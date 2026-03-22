@@ -3,6 +3,7 @@
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import ScrollProgress from '$lib/components/layout/ScrollProgress.svelte';
+	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import Part1 from '$lib/components/sections/Part1.svelte';
 	import Part2 from '$lib/components/sections/Part2.svelte';
@@ -13,8 +14,10 @@
 	import Part7 from '$lib/components/sections/Part7.svelte';
 
 	let sidebarOpen = $state(false);
+	let cheatSheetOpen = $state(false);
 	let activeSection = $state('hero');
 	let theme = $state<'light' | 'dark' | 'system'>('system');
+	let navClickActive = false;
 
 	const sectionIds = [
 		'hero',
@@ -84,10 +87,12 @@
 						visibleSections.delete(entry.target.id);
 					}
 				}
-				for (const id of sectionIds) {
-					if (visibleSections.has(id)) {
-						activeSection = id;
-						break;
+				if (!navClickActive) {
+					for (const id of sectionIds) {
+						if (visibleSections.has(id)) {
+							activeSection = id;
+							break;
+						}
 					}
 				}
 			},
@@ -106,11 +111,30 @@
 			sidebarOpen = true;
 		}
 
-		return () => observer.disconnect();
+		const clearNavClick = () => {
+			navClickActive = false;
+		};
+		window.addEventListener('wheel', clearNavClick, { passive: true });
+		window.addEventListener('touchmove', clearNavClick, { passive: true });
+
+		return () => {
+			observer.disconnect();
+			window.removeEventListener('wheel', clearNavClick);
+			window.removeEventListener('touchmove', clearNavClick);
+		};
 	});
+
+	function handleNavigate(id: string) {
+		activeSection = id;
+		navClickActive = true;
+	}
 
 	function toggleSidebar() {
 		sidebarOpen = !sidebarOpen;
+	}
+
+	function toggleCheatSheet() {
+		cheatSheetOpen = !cheatSheetOpen;
 	}
 </script>
 
@@ -123,12 +147,13 @@
 </svelte:head>
 
 <ScrollProgress />
-<Header theme={getEffectiveTheme()} onToggleTheme={toggleTheme} />
-<Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} />
+<Header theme={getEffectiveTheme()} onToggleTheme={toggleTheme} onToggleCheatSheet={toggleCheatSheet} />
+<Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
+<CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
 
 <main
 	class="transition-[margin-left] duration-200 ease-out"
-	style="padding-top: var(--header-height); margin-left: {sidebarOpen ? 'var(--sidebar-width)' : '0'};"
+	style="padding-top: var(--header-height); margin-left: {sidebarOpen ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)'};"
 >
 	<Hero />
 	<Part1 />

@@ -2,7 +2,7 @@
 	import { Laptop, UserCheck, KeyRound, Download } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
-	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
+	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 </script>
 
@@ -43,6 +43,10 @@ git config --global user.email "your-enterprise-email@company.com"`}
 					The <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">--global</code> flag saves this for every Git repository on your computer. You only need to do this once.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				Don't want to use the terminal? No problem. VS Code will actually prompt you to configure your identity the first time you try to use Git. You can also open the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd>) and search for <strong>"Git: Config"</strong> to set these values without touching the terminal.
+			</p>
 		</div>
 
 		<!-- 1.2 Authentication -->
@@ -92,6 +96,16 @@ git config --global credential.helper libsecret`}
 					will prompt you once and then save the credentials for future use.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				That said, if you're using VS Code, you can skip the PAT setup entirely. VS Code handles GitHub authentication for you -- when you clone a private repo or push for the first time, it opens your browser to sign in. No tokens to generate, copy, or store:
+			</p>
+
+			<VsCodeScreenshot
+				src="github/auth-prompt.png"
+				alt="VS Code showing GitHub authentication prompt in the browser"
+				caption="VS Code automatically opens your browser to sign in to GitHub -- no tokens to manage."
+			/>
 		</div>
 
 		<!-- 1.3 Cloning -->
@@ -119,8 +133,10 @@ git config --global credential.helper libsecret`}
 				<li>Choose a save location, then open the folder</li>
 			</ol>
 
-			<VsCodePlaceholder
-				description="VS Code Welcome page with 'Clone Repository' button highlighted, and Command Palette showing 'Git: Clone'"
+			<VsCodeScreenshot
+				src="quickstart/clone-repository-url.png"
+				alt="VS Code Clone Repository dialog showing URL input field"
+				caption="Use Cmd+Shift+P → 'Git: Clone' and paste the repository URL. VS Code handles the rest."
 			/>
 
 			<Callout type="note">

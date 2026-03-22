@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Monitor, Layout, Clock, Columns } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
-	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
+	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 </script>
@@ -72,8 +72,24 @@
 				</div>
 			</div>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control panel showing the full layout -- Changes list at the top, Staged Changes section, commit message input box, and the checkmark Commit button. The '...' overflow menu is visible at the top-right"
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's what it looks like in action. Press <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+G</kbd> (or <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+G</kbd> on Mac) to open the Source Control panel from anywhere:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/overview.png"
+				alt="VS Code Source Control panel showing the full layout with Changes, Staged Changes, commit message input, and Graph"
+				caption="Your command center: the Source Control panel shows everything at a glance -- changed files, staged files, commit input, and the branch graph."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Below the commit area, you'll find the <strong>Source Control Graph</strong> -- a visual representation of your commit history and branch structure. This is incredibly helpful for understanding how branches relate to each other:
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/source-control-graph.png"
+				alt="VS Code Source Control Graph showing commit history with branches"
+				caption="The Source Control Graph visualizes your commit history and branch structure -- a powerful way to understand how branches relate."
 			/>
 		</div>
 
@@ -93,16 +109,24 @@
 				any commit to see a diff, or right-click and select "Restore."
 			</p>
 
-			<Callout type="tip">
-				{#snippet children()}
-					The <strong>GitLens</strong> extension is practically essential for professional work. It
-					adds "blame" annotations to every single line of code, showing who wrote that line
-					and when. Install it from the VS Code Marketplace.
-				{/snippet}
-			</Callout>
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's the Timeline in action. Each entry represents a commit that touched this file -- click any entry to see exactly what changed in that commit:
+			</p>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code with a file open, showing the Timeline pane at the bottom of the Explorer sidebar. Each entry shows a commit hash, message, and timestamp. GitLens blame annotations are visible inline showing author and date for each line"
+			<VsCodeScreenshot
+				src="overview/timeline-view.png"
+				alt="VS Code Timeline view in the Explorer sidebar showing file history"
+				caption="The Timeline view (in the Explorer panel) shows the complete commit history for any file. Click any entry to see the diff."
+			/>
+
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				VS Code also has <strong>built-in Git Blame</strong>. Hover over any line of code and you'll see who changed it and when, right in the status bar. For even richer inline annotations on every single line, install the <strong>GitLens</strong> extension from the VS Code Marketplace -- it's practically essential for professional work:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/git-blame-status-bar.png"
+				alt="VS Code showing Git blame information in the status bar"
+				caption="Built-in Git blame shows the author and commit message for the current line right in the status bar."
 			/>
 		</div>
 
@@ -147,8 +171,24 @@
 				</div>
 			</div>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code 3-way Merge Editor in full view showing the Incoming (left), Current (right), and Result (bottom) panes. Clickable 'Accept Current Change', 'Accept Incoming Change', 'Accept Both Changes' buttons are visible above the conflict markers. The 'Accept Merge' button is shown at the bottom-right"
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's the merge editor in action. Use the checkboxes next to each change to select which version you want to keep -- or manually edit the Result pane at the bottom for a custom resolution:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/merge-editor-overview.png"
+				alt="VS Code 3-way Merge Editor showing Incoming, Current, and Result panes"
+				caption="The 3-way Merge Editor transforms scary merge conflicts into a visual, point-and-click experience. Use the checkboxes to select changes."
+			/>
+
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				And if you have GitHub Copilot installed, there's an even easier option. VS Code can use AI to analyze both sides of a conflict and suggest an intelligent resolution. Look for the <strong>"Resolve with AI"</strong> option in the merge editor:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/ai-merge-conflict-resolution.png"
+				alt="VS Code AI-powered merge conflict resolution with GitHub Copilot"
+				caption="GitHub Copilot can analyze conflicting changes and suggest an intelligent resolution -- the future of merge conflict handling."
 			/>
 		</div>
 	</div>

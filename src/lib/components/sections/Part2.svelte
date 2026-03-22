@@ -2,7 +2,7 @@
 	import { RefreshCw, Eye, FolderPlus, Save } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
-	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
+	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -19,13 +19,14 @@
 		/>
 
 		<MermaidDiagram
-			definition={`graph LR
-  A(["AI Code"]) --> B(["Status"])
-  B --> C{"OK?"}
-  C -->|No| A
-  C -->|Yes| D(["Stage"])
-  D --> E(["Commit"])
-  E --> F(["Push"])`}
+			definition={`graph TD
+  A(["AI Generates Code"]) --> B(["Status: Review Changes"])
+  B --> C{"Approve Changes?"}
+  C -->|No| D(["Discard / Modify"])
+  D --> A
+  C -->|Yes| E(["Stage Changes"])
+  E --> F(["Commit: Create Save Point"])
+  F --> G(["Push to Remote"])`}
 			id="core-loop-overview"
 		/>
 
@@ -78,8 +79,24 @@
 				</div>
 			</div>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control panel showing the Activity Bar icon with a blue badge, listing 'Changes' and 'Untracked files' sections"
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				The good news? You don't actually need to type <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code> in the terminal. VS Code shows you all of this visually. Just click the <strong>Source Control icon</strong> in the Activity Bar (the branch icon on the left sidebar). The badge shows how many files changed, and each file is labeled <strong>M</strong> (modified), <strong>U</strong> (untracked), or <strong>D</strong> (deleted):
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/view-changes.png"
+				alt="VS Code Source Control panel showing changed files with status badges"
+				caption="The Source Control panel is your visual 'git status' — modified (M), untracked (U), and deleted (D) files are listed with clear badges."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				You can also spot changes right in the editor without opening the Source Control panel. VS Code adds colored indicators in the <strong>gutter</strong> (the narrow strip to the left of your code): <strong style="color: var(--color-tip);">green</strong> for added lines, <strong style="color: var(--color-note);">blue</strong> for modified lines, and a <strong style="color: var(--color-caution);">red triangle</strong> for deleted lines. Click any indicator to preview the change inline:
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/gutter-diff-preview.png"
+				alt="VS Code editor gutter showing colored indicators for added, modified, and deleted lines"
+				caption="Colored gutter indicators let you spot changes at a glance — green (added), blue (modified), and red (deleted). Click to preview."
 			/>
 		</div>
 
@@ -130,8 +147,38 @@
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">q</code> (quit).
 			</p>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Diff Editor showing side-by-side comparison with red (deletions) and green (additions). Right-click menu visible with 'Stage Selected Ranges' option highlighted"
+			<h4 class="mb-2 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
+				The VS Code Way: Visual Staging
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				This is where VS Code really shines. Instead of typing cryptic <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">y/n/s/q</code> responses in the terminal, you get a beautiful side-by-side Diff Editor. To stage an entire file, just hover over it and click the <strong>+</strong> button:
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/stage-changes.png"
+				alt="VS Code Source Control showing stage changes button on hover"
+				caption="Hover over any file and click + to stage it. The file moves from 'Changes' to 'Staged Changes'."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				When you click a file in the Changes list, VS Code opens the <strong>Diff Editor</strong> -- a side-by-side view showing the old version (left) and new version (right). This makes it easy to review exactly what changed before staging:
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/diff-editor.png"
+				alt="VS Code Diff Editor showing side-by-side comparison of old and new file versions"
+				caption="The Diff Editor shows your changes side-by-side: red highlights deletions, green highlights additions. Review before you stage."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				For even more precision, click a file to open the Diff Editor, then select specific lines and right-click → <strong>"Stage Selected Ranges"</strong>. This is the visual equivalent of <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code>, but far easier to use:
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/stage-specific-lines.png"
+				alt="VS Code Diff Editor showing stage selected ranges option"
+				caption="In the Diff Editor, select specific lines and use the gutter to stage just those changes -- even more precise than git add -p."
 			/>
 		</div>
 
@@ -208,8 +255,24 @@
 				{/snippet}
 			</Callout>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control panel showing 'Staged Changes' list, the commit message input box at the top with a conventional commit message, and the checkmark Commit button"
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, committing is just as simple: type your message in the input box at the top of the Source Control panel and click the <strong>Commit</strong> button (or press <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Enter</kbd>). Notice the <strong>sparkle icon</strong> next to the input -- click it to let AI generate a commit message from your staged changes:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/overview.png"
+				alt="VS Code Source Control panel showing staged changes, commit message box, and commit button"
+				caption="The full Source Control view: your staged changes, the commit message input, and the Commit button. Click the sparkle icon to auto-generate a message."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's the AI commit message feature in action. After staging your changes, click the sparkle icon and Copilot will analyze your diff and write a descriptive message for you:
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/generate-commit-message.png"
+				alt="VS Code showing AI-generated commit message from staged changes"
+				caption="Click the sparkle icon and AI generates a commit message based on your staged changes. Always review it before committing!"
 			/>
 
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">

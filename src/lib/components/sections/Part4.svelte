@@ -2,7 +2,7 @@
 	import { Undo2, Trash2, MinusCircle, PenLine, RotateCcw, AlertTriangle, Table } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
-	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
+	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -43,9 +43,9 @@
 git restore src/bad_file.py  # Discard a single file`}
 			/>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control panel, right-clicking a file under 'Changes', with 'Discard Changes' option highlighted in the context menu"
-			/>
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, you don't need the terminal for this. In the Source Control panel, hover over the file you want to discard under "Changes" and click the <strong>curved arrow</strong> icon. To discard ALL changes at once, click the curved arrow next to the "Changes" header. You can also right-click any file and choose <strong>"Discard Changes"</strong>.
+			</p>
 
 			<Callout type="caution">
 				{#snippet children()}
@@ -72,8 +72,14 @@ git restore src/bad_file.py  # Discard a single file`}
 # Older equivalent: git reset HEAD src/bad_file.py`}
 			/>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control panel showing 'Staged Changes' list. Right-click menu with 'Unstage Changes' option highlighted"
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, this is a one-click fix. In the Source Control panel, look under <strong>"Staged Changes"</strong>, hover over the file you want to unstage, and click the <strong>−</strong> (minus) button. The file moves right back to "Changes":
+			</p>
+
+			<VsCodeScreenshot
+				src="staging-commits/unstage-changes.png"
+				alt="VS Code Source Control panel showing the unstage button (minus icon) on a staged file"
+				caption="Click the − button next to any staged file to unstage it. It moves back to the 'Changes' section."
 			/>
 		</div>
 
@@ -97,9 +103,9 @@ git commit --amend --no-edit     # Add it to the last commit
 git commit --amend`}
 			/>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control '...' menu expanded, showing Commit submenu with 'Commit Staged (Amend)' option highlighted"
-			/>
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, click the <strong>dropdown arrow</strong> next to the Commit button and select <strong>"Commit (Amend)"</strong>. This adds your newly staged files to the last commit without needing the terminal. You can also find this under the <strong>...</strong> menu → Commit → <strong>Commit Staged (Amend)</strong>.
+			</p>
 
 			<Callout type="warning">
 				{#snippet children()}
@@ -211,9 +217,19 @@ git push                   # Push the revert`}
 				{/snippet}
 			</Callout>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code GitLens extension sidebar showing commit history. Right-click menu on a commit with 'Revert Commit...' option highlighted"
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				VS Code has this built in too. Open the <strong>...</strong> menu in the Source Control panel -- this is your gateway to all advanced Git operations. From here you can access Commit, Changes, Pull, Push, Branch, Stash, and more:
+			</p>
+
+			<VsCodeScreenshot
+				src="quickstart/pull-push-commands.png"
+				alt="VS Code Source Control ellipsis menu showing Pull, Push, Commit, Stash, Branch, and other Git commands"
+				caption="The ... menu is your Git command center. Look under Commit for Undo Last Commit, Commit (Amend), and other recovery options."
 			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				For reverting pushed commits, use the <strong>Source Control Graph</strong>: right-click any commit and select <strong>"Revert Commit"</strong> to create the inverse commit safely.
+			</p>
 		</div>
 
 		<!-- 4.6 Force Push -->

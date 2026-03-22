@@ -44,18 +44,19 @@
 	--color-caution-bg: #fef2f2;
 	--color-caution-border: #fca5a5;
 
-	--color-terminal-bg: #1e1e2e;
-	--color-terminal-text: #cdd6f4;
-	--color-terminal-prompt: #a6e3a1;
-	--color-terminal-command: #f5f5f5;
-	--color-terminal-output: #a6adc8;
-	--color-terminal-border: #313244;
-	--color-terminal-header: #181825;
+	--color-terminal-bg: #f8f9fc;
+	--color-terminal-text: #1f2937;
+	--color-terminal-prompt: #059669;
+	--color-terminal-command: #111827;
+	--color-terminal-output: #4b5563;
+	--color-terminal-border: #e5e7eb;
+	--color-terminal-header: #f1f3f5;
 
 	--color-code-bg: #f3f4f6;
 	--color-code-text: #1f2937;
 
 	--sidebar-width: 260px;
+	--sidebar-collapsed-width: 48px;
 	--header-height: 56px;
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -91,6 +92,14 @@
 		--color-warning-border: #422006;
 		--color-caution-bg: #1f0a0a;
 		--color-caution-border: #450a0a;
+
+		--color-terminal-bg: #1e1e2e;
+		--color-terminal-text: #cdd6f4;
+		--color-terminal-prompt: #a6e3a1;
+		--color-terminal-command: #f5f5f5;
+		--color-terminal-output: #a6adc8;
+		--color-terminal-border: #313244;
+		--color-terminal-header: #181825;
 
 		--color-code-bg: #1a1d28;
 		--color-code-text: #e8eaf0;
@@ -153,6 +162,13 @@
 	--color-warning-border: #422006;
 	--color-caution-bg: #1f0a0a;
 	--color-caution-border: #450a0a;
+	--color-terminal-bg: #1e1e2e;
+	--color-terminal-text: #cdd6f4;
+	--color-terminal-prompt: #a6e3a1;
+	--color-terminal-command: #f5f5f5;
+	--color-terminal-output: #a6adc8;
+	--color-terminal-border: #313244;
+	--color-terminal-header: #181825;
 	--color-code-bg: #1a1d28;
 	--color-code-text: #e8eaf0;
 }
@@ -211,24 +227,88 @@ kbd {
 	height: auto;
 }
 
+/* Flowchart node styling */
 .mermaid-container .node rect,
 .mermaid-container .node circle,
 .mermaid-container .node polygon {
-	rx: 8;
-	ry: 8;
+	rx: 10;
+	ry: 10;
 }
 
 .mermaid-container .node .label {
 	font-family: var(--font-sans);
-	font-size: 13px;
+	font-size: 14px;
+	font-weight: 500;
 }
 
 .mermaid-container .edgeLabel {
 	font-family: var(--font-sans);
-	font-size: 11px;
+	font-size: 12px;
+	font-weight: 500;
 }
 
 .mermaid-container .cluster rect {
 	rx: 12 !important;
 	ry: 12 !important;
+}
+
+/* Text centering inside Mermaid nodes */
+.mermaid-container .node foreignObject div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.mermaid-container .nodeLabel,
+.mermaid-container .label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+/* Flowchart edge/arrow lines */
+.mermaid-container .flowchart-link {
+	stroke-width: 1.5px !important;
+}
+
+.mermaid-container .edgePath .path {
+	stroke-width: 1.5px !important;
+}
+
+.mermaid-container marker path {
+	stroke-width: 1px !important;
+}
+
+/* Git graph styling */
+.mermaid-container .gitTitleText {
+	font-family: var(--font-sans);
+	font-weight: 600;
+}
+
+.mermaid-container .branch-label {
+	font-family: var(--font-sans);
+	font-size: 13px !important;
+	font-weight: 600;
+}
+
+.mermaid-container .commit-label {
+	font-family: var(--font-sans);
+	font-size: 12px !important;
+}
+
+/* Git graph branch lines — clean, not too thick */
+.mermaid-container .branch {
+	stroke-width: 2px !important;
+}
+
+/* Git graph commit circles */
+.mermaid-container .commit {
+	stroke-width: 2px !important;
+}
+
+/* Git graph arrow/merge lines */
+.mermaid-container .arrow {
+	stroke-width: 1.5px !important;
 }

@@ -2,7 +2,7 @@
 	import { Layers, Archive, GitMerge, FileWarning } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
-	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
+	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { stashSteps, rebaseMergeSteps, conflictSteps } from '$lib/data/sandbox-steps';
@@ -64,9 +64,19 @@ git stash pop`}
 				the stash entry for reuse.
 			</p>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code Source Control '...' menu expanded, showing Stash submenu with 'Stash (Include Untracked)' and 'Pop Latest Stash' options"
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, you can do all of this without memorizing commands. Open the <strong>...</strong> menu in the Source Control panel -- you'll see a <strong>Stash</strong> submenu with all the options you need:
+			</p>
+
+			<VsCodeScreenshot
+				src="quickstart/pull-push-commands.png"
+				alt="VS Code Source Control ellipsis menu showing Stash, Branch, and other Git commands"
+				caption="The ... menu includes a Stash submenu with 'Stash (Include Untracked)' and 'Pop Latest Stash' -- everything you need for context-switching."
 			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Choose <strong>"Stash (Include Untracked)"</strong> to save all your work. When you're ready to come back, go to <strong>...</strong> → Stash → <strong>"Pop Latest Stash"</strong> to restore everything exactly where you left off.
+			</p>
 
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Stash Workflow
@@ -118,6 +128,10 @@ git stash pop`}
 					is also using), as it rewrites history.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				VS Code supports both approaches. Use the <strong>...</strong> menu in Source Control → <strong>"Pull (Rebase)"</strong> to rebase instead of merge when pulling. For merging, use the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd>) → <strong>"Git: Merge Branch..."</strong> and select the branch to merge.
+			</p>
 
 			<Callout type="tip">
 				{#snippet children()}
@@ -183,8 +197,20 @@ const x = 5;
 				{/snippet}
 			</Callout>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code 3-way Merge Editor showing Left (Incoming), Right (Current), and Bottom (Result) panes. Clickable 'Accept Current Change', 'Accept Incoming Change', and 'Accept Both Changes' buttons visible above conflict blocks"
+			<VsCodeScreenshot
+				src="overview/merge-conflict.png"
+				alt="VS Code inline merge conflict view showing Accept Current, Accept Incoming, and Accept Both options"
+				caption="VS Code highlights conflicts inline with clickable actions: Accept Current Change, Accept Incoming Change, or Accept Both Changes."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				For complex conflicts with multiple overlapping changes, click <strong>"Resolve in Merge Editor"</strong> to open the full 3-way view. This gives you the most control over the final result:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/merge-editor-overview.png"
+				alt="VS Code 3-way Merge Editor with Incoming, Current, and Result panes"
+				caption="The 3-way Merge Editor: Incoming changes (left), your changes (right), and the final result (bottom). Use checkboxes to select which changes to keep."
 			/>
 
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">

@@ -2,7 +2,7 @@
 	import { GitBranch, GitPullRequest, RefreshCcw } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
-	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
+	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -50,8 +50,24 @@
 # Older equivalent: git checkout -b "feature/my-new-idea"`}
 			/>
 
-			<VsCodePlaceholder
-				description="Screenshot: VS Code status bar (bottom-left) showing the current branch name. Click it to see a dropdown with '+ Create new branch...' option"
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, this is even easier. Look at the <strong>bottom-left corner</strong> of your window -- you'll see the current branch name (e.g., "main"). Click it and you'll get a dropdown where you can switch to existing branches or select <strong>"+ Create new branch..."</strong> to make a new one:
+			</p>
+
+			<VsCodeScreenshot
+				src="branches-worktrees/current-branch.png"
+				alt="VS Code status bar showing current branch name and the branches dropdown"
+				caption="Click the branch name in the bottom-left corner to switch branches or create a new one."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				When you click the branch name, VS Code opens a Quick Pick menu listing all your branches. Select <strong>"+ Create new branch..."</strong> at the top, type a name like <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">feature/my-new-idea</code>, and you're immediately switched to it:
+			</p>
+
+			<VsCodeScreenshot
+				src="overview/gitbranches.png"
+				alt="VS Code branch Quick Pick showing create new branch option and existing branches"
+				caption="The branch Quick Pick lets you create, switch, or check out branches without touching the terminal."
 			/>
 
 			<Callout type="tip">
@@ -74,6 +90,25 @@
 					Your branch is now "stale."
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Before diving into the commands, here's how the three main remote operations relate to each other:
+			</p>
+
+			<figure class="my-5 overflow-hidden rounded-lg border" style="border-color: var(--color-border); background: var(--color-bg-secondary);">
+				<div class="flex items-center justify-center p-2" style="background: var(--color-bg-tertiary);">
+					<img
+						src="https://code.visualstudio.com/assets/docs/sourcecontrol/repos-remotes/git-fetch-pull-push.png"
+						alt="Diagram showing how Git fetch, pull, and push operations work between local and remote repositories"
+						class="w-full rounded"
+						loading="lazy"
+						style="max-height: 500px; object-fit: contain;"
+					/>
+				</div>
+				<figcaption class="border-t px-4 py-2.5 text-xs" style="border-color: var(--color-border); color: var(--color-text-muted);">
+					Fetch downloads without merging. Pull = fetch + merge. Push uploads your commits. Understanding this flow is key.
+				</figcaption>
+			</figure>
 
 			<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 1: The "Safe" Sync (fetch + merge)
@@ -99,6 +134,26 @@ git merge origin/main   # Merge the updates into your branch`}
 					is just a "black box" shortcut.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				VS Code makes syncing visual. Look at the <strong>status bar</strong> at the bottom of your window -- you'll see small arrows with numbers showing how many commits are incoming (to pull) and outgoing (to push). Click the <strong>sync icon</strong> (circular arrows) to pull and push in one step:
+			</p>
+
+			<VsCodeScreenshot
+				src="repos-remotes/git-status-bar-sync.png"
+				alt="VS Code status bar showing sync status with incoming and outgoing commit counts"
+				caption="The status bar shows how many commits you need to pull (↓) and push (↑). Click to sync."
+			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				You'll also see a prominent <strong>"Sync Changes"</strong> button right in the Source Control panel. It shows the exact count of incoming and outgoing commits, so you always know what's about to happen:
+			</p>
+
+			<VsCodeScreenshot
+				src="quickstart/sync-changes.png"
+				alt="VS Code Source Control showing Sync Changes button with incoming and outgoing commit counts"
+				caption="The Sync Changes button combines pull + push in one click. The numbers show exactly how many commits are incoming (↓) and outgoing (↑)."
+			/>
 		</div>
 
 		<!-- 3.3 Pull Requests -->
@@ -138,6 +193,16 @@ git merge origin/main   # Merge the updates into your branch`}
 					summarizing your commits. Claude Code can even automate the PR creation process.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
+				You don't even need to leave VS Code to create a PR. Install the <strong>GitHub Pull Requests and Issues</strong> extension and you can create PRs, review diffs, add comments, approve, and merge -- all without opening your browser:
+			</p>
+
+			<VsCodeScreenshot
+				src="github/create-pull-request-view.png"
+				alt="VS Code GitHub Pull Request creation view with title, description, and reviewer fields"
+				caption="Create Pull Requests directly in VS Code with the GitHub Pull Requests extension. AI can even generate the PR description for you."
+			/>
 
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Branch, Commit, and Push

@@ -16,8 +16,10 @@
 	let {
 		open = false,
 		activeSection = '',
-		onToggle
-	}: { open: boolean; activeSection: string; onToggle: () => void } = $props();
+		onToggle,
+		onNavigate
+	}: { open: boolean; activeSection: string; onToggle: () => void; onNavigate: (id: string) => void } =
+		$props();
 
 	interface SectionItem {
 		id: string;
@@ -110,6 +112,8 @@
 	];
 
 	let expandedSections = $state<Set<string>>(new Set());
+	let flyoutSection = $state<string | null>(null);
+	let flyoutY = $state(0);
 
 	function toggleSection(id: string) {
 		const next = new Set(expandedSections);
@@ -121,6 +125,7 @@
 	function scrollTo(id: string) {
 		const el = document.getElementById(id);
 		if (el) {
+			onNavigate(id);
 			el.scrollIntoView({ behavior: 'smooth' });
 			if (window.innerWidth < 1024) onToggle();
 		}
@@ -128,20 +133,42 @@
 
 	function isActive(sectionId: string): boolean {
 		if (activeSection === sectionId) return true;
+		if (sectionId === 'hero') return activeSection === 'hero';
 		const partNum = sectionId.replace('part-', '');
 		return activeSection.startsWith(`section-${partNum}-`);
 	}
 
+	function openFlyout(sectionId: string, event: MouseEvent) {
+		const btn = event.currentTarget as HTMLElement;
+		const rect = btn.getBoundingClientRect();
+		flyoutY = rect.top;
+		flyoutSection = flyoutSection === sectionId ? null : sectionId;
+	}
+
+	function closeFlyout() {
+		flyoutSection = null;
+	}
+
+	function handleFlyoutNavigate(id: string) {
+		scrollTo(id);
+		closeFlyout();
+	}
+
 	$effect(() => {
+		const current = activeSection;
 		for (const section of sections) {
-			if (section.children?.some((c) => c.id === activeSection)) {
+			if (
+				section.children?.some((c) => c.id === current) &&
+				!expandedSections.has(section.id)
+			) {
 				expandedSections = new Set([...expandedSections, section.id]);
+				break;
 			}
 		}
 	});
 </script>
 
-<!-- Backdrop on mobile -->
+<!-- Backdrop on mobile when expanded -->
 {#if open}
 	<button
 		class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
@@ -150,23 +177,35 @@
 	></button>
 {/if}
 
+<!-- Flyout backdrop (click outside to close) -->
+{#if flyoutSection && !open}
+	<button
+		class="fixed inset-0 z-40"
+		onclick={closeFlyout}
+		aria-label="Close flyout"
+	></button>
+{/if}
+
+<!-- ───── EXPANDED SIDEBAR ───── -->
 <aside
-	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 ease-out"
+	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col border-r transition-all duration-200 ease-out"
 	style="width: var(--sidebar-width); padding-top: var(--header-height); border-color: var(--color-border); background: var(--color-bg-secondary);"
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
 >
-	<!-- Sidebar header with collapse -->
 	<div
 		class="flex items-center justify-between border-b px-4 py-3"
 		style="border-color: var(--color-border);"
 	>
-		<span class="text-xs font-semibold tracking-wider uppercase" style="color: var(--color-text-muted); letter-spacing: 0.08em;">
+		<span
+			class="text-xs font-semibold tracking-wider uppercase"
+			style="color: var(--color-text-muted); letter-spacing: 0.08em;"
+		>
 			Contents
 		</span>
 		<button
 			onclick={onToggle}
-			class="flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors"
 			style="color: var(--color-text-muted);"
 			aria-label="Collapse sidebar"
 		>
@@ -178,37 +217,51 @@
 		{#each sections as section}
 			{@const active = isActive(section.id)}
 			<div class="mb-0.5">
-				<button
-					onclick={() => {
-						if (section.children) {
-							toggleSection(section.id);
-							scrollTo(section.id);
-						} else {
-							scrollTo(section.id);
-						}
-					}}
+				<div
 					class="flex w-full items-center gap-2 rounded-md px-2.5 py-[7px] text-left text-[13px] transition-colors"
 					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'}; font-weight: {active ? '600' : '500'};"
 				>
-					<svelte:component this={section.icon} size={14} strokeWidth={active ? 2.5 : 2} />
-					<span class="flex-1">{section.label}</span>
+					<button
+						onclick={() => {
+							if (section.children) {
+								if (!expandedSections.has(section.id)) {
+									toggleSection(section.id);
+								}
+							}
+							scrollTo(section.id);
+						}}
+						class="flex flex-1 cursor-pointer items-center gap-2 text-left"
+						style="color: inherit;"
+					>
+						<svelte:component this={section.icon} size={14} strokeWidth={active ? 2.5 : 2} />
+						<span class="flex-1">{section.label}</span>
+					</button>
 					{#if section.children}
-						<ChevronRight
-							size={12}
-							class="transition-transform duration-150"
-							style="transform: rotate({expandedSections.has(section.id) ? '90deg' : '0deg'}); opacity: 0.5;"
-						/>
+						<button
+							onclick={() => toggleSection(section.id)}
+							class="flex h-5 w-5 cursor-pointer items-center justify-center rounded transition-colors"
+							aria-label={expandedSections.has(section.id) ? 'Collapse' : 'Expand'}
+						>
+							<ChevronRight
+								size={12}
+								class="transition-transform duration-150"
+								style="transform: rotate({expandedSections.has(section.id) ? '90deg' : '0deg'}); opacity: 0.5;"
+							/>
+						</button>
 					{/if}
-				</button>
+				</div>
 
 				{#if section.children && expandedSections.has(section.id)}
-					<div class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5" style="border-color: var(--color-border);">
+					<div
+						class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5"
+						style="border-color: var(--color-border);"
+					>
 						{#each section.children as child}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="block w-full rounded-md px-2 py-[5px] text-left text-xs transition-colors"
-								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
+								class="block w-full cursor-pointer rounded-md px-2 py-[5px] text-left text-xs transition-colors"
+								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
 							>
 								{child.label}
 							</button>
@@ -220,14 +273,98 @@
 	</nav>
 </aside>
 
-<!-- Collapsed sidebar toggle -->
+<!-- ───── COLLAPSED ICON RAIL ───── -->
 {#if !open}
-	<button
-		onclick={onToggle}
-		class="fixed z-40 flex h-8 w-8 items-center justify-center rounded-md border transition-colors"
-		style="top: calc(var(--header-height) + 12px); left: 12px; background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-muted);"
-		aria-label="Open sidebar"
+	<aside
+		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center border-r py-2 max-lg:hidden"
+		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); border-color: var(--color-border); background: var(--color-bg-secondary);"
 	>
-		<PanelLeft size={15} />
-	</button>
+		<!-- Expand button -->
+		<button
+			onclick={onToggle}
+			class="mb-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-colors"
+			style="color: var(--color-text-muted);"
+			aria-label="Expand sidebar"
+		>
+			<PanelLeft size={16} />
+		</button>
+
+		<div
+			class="mx-auto mb-2 w-6"
+			style="border-top: 1px solid var(--color-border);"
+		></div>
+
+		<!-- Icon buttons -->
+		{#each sections as section}
+			{@const active = isActive(section.id)}
+			{@const isFlyoutOpen = flyoutSection === section.id}
+			<button
+				onclick={(e) => {
+					if (section.children) {
+						openFlyout(section.id, e);
+					} else {
+						scrollTo(section.id);
+						closeFlyout();
+					}
+				}}
+				class="group relative mb-0.5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-all"
+				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; background: {active ? 'var(--color-primary-dim)' : isFlyoutOpen ? 'var(--color-surface-hover)' : 'transparent'};"
+				aria-label={section.label}
+			>
+				<svelte:component
+					this={section.icon}
+					size={16}
+					strokeWidth={active ? 2.5 : 1.8}
+				/>
+				<!-- Tooltip (only when no flyout is open) -->
+				{#if !flyoutSection}
+					<span
+						class="pointer-events-none absolute left-12 z-50 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+						style="background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border);"
+					>
+						{section.label}
+					</span>
+				{/if}
+			</button>
+		{/each}
+	</aside>
+
+	<!-- ───── FLYOUT PANEL ───── -->
+	{#if flyoutSection}
+		{@const section = sections.find((s) => s.id === flyoutSection)}
+		{#if section}
+			<div
+				class="fixed z-50 min-w-[180px] rounded-lg border shadow-xl"
+				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; background: var(--color-surface); border-color: var(--color-border);"
+			>
+				<!-- Flyout header -->
+				<button
+					onclick={() => {
+						handleFlyoutNavigate(section.id);
+					}}
+					class="flex w-full cursor-pointer items-center gap-2 rounded-t-lg px-3 py-2.5 text-left text-[13px] font-semibold transition-colors"
+					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light);"
+				>
+					<svelte:component this={section.icon} size={14} />
+					{section.label}
+				</button>
+
+				<!-- Flyout children -->
+				{#if section.children}
+					<div class="px-1.5 py-1.5">
+						{#each section.children as child}
+							{@const childActive = activeSection === child.id}
+							<button
+								onclick={() => handleFlyoutNavigate(child.id)}
+								class="block w-full cursor-pointer rounded-md px-2.5 py-[6px] text-left text-xs transition-colors"
+								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
+							>
+								{child.label}
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</div>
+		{/if}
+	{/if}
 {/if}
