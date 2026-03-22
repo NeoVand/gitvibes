@@ -1,3 +1,144 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+	--color-bg: #ffffff;
+	--color-bg-secondary: #f8fafc;
+	--color-bg-tertiary: #f1f5f9;
+	--color-surface: #ffffff;
+	--color-surface-hover: #f8fafc;
+	--color-border: #e2e8f0;
+	--color-border-light: #f1f5f9;
+	--color-text: #0f172a;
+	--color-text-secondary: #475569;
+	--color-text-muted: #94a3b8;
+	--color-text-inverse: #ffffff;
+
+	--color-primary: #6366f1;
+	--color-primary-light: #818cf8;
+	--color-primary-dim: #e0e7ff;
+
+	--color-branch-main: #6366f1;
+	--color-branch-feature: #10b981;
+	--color-branch-hotfix: #ef4444;
+	--color-branch-release: #f59e0b;
+
+	--color-note: #3b82f6;
+	--color-note-bg: #eff6ff;
+	--color-tip: #10b981;
+	--color-tip-bg: #ecfdf5;
+	--color-important: #8b5cf6;
+	--color-important-bg: #f5f3ff;
+	--color-warning: #f59e0b;
+	--color-warning-bg: #fffbeb;
+	--color-caution: #ef4444;
+	--color-caution-bg: #fef2f2;
+
+	--color-terminal-bg: #0f172a;
+	--color-terminal-text: #e2e8f0;
+	--color-terminal-prompt: #10b981;
+	--color-terminal-command: #f8fafc;
+	--color-terminal-output: #94a3b8;
+	--color-terminal-border: #1e293b;
+
+	--color-code-bg: #f1f5f9;
+	--color-code-text: #1e293b;
+
+	--sidebar-width: 280px;
+	--header-height: 64px;
+
+	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-bg: #0b1121;
+		--color-bg-secondary: #111827;
+		--color-bg-tertiary: #1e293b;
+		--color-surface: #151f32;
+		--color-surface-hover: #1e293b;
+		--color-border: #1e293b;
+		--color-border-light: #1e293b;
+		--color-text: #f1f5f9;
+		--color-text-secondary: #94a3b8;
+		--color-text-muted: #64748b;
+		--color-text-inverse: #0f172a;
+
+		--color-primary: #818cf8;
+		--color-primary-light: #a5b4fc;
+		--color-primary-dim: #1e1b4b;
+
+		--color-note-bg: #0c1929;
+		--color-tip-bg: #052e16;
+		--color-important-bg: #1a0533;
+		--color-warning-bg: #1c1508;
+		--color-caution-bg: #1f0a0a;
+
+		--color-code-bg: #1e293b;
+		--color-code-text: #e2e8f0;
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	scroll-padding-top: calc(var(--header-height) + 24px);
+}
+
+body {
+	font-family: var(--font-sans);
+	background-color: var(--color-bg);
+	color: var(--color-text);
+	line-height: 1.7;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+code,
+pre,
+kbd {
+	font-family: var(--font-mono);
+}
+
+::selection {
+	background-color: var(--color-primary);
+	color: white;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--color-text-muted);
+	border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--color-text-secondary);
+}
+
+/* Mermaid overrides */
+.mermaid-container svg {
+	max-width: 100%;
+	height: auto;
+}
