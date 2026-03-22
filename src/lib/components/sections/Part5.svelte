@@ -4,25 +4,18 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
+	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { stashSteps, rebaseMergeSteps, conflictSteps } from '$lib/data/sandbox-steps';
 </script>
 
-<section id="part-5" class="py-20">
-	<div class="mx-auto max-w-4xl px-6">
-		<div class="mb-12 flex items-center gap-3">
-			<div
-				class="flex h-10 w-10 items-center justify-center rounded-xl"
-				style="background: var(--color-important-bg); color: var(--color-important);"
-			>
-				<Layers size={22} />
-			</div>
-			<div>
-				<p class="text-sm font-medium" style="color: var(--color-important);">Part 5</p>
-				<h2 class="text-2xl font-bold" style="color: var(--color-text);">
-					Advanced Scenarios: Managing a Multi-Branch Workflow
-				</h2>
-			</div>
-		</div>
+<section id="part-5" class="border-t py-16" style="border-color: var(--color-border-light);">
+	<div class="mx-auto max-w-3xl px-6">
+		<SectionHeader
+			icon={Layers}
+			partLabel="Part 5"
+			title="Advanced Scenarios: Managing a Multi-Branch Workflow"
+			color="var(--color-important)"
+		/>
 
 		<Callout type="note">
 			{#snippet children()}
@@ -33,13 +26,8 @@
 		</Callout>
 
 		<!-- 5.1 Stash -->
-		<div id="section-5-1" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<Archive size={18} style="color: var(--color-important);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					5.1 "I Need to Switch Branches, but My Work Isn't Ready"
-				</h3>
-			</div>
+		<div id="section-5-1" class="mb-14">
+			<SectionHeader level="section" icon={Archive} title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;" color="var(--color-important)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -69,7 +57,7 @@ git switch feature/A
 git stash pop`}
 			/>
 
-			<p class="my-4 text-sm" style="color: var(--color-text-secondary);">
+			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git stash pop</code> re-applies
 				your changes and removes them from the stash. Use
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git stash apply</code> to keep
@@ -87,13 +75,8 @@ git stash pop`}
 		</div>
 
 		<!-- 5.2 Rebase vs Merge -->
-		<div id="section-5-2" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<GitMerge size={18} style="color: var(--color-important);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					5.2 "My Branch is Out of Date" (Rebase vs. Merge)
-				</h3>
-			</div>
+		<div id="section-5-2" class="mb-14">
+			<SectionHeader level="section" icon={GitMerge} title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)" color="var(--color-important)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -104,10 +87,10 @@ git stash pop`}
 
 			<div class="mb-6 grid gap-4 sm:grid-cols-2">
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<h4 class="mb-2 text-base font-semibold" style="color: var(--color-note);">
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-note);">
 						git merge main
 					</h4>
-					<p class="mb-2 text-sm" style="color: var(--color-text-secondary);">
+					<p class="mb-2 text-[13px]" style="color: var(--color-text-secondary);">
 						Creates a new "Merge Commit" on your branch. Preserves the exact history -- messy but
 						100% accurate.
 					</p>
@@ -116,10 +99,10 @@ git stash pop`}
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<h4 class="mb-2 text-base font-semibold" style="color: var(--color-important);">
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-important);">
 						git rebase main
 					</h4>
-					<p class="mb-2 text-sm" style="color: var(--color-text-secondary);">
+					<p class="mb-2 text-[13px]" style="color: var(--color-text-secondary);">
 						"Replays" your commits on top of the latest main. Creates a clean, linear history
 						as if you started today.
 					</p>
@@ -152,12 +135,7 @@ git stash pop`}
 
 		<!-- 5.3 Merge Conflicts -->
 		<div id="section-5-3" class="mb-8">
-			<div class="mb-4 flex items-center gap-2">
-				<FileWarning size={18} style="color: var(--color-important);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					5.3 "We Both Edited the Same File" (Merge Conflicts)
-				</h3>
-			</div>
+			<SectionHeader level="section" icon={FileWarning} title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)" color="var(--color-important)" />
 
 			<Callout type="warning">
 				{#snippet children()}
@@ -167,7 +145,7 @@ git stash pop`}
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-3 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
 				The Conflict Markers
 			</h4>
 			<CodeBlock
@@ -182,14 +160,14 @@ const x = 5;
 >>>>>>> origin/main`}
 			/>
 
-			<p class="my-4 text-sm" style="color: var(--color-text-secondary);">
+			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
 				Delete all the markers (<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">&lt;&lt;&lt;</code>,
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">===</code>,
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">&gt;&gt;&gt;</code>) and edit the code to
 				be the correct final version, then stage and commit.
 			</p>
 
-			<h4 class="mb-3 mt-6 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-3 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
 				The VS Code Way (The Superior Way)
 			</h4>
 

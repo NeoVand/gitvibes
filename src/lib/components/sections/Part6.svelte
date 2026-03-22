@@ -3,24 +3,17 @@
 	import Callout from '../ui/Callout.svelte';
 	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
+	import SectionHeader from '../ui/SectionHeader.svelte';
 </script>
 
-<section id="part-6" class="py-20">
-	<div class="mx-auto max-w-4xl px-6">
-		<div class="mb-12 flex items-center gap-3">
-			<div
-				class="flex h-10 w-10 items-center justify-center rounded-xl"
-				style="background: var(--color-note-bg); color: var(--color-note);"
-			>
-				<Monitor size={22} />
-			</div>
-			<div>
-				<p class="text-sm font-medium" style="color: var(--color-note);">Part 6</p>
-				<h2 class="text-2xl font-bold" style="color: var(--color-text);">
-					Your AI-Assisted Cockpit: Mastering Git in VS Code
-				</h2>
-			</div>
-		</div>
+<section id="part-6" class="border-t py-16" style="border-color: var(--color-border-light);">
+	<div class="mx-auto max-w-3xl px-6">
+		<SectionHeader
+			icon={Monitor}
+			partLabel="Part 6"
+			title="Your AI-Assisted Cockpit: Mastering Git in VS Code"
+			color="var(--color-note)"
+		/>
 
 		<MermaidDiagram
 			definition={`graph TD
@@ -43,14 +36,8 @@
 		</Callout>
 
 		<!-- 6.1 Source Control View -->
-		<div id="section-6-1" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<Layout size={18} style="color: var(--color-note);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					6.1 The Source Control View
-					<kbd class="ml-2 rounded border px-1.5 py-0.5 text-xs font-normal" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+G</kbd>
-				</h3>
-			</div>
+		<div id="section-6-1" class="mb-14">
+			<SectionHeader level="section" icon={Layout} title="6.1 The Source Control View" color="var(--color-note)" />
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
 				This is your command center. Everything you've learned maps directly to the UI:
@@ -58,27 +45,27 @@
 
 			<div class="mb-6 grid gap-3 sm:grid-cols-2">
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-text);">Changes</p>
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Changes</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your working directory (<code class="text-xs" style="font-family: var(--font-mono);">git status</code>).
 						Modified and untracked files appear here.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-text);">Staged Changes</p>
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Staged Changes</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your staging area. Files you've approved for the next commit.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-text);">Commit Box</p>
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Commit Box</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your <code class="text-xs" style="font-family: var(--font-mono);">git commit -m "..."</code>. Type the message
 						and click the checkmark.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-text);">... Menu</p>
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">... Menu</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						All advanced commands: Pull, Push, Stash, Commit (Amend), Branch, Revert, and more.
 					</p>
@@ -91,13 +78,8 @@
 		</div>
 
 		<!-- 6.2 Timeline & GitLens -->
-		<div id="section-6-2" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<Clock size={18} style="color: var(--color-note);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					6.2 The Timeline View & GitLens
-				</h3>
-			</div>
+		<div id="section-6-2" class="mb-14">
+			<SectionHeader level="section" icon={Clock} title="6.2 The Timeline View & GitLens" color="var(--color-note)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -126,12 +108,7 @@
 
 		<!-- 6.3 3-Way Merge Editor -->
 		<div id="section-6-3" class="mb-8">
-			<div class="mb-4 flex items-center gap-2">
-				<Columns size={18} style="color: var(--color-note);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					6.3 The 3-Way Merge Editor
-				</h3>
-			</div>
+			<SectionHeader level="section" icon={Columns} title="6.3 The 3-Way Merge Editor" color="var(--color-note)" />
 
 			<Callout type="important">
 				{#snippet children()}
@@ -150,21 +127,21 @@
 				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
 					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-note);"></div>
 					<div>
-						<span class="text-sm font-medium" style="color: var(--color-text);">Left Pane: "Incoming"</span>
+						<span class="text-[13px] font-medium" style="color: var(--color-text);">Left Pane: "Incoming"</span>
 						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">Your teammate's changes</span>
 					</div>
 				</div>
 				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
 					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-tip);"></div>
 					<div>
-						<span class="text-sm font-medium" style="color: var(--color-text);">Right Pane: "Current"</span>
+						<span class="text-[13px] font-medium" style="color: var(--color-text);">Right Pane: "Current"</span>
 						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">Your local changes</span>
 					</div>
 				</div>
 				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
 					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-important);"></div>
 					<div>
-						<span class="text-sm font-medium" style="color: var(--color-text);">Bottom Pane: "Result"</span>
+						<span class="text-[13px] font-medium" style="color: var(--color-text);">Bottom Pane: "Result"</span>
 						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">The final merged output</span>
 					</div>
 				</div>

@@ -5,25 +5,18 @@
 	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
+	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { branchingSteps } from '$lib/data/sandbox-steps';
 </script>
 
-<section id="part-3" class="py-20">
-	<div class="mx-auto max-w-4xl px-6">
-		<div class="mb-12 flex items-center gap-3">
-			<div
-				class="flex h-10 w-10 items-center justify-center rounded-xl"
-				style="background: var(--color-note-bg); color: var(--color-note);"
-			>
-				<GitBranch size={22} />
-			</div>
-			<div>
-				<p class="text-sm font-medium" style="color: var(--color-note);">Part 3</p>
-				<h2 class="text-2xl font-bold" style="color: var(--color-text);">
-					Parallel Universes: Branching for AI Experiments
-				</h2>
-			</div>
-		</div>
+<section id="part-3" class="border-t py-16" style="border-color: var(--color-border-light);">
+	<div class="mx-auto max-w-3xl px-6">
+		<SectionHeader
+			icon={GitBranch}
+			partLabel="Part 3"
+			title="Parallel Universes: Branching for AI Experiments"
+			color="var(--color-note)"
+		/>
 
 		<Callout type="important">
 			{#snippet children()}
@@ -36,13 +29,8 @@
 		</Callout>
 
 		<!-- 3.1 Creating Branches -->
-		<div id="section-3-1" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<GitBranch size={18} style="color: var(--color-note);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					3.1 "I Have a New Idea (or AI Prompt)"
-				</h3>
-			</div>
+		<div id="section-3-1" class="mb-14">
+			<SectionHeader level="section" icon={GitBranch} title="3.1 &quot;I Have a New Idea (or AI Prompt)&quot;" color="var(--color-note)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -76,13 +64,8 @@
 		</div>
 
 		<!-- 3.2 Syncing -->
-		<div id="section-3-2" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<RefreshCcw size={18} style="color: var(--color-note);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					3.2 "My Teammate Pushed Updates" (Syncing)
-				</h3>
-			</div>
+		<div id="section-3-2" class="mb-14">
+			<SectionHeader level="section" icon={RefreshCcw} title="3.2 &quot;My Teammate Pushed Updates&quot; (Syncing)" color="var(--color-note)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -92,7 +75,7 @@
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-2 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 1: The "Safe" Sync (fetch + merge)
 			</h4>
 			<CodeBlock
@@ -101,7 +84,7 @@
 git merge origin/main   # Merge the updates into your branch`}
 			/>
 
-			<h4 class="mb-2 mt-6 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-2 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 2: The "Easy" Sync (pull)
 			</h4>
 			<CodeBlock
@@ -120,12 +103,7 @@ git merge origin/main   # Merge the updates into your branch`}
 
 		<!-- 3.3 Pull Requests -->
 		<div id="section-3-3" class="mb-8">
-			<div class="mb-4 flex items-center gap-2">
-				<GitPullRequest size={18} style="color: var(--color-note);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					3.3 "My AI-Generated Feature is Ready" (The Pull Request)
-				</h3>
-			</div>
+			<SectionHeader level="section" icon={GitPullRequest} title="3.3 &quot;My AI-Generated Feature is Ready&quot; (The Pull Request)" color="var(--color-note)" />
 
 			<Callout type="note">
 				{#snippet children()}

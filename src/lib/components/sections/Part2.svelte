@@ -5,36 +5,27 @@
 	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
+	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { coreLoopSteps } from '$lib/data/sandbox-steps';
 </script>
 
-<section id="part-2" class="py-20">
-	<div class="mx-auto max-w-4xl px-6">
-		<div class="mb-12 flex items-center gap-3">
-			<div
-				class="flex h-10 w-10 items-center justify-center rounded-xl"
-				style="background: var(--color-tip-bg); color: var(--color-tip);"
-			>
-				<RefreshCw size={22} />
-			</div>
-			<div>
-				<p class="text-sm font-medium" style="color: var(--color-tip);">Part 2</p>
-				<h2 class="text-2xl font-bold" style="color: var(--color-text);">
-					The Core Safety Loop: Your "Save Game" for AI Coding
-				</h2>
-			</div>
-		</div>
+<section id="part-2" class="border-t py-16" style="border-color: var(--color-border-light);">
+	<div class="mx-auto max-w-3xl px-6">
+		<SectionHeader
+			icon={RefreshCw}
+			partLabel="Part 2"
+			title="The Core Safety Loop: Your &quot;Save Game&quot; for AI Coding"
+			color="var(--color-tip)"
+		/>
 
 		<MermaidDiagram
 			definition={`graph LR
-  A(["AI Generates Code"]) --> B(["Status: Review"])
-  B --> C{"Approve?"}
-  C -->|No| D(["Discard/Modify"])
-  C -->|Yes| E(["Stage Changes"])
-  D --> A
-  E --> F(["Commit: Save Point"])
-  F --> G(["Push to Remote"])
-  G --> H(["Create Pull Request"])`}
+  A(["AI Code"]) --> B(["Status"])
+  B --> C{"OK?"}
+  C -->|No| A
+  C -->|Yes| D(["Stage"])
+  D --> E(["Commit"])
+  E --> F(["Push"])`}
 			id="core-loop-overview"
 		/>
 
@@ -47,13 +38,8 @@
 		</Callout>
 
 		<!-- 2.1 git status -->
-		<div id="section-2-1" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<Eye size={18} style="color: var(--color-tip);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					2.1 "What Did the AI Just Do?"
-				</h3>
-			</div>
+		<div id="section-2-1" class="mb-14">
+			<SectionHeader level="section" icon={Eye} title="2.1 &quot;What Did the AI Just Do?&quot;" color="var(--color-tip)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -72,7 +58,7 @@
 					class="rounded-lg p-4"
 					style="background: var(--color-caution-bg); border: 1px solid var(--color-caution);"
 				>
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-caution);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						"Changes not staged" (Red)
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -83,7 +69,7 @@
 					class="rounded-lg p-4"
 					style="background: var(--color-caution-bg); border: 1px solid var(--color-caution);"
 				>
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-caution);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						"Untracked files" (Red)
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -98,13 +84,8 @@
 		</div>
 
 		<!-- 2.2 Staging -->
-		<div id="section-2-2" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<FolderPlus size={18} style="color: var(--color-tip);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					2.2 Reviewing and Staging the AI's Work
-				</h3>
-			</div>
+		<div id="section-2-2" class="mb-14">
+			<SectionHeader level="section" icon={FolderPlus} title="2.2 Reviewing and Staging the AI's Work" color="var(--color-tip)" />
 
 			<Callout type="warning">
 				{#snippet children()}
@@ -114,7 +95,7 @@
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-2 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 1: Stage All (the "trusting" add)
 			</h4>
 			<CodeBlock code="git add ." title="Stage everything" />
@@ -125,12 +106,12 @@
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-2 mt-6 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-2 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 2: Stage One File (the "surgical" add)
 			</h4>
 			<CodeBlock code="git add src/my_file.py" title="Stage specific file" />
 
-			<h4 class="mb-2 mt-6 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-2 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 3: Stage Parts of a File (the "AI-first developer's" add)
 			</h4>
 			<Callout type="tip">
@@ -142,7 +123,7 @@
 			</Callout>
 			<CodeBlock code="git add --patch  # or git add -p" title="Interactive staging" />
 
-			<p class="mb-4 mt-4 text-sm" style="color: var(--color-text-secondary);">
+			<p class="mb-4 mt-4 text-[13px]" style="color: var(--color-text-secondary);">
 				For each hunk, Git asks: <code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">y</code> (stage),
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">n</code> (skip),
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">s</code> (split into smaller pieces),
@@ -156,12 +137,7 @@
 
 		<!-- 2.3 Committing -->
 		<div id="section-2-3" class="mb-8">
-			<div class="mb-4 flex items-center gap-2">
-				<Save size={18} style="color: var(--color-tip);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					2.3 Creating the Save Point
-				</h3>
-			</div>
+			<SectionHeader level="section" icon={Save} title="2.3 Creating the Save Point" color="var(--color-tip)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -187,7 +163,7 @@
 				class="my-4 overflow-hidden rounded-lg border"
 				style="border-color: var(--color-border);"
 			>
-				<table class="w-full text-sm">
+				<table class="w-full text-[13px]">
 					<thead>
 						<tr style="background: var(--color-bg-tertiary);">
 							<th class="px-4 py-2 text-left font-semibold" style="color: var(--color-text);">Type</th>

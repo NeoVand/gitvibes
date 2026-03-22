@@ -8,13 +8,16 @@
 		Monitor,
 		BookOpen,
 		ChevronRight,
-		Rocket
+		Rocket,
+		PanelLeftClose,
+		PanelLeft
 	} from 'lucide-svelte';
+
 	let {
 		open = false,
 		activeSection = '',
-		onClose
-	}: { open: boolean; activeSection: string; onClose: () => void } = $props();
+		onToggle
+	}: { open: boolean; activeSection: string; onToggle: () => void } = $props();
 
 	interface SectionItem {
 		id: string;
@@ -119,15 +122,16 @@
 		const el = document.getElementById(id);
 		if (el) {
 			el.scrollIntoView({ behavior: 'smooth' });
-			if (window.innerWidth < 1024) onClose();
+			if (window.innerWidth < 1024) onToggle();
 		}
 	}
 
 	function isActive(sectionId: string): boolean {
-		return activeSection === sectionId || activeSection.startsWith(sectionId.replace('part-', 'section-'));
+		if (activeSection === sectionId) return true;
+		const partNum = sectionId.replace('part-', '');
+		return activeSection.startsWith(`section-${partNum}-`);
 	}
 
-	// Auto-expand the section containing the active subsection
 	$effect(() => {
 		for (const section of sections) {
 			if (section.children?.some((c) => c.id === activeSection)) {
@@ -140,22 +144,40 @@
 <!-- Backdrop on mobile -->
 {#if open}
 	<button
-		class="fixed inset-0 z-40 bg-black/50 lg:hidden"
-		onclick={onClose}
+		class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+		onclick={onToggle}
 		aria-label="Close sidebar"
 	></button>
 {/if}
 
 <aside
-	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col overflow-y-auto border-r transition-transform duration-300"
+	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col border-r transition-transform duration-200 ease-out"
 	style="width: var(--sidebar-width); padding-top: var(--header-height); border-color: var(--color-border); background: var(--color-bg-secondary);"
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
 >
-	<nav class="flex-1 px-3 py-4">
+	<!-- Sidebar header with collapse -->
+	<div
+		class="flex items-center justify-between border-b px-4 py-3"
+		style="border-color: var(--color-border);"
+	>
+		<span class="text-xs font-semibold tracking-wider uppercase" style="color: var(--color-text-muted); letter-spacing: 0.08em;">
+			Contents
+		</span>
+		<button
+			onclick={onToggle}
+			class="flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+			style="color: var(--color-text-muted);"
+			aria-label="Collapse sidebar"
+		>
+			<PanelLeftClose size={15} />
+		</button>
+	</div>
+
+	<nav class="flex-1 overflow-y-auto px-3 py-3">
 		{#each sections as section}
 			{@const active = isActive(section.id)}
-			<div class="mb-1">
+			<div class="mb-0.5">
 				<button
 					onclick={() => {
 						if (section.children) {
@@ -165,28 +187,28 @@
 							scrollTo(section.id);
 						}
 					}}
-					class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors"
-					style="color: {active ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
+					class="flex w-full items-center gap-2 rounded-md px-2.5 py-[7px] text-left text-[13px] transition-colors"
+					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'}; font-weight: {active ? '600' : '500'};"
 				>
-					<section.icon size={16} />
-					<span class="flex-1 font-medium">{section.label}</span>
+					<svelte:component this={section.icon} size={14} strokeWidth={active ? 2.5 : 2} />
+					<span class="flex-1">{section.label}</span>
 					{#if section.children}
 						<ChevronRight
-							size={14}
-							class="transition-transform"
-							style="transform: rotate({expandedSections.has(section.id) ? '90deg' : '0deg'});"
+							size={12}
+							class="transition-transform duration-150"
+							style="transform: rotate({expandedSections.has(section.id) ? '90deg' : '0deg'}); opacity: 0.5;"
 						/>
 					{/if}
 				</button>
 
 				{#if section.children && expandedSections.has(section.id)}
-					<div class="mt-1 ml-6 space-y-0.5 border-l pl-3" style="border-color: var(--color-border);">
+					<div class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5" style="border-color: var(--color-border);">
 						{#each section.children as child}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="block w-full rounded-md px-2.5 py-1.5 text-left text-xs transition-colors"
-								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-muted)'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
+								class="block w-full rounded-md px-2 py-[5px] text-left text-xs transition-colors"
+								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
 							>
 								{child.label}
 							</button>
@@ -197,3 +219,15 @@
 		{/each}
 	</nav>
 </aside>
+
+<!-- Collapsed sidebar toggle -->
+{#if !open}
+	<button
+		onclick={onToggle}
+		class="fixed z-40 flex h-8 w-8 items-center justify-center rounded-md border transition-colors"
+		style="top: calc(var(--header-height) + 12px); left: 12px; background: var(--color-surface); border-color: var(--color-border); color: var(--color-text-muted);"
+		aria-label="Open sidebar"
+	>
+		<PanelLeft size={15} />
+	</button>
+{/if}

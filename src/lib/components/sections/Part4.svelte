@@ -5,25 +5,18 @@
 	import VsCodePlaceholder from '../ui/VsCodePlaceholder.svelte';
 	import Sandbox from '../ui/Sandbox.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
+	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { undoSteps } from '$lib/data/sandbox-steps';
 </script>
 
-<section id="part-4" class="py-20">
-	<div class="mx-auto max-w-4xl px-6">
-		<div class="mb-12 flex items-center gap-3">
-			<div
-				class="flex h-10 w-10 items-center justify-center rounded-xl"
-				style="background: var(--color-warning-bg); color: var(--color-warning);"
-			>
-				<Undo2 size={22} />
-			</div>
-			<div>
-				<p class="text-sm font-medium" style="color: var(--color-warning);">Part 4</p>
-				<h2 class="text-2xl font-bold" style="color: var(--color-text);">
-					The "Undo" Toolkit: Reversing AI Mistakes
-				</h2>
-			</div>
-		</div>
+<section id="part-4" class="border-t py-16" style="border-color: var(--color-border-light);">
+	<div class="mx-auto max-w-3xl px-6">
+		<SectionHeader
+			icon={Undo2}
+			partLabel="Part 4"
+			title="The &quot;Undo&quot; Toolkit: Reversing AI Mistakes"
+			color="var(--color-warning)"
+		/>
 
 		<Callout type="important">
 			{#snippet children()}
@@ -34,13 +27,8 @@
 		</Callout>
 
 		<!-- 4.1 Discard Local -->
-		<div id="section-4-1" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<Trash2 size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.1 "Discard This Mess" (Local, Not Committed)
-				</h3>
-			</div>
+		<div id="section-4-1" class="mb-14">
+			<SectionHeader level="section" icon={Trash2} title="4.1 &quot;Discard This Mess&quot; (Local, Not Committed)" color="var(--color-warning)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -68,13 +56,8 @@ git restore src/bad_file.py  # Discard a single file`}
 		</div>
 
 		<!-- 4.2 Unstage -->
-		<div id="section-4-2" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<MinusCircle size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.2 "I Staged This by Accident" (Staged, Not Committed)
-				</h3>
-			</div>
+		<div id="section-4-2" class="mb-14">
+			<SectionHeader level="section" icon={MinusCircle} title="4.2 &quot;I Staged This by Accident&quot; (Staged, Not Committed)" color="var(--color-warning)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -95,13 +78,8 @@ git restore src/bad_file.py  # Discard a single file`}
 		</div>
 
 		<!-- 4.3 Amend -->
-		<div id="section-4-3" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<PenLine size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.3 "I Forgot a File in My Last Commit"
-				</h3>
-			</div>
+		<div id="section-4-3" class="mb-14">
+			<SectionHeader level="section" icon={PenLine} title="4.3 &quot;I Forgot a File in My Last Commit&quot;" color="var(--color-warning)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -132,13 +110,8 @@ git commit --amend`}
 		</div>
 
 		<!-- 4.4 Reset -->
-		<div id="section-4-4" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<RotateCcw size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.4 "Nuke This Whole Feature" (Locally, Committed)
-				</h3>
-			</div>
+		<div id="section-4-4" class="mb-14">
+			<SectionHeader level="section" icon={RotateCcw} title="4.4 &quot;Nuke This Whole Feature&quot; (Locally, Committed)" color="var(--color-warning)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -152,13 +125,13 @@ git commit --amend`}
 				code={`git reset --hard HEAD~3   # Delete last 3 commits + all changes`}
 			/>
 
-			<h4 class="mb-3 mt-6 text-base font-semibold" style="color: var(--color-text);">
+			<h4 class="mb-3 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
 				The "Safer" Resets
 			</h4>
 
 			<div class="mb-4 space-y-3">
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-important);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-important);">
 						<code class="text-xs" style="font-family: var(--font-mono);">--soft</code>: Keep changes staged
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -166,7 +139,7 @@ git commit --amend`}
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-warning);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-warning);">
 						<code class="text-xs" style="font-family: var(--font-mono);">--mixed</code> (default): Keep changes unstaged
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -174,7 +147,7 @@ git commit --amend`}
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-caution);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						<code class="text-xs" style="font-family: var(--font-mono);">--hard</code>: Destroy everything
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -193,13 +166,8 @@ git commit --amend`}
 		</div>
 
 		<!-- 4.5 Revert -->
-		<div id="section-4-5" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<Undo2 size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.5 "I Pushed a Bug to the Team!" (Public, Pushed)
-				</h3>
-			</div>
+		<div id="section-4-5" class="mb-14">
+			<SectionHeader level="section" icon={Undo2} title="4.5 &quot;I Pushed a Bug to the Team!&quot; (Public, Pushed)" color="var(--color-warning)" />
 
 			<Callout type="caution">
 				{#snippet children()}
@@ -249,13 +217,8 @@ git push                   # Push the revert`}
 		</div>
 
 		<!-- 4.6 Force Push -->
-		<div id="section-4-6" class="mb-16">
-			<div class="mb-4 flex items-center gap-2">
-				<AlertTriangle size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.6 The "Break Glass" Command
-				</h3>
-			</div>
+		<div id="section-4-6" class="mb-14">
+			<SectionHeader level="section" icon={AlertTriangle} title="4.6 The &quot;Break Glass&quot; Command" color="var(--color-warning)" />
 
 			<Callout type="warning">
 				{#snippet children()}
@@ -267,7 +230,7 @@ git push                   # Push the revert`}
 
 			<div class="mb-4 grid gap-3 sm:grid-cols-2">
 				<div class="rounded-lg p-4" style="background: var(--color-caution-bg); border: 1px solid var(--color-caution);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-caution);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						<code class="text-xs" style="font-family: var(--font-mono);">git push --force</code>
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -276,7 +239,7 @@ git push                   # Push the revert`}
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-tip-bg); border: 1px solid var(--color-tip);">
-					<p class="mb-1 text-sm font-semibold" style="color: var(--color-tip);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-tip);">
 						<code class="text-xs" style="font-family: var(--font-mono);">git push --force-with-lease</code>
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
@@ -289,12 +252,7 @@ git push                   # Push the revert`}
 
 		<!-- 4.7 Recovery Matrix -->
 		<div id="section-4-7" class="mb-8">
-			<div class="mb-4 flex items-center gap-2">
-				<Table size={18} style="color: var(--color-warning);" />
-				<h3 class="text-xl font-semibold" style="color: var(--color-text);">
-					4.7 The Git "Undo" Recovery Matrix
-				</h3>
-			</div>
+			<SectionHeader level="section" icon={Table} title="4.7 The Git &quot;Undo&quot; Recovery Matrix" color="var(--color-warning)" />
 
 			<div
 				class="my-4 overflow-x-auto rounded-lg border"

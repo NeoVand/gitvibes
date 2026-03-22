@@ -20,58 +20,25 @@ Changes not staged for commit:
 
 Untracked files:
 \tnew file:   src/middleware.py`,
-		diagram: `graph TD
-  subgraph WD["Working Directory"]
-    F1["auth.py"] & F2["routes.py"] & F3["test_auth.py"] & F4["middleware.py"]
-  end
-  subgraph SA["Staging Area"]
-    E1["(empty)"]
-  end
-  subgraph R["Repository"]
-    C1["Initial setup"]
-  end
-  WD -.->|"git add"| SA -.->|"git commit"| R
-  style WD fill:#fef2f2,stroke:#ef4444
-  style SA fill:#fffbeb,stroke:#f59e0b
-  style R fill:#ecfdf5,stroke:#10b981`
+		diagram: `graph LR
+  A["Working Dir"] -->|4 files| B["Staging"]
+  B -.->|empty| C["Repository"]`
 	},
 	{
 		command: 'git add src/auth.py src/routes.py',
 		description: 'Stage the files you reviewed and approved',
 		output: '',
-		diagram: `graph TD
-  subgraph WD["Working Directory"]
-    F3["test_auth.py"] & F4["middleware.py"]
-  end
-  subgraph SA["Staging Area"]
-    S1["auth.py"] & S2["routes.py"]
-  end
-  subgraph R["Repository"]
-    C1["Initial setup"]
-  end
-  WD -.->|"git add"| SA -.->|"git commit"| R
-  style WD fill:#fef2f2,stroke:#ef4444
-  style SA fill:#fffbeb,stroke:#f59e0b
-  style R fill:#ecfdf5,stroke:#10b981`
+		diagram: `graph LR
+  A["Working Dir"] -->|"git add"| B["Staging"]
+  B -.-> C["Repository"]`
 	},
 	{
 		command: 'git add .',
 		description: 'Stage all remaining changes',
 		output: '',
-		diagram: `graph TD
-  subgraph WD["Working Directory"]
-    E2["(clean)"]
-  end
-  subgraph SA["Staging Area"]
-    S1["auth.py"] & S2["routes.py"] & S3["test_auth.py"] & S4["middleware.py"]
-  end
-  subgraph R["Repository"]
-    C1["Initial setup"]
-  end
-  WD -.->|"git add"| SA -.->|"git commit"| R
-  style WD fill:#ecfdf5,stroke:#10b981
-  style SA fill:#fffbeb,stroke:#f59e0b
-  style R fill:#ecfdf5,stroke:#10b981`
+		diagram: `graph LR
+  A["Working Dir"] -->|"git add ."| B["Staging"]
+  B -.-> C["Repository"]`
 	},
 	{
 		command: 'git commit -m "feat: Add user authentication endpoint"',
@@ -79,20 +46,9 @@ Untracked files:
 		output: `[feature/add-auth a1b2c3d] feat: Add user authentication endpoint
  4 files changed, 127 insertions(+), 3 deletions(-)
  create mode 100644 src/middleware.py`,
-		diagram: `graph TD
-  subgraph WD["Working Directory"]
-    E2["(clean)"]
-  end
-  subgraph SA["Staging Area"]
-    E1["(empty)"]
-  end
-  subgraph R["Repository"]
-    C1["Initial setup"] --> C2["feat: Add auth"]
-  end
-  WD -.->|"git add"| SA -.->|"git commit"| R
-  style WD fill:#ecfdf5,stroke:#10b981
-  style SA fill:#ecfdf5,stroke:#10b981
-  style R fill:#ecfdf5,stroke:#10b981`
+		diagram: `graph LR
+  A["Working Dir"] --> B["Staging"]
+  B -->|"git commit"| C["Repository"]`
 	}
 ];
 
@@ -177,58 +133,31 @@ Changes not staged for commit:
 \tmodified:   src/model.py
 \tmodified:   src/utils.py
 \tmodified:   src/config.py`,
-		diagram: `graph TD
-  A["Mistake Detected"] --> B{"Where is it?"}
-  B -->|"Local, Not Committed"| C["git restore"]
-  B -->|"Staged, Not Committed"| D["git restore --staged"]
-  B -->|"Committed, Not Pushed"| E{"Keep Changes?"}
-  B -->|"Pushed to Team"| F["git revert"]
-  style C fill:#10b981,color:#fff
-  style A fill:#ef4444,color:#fff`
+		diagram: `graph LR
+  A["Working Dir"] -->|modified| B["model.py"]
+  A -->|modified| C["utils.py"]
+  A -->|modified| D["config.py"]`
 	},
 	{
 		command: 'git restore src/model.py',
 		description: 'Scenario 1: Discard local changes to one file',
 		output: ``,
-		diagram: `graph TD
-  A["Mistake Detected"] --> B{"Where is it?"}
-  B -->|"Local, Not Committed"| C["git restore"]
-  B -->|"Staged, Not Committed"| D["git restore --staged"]
-  B -->|"Committed, Not Pushed"| E{"Keep Changes?"}
-  B -->|"Pushed to Team"| F["git revert"]
-  C --> I["Changes Discarded"]
-  style C fill:#10b981,color:#fff
-  style I fill:#10b981,color:#fff`
+		diagram: `graph LR
+  A["model.py"] -->|"git restore"| B["Last Commit"]`
 	},
 	{
 		command: 'git restore --staged src/utils.py',
 		description: 'Scenario 2: Unstage a file staged by accident',
 		output: ``,
-		diagram: `graph TD
-  A["Mistake Detected"] --> B{"Where is it?"}
-  B -->|"Local, Not Committed"| C["git restore"]
-  B -->|"Staged, Not Committed"| D["git restore --staged"]
-  B -->|"Committed, Not Pushed"| E{"Keep Changes?"}
-  B -->|"Pushed to Team"| F["git revert"]
-  D --> J["File Unstaged"]
-  style D fill:#f59e0b,color:#fff
-  style J fill:#f59e0b,color:#fff`
+		diagram: `graph LR
+  A["Staged"] -->|"git restore --staged"| B["Unstaged"]`
 	},
 	{
 		command: 'git reset --soft HEAD~1',
 		description: 'Scenario 4: Undo last commit but keep changes',
 		output: ``,
-		diagram: `graph TD
-  A["Mistake Detected"] --> B{"Where is it?"}
-  B -->|"Local, Not Committed"| C["git restore"]
-  B -->|"Staged, Not Committed"| D["git restore --staged"]
-  B -->|"Committed, Not Pushed"| E{"Keep Changes?"}
-  B -->|"Pushed to Team"| F["git revert"]
-  E -->|"Yes"| G["git reset --soft"]
-  G --> K["Changes Back to Staging"]
-  style E fill:#8b5cf6,color:#fff
-  style G fill:#8b5cf6,color:#fff
-  style K fill:#8b5cf6,color:#fff`
+		diagram: `graph LR
+  A["Commit"] -->|"git reset --soft"| B["Staging Area"]`
 	},
 	{
 		command: 'git revert a1b2c3d',
@@ -236,10 +165,9 @@ Changes not staged for commit:
 		output: `[main e5f6a7b] Revert "feat: Add buggy AI feature"
  2 files changed, 3 deletions(-)`,
 		diagram: `gitGraph
-  commit id: "Good commit"
-  commit id: "Bad commit" type: REVERSE
-  commit id: "Revert bad commit" type: HIGHLIGHT
-  commit id: "Continue work"`
+  commit id: "Good"
+  commit id: "Bad" type: REVERSE
+  commit id: "Revert" type: HIGHLIGHT`
 	}
 ];
 
@@ -382,14 +310,11 @@ export const conflictSteps: SandboxStep[] = [
 CONFLICT (content): Merge conflict in src/model.py
 Automatic merge failed; fix conflicts and then commit the result.`,
 		diagram: `graph TD
-  A["git pull / merge / rebase"] --> B["CONFLICT detected"]
-  B --> C["git status: see unmerged files"]
-  C --> D["Open file: see conflict markers"]
-  D --> E["Edit file: choose correct code"]
-  E --> F["git add src/model.py"]
-  F --> G["git commit"]
-  style B fill:#ef4444,color:#fff
-  style A fill:#6366f1,color:#fff`
+  A["Pull"] --> B["CONFLICT"]
+  B -.-> C["Status"]
+  C -.-> D["Fix"]
+  D -.-> E["Stage"]
+  E -.-> F["Commit"]`
 	},
 	{
 		command: 'git status',
@@ -402,14 +327,11 @@ Unmerged paths:
   (use "git add <file>..." to mark resolution)
 \tboth modified:   src/model.py`,
 		diagram: `graph TD
-  A["git pull / merge / rebase"] --> B["CONFLICT detected"]
-  B --> C["git status: see unmerged files"]
-  C --> D["Open file: see conflict markers"]
-  D --> E["Edit file: choose correct code"]
-  E --> F["git add src/model.py"]
-  F --> G["git commit"]
-  style B fill:#ef4444,color:#fff
-  style C fill:#f59e0b,color:#fff`
+  A["Pull"] --> B["CONFLICT"]
+  B --> C["Status"]
+  C -.-> D["Fix"]
+  D -.-> E["Stage"]
+  E -.-> F["Commit"]`
 	},
 	{
 		command: 'code src/model.py',
@@ -422,41 +344,32 @@ const x = 10;
 const x = 5;
 >>>>>>> origin/main`,
 		diagram: `graph TD
-  A["git pull / merge / rebase"] --> B["CONFLICT detected"]
-  B --> C["git status: see unmerged files"]
-  C --> D["Open file: see conflict markers"]
-  D --> E["Edit file: choose correct code"]
-  E --> F["git add src/model.py"]
-  F --> G["git commit"]
-  style B fill:#ef4444,color:#fff
-  style D fill:#f59e0b,color:#fff`
+  A["Pull"] --> B["CONFLICT"]
+  B --> C["Status"]
+  C --> D["Fix"]
+  D -.-> E["Stage"]
+  E -.-> F["Commit"]`
 	},
 	{
 		command: 'git add src/model.py',
 		description: 'Mark the conflict as resolved',
 		output: ``,
 		diagram: `graph TD
-  A["git pull / merge / rebase"] --> B["CONFLICT detected"]
-  B --> C["git status: see unmerged files"]
-  C --> D["Open file: see conflict markers"]
-  D --> E["Edit file: choose correct code"]
-  E --> F["git add src/model.py"]
-  F --> G["git commit"]
-  style B fill:#ef4444,color:#fff
-  style F fill:#10b981,color:#fff`
+  A["Pull"] --> B["CONFLICT"]
+  B --> C["Status"]
+  C --> D["Fix"]
+  D --> E["Stage"]
+  E -.-> F["Commit"]`
 	},
 	{
 		command: 'git commit -m "fix: Resolve merge conflict in model.py"',
 		description: 'Finalize the merge',
 		output: `[feature/ai-experiment g8h9i0j] fix: Resolve merge conflict in model.py`,
 		diagram: `graph TD
-  A["git pull / merge / rebase"] --> B["CONFLICT detected"]
-  B --> C["git status: see unmerged files"]
-  C --> D["Open file: see conflict markers"]
-  D --> E["Edit file: choose correct code"]
-  E --> F["git add src/model.py"]
-  F --> G["git commit"]
-  style B fill:#ef4444,color:#fff
-  style G fill:#10b981,color:#fff`
+  A["Pull"] --> B["CONFLICT"]
+  B --> C["Status"]
+  C --> D["Fix"]
+  D --> E["Stage"]
+  E --> F["Commit"]`
 	}
 ];

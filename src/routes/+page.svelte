@@ -14,6 +14,7 @@
 
 	let sidebarOpen = $state(false);
 	let activeSection = $state('hero');
+	let theme = $state<'light' | 'dark' | 'system'>('system');
 
 	const sectionIds = [
 		'hero',
@@ -51,6 +52,26 @@
 		'section-quick-ref'
 	];
 
+	function getEffectiveTheme(): 'light' | 'dark' {
+		if (theme !== 'system') return theme;
+		if (typeof window === 'undefined') return 'dark';
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	}
+
+	function toggleTheme() {
+		const effective = getEffectiveTheme();
+		theme = effective === 'dark' ? 'light' : 'dark';
+		applyTheme();
+	}
+
+	function applyTheme() {
+		const root = document.documentElement;
+		root.classList.remove('light', 'dark');
+		if (theme !== 'system') {
+			root.classList.add(theme);
+		}
+	}
+
 	onMount(() => {
 		const visibleSections = new Set<string>();
 
@@ -63,7 +84,6 @@
 						visibleSections.delete(entry.target.id);
 					}
 				}
-				// Pick the first visible section in document order
 				for (const id of sectionIds) {
 					if (visibleSections.has(id)) {
 						activeSection = id;
@@ -82,7 +102,6 @@
 			if (el) observer.observe(el);
 		}
 
-		// Responsive sidebar: open by default on desktop
 		if (window.innerWidth >= 1024) {
 			sidebarOpen = true;
 		}
@@ -96,7 +115,7 @@
 </script>
 
 <svelte:head>
-	<title>Git for Vibe Coders | The AI-First Developer's Guide</title>
+	<title>GitVibes -- Git for Vibe Coders</title>
 	<meta
 		name="description"
 		content="An interactive guide to Git for developers using AI tools. Learn version control as your safety net for AI-assisted coding."
@@ -104,34 +123,28 @@
 </svelte:head>
 
 <ScrollProgress />
-<Header {sidebarOpen} onToggleSidebar={toggleSidebar} />
-<Sidebar open={sidebarOpen} {activeSection} onClose={() => (sidebarOpen = false)} />
+<Header theme={getEffectiveTheme()} onToggleTheme={toggleTheme} />
+<Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} />
 
 <main
-	class="transition-[margin-left] duration-300"
+	class="transition-[margin-left] duration-200 ease-out"
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen ? 'var(--sidebar-width)' : '0'};"
 >
 	<Hero />
-
-	<div
-		class="divide-y"
-		style="border-color: var(--color-border-light);"
-	>
-		<Part1 />
-		<Part2 />
-		<Part3 />
-		<Part4 />
-		<Part5 />
-		<Part6 />
-		<Part7 />
-	</div>
+	<Part1 />
+	<Part2 />
+	<Part3 />
+	<Part4 />
+	<Part5 />
+	<Part6 />
+	<Part7 />
 
 	<footer
-		class="py-12 text-center"
-		style="background: var(--color-bg-secondary); border-top: 1px solid var(--color-border);"
+		class="py-10 text-center"
+		style="border-top: 1px solid var(--color-border);"
 	>
-		<p class="text-sm" style="color: var(--color-text-muted);">
-			Built for the vibe coding generation. Git is your safety net.
+		<p class="text-xs" style="color: var(--color-text-muted);">
+			Built for the vibe coding generation.
 		</p>
 	</footer>
 </main>
