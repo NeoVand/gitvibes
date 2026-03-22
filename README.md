@@ -1,42 +1,72 @@
-# sv
+# GitVibes — Git for Vibe Coders
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+An interactive, visual guide to Git and version control for developers who use AI-assisted coding tools like GitHub Copilot, Cursor, and Claude Code.
 
-## Creating a project
+**[Live Site →](https://neovand.github.io/gitvibes/)**
 
-If you're seeing this, you've probably already done this step. Congrats!
+## What is this?
 
-```sh
-# create a new project
-npx sv create my-app
-```
+GitVibes is a beginner-friendly tutorial that teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks you through real scenarios — "the AI just changed 10 files, what do I do?" — with interactive sandboxes, Mermaid diagrams, and step-by-step VS Code screenshots.
 
-To recreate this project with the same configuration:
+### Topics covered
 
-```sh
-# recreate this project
-npx sv@0.12.8 create --template minimal --types ts --add prettier playwright eslint tailwindcss="plugins:typography,forms" sveltekit-adapter="adapter:static" devtools-json mdsvex mcp="ide:claude-code+setup:local" --install npm .
-```
+1. **Enterprise Onboarding** — Cloning repos, authentication, SSH vs HTTPS
+2. **The Core Safety Loop** — Status → Stage → Commit, reviewing AI changes
+3. **Branching & PRs** — Creating branches, syncing, pull requests
+4. **The Undo Toolkit** — Checkout, revert, reset, amending commits
+5. **Advanced Workflows** — Stash, rebase vs merge, conflict resolution
+6. **VS Code Cockpit** — Source Control view, Timeline, GitLens, 3-way merge editor
+7. **Cheat Sheet** — Quick reference for common commands
 
-## Developing
+### Features
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- Interactive Git sandboxes that simulate real workflows
+- Real VS Code screenshots with step-by-step instructions
+- Mermaid diagrams for visualizing branching and commit history
+- Light/dark theme support
+- Searchable command reference
+- Fully static — no backend required
 
-```sh
+## Tech stack
+
+| Layer | Tool |
+|-------|------|
+| Framework | [SvelteKit](https://svelte.dev) (Svelte 5) |
+| Styling | [Tailwind CSS](https://tailwindcss.com) v4 |
+| Diagrams | [Mermaid.js](https://mermaid.js.org) |
+| Icons | [Lucide](https://lucide.dev) |
+| Markdown | [mdsvex](https://mdsvex.pngwn.io) |
+| Hosting | GitHub Pages (static adapter) |
+
+## Getting started
+
+```bash
+# Clone the repo
+git clone https://github.com/NeoVand/gitvibes.git
+cd gitvibes
+
+# Install dependencies
+npm install
+
+# Start dev server
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
+
+Open [http://localhost:5173](http://localhost:5173) to view it locally.
 
 ## Building
 
-To create a production version of your app:
-
-```sh
+```bash
 npm run build
+npm run preview  # preview the production build
 ```
 
-You can preview the production build with `npm run preview`.
+The static site is output to the `build/` directory.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Deployment
+
+This project deploys automatically to GitHub Pages on every push to `main` via GitHub Actions. The workflow is defined in `.github/workflows/deploy.yml`.
+
+## License
+
+MIT
