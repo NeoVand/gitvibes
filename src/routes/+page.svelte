@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
-	import ScrollProgress from '$lib/components/layout/ScrollProgress.svelte';
 	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import Part1 from '$lib/components/sections/Part1.svelte';
@@ -146,7 +145,6 @@
 	/>
 </svelte:head>
 
-<ScrollProgress />
 <Header theme={getEffectiveTheme()} onToggleTheme={toggleTheme} onToggleCheatSheet={toggleCheatSheet} />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />

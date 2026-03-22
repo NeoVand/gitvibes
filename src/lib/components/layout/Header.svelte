@@ -14,8 +14,8 @@
 </script>
 
 <header
-	class="fixed top-0 right-0 left-0 z-50 flex items-center border-b"
-	style="height: var(--header-height); border-color: var(--color-border); background: var(--color-bg);"
+	class="fixed top-0 right-0 left-0 z-50 flex items-center"
+	style="height: var(--header-height); background: var(--color-bg); box-shadow: 0 1px 0 var(--color-border);"
 >
 	<div
 		class="flex items-center"

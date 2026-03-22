@@ -194,7 +194,7 @@
 	class:-translate-x-full={!open}
 >
 	<div
-		class="flex items-center justify-between border-b px-4 py-3"
+		class="flex items-center justify-between border-b px-4 py-2"
 		style="border-color: var(--color-border);"
 	>
 		<span
