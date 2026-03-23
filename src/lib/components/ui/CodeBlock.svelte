@@ -19,8 +19,7 @@
 <div class="group relative my-4 overflow-hidden rounded-lg" style="background: var(--color-terminal-bg);">
 	{#if title || lang}
 		<div
-			class="flex items-center justify-between border-b px-4 py-2"
-			style="border-color: var(--color-terminal-border);"
+			class="flex items-center justify-between px-4 py-2"
 		>
 			<span class="text-xs font-medium" style="color: var(--color-text-muted);">
 				{title || lang}

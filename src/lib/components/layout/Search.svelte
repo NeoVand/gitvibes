@@ -152,7 +152,7 @@
 		display: flex;
 		align-items: center;
 		gap: 6px;
-		background: var(--color-bg-tertiary);
+		background: transparent;
 		border: none;
 		border-radius: 8px;
 		padding: 0 10px;
@@ -163,7 +163,7 @@
 
 	.search-input-wrapper:focus-within {
 		width: 320px;
-		background: var(--color-surface);
+		background: var(--color-bg-tertiary);
 	}
 
 	.search-input-wrapper :global(.search-icon) {

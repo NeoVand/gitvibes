@@ -11,19 +11,16 @@
 </script>
 
 <figure
-	class="my-5 overflow-hidden rounded-lg border"
-	style="border-color: var(--color-border); background: var(--color-bg-secondary);"
+	class="my-5 overflow-hidden rounded-lg"
+	style="background: var(--color-bg-tertiary);"
 >
-	<div
-		class="flex items-center gap-2 border-b px-4 py-2"
-		style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
-	>
+	<div class="flex items-center gap-2 px-4 py-2">
 		<Monitor size={14} style="color: var(--color-primary);" />
 		<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
 			VS Code
 		</span>
 	</div>
-	<div class="flex items-center justify-center p-2" style="background: var(--color-bg-tertiary);">
+	<div class="flex items-center justify-center px-2 pb-2">
 		<img
 			src={src.startsWith('http') ? src : `${baseUrl}/${src}`}
 			{alt}
@@ -34,8 +31,8 @@
 	</div>
 	{#if caption}
 		<figcaption
-			class="border-t px-4 py-2.5 text-xs"
-			style="border-color: var(--color-border); color: var(--color-text-muted);"
+			class="px-4 py-2.5 text-xs"
+			style="color: var(--color-text-muted);"
 		>
 			{caption}
 		</figcaption>

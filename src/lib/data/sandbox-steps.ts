@@ -20,7 +20,7 @@ Changes not staged for commit:
 
 Untracked files:
 \tnew file:   src/middleware.py`,
-		diagram: `graph LR
+		diagram: `graph TD
   A["Working Dir"] -->|4 files| B["Staging"]
   B -.->|empty| C["Repository"]`
 	},
@@ -28,7 +28,7 @@ Untracked files:
 		command: 'git add src/auth.py src/routes.py',
 		description: 'Stage the files you reviewed and approved',
 		output: '',
-		diagram: `graph LR
+		diagram: `graph TD
   A["Working Dir"] -->|"git add"| B["Staging"]
   B -.-> C["Repository"]`
 	},
@@ -36,7 +36,7 @@ Untracked files:
 		command: 'git add .',
 		description: 'Stage all remaining changes',
 		output: '',
-		diagram: `graph LR
+		diagram: `graph TD
   A["Working Dir"] -->|"git add ."| B["Staging"]
   B -.-> C["Repository"]`
 	},
@@ -46,7 +46,7 @@ Untracked files:
 		output: `[feature/add-auth a1b2c3d] feat: Add user authentication endpoint
  4 files changed, 127 insertions(+), 3 deletions(-)
  create mode 100644 src/middleware.py`,
-		diagram: `graph LR
+		diagram: `graph TD
   A["Working Dir"] --> B["Staging"]
   B -->|"git commit"| C["Repository"]`
 	}

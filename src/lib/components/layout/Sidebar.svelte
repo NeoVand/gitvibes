@@ -33,7 +33,12 @@
 		{
 			id: 'hero',
 			label: 'Introduction',
-			icon: Rocket
+			icon: Rocket,
+			children: [
+				{ id: 'section-intro-what', label: 'What Is Git?' },
+				{ id: 'section-intro-install', label: 'Installing Git' },
+				{ id: 'section-intro-repo', label: 'What Is a Repository?' }
+			]
 		},
 		{
 			id: 'part-1',
@@ -133,7 +138,7 @@
 
 	function isActive(sectionId: string): boolean {
 		if (activeSection === sectionId) return true;
-		if (sectionId === 'hero') return activeSection === 'hero';
+		if (sectionId === 'hero') return activeSection === 'hero' || activeSection.startsWith('section-intro-');
 		const partNum = sectionId.replace('part-', '');
 		return activeSection.startsWith(`section-${partNum}-`);
 	}
@@ -188,14 +193,13 @@
 
 <!-- ───── EXPANDED SIDEBAR ───── -->
 <aside
-	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col border-r transition-all duration-200 ease-out"
-	style="width: var(--sidebar-width); padding-top: var(--header-height); border-color: var(--color-border); background: var(--color-bg-secondary);"
+	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-all duration-200 ease-out"
+	style="width: var(--sidebar-width); padding-top: var(--header-height); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
 >
 	<div
-		class="flex items-center justify-between border-b px-4 py-2"
-		style="border-color: var(--color-border);"
+		class="flex items-center justify-between px-4 py-2"
 	>
 		<span
 			class="text-xs font-semibold tracking-wider uppercase"
@@ -218,8 +222,8 @@
 			{@const active = isActive(section.id)}
 			<div class="mb-0.5">
 				<div
-					class="flex w-full items-center gap-2 rounded-md px-2.5 py-[7px] text-left text-[13px] transition-colors"
-					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'}; font-weight: {active ? '600' : '500'};"
+					class="flex w-full items-center gap-2 px-2.5 py-[7px] text-left text-[13px] transition-colors"
+					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {active ? '600' : '500'};"
 				>
 					<button
 						onclick={() => {
@@ -253,15 +257,14 @@
 
 				{#if section.children && expandedSections.has(section.id)}
 					<div
-						class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5"
-						style="border-color: var(--color-border);"
+						class="mt-0.5 ml-[22px] space-y-px pl-2.5"
 					>
 						{#each section.children as child}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="block w-full cursor-pointer rounded-md px-2 py-[5px] text-left text-xs transition-colors"
-								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
+								class="block w-full cursor-pointer px-2 py-[5px] text-left text-xs transition-colors"
+								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
 							>
 								{child.label}
 							</button>
@@ -276,8 +279,8 @@
 <!-- ───── COLLAPSED ICON RAIL ───── -->
 {#if !open}
 	<aside
-		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center border-r py-2 max-lg:hidden"
-		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); border-color: var(--color-border); background: var(--color-bg-secondary);"
+		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2 max-lg:hidden"
+		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
 	>
 		<!-- Expand button -->
 		<button
@@ -289,10 +292,7 @@
 			<PanelLeft size={16} />
 		</button>
 
-		<div
-			class="mx-auto mb-2 w-6"
-			style="border-top: 1px solid var(--color-border);"
-		></div>
+		<div class="mb-2"></div>
 
 		<!-- Icon buttons -->
 		{#each sections as section}
@@ -308,7 +308,7 @@
 					}
 				}}
 				class="group relative mb-0.5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-all"
-				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; background: {active ? 'var(--color-primary-dim)' : isFlyoutOpen ? 'var(--color-surface-hover)' : 'transparent'};"
+				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'};"
 				aria-label={section.label}
 			>
 				<svelte:component

@@ -29,13 +29,13 @@
 </script>
 
 <div
-	class="my-6 overflow-hidden rounded-xl border"
-	style="border-color: var(--color-border); background: var(--color-surface);"
+	class="my-6 overflow-hidden rounded-xl"
+	style="background: var(--color-bg-secondary);"
 >
 	<!-- Header -->
 	<div
-		class="flex items-center justify-between border-b px-5 py-3"
-		style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+		class="flex items-center justify-between px-5 py-3"
+		style="background: var(--color-bg-tertiary);"
 	>
 		<div class="flex items-center gap-2">
 			<GitBranch size={16} style="color: var(--color-primary);" />
@@ -51,10 +51,10 @@
 	<!-- Content -->
 	<div class="grid grid-cols-1 lg:grid-cols-2" style="min-height: 300px;">
 		<!-- Terminal pane -->
-		<div class="flex flex-col border-b lg:border-r lg:border-b-0" style="border-color: var(--color-terminal-border);">
+		<div class="flex flex-col">
 			<div
-				class="flex items-center gap-2 border-b px-4 py-2"
-				style="background: var(--color-terminal-bg); border-color: var(--color-terminal-border);"
+				class="flex items-center gap-2 px-4 py-2"
+				style="background: var(--color-terminal-bg);"
 			>
 				<div class="flex gap-1.5">
 					<span class="block h-3 w-3 rounded-full" style="background: #ef4444;"></span>
@@ -100,11 +100,8 @@
 		</div>
 
 		<!-- Visualization pane -->
-		<div class="flex flex-col" style="background: var(--color-bg-secondary);">
-			<div
-				class="flex items-center gap-2 border-b px-4 py-2"
-				style="border-color: var(--color-border);"
-			>
+		<div class="flex flex-col">
+			<div class="flex items-center gap-2 px-4 py-2">
 				<GitBranch size={12} style="color: var(--color-primary);" />
 				<span class="text-xs" style="color: var(--color-text-muted);">Visualization</span>
 			</div>
@@ -118,14 +115,13 @@
 
 	<!-- Navigation footer -->
 	<div
-		class="flex items-center justify-between border-t px-5 py-3"
-		style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+		class="flex items-center justify-between px-5 py-3"
 	>
 		<button
 			onclick={prev}
 			disabled={currentStep === 0}
 			class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
-			style="color: var(--color-text-secondary); background: var(--color-surface); border: 1px solid var(--color-border);"
+			style="color: var(--color-text-muted);"
 		>
 			<ChevronLeft size={16} />
 			Previous
@@ -136,14 +132,14 @@
 			{#each steps as _, i}
 				<button
 					onclick={() => (currentStep = i)}
-					class="h-2 rounded-full transition-all"
-					class:w-6={i === currentStep}
-					class:w-2={i !== currentStep}
+					class="h-1.5 rounded-full transition-all"
+					class:w-5={i === currentStep}
+					class:w-1.5={i !== currentStep}
 					style="background: {i === currentStep
-						? 'var(--color-primary)'
+						? 'var(--color-text-muted)'
 						: i < currentStep
-							? 'var(--color-primary-light)'
-							: 'var(--color-border)'};"
+							? 'var(--color-text-muted)'
+							: 'var(--color-border)'}; opacity: {i === currentStep ? '1' : i < currentStep ? '0.5' : '0.3'};"
 					aria-label="Go to step {i + 1}"
 				></button>
 			{/each}
@@ -153,7 +149,7 @@
 			onclick={next}
 			disabled={currentStep === steps.length - 1}
 			class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
-			style="color: var(--color-text-inverse); background: var(--color-primary);"
+			style="color: var(--color-text-secondary);"
 		>
 			Next
 			<ChevronRight size={16} />

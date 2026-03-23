@@ -39,6 +39,19 @@
 						titleColor: '#e2e8f0',
 						edgeLabelBackground: '#1e2030',
 						nodeTextColor: '#e2e8f0',
+						// sequenceDiagram
+						actorBkg: '#1e2030',
+						actorTextColor: '#cbd5e1',
+						actorBorder: '#334155',
+						actorLineColor: '#334155',
+						noteBkgColor: 'transparent',
+						noteTextColor: '#64748b',
+						noteBorderColor: 'transparent',
+						signalColor: '#475569',
+						signalTextColor: '#94a3b8',
+						activationBkgColor: '#1e2030',
+						activationBorderColor: '#475569',
+						sequenceNumberColor: '#94a3b8',
 						// gitGraph
 						git0: '#818cf8',
 						git1: '#34d399',
@@ -85,6 +98,19 @@
 						titleColor: '#1e293b',
 						edgeLabelBackground: '#ffffff',
 						nodeTextColor: '#1e293b',
+						// sequenceDiagram
+						actorBkg: '#f1f5f9',
+						actorTextColor: '#475569',
+						actorBorder: '#cbd5e1',
+						actorLineColor: '#cbd5e1',
+						noteBkgColor: 'transparent',
+						noteTextColor: '#94a3b8',
+						noteBorderColor: 'transparent',
+						signalColor: '#94a3b8',
+						signalTextColor: '#64748b',
+						activationBkgColor: '#f1f5f9',
+						activationBorderColor: '#94a3b8',
+						sequenceNumberColor: '#64748b',
 						// gitGraph
 						git0: '#6366f1',
 						git1: '#10b981',
@@ -125,6 +151,18 @@
 				useMaxWidth: true,
 				nodeSpacing: 30,
 				rankSpacing: 50
+			},
+			sequence: {
+				useMaxWidth: true,
+				mirrorActors: false,
+				messageAlign: 'center' as const,
+				actorMargin: 80,
+				noteMargin: 8,
+				messageFontSize: 12,
+				actorFontSize: 13,
+				noteFontSize: 10,
+				width: 180,
+				height: 36
 			},
 			fontSize: 14,
 			fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif"

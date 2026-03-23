@@ -20,6 +20,9 @@
 
 	const sectionIds = [
 		'hero',
+		'section-intro-what',
+		'section-intro-install',
+		'section-intro-repo',
 		'part-1',
 		'section-1-1',
 		'section-1-2',

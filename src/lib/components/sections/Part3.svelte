@@ -95,20 +95,25 @@
 				Before diving into the commands, here's how the three main remote operations relate to each other:
 			</p>
 
-			<figure class="my-5 overflow-hidden rounded-lg border" style="border-color: var(--color-border); background: var(--color-bg-secondary);">
-				<div class="flex items-center justify-center p-2" style="background: var(--color-bg-tertiary);">
-					<img
-						src="https://code.visualstudio.com/assets/docs/sourcecontrol/repos-remotes/git-fetch-pull-push.png"
-						alt="Diagram showing how Git fetch, pull, and push operations work between local and remote repositories"
-						class="w-full rounded"
-						loading="lazy"
-						style="max-height: 500px; object-fit: contain;"
-					/>
-				</div>
-				<figcaption class="border-t px-4 py-2.5 text-xs" style="border-color: var(--color-border); color: var(--color-text-muted);">
-					Fetch downloads without merging. Pull = fetch + merge. Push uploads your commits. Understanding this flow is key.
-				</figcaption>
-			</figure>
+			<MermaidDiagram
+				definition={`sequenceDiagram
+    participant L as Local Repo
+    participant R as Remote Repo
+    rect rgba(99, 102, 241, 0.05)
+    R->>L: git fetch — download new commits
+    end
+    rect rgba(99, 102, 241, 0.05)
+    R->>L: git pull — download + merge
+    L->>L: auto-merge into branch
+    end
+    rect rgba(99, 102, 241, 0.05)
+    L->>R: git push — upload commits
+    end`}
+				id="fetch-pull-push"
+			/>
+			<p class="mt-2 px-1 text-xs" style="color: var(--color-text-muted);">
+				Fetch downloads without merging. Pull = fetch + merge. Push uploads your commits.
+			</p>
 
 			<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 1: The "Safe" Sync (fetch + merge)
@@ -140,9 +145,9 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="repos-remotes/git-status-bar-sync.png"
-				alt="VS Code status bar showing sync status with incoming and outgoing commit counts"
-				caption="The status bar shows how many commits you need to pull (↓) and push (↑). Click to sync."
+				src="overview/incoming-outgoing-changes.png"
+				alt="VS Code Source Control showing incoming and outgoing changes with commit counts"
+				caption="The incoming/outgoing section shows exactly which commits you need to pull and which you'll push."
 			/>
 
 			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
