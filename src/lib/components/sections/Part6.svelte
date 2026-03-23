@@ -12,7 +12,7 @@
 			icon={Monitor}
 			partLabel="Part 6"
 			title="Your AI-Assisted Cockpit: Mastering Git in VS Code"
-			color="var(--color-note)"
+			color="var(--color-primary)"
 		/>
 
 		<MermaidDiagram
@@ -28,6 +28,10 @@
 			id="vscode-overview"
 		/>
 
+		<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+			VS Code bundles a rich set of Git tools right into the editor, so you can do almost everything without opening a terminal.
+		</p>
+
 		<Callout type="note">
 			{#snippet children()}
 				While the command line is powerful, the VS Code UI is your "cockpit." It provides rich,
@@ -37,7 +41,7 @@
 
 		<!-- 6.1 Source Control View -->
 		<div id="section-6-1" class="mb-14">
-			<SectionHeader level="section" icon={Layout} title="6.1 The Source Control View" color="var(--color-note)" />
+			<SectionHeader level="section" icon={Layout} title="6.1 The Source Control View" color="var(--color-primary)" />
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
 				This is your command center. Everything you've learned maps directly to the UI:
@@ -95,7 +99,7 @@
 
 		<!-- 6.2 Timeline & GitLens -->
 		<div id="section-6-2" class="mb-14">
-			<SectionHeader level="section" icon={Clock} title="6.2 The Timeline View & GitLens" color="var(--color-note)" />
+			<SectionHeader level="section" icon={Clock} title="6.2 The Timeline View & GitLens" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -132,7 +136,11 @@
 
 		<!-- 6.3 3-Way Merge Editor -->
 		<div id="section-6-3" class="mb-8">
-			<SectionHeader level="section" icon={Columns} title="6.3 The 3-Way Merge Editor" color="var(--color-note)" />
+			<SectionHeader level="section" icon={Columns} title="6.3 The 3-Way Merge Editor" color="var(--color-primary)" />
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				We touched on merge conflicts earlier -- now let's look at the tool that makes resolving them almost enjoyable.
+			</p>
 
 			<Callout type="important">
 				{#snippet children()}

@@ -16,7 +16,7 @@
 			icon={GitBranch}
 			partLabel="Part 3"
 			title="Parallel Universes: Branching for AI Experiments"
-			color="var(--color-note)"
+			color="var(--color-primary)"
 		/>
 
 		<Callout type="important">
@@ -31,7 +31,7 @@
 
 		<!-- 3.1 Creating Branches -->
 		<div id="section-3-1" class="mb-14">
-			<SectionHeader level="section" icon={GitBranch} title="3.1 &quot;I Have a New Idea (or AI Prompt)&quot;" color="var(--color-note)" />
+			<SectionHeader level="section" icon={GitBranch} title="3.1 &quot;I Have a New Idea (or AI Prompt)&quot;" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -87,7 +87,7 @@
 
 		<!-- 3.2 Syncing -->
 		<div id="section-3-2" class="mb-14">
-			<SectionHeader level="section" icon={RefreshCcw} title="3.2 &quot;My Teammate Pushed Updates&quot; (Syncing)" color="var(--color-note)" />
+			<SectionHeader level="section" icon={RefreshCcw} title="3.2 &quot;My Teammate Pushed Updates&quot; (Syncing)" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -174,7 +174,7 @@ git merge origin/main   # Merge the updates into your branch`}
 
 		<!-- 3.3 Pull Requests -->
 		<div id="section-3-3" class="mb-8">
-			<SectionHeader level="section" icon={GitPullRequest} title="3.3 &quot;My AI-Generated Feature is Ready&quot; (The Pull Request)" color="var(--color-note)" />
+			<SectionHeader level="section" icon={GitPullRequest} title="3.3 &quot;My AI-Generated Feature is Ready&quot; (The Pull Request)" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -183,6 +183,10 @@ git merge origin/main   # Merge the updates into your branch`}
 					it directly. You "propose" the change via a <strong>Pull Request (PR)</strong>.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Once your feature is ready, push your branch to the remote so your teammates can see it:
+			</p>
 
 			<CodeBlock
 				title="Push your branch to the remote"
@@ -202,6 +206,10 @@ git merge origin/main   # Merge the updates into your branch`}
 					ultimately "sign off" before it enters <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code>.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Writing a good PR description can feel tedious, but AI tools can help with that too:
+			</p>
 
 			<Callout type="tip">
 				{#snippet children()}

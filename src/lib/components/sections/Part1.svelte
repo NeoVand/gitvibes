@@ -130,6 +130,10 @@ git config --global credential.helper libsecret`}
 				{/snippet}
 			</Callout>
 
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				To get a copy of the project on your machine, run the clone command with the repository URL your team shared with you:
+			</p>
+
 			<CodeBlock
 				title="Clone the repository"
 				code="git clone https://github.com/Your-Enterprise/your-project.git"
@@ -149,6 +153,10 @@ git config --global credential.helper libsecret`}
 				alt="VS Code Clone Repository dialog showing URL input field"
 				caption="Use Cmd+Shift+P → 'Git: Clone' and paste the repository URL. VS Code handles the rest."
 			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				One thing to keep in mind after cloning:
+			</p>
 
 			<Callout type="note">
 				{#snippet children()}

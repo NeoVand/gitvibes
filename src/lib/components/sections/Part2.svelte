@@ -16,7 +16,7 @@
 			icon={RefreshCw}
 			partLabel="Part 2"
 			title="The Core Safety Loop: Your &quot;Save Game&quot; for AI Coding"
-			color="var(--color-tip)"
+			color="var(--color-primary)"
 		/>
 
 		<MermaidDiagram
@@ -31,6 +31,10 @@
 			id="core-loop-overview"
 		/>
 
+		<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+			The diagram above shows the full cycle you'll repeat every time you work with AI-generated code. Let's break it down:
+		</p>
+
 		<Callout type="important">
 			{#snippet children()}
 				This is your fundamental daily workflow. It's a three-step process: the AI makes a change,
@@ -41,7 +45,7 @@
 
 		<!-- 2.1 git status -->
 		<div id="section-2-1" class="mb-14">
-			<SectionHeader level="section" icon={Eye} title="2.1 &quot;What Did the AI Just Do?&quot;" color="var(--color-tip)" />
+			<SectionHeader level="section" icon={Eye} title="2.1 &quot;What Did the AI Just Do?&quot;" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -108,7 +112,7 @@
 
 		<!-- 2.2 Staging -->
 		<div id="section-2-2" class="mb-14">
-			<SectionHeader level="section" icon={FolderPlus} title="2.2 Reviewing and Staging the AI's Work" color="var(--color-tip)" />
+			<SectionHeader level="section" icon={FolderPlus} title="2.2 Reviewing and Staging the AI's Work" color="var(--color-primary)" />
 
 			<Callout type="warning">
 				{#snippet children()}
@@ -144,6 +148,11 @@
 					walks you through every individual block of changes ("hunk") interactively.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's how to start an interactive staging session:
+			</p>
+
 			<CodeBlock code="git add --patch  # or git add -p" title="Interactive staging" />
 
 			<p class="mb-4 mt-4 text-[13px]" style="color: var(--color-text-secondary);">
@@ -195,7 +204,7 @@
 
 		<!-- 2.3 Committing -->
 		<div id="section-2-3" class="mb-8">
-			<SectionHeader level="section" icon={Save} title="2.3 Creating the Save Point" color="var(--color-tip)" />
+			<SectionHeader level="section" icon={Save} title="2.3 Creating the Save Point" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -208,6 +217,10 @@
 				title="Create a commit with a message"
 				code={`git commit -m "feat: Add user authentication endpoint"`}
 			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				The command itself is simple, but the message you write matters more than you might think.
+			</p>
 
 			<Callout type="important">
 				{#snippet children()}

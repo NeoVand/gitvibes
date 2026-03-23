@@ -11,12 +11,12 @@
 			icon={BookOpen}
 			partLabel="Part 7"
 			title="Conclusion: Best Practices for AI-Augmented Teams"
-			color="var(--color-tip)"
+			color="var(--color-primary)"
 		/>
 
 		<!-- 7.1 AI-First Workflow -->
 		<div id="section-7-1" class="mb-14">
-			<SectionHeader level="section" icon={Workflow} title="7.1 The AI-First Workflow (Summary)" color="var(--color-tip)" />
+			<SectionHeader level="section" icon={Workflow} title="7.1 The AI-First Workflow (Summary)" color="var(--color-primary)" />
 
 			<p class="mb-6" style="color: var(--color-text-secondary);">
 				This is your new "save game" loop. Follow these 8 steps for every piece of work:
@@ -33,6 +33,10 @@
   G --> H(["8. Recover"])`}
 				id="workflow-summary"
 			/>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's what each step looks like in practice, along with the commands you'll use.
+			</p>
 
 			<div class="mt-6 space-y-3">
 				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
@@ -106,7 +110,11 @@
 
 			<!-- 7.2 Quick Reference -->
 		<div id="section-7-2" class="mb-8">
-			<SectionHeader level="section" icon={Table} title="7.2 Quick Reference Card" color="var(--color-tip)" />
+			<SectionHeader level="section" icon={Table} title="7.2 Quick Reference Card" color="var(--color-primary)" />
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Keep this handy. It covers the most common Git tasks with both the terminal command and the VS Code equivalent, so you can use whichever feels more natural.
+			</p>
 
 			<div
 				class="overflow-x-auto rounded-lg"
@@ -176,26 +184,5 @@
 			</div>
 		</div>
 
-		<!-- Final Thoughts -->
-		<div
-			class="mt-12 rounded-xl p-8 text-center"
-			style="background: var(--color-primary-dim);"
-		>
-			<Callout type="important">
-				{#snippet children()}
-					Your AI assistants are powerful tools that lack context and accountability.
-					<strong>Git is your system of accountability.</strong> It provides the immutable
-					history, the instant "undo" button, and the human-in-the-loop review layer that
-					transforms high-velocity "Vibe Coding" from a risky hobby into a professional,
-					safe, and scalable engineering discipline.
-				{/snippet}
-			</Callout>
-
-			<p class="mt-4 text-[13px]" style="color: var(--color-text-muted);">
-				Git is not just version control -- it's your safety net, your time machine, and your
-				collaboration platform. Master it, and you'll transform AI-assisted coding into a
-				superpower.
-			</p>
-		</div>
 	</div>
 </section>

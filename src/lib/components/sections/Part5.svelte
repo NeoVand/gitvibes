@@ -15,7 +15,7 @@
 			icon={Layers}
 			partLabel="Part 5"
 			title="Advanced Scenarios: Managing a Multi-Branch Workflow"
-			color="var(--color-important)"
+			color="var(--color-primary)"
 		/>
 
 		<Callout type="note">
@@ -28,7 +28,7 @@
 
 		<!-- 5.1 Stash -->
 		<div id="section-5-1" class="mb-14">
-			<SectionHeader level="section" icon={Archive} title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;" color="var(--color-important)" />
+			<SectionHeader level="section" icon={Archive} title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -92,7 +92,7 @@ git stash pop`}
 
 		<!-- 5.2 Rebase vs Merge -->
 		<div id="section-5-2" class="mb-14">
-			<SectionHeader level="section" icon={GitMerge} title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)" color="var(--color-important)" />
+			<SectionHeader level="section" icon={GitMerge} title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)" color="var(--color-primary)" />
 
 			<Callout type="note">
 				{#snippet children()}
@@ -100,6 +100,10 @@ git stash pop`}
 					has moved on. There are two philosophies for updating it.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				You have two options for catching up with main, and each tells a different story in your commit history.
+			</p>
 
 			<div class="mb-6 grid gap-4 sm:grid-cols-2">
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
@@ -160,7 +164,7 @@ git stash pop`}
 
 		<!-- 5.3 Merge Conflicts -->
 		<div id="section-5-3" class="mb-8">
-			<SectionHeader level="section" icon={FileWarning} title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)" color="var(--color-important)" />
+			<SectionHeader level="section" icon={FileWarning} title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)" color="var(--color-primary)" />
 
 			<Callout type="warning">
 				{#snippet children()}
@@ -169,6 +173,10 @@ git stash pop`}
 					You and a teammate edited the same lines. Git needs you, the human, to resolve it.
 				{/snippet}
 			</Callout>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Don't panic -- conflicts look intimidating at first, but they follow a simple pattern. Git inserts special markers into your file to show you exactly where the disagreement is.
+			</p>
 
 			<h4 class="mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
 				The Conflict Markers
@@ -195,6 +203,10 @@ const x = 5;
 			<h4 class="mb-3 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
 				The VS Code Way (The Superior Way)
 			</h4>
+
+			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Editing conflict markers by hand works, but VS Code makes the whole process much more visual and less error-prone.
+			</p>
 
 			<Callout type="tip">
 				{#snippet children()}
