@@ -192,6 +192,16 @@ body {
 	font-size: 15px;
 }
 
+/* On mobile, expanded sidebar is an overlay — content stays at collapsed width */
+@media (max-width: 1023px) {
+	.main-content {
+		margin-left: var(--sidebar-collapsed-width) !important;
+	}
+	.sidebar-drawer {
+		background: var(--color-bg) !important;
+	}
+}
+
 code,
 pre,
 kbd {

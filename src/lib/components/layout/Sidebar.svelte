@@ -127,12 +127,12 @@
 		expandedSections = next;
 	}
 
-	function scrollTo(id: string) {
+	function scrollTo(id: string, closeSidebarOnMobile = true) {
 		const el = document.getElementById(id);
 		if (el) {
 			onNavigate(id);
 			el.scrollIntoView({ behavior: 'smooth' });
-			if (window.innerWidth < 1024) onToggle();
+			if (closeSidebarOnMobile && open && window.innerWidth < 1024) onToggle();
 		}
 	}
 
@@ -155,7 +155,7 @@
 	}
 
 	function handleFlyoutNavigate(id: string) {
-		scrollTo(id);
+		scrollTo(id, false);
 		closeFlyout();
 	}
 
@@ -176,7 +176,7 @@
 <!-- Backdrop on mobile when expanded -->
 {#if open}
 	<button
-		class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
+		class="fixed inset-0 z-40 bg-black/30 lg:hidden"
 		onclick={onToggle}
 		aria-label="Close sidebar"
 	></button>
@@ -193,7 +193,7 @@
 
 <!-- ───── EXPANDED SIDEBAR ───── -->
 <aside
-	class="fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-all duration-200 ease-out"
+	class="sidebar-drawer fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-all duration-200 ease-out"
 	style="width: var(--sidebar-width); padding-top: var(--header-height); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
@@ -279,7 +279,7 @@
 <!-- ───── COLLAPSED ICON RAIL ───── -->
 {#if !open}
 	<aside
-		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2 max-lg:hidden"
+		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2"
 		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
 	>
 		<!-- Expand button -->

@@ -4,6 +4,8 @@ An interactive, visual guide to Git and version control for developers who use A
 
 **[Live Site →](https://neovand.github.io/gitvibes/)**
 
+![GitVibes Screenshot](static/screenshot.png)
+
 ## What is this?
 
 GitVibes is a beginner-friendly tutorial that teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks you through real scenarios — "the AI just changed 10 files, what do I do?" — with interactive sandboxes, Mermaid diagrams, and step-by-step VS Code screenshots.

@@ -153,7 +153,7 @@
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
 
 <main
-	class="transition-[margin-left] duration-200 ease-out"
+	class="main-content transition-[margin-left] duration-200 ease-out"
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)'};"
 >
 	<Hero />

@@ -116,7 +116,7 @@
 				<X size={14} />
 			</button>
 		{:else}
-			<kbd class="shortcut-hint">⌘K</kbd>
+			<kbd class="shortcut-hint hidden sm:inline">⌘K</kbd>
 		{/if}
 	</div>
 
@@ -157,12 +157,13 @@
 		border-radius: 8px;
 		padding: 0 10px;
 		height: 32px;
-		width: 260px;
+		width: 100%;
+		max-width: 260px;
 		transition: all 0.2s ease;
 	}
 
 	.search-input-wrapper:focus-within {
-		width: 320px;
+		max-width: 320px;
 		background: var(--color-bg-tertiary);
 	}
 
