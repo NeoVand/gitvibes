@@ -26,7 +26,7 @@
 			</span>
 			<button
 				onclick={copyCode}
-				class="flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity"
+				class="flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity {copied ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}"
 				style="color: var(--color-text-muted);"
 				aria-label="Copy code"
 			>
@@ -35,7 +35,7 @@
 					<span>Copied</span>
 				{:else}
 					<Copy size={14} />
-					<span class="opacity-0 transition-opacity group-hover:opacity-100">Copy</span>
+					<span>Copy</span>
 				{/if}
 			</button>
 		</div>

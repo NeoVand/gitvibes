@@ -7,6 +7,7 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { branchingSteps } from '$lib/data/sandbox-steps';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-3" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -77,6 +78,11 @@
 					back. <strong>This workflow enables fearless experimentation.</strong>
 				{/snippet}
 			</Callout>
+
+			<VibeBox prompts={[
+				"Create a new branch called feature/user-auth and switch to it",
+				"I need to start working on the payment integration — set up a branch for me"
+			]} />
 		</div>
 
 		<!-- 3.2 Syncing -->
@@ -159,6 +165,11 @@ git merge origin/main   # Merge the updates into your branch`}
 				alt="VS Code Source Control showing Sync Changes button with incoming and outgoing commit counts"
 				caption="The Sync Changes button combines pull + push in one click. The numbers show exactly how many commits are incoming (↓) and outgoing (↑)."
 			/>
+
+			<VibeBox prompts={[
+				"Pull the latest changes from main and update my branch",
+				"Fetch from origin and tell me if my branch is behind main"
+			]} />
 		</div>
 
 		<!-- 3.3 Pull Requests -->
@@ -213,6 +224,11 @@ git merge origin/main   # Merge the updates into your branch`}
 				Try It: Branch, Commit, and Push
 			</h4>
 			<Sandbox title="Branching Workflow" steps={branchingSteps} id="branching" />
+
+			<VibeBox prompts={[
+				"Push this branch and create a pull request with a good description",
+				"Create a PR from this branch to main, summarizing all the changes we made"
+			]} />
 		</div>
 	</div>
 </section>

@@ -7,6 +7,7 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { undoSteps } from '$lib/data/sandbox-steps';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-4" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -53,6 +54,11 @@ git restore src/bad_file.py  # Discard a single file`}
 					that's exactly what you want.
 				{/snippet}
 			</Callout>
+
+			<VibeBox prompts={[
+				"That last change broke everything — throw it all away and go back to my last commit",
+				"Discard all the changes you just made, they're not working"
+			]} />
 		</div>
 
 		<!-- 4.2 Unstage -->
@@ -81,6 +87,11 @@ git restore src/bad_file.py  # Discard a single file`}
 				alt="VS Code Source Control panel showing the unstage button (minus icon) on a staged file"
 				caption="Click the − button next to any staged file to unstage it. It moves back to the 'Changes' section."
 			/>
+
+			<VibeBox prompts={[
+				"Unstage config.py, I don't want that in this commit",
+				"I accidentally staged everything — unstage all files except auth.py"
+			]} />
 		</div>
 
 		<!-- 4.3 Amend -->
@@ -113,6 +124,11 @@ git commit --amend`}
 					not pushed that commit to the remote server yet.
 				{/snippet}
 			</Callout>
+
+			<VibeBox prompts={[
+				"I forgot to include the test file in my last commit — add it without creating a new commit",
+				"Fix my last commit message, it should say 'fix' not 'feat'"
+			]} />
 		</div>
 
 		<!-- 4.4 Reset -->
@@ -136,7 +152,7 @@ git commit --amend`}
 			</h4>
 
 			<div class="mb-4 space-y-3">
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-important);">
 						<code class="text-xs" style="font-family: var(--font-mono);">--soft</code>: Keep changes staged
 					</p>
@@ -144,7 +160,7 @@ git commit --amend`}
 						Deletes commits but keeps changes in the Staging Area. Useful for "squashing" commits into one.
 					</p>
 				</div>
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-warning);">
 						<code class="text-xs" style="font-family: var(--font-mono);">--mixed</code> (default): Keep changes unstaged
 					</p>
@@ -152,7 +168,7 @@ git commit --amend`}
 						Deletes commits but keeps changes in the Working Directory (unstaged).
 					</p>
 				</div>
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						<code class="text-xs" style="font-family: var(--font-mono);">--hard</code>: Destroy everything
 					</p>
@@ -169,6 +185,11 @@ git commit --amend`}
 					This is for <strong>local cleanup only</strong>.
 				{/snippet}
 			</Callout>
+
+			<VibeBox prompts={[
+				"The last 3 commits were all bad — nuke them but keep the code changes so I can redo it",
+				"Completely undo my last 2 commits, I want to start fresh from before them"
+			]} />
 		</div>
 
 		<!-- 4.5 Revert -->
@@ -230,6 +251,11 @@ git push                   # Push the revert`}
 			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
 				For reverting pushed commits, use the <strong>Source Control Graph</strong>: right-click any commit and select <strong>"Revert Commit"</strong> to create the inverse commit safely.
 			</p>
+
+			<VibeBox prompts={[
+				"I pushed a broken commit to main — safely undo it without rewriting history",
+				"Revert commit a1b2c3d, it introduced a bug in production"
+			]} />
 		</div>
 
 		<!-- 4.6 Force Push -->
@@ -245,7 +271,7 @@ git push                   # Push the revert`}
 			</Callout>
 
 			<div class="mb-4 grid gap-3 sm:grid-cols-2">
-				<div class="rounded-lg p-4" style="background: var(--color-caution-bg); border: 1px solid var(--color-caution);">
+				<div class="rounded-lg p-4" style="background: var(--color-caution-bg);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						<code class="text-xs" style="font-family: var(--font-mono);">git push --force</code>
 					</p>
@@ -254,7 +280,7 @@ git push                   # Push the revert`}
 						you permanently destroy their work.
 					</p>
 				</div>
-				<div class="rounded-lg p-4" style="background: var(--color-tip-bg); border: 1px solid var(--color-tip);">
+				<div class="rounded-lg p-4" style="background: var(--color-tip-bg);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-tip);">
 						<code class="text-xs" style="font-family: var(--font-mono);">git push --force-with-lease</code>
 					</p>
@@ -275,8 +301,8 @@ git push                   # Push the revert`}
 			</p>
 
 			<div
-				class="my-4 overflow-x-auto rounded-lg border"
-				style="border-color: var(--color-border);"
+				class="my-4 overflow-x-auto rounded-lg"
+				style="background: var(--color-bg-secondary);"
 			>
 				<table class="w-full text-xs">
 					<thead>

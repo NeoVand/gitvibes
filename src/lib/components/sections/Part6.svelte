@@ -44,27 +44,27 @@
 			</p>
 
 			<div class="mb-6 grid gap-3 sm:grid-cols-2">
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Changes</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your working directory (<code class="text-xs" style="font-family: var(--font-mono);">git status</code>).
 						Modified and untracked files appear here.
 					</p>
 				</div>
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Staged Changes</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your staging area. Files you've approved for the next commit.
 					</p>
 				</div>
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Commit Box</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your <code class="text-xs" style="font-family: var(--font-mono);">git commit -m "..."</code>. Type the message
 						and click the checkmark.
 					</p>
 				</div>
-				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">... Menu</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						All advanced commands: Pull, Push, Stash, Commit (Amend), Branch, Revert, and more.
@@ -148,21 +148,21 @@
 			</p>
 
 			<div class="mb-6 space-y-2">
-				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-note);"></div>
 					<div>
 						<span class="text-[13px] font-medium" style="color: var(--color-text);">Left Pane: "Incoming"</span>
 						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">Your teammate's changes</span>
 					</div>
 				</div>
-				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-tip);"></div>
 					<div>
 						<span class="text-[13px] font-medium" style="color: var(--color-text);">Right Pane: "Current"</span>
 						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">Your local changes</span>
 					</div>
 				</div>
-				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-important);"></div>
 					<div>
 						<span class="text-[13px] font-medium" style="color: var(--color-text);">Bottom Pane: "Result"</span>

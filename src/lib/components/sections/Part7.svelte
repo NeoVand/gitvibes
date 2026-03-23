@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BookOpen, Workflow, Bot, Table } from 'lucide-svelte';
+	import { BookOpen, Workflow, Table } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -35,7 +35,7 @@
 			/>
 
 			<div class="mt-6 space-y-3">
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">1</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sandbox</p>
@@ -44,14 +44,14 @@
 						</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">2</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Generate</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">"Vibe" with your AI assistant and prompt it to generate code.</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">3</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Review</p>
@@ -60,7 +60,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">4</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Save</p>
@@ -69,7 +69,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">5</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sync</p>
@@ -78,7 +78,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">6</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Push</p>
@@ -87,14 +87,14 @@
 						</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">7</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Propose</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">Create a Pull Request for human review.</p>
 					</div>
 				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">8</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Recover</p>
@@ -104,47 +104,13 @@
 			</div>
 		</div>
 
-		<!-- 7.2 Teaching AI Git -->
-		<div id="section-7-2" class="mb-14">
-			<SectionHeader level="section" icon={Bot} title="7.2 Teaching Your AI to Use Git (The Future)" color="var(--color-tip)" />
-
-			<Callout type="tip">
-				{#snippet children()}
-					The next level is not just using Git to manage AI; it's using AI to manage Git.
-				{/snippet}
-			</Callout>
-
-			<div class="mb-6 space-y-4">
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-						Cursor Rules
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Create <code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.cursor/rules</code> files
-						in your repository. You can literally teach your AI your team's Git workflow:
-						"All commit messages must follow Conventional Commits" or "All new work must be
-						on a <code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">feature/</code> branch."
-					</p>
-				</div>
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
-					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-						Claude Code & GitHub Actions
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Create advanced automations where an AI agent automatically reviews new PRs, updates
-						documentation to reflect code changes, and helps manage branches.
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<!-- Quick Reference -->
-		<div id="section-quick-ref" class="mb-8">
-			<SectionHeader level="section" icon={Table} title="Quick Reference Card" color="var(--color-tip)" />
+			<!-- 7.2 Quick Reference -->
+		<div id="section-7-2" class="mb-8">
+			<SectionHeader level="section" icon={Table} title="7.2 Quick Reference Card" color="var(--color-tip)" />
 
 			<div
-				class="overflow-x-auto rounded-lg border"
-				style="border-color: var(--color-border);"
+				class="overflow-x-auto rounded-lg"
+				style="background: var(--color-bg-secondary);"
 			>
 				<table class="w-full text-xs">
 					<thead>
@@ -213,7 +179,7 @@
 		<!-- Final Thoughts -->
 		<div
 			class="mt-12 rounded-xl p-8 text-center"
-			style="background: var(--color-primary-dim); border: 1px solid var(--color-primary);"
+			style="background: var(--color-primary-dim);"
 		>
 			<Callout type="important">
 				{#snippet children()}

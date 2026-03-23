@@ -4,6 +4,7 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-1" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -47,6 +48,11 @@ git config --global user.email "your-enterprise-email@company.com"`}
 			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
 				Don't want to use the terminal? No problem. VS Code will actually prompt you to configure your identity the first time you try to use Git. You can also open the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd>) and search for <strong>"Git: Config"</strong> to set these values without touching the terminal.
 			</p>
+
+			<VibeBox prompts={[
+				"Set up my Git config with my name and email for this project",
+				"Configure Git to use VS Code as my default editor"
+			]} />
 		</div>
 
 		<!-- 1.2 Authentication -->
@@ -106,6 +112,11 @@ git config --global credential.helper libsecret`}
 				alt="VS Code showing GitHub authentication prompt in the browser"
 				caption="VS Code automatically opens your browser to sign in to GitHub -- no tokens to manage."
 			/>
+
+			<VibeBox prompts={[
+				"Help me set up SSH authentication for GitHub",
+				"Generate an SSH key and add it to my GitHub account"
+			]} />
 		</div>
 
 		<!-- 1.3 Cloning -->
@@ -145,6 +156,11 @@ git config --global credential.helper libsecret`}
 					checked out. Other branches exist as remote-tracking branches until you explicitly check them out.
 				{/snippet}
 			</Callout>
+
+			<VibeBox prompts={[
+				"Clone the repo at github.com/our-team/project into my projects folder",
+				"Clone this repository and set up the development environment"
+			]} />
 		</div>
 	</div>
 </section>

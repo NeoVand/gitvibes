@@ -7,6 +7,7 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { coreLoopSteps } from '$lib/data/sandbox-steps';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-2" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -57,7 +58,7 @@
 			<div class="mb-6 grid gap-3 sm:grid-cols-2">
 				<div
 					class="rounded-lg p-4"
-					style="background: var(--color-caution-bg); border: 1px solid var(--color-caution);"
+					style="background: var(--color-caution-bg);"
 				>
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						"Changes not staged" (Red)
@@ -68,7 +69,7 @@
 				</div>
 				<div
 					class="rounded-lg p-4"
-					style="background: var(--color-caution-bg); border: 1px solid var(--color-caution);"
+					style="background: var(--color-caution-bg);"
 				>
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						"Untracked files" (Red)
@@ -98,6 +99,11 @@
 				alt="VS Code editor gutter showing colored indicators for added, modified, and deleted lines"
 				caption="Colored gutter indicators let you spot changes at a glance — green (added), blue (modified), and red (deleted). Click to preview."
 			/>
+
+			<VibeBox prompts={[
+				"What files did you just change? Show me a summary",
+				"Check git status and explain what each changed file does"
+			]} />
 		</div>
 
 		<!-- 2.2 Staging -->
@@ -180,6 +186,11 @@
 				alt="VS Code Diff Editor showing stage selected ranges option"
 				caption="In the Diff Editor, select specific lines and use the gutter to stage just those changes -- even more precise than git add -p."
 			/>
+
+			<VibeBox prompts={[
+				"Stage only the files related to the authentication feature",
+				"Review the diff of each changed file and stage the ones that look correct"
+			]} />
 		</div>
 
 		<!-- 2.3 Committing -->
@@ -207,8 +218,8 @@
 			</Callout>
 
 			<div
-				class="my-4 overflow-hidden rounded-lg border"
-				style="border-color: var(--color-border);"
+				class="my-4 overflow-hidden rounded-lg"
+				style="background: var(--color-bg-secondary);"
 			>
 				<table class="w-full text-[13px]">
 					<thead>
@@ -279,6 +290,11 @@
 				Try It: The Complete Loop
 			</h4>
 			<Sandbox title="The Core Safety Loop" steps={coreLoopSteps} id="core-loop" />
+
+			<VibeBox prompts={[
+				"Commit the staged changes with a good conventional commit message",
+				"Write a descriptive commit message for these changes and commit them"
+			]} />
 		</div>
 	</div>
 </section>

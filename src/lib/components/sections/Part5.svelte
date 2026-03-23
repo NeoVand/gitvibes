@@ -6,6 +6,7 @@
 	import Sandbox from '../ui/Sandbox.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { stashSteps, rebaseMergeSteps, conflictSteps } from '$lib/data/sandbox-steps';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-5" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -82,6 +83,11 @@ git stash pop`}
 				Try It: The Stash Workflow
 			</h4>
 			<Sandbox title="Stash: Context-Switch Safely" steps={stashSteps} id="stash" />
+
+			<VibeBox prompts={[
+				"I need to switch branches but I'm not done here — save my work temporarily",
+				"Stash my current changes, switch to main to fix a bug, then come back and restore them"
+			]} />
 		</div>
 
 		<!-- 5.2 Rebase vs Merge -->
@@ -96,7 +102,7 @@ git stash pop`}
 			</Callout>
 
 			<div class="mb-6 grid gap-4 sm:grid-cols-2">
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-note);">
 						git merge main
 					</h4>
@@ -108,7 +114,7 @@ git stash pop`}
 						History: "Worked on feature... merged main... worked on feature..."
 					</p>
 				</div>
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary); border: 1px solid var(--color-border);">
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-important);">
 						git rebase main
 					</h4>
@@ -145,6 +151,11 @@ git stash pop`}
 				Try It: Merge vs. Rebase
 			</h4>
 			<Sandbox title="Merge vs. Rebase" steps={rebaseMergeSteps} id="rebase-merge" />
+
+			<VibeBox prompts={[
+				"My branch is behind main — rebase my changes on top of the latest main",
+				"Update my feature branch with the latest changes from main using rebase"
+			]} />
 		</div>
 
 		<!-- 5.3 Merge Conflicts -->
@@ -217,6 +228,11 @@ const x = 5;
 				Try It: Resolving a Merge Conflict
 			</h4>
 			<Sandbox title="Merge Conflict Resolution" steps={conflictSteps} id="conflicts" />
+
+			<VibeBox prompts={[
+				"I have a merge conflict in model.py — help me resolve it, keeping both changes",
+				"Show me the conflicts and suggest the best resolution for each one"
+			]} />
 		</div>
 	</div>
 </section>

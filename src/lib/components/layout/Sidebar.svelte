@@ -110,8 +110,7 @@
 			icon: BookOpen,
 			children: [
 				{ id: 'section-7-1', label: 'AI-First Workflow' },
-				{ id: 'section-7-2', label: 'Teaching AI Git' },
-				{ id: 'section-quick-ref', label: 'Quick Reference' }
+				{ id: 'section-7-2', label: 'Quick Reference' }
 			]
 		}
 	];
