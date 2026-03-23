@@ -270,6 +270,10 @@ git push                   # Push the revert`}
 		<div id="section-4-7" class="mb-8">
 			<SectionHeader level="section" icon={Table} title="4.7 The Git &quot;Undo&quot; Recovery Matrix" color="var(--color-warning)" />
 
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Before moving to advanced topics, here's a quick-reference matrix summarizing every undo technique and when to use it:
+			</p>
+
 			<div
 				class="my-4 overflow-x-auto rounded-lg border"
 				style="border-color: var(--color-border);"
@@ -279,6 +283,7 @@ git push                   # Push the revert`}
 						<tr style="background: var(--color-bg-tertiary);">
 							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);">Scenario</th>
 							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);">Command</th>
+							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);">What It Does</th>
 							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);">Safe?</th>
 							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);">VS Code</th>
 						</tr>
@@ -287,43 +292,50 @@ git push                   # Push the revert`}
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">AI's change is bad, not committed</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git restore .</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">Local Only</span></td>
-							<td class="px-3 py-2">Discard Changes</td>
+							<td class="px-3 py-2">Discards all local changes in the working directory</td>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">Right-click file → "Discard Changes"</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">File staged by accident</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git restore --staged &lt;file&gt;</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">Local Only</span></td>
-							<td class="px-3 py-2">Unstage Changes</td>
+							<td class="px-3 py-2">Unstages a file, moving it from Staging back to Changes</td>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">Right-click staged file → "Unstage Changes"</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Typo in last commit message</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git commit --amend</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">Local Only</span></td>
-							<td class="px-3 py-2">Commit (Amend)</td>
+							<td class="px-3 py-2">Edits the message of the most recent commit</td>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">... → Commit → Commit (Amend)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Forgot a file in last commit</td>
-							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git commit --amend --no-edit</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">Local Only</span></td>
-							<td class="px-3 py-2">Commit Staged (Amend)</td>
+							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git add &lt;file&gt;</code><br /><code style="font-family: var(--font-mono);">git commit --amend --no-edit</code></td>
+							<td class="px-3 py-2">Adds new files to the most recent commit</td>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">Stage files → ... → Commit Staged (Amend)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Last 3 local commits are bad</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git reset --hard HEAD~3</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-warning);">Rewrites History</span></td>
-							<td class="px-3 py-2">GitLens: Reset</td>
+							<td class="px-3 py-2">Destroys the last 3 commits and all their code changes</td>
+							<td class="px-3 py-2"><span style="color: var(--color-warning);">Local Only! (Rewrites history)</span></td>
+							<td class="px-3 py-2">GitLens → Right-click commit → Reset</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Pushed a bug to the team</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git revert &lt;hash&gt;</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">100% Safe</span></td>
-							<td class="px-3 py-2">Revert Commit</td>
+							<td class="px-3 py-2">Creates a new commit that is the inverse of the bad one</td>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">100% Safe (Public)</span></td>
+							<td class="px-3 py-2">GitLens → Right-click commit → "Revert Commit..."</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Reset a public branch, need to push</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git push --force-with-lease</code></td>
-							<td class="px-3 py-2"><span style="color: var(--color-caution);">Break Glass</span></td>
+							<td class="px-3 py-2">Forcefully overwrites remote, only if no one else pushed</td>
+							<td class="px-3 py-2"><span style="color: var(--color-caution);">Enterprise "Break Glass"</span></td>
 							<td class="px-3 py-2">Terminal only</td>
 						</tr>
 					</tbody>
