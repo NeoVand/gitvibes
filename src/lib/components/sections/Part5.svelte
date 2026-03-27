@@ -33,8 +33,8 @@
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You're in the middle of a complex AI refactor with 10 modified
-					files. Your manager says: "Urgent bug on main!" You can't commit half-baked work, but Git
-					won't let you switch branches with a dirty working directory.
+					files. Your manager says: "Urgent bug on main!" You can't commit half-baked work, and Git
+					may block you from switching branches if your uncommitted changes conflict with the target branch.
 				{/snippet}
 			</Callout>
 
@@ -45,7 +45,7 @@
 			<CodeBlock
 				title="Stash, fix, and return"
 				code={`# 1. Stash your changes
-git stash save "WIP: refactoring pipeline, AI changes"
+git stash push -m "WIP: refactoring pipeline, AI changes"
 
 # 2. Fix the urgent bug
 git switch main
@@ -140,7 +140,7 @@ git stash pop`}
 			</Callout>
 
 			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				VS Code supports both approaches. Use the <strong>...</strong> menu in Source Control → <strong>"Pull (Rebase)"</strong> to rebase instead of merge when pulling. For merging, use the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd>) → <strong>"Git: Merge Branch..."</strong> and select the branch to merge.
+				VS Code supports both approaches. Use the <strong>...</strong> menu in Source Control → <strong>"Pull (Rebase)"</strong> to rebase instead of merge when pulling. For merging, use the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd> / <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+P</kbd>) → <strong>"Git: Merge Branch..."</strong> and select the branch to merge.
 			</p>
 
 			<Callout type="tip">
@@ -182,14 +182,14 @@ git stash pop`}
 				The Conflict Markers
 			</h4>
 			<CodeBlock
-				lang="javascript"
+				lang="python"
 				title="What you'll see in the file"
 				code={`<<<<<<< HEAD
-// Your AI's change
-const x = 10;
+# Your AI's change
+x = 10
 =======
-// Your teammate's change
-const x = 5;
+# Your teammate's change
+x = 5
 >>>>>>> origin/main`}
 			/>
 

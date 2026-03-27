@@ -46,7 +46,7 @@ git config --global user.email "your-enterprise-email@company.com"`}
 			</Callout>
 
 			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
-				Don't want to use the terminal? No problem. VS Code will actually prompt you to configure your identity the first time you try to use Git. You can also open the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd>) and search for <strong>"Git: Config"</strong> to set these values without touching the terminal.
+				Don't want to use the terminal? No problem. VS Code will actually prompt you to configure your identity the first time you try to use Git. You can also open the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd> / <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+P</kbd>) and search for <strong>"Git: Config"</strong> to set these values without touching the terminal.
 			</p>
 
 			<VibeBox prompts={[
@@ -143,7 +143,7 @@ git config --global credential.helper libsecret`}
 
 			<ol class="mb-4 list-inside list-decimal space-y-1.5 text-[13px]" style="color: var(--color-text-secondary);">
 				<li>Open VS Code. Click <strong>"Clone Repository"</strong> on the Welcome page</li>
-				<li>Or use the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd>) and type <strong>Git: Clone</strong></li>
+				<li>Or use the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd> / <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+P</kbd>) and type <strong>Git: Clone</strong></li>
 				<li>Paste the HTTPS URL. VS Code handles authentication automatically</li>
 				<li>Choose a save location, then open the folder</li>
 			</ol>

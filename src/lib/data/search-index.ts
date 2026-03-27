@@ -540,7 +540,7 @@ export const searchIndex: SearchEntry[] = [
 		part: 'Advanced Workflows',
 		keywords: [
 			'git stash',
-			'git stash save',
+			'git stash push',
 			'git stash pop',
 			'git stash apply',
 			'stash',
@@ -759,8 +759,8 @@ export const searchIndex: SearchEntry[] = [
 			'The complete 8-step AI-first workflow: Sandbox, Generate, Review, Save, Sync, Push, Propose, Recover.'
 	},
 	{
-		id: 'section-7-2',
-		title: 'Teaching AI Git',
+		id: 'section-7-3',
+		title: 'Teaching Your AI Git',
 		part: 'Conclusion',
 		keywords: [
 			'teaching AI',
@@ -768,6 +768,7 @@ export const searchIndex: SearchEntry[] = [
 			'cursor rules',
 			'.cursor/rules',
 			'claude code',
+			'CLAUDE.md',
 			'github actions',
 			'automation',
 			'AI agent',
@@ -783,7 +784,7 @@ export const searchIndex: SearchEntry[] = [
 			'Configure AI tools like Cursor and Claude Code to follow your team Git workflow automatically.'
 	},
 	{
-		id: 'section-quick-ref',
+		id: 'section-7-2',
 		title: 'Quick Reference',
 		part: 'Conclusion',
 		keywords: [

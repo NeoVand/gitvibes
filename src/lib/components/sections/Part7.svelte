@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { BookOpen, Workflow, Table } from 'lucide-svelte';
+	import { BookOpen, Workflow, Table, Sparkles, MessageSquare } from 'lucide-svelte';
 	import Callout from '../ui/Callout.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-7" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -106,6 +107,11 @@
 					</div>
 				</div>
 			</div>
+
+			<VibeBox prompts={[
+				"Walk me through the full Git workflow for starting a new feature from scratch",
+				"I just finished coding — what Git steps should I follow before creating a PR?"
+			]} />
 		</div>
 
 			<!-- 7.2 Quick Reference -->
@@ -166,7 +172,7 @@
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Stash work in progress</td>
-							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git stash save "message"</code></td>
+							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git stash push -m "message"</code></td>
 							<td class="px-3 py-2">... menu: Stash</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
@@ -182,6 +188,60 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+
+		<!-- 7.3 Teaching Your AI to Use Git -->
+		<div id="section-7-3" class="mb-14">
+			<SectionHeader level="section" icon={Sparkles} title="7.3 Teaching Your AI to Use Git" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				The next level is not just using Git to manage AI — it's using AI to manage Git. Modern AI coding tools can be configured to follow your team's Git conventions automatically.
+			</p>
+
+			<div class="mb-6 space-y-3">
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						Cursor Rules
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Cursor allows you to create <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.cursor/rules</code> files within your repository. You can teach your AI your team's Git workflow: "All commit messages must follow Conventional Commits" or "All new work must be on a <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">feature/</code> branch."
+					</p>
+				</div>
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						Claude Code & CLAUDE.md
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Claude Code reads <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">CLAUDE.md</code> files for project-specific instructions. You can define branch naming conventions, commit message formats, and PR templates that Claude will follow automatically.
+					</p>
+				</div>
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						GitHub Actions & AI Agents
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Create automations where AI agents automatically review new PRs, update documentation to reflect code changes, and help manage branches — turning your Git workflow into a fully automated pipeline.
+					</p>
+				</div>
+			</div>
+
+			<VibeBox prompts={[
+				"Create a .cursor/rules file that enforces Conventional Commits and feature branches",
+				"Set up a CLAUDE.md with our team's Git workflow and branch naming conventions"
+			]} />
+		</div>
+
+		<!-- Final Thoughts -->
+		<div class="mb-8">
+			<Callout type="important">
+				{#snippet children()}
+					<strong>Final Thoughts:</strong> Your AI assistants are powerful tools that lack context and
+					accountability. Git is your system of accountability. It provides the immutable history,
+					the instant "undo" button, and the human-in-the-loop review layer that transforms
+					high-velocity AI coding from a risky experiment into a professional, safe, and scalable
+					engineering discipline. Master it, and you'll transform AI-assisted coding into a superpower.
+				{/snippet}
+			</Callout>
 		</div>
 
 	</div>

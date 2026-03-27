@@ -54,7 +54,7 @@
 		'part-7',
 		'section-7-1',
 		'section-7-2',
-		'section-quick-ref'
+		'section-7-3'
 	];
 
 	function getEffectiveTheme(): 'light' | 'dark' {

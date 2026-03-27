@@ -4,6 +4,7 @@
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
 <section id="part-6" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -95,6 +96,11 @@
 				alt="VS Code Source Control Graph showing commit history with branches"
 				caption="The Source Control Graph visualizes your commit history and branch structure -- a powerful way to understand how branches relate."
 			/>
+
+			<VibeBox prompts={[
+				"Show me how to stage and commit changes using the VS Code Source Control panel",
+				"Walk me through the VS Code Git workflow without using the terminal"
+			]} />
 		</div>
 
 		<!-- 6.2 Timeline & GitLens -->
@@ -132,6 +138,11 @@
 				alt="VS Code showing Git blame information in the status bar"
 				caption="Built-in Git blame shows the author and commit message for the current line right in the status bar."
 			/>
+
+			<VibeBox prompts={[
+				"Show me the history of changes to this file — who changed what and when",
+				"Who last modified this function and what was the commit message?"
+			]} />
 		</div>
 
 		<!-- 6.3 3-Way Merge Editor -->
@@ -198,6 +209,11 @@
 				alt="VS Code AI-powered merge conflict resolution with GitHub Copilot"
 				caption="GitHub Copilot can analyze conflicting changes and suggest an intelligent resolution -- the future of merge conflict handling."
 			/>
+
+			<VibeBox prompts={[
+				"I have a merge conflict — open the VS Code merge editor and help me resolve it",
+				"Accept the incoming changes for all conflicts in this file"
+			]} />
 		</div>
 	</div>
 </section>

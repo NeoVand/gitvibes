@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { GitBranch, Undo2, Users, Monitor, Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
+	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 
 	const cards = [
 		{ icon: GitBranch, title: 'Branch & Experiment', desc: 'Create safe sandboxes for AI work', color: 'var(--color-tip)' },
@@ -70,7 +71,8 @@
 				<ScrollText size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-primary);" />
 				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
 					<strong style="color: var(--color-text);">Quick reference:</strong> Need a command fast? Hit
-					<kbd class="mx-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium" style="background: var(--color-bg-tertiary); color: var(--color-text);">⌘K</kbd>
+					<kbd class="mx-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium" style="background: var(--color-bg-tertiary); color: var(--color-text);">⌘K</kbd> /
+					<kbd class="mx-0.5 rounded px-1.5 py-0.5 text-[11px] font-medium" style="background: var(--color-bg-tertiary); color: var(--color-text);">Ctrl+K</kbd>
 					to search, or open the
 					<strong style="color: var(--color-text);">Git Cheat Sheet</strong>
 					from the header for a complete command reference.
@@ -233,8 +235,19 @@
 			The typical workflow is: you <strong style="color: var(--color-text);">clone</strong> (download) a remote repo to your machine, make changes locally, then <strong style="color: var(--color-text);">push</strong> (upload) your changes back. Git keeps both copies in sync.
 		</p>
 
-		<p class="text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
-			Every change in Git goes through three stages — your <strong style="color: var(--color-text);">Working Directory</strong> (where you edit files), the <strong style="color: var(--color-text);">Staging Area</strong> (where you prepare a snapshot), and the <strong style="color: var(--color-text);">Repository</strong> (where snapshots are permanently saved as "commits"). Don't worry if this sounds abstract — you'll see each step in action throughout this guide.
+		<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+			Every change in Git goes through three stages — your <strong style="color: var(--color-text);">Working Directory</strong> (where you edit files), the <strong style="color: var(--color-text);">Staging Area</strong> (where you prepare a snapshot), and the <strong style="color: var(--color-text);">Repository</strong> (where snapshots are permanently saved as "commits"). Here's how they relate:
+		</p>
+
+		<MermaidDiagram
+			definition={`graph LR
+  A(["Working Directory"]) -->|"git add"| B(["Staging Area"])
+  B -->|"git commit"| C(["Repository"])
+  C -->|"git push"| D(["Remote"])`}
+			id="repo-stages"
+		/>
+		<p class="mt-2 px-1 text-xs" style="color: var(--color-text-muted);">
+			You edit files in your Working Directory, stage the ones you approve, commit them as a permanent snapshot, and push to share with your team.
 		</p>
 	</div>
 </section>

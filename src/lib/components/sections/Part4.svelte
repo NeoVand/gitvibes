@@ -318,6 +318,10 @@ git push                   # Push the revert`}
 					</p>
 				</div>
 			</div>
+			<VibeBox prompts={[
+				"I amended a commit I already pushed and now I can't push — help me fix it safely",
+				"What's the safest way to force push after rewriting history on my branch?"
+			]} />
 		</div>
 
 		<!-- 4.7 Recovery Matrix -->

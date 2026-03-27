@@ -113,13 +113,7 @@ Branch 'feature/ai-experiment' set up to track 'origin/feature/ai-experiment'.`,
   branch feature/ai-experiment
   checkout feature/ai-experiment
   commit id: "AI refactor attempt 1"
-  commit id: "AI refactor attempt 2"
-  checkout main
-  commit id: "Teammate update"
-  checkout feature/ai-experiment
-  commit id: "AI refactor final"
-  checkout main
-  merge feature/ai-experiment tag: "PR Merged"`
+  commit id: "AI refactor attempt 2" type: HIGHLIGHT`
 	}
 ];
 
@@ -151,6 +145,15 @@ Changes not staged for commit:
 		output: ``,
 		diagram: `graph LR
   A["Staged"] -->|"git restore --staged"| B["Unstaged"]`
+	},
+	{
+		command: 'git commit --amend --no-edit',
+		description: 'Scenario 3: Add a forgotten file to the last commit',
+		output: `[feature/experiment a2b3c4e] feat: Update model and config
+ Date: Mon Mar 27 10:30:00 2026 -0700
+ 3 files changed, 45 insertions(+), 12 deletions(-)`,
+		diagram: `graph LR
+  A["Forgotten file"] -->|"git add + amend"| B["Updated last commit"]`
 	},
 	{
 		command: 'git reset --soft HEAD~1',
@@ -188,7 +191,7 @@ Changes not staged for commit:
   commit id: "WIP changes" type: HIGHLIGHT`
 	},
 	{
-		command: 'git stash save "WIP: refactoring pipeline, AI changes"',
+		command: 'git stash push -m "WIP: refactoring pipeline, AI changes"',
 		description: 'Stash your dirty changes temporarily',
 		output: `Saved working directory and index state
   On feature/A: WIP: refactoring pipeline, AI changes`,
@@ -337,11 +340,11 @@ Unmerged paths:
 		command: 'code src/model.py',
 		description: 'Open the file and resolve conflict markers',
 		output: `<<<<<<< HEAD
-// Your AI's change
-const x = 10;
+# Your AI's change
+x = 10
 =======
-// Your teammate's change
-const x = 5;
+# Your teammate's change
+x = 5
 >>>>>>> origin/main`,
 		diagram: `graph TD
   A["Pull"] --> B["CONFLICT"]
