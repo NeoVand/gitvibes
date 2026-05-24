@@ -4,6 +4,7 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { coreLoopSteps } from '$lib/data/sandbox-steps';
@@ -160,6 +161,7 @@
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">n</code> (skip),
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">s</code> (split into smaller pieces),
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">q</code> (quit).
+				In the <strong>Try it yourself</strong> playground below, <code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code> is simplified to file-by-file staging — type <code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">y</code> or <code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">n</code> on the next line for each file.
 			</p>
 
 			<h4 class="mb-2 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -302,6 +304,9 @@
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Complete Loop
 			</h4>
+			<PlaygroundNote>
+				Use <strong>Watch</strong> to step through the workflow with guided examples, or <strong>Try it yourself</strong> to run real Git commands in your browser. Type <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">help</code> in the terminal for the full command list.
+			</PlaygroundNote>
 			<LessonActivity
 				title="The Core Safety Loop"
 				steps={coreLoopSteps}

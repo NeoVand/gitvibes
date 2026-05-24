@@ -376,3 +376,55 @@ x = 5
   E --> F["Commit"]`
 	}
 ];
+
+// ── Part 3: Sync with remote ─────────────────────────────────────────
+export const syncSteps: SandboxStep[] = [
+	{
+		command: 'git fetch origin',
+		description: 'Download teammates\' commits without merging yet',
+		output: `remote: Enumerating objects: 8, done.
+From https://github.com/your-org/project
+   b2c3d4e..f1a2b3c  main       -> origin/main`,
+		diagram: `sequenceDiagram
+  participant R as origin/main
+  participant L as Local
+  R->>L: fetch (download only)`
+	},
+	{
+		command: 'git log --oneline --all',
+		description: 'See what arrived from the remote',
+		output: `f1a2b3c (origin/main) Teammate commit F
+e5f6a7b (origin/main) Teammate commit E
+b2c3d4e (HEAD -> feature/sync) My feature commit
+a1b2c3d (main) Local main`,
+		diagram: `gitGraph
+  commit id: "Shared"
+  commit id: "Local main"
+  branch feature/sync
+  commit id: "My feature"
+  checkout main
+  commit id: "Teammate E"
+  commit id: "Teammate F"`
+	},
+	{
+		command: 'git merge origin/main',
+		description: 'Bring remote updates into your feature branch',
+		output: `Merge made by the 'ort' strategy.
+ 1 file changed, 5 insertions(+)`,
+		diagram: `sequenceDiagram
+  participant L as feature branch
+  L->>L: merge origin/main`
+	},
+	{
+		command: 'git push -u origin feature/sync-practice',
+		description: 'Upload your updated branch to the remote',
+		output: `Enumerating objects: 6, done.
+To https://github.com/your-org/project.git
+ * [new branch]      feature/sync-practice -> feature/sync-practice
+Branch 'feature/sync-practice' set up to track 'origin/feature/sync-practice'.`,
+		diagram: `sequenceDiagram
+  participant L as Local
+  participant R as origin
+  L->>R: push`
+	}
+];

@@ -1,6 +1,8 @@
 import './polyfills';
 import git from 'isomorphic-git';
 import LightningFS from '@isomorphic-git/lightning-fs';
+import { RemoteState, writeRemoteTrackingRef, type RemoteBranchRef } from './remote-state';
+import type { PatchSession } from './patch-mode';
 
 export interface PlaygroundFile {
 	path: string;
@@ -25,6 +27,7 @@ export interface RepoSeed {
 	branches?: BranchSeed[];
 	workingFiles?: PlaygroundFile[];
 	stagedFiles?: string[];
+	remote?: RemoteBranchRef[];
 }
 
 const AUTHOR = { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' };
@@ -32,6 +35,8 @@ const AUTHOR = { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' };
 export class GitEngine {
 	fs: LightningFS;
 	dir = '/repo';
+	remote = new RemoteState();
+	patchSession: PatchSession | null = null;
 	private initPromise: Promise<void> | null = null;
 
 	constructor(private fsName = 'gitvibes-playground') {
@@ -41,6 +46,8 @@ export class GitEngine {
 	async reset(seed?: RepoSeed): Promise<void> {
 		this.fs = new LightningFS(`${this.fsName}-${Date.now()}`);
 		this.initPromise = null;
+		this.remote.clear();
+		this.patchSession = null;
 		await this.ensureInit();
 
 		if (!seed) return;
@@ -70,11 +77,20 @@ export class GitEngine {
 				await git.add({ fs: this.fs, dir: this.dir, filepath });
 			}
 		}
+
+		if (seed.remote) {
+			for (const ref of seed.remote) {
+				this.remote.setBranch(ref.branch, ref.oid);
+				await writeRemoteTrackingRef(this, 'origin', ref.branch, ref.oid);
+			}
+		}
 	}
 
 	async resetWith(fn: (engine: GitEngine) => Promise<void>): Promise<void> {
 		this.fs = new LightningFS(`${this.fsName}-${Date.now()}`);
 		this.initPromise = null;
+		this.remote.clear();
+		this.patchSession = null;
 		await this.ensureInit();
 		await fn(this);
 	}

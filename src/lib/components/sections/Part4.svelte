@@ -4,6 +4,7 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { undoSteps } from '$lib/data/sandbox-steps';
@@ -403,6 +404,9 @@ git push                   # Push the revert`}
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Undo Toolkit
 			</h4>
+			<PlaygroundNote>
+				The playground includes <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git revert HEAD</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit --amend</code>. Try reverting the pushed bad commit, then amending after staging a fix.
+			</PlaygroundNote>
 			<LessonActivity title="Undo Operations" steps={undoSteps} scenarioId="undo" id="undo" />
 		</div>
 	</div>

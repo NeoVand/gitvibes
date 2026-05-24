@@ -4,9 +4,10 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { branchingSteps } from '$lib/data/sandbox-steps';
+	import { branchingSteps, syncSteps } from '$lib/data/sandbox-steps';
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -163,7 +164,20 @@ git merge origin/main   # Merge the updates into your branch`}
 			<VsCodeScreenshot
 				src="quickstart/sync-changes.png"
 				alt="VS Code Source Control showing Sync Changes button with incoming and outgoing commit counts"
-				caption="The Sync Changes button combines pull + push in one click. The numbers show exactly how many commits are incoming (↓) and outgoing (↑)."
+				caption="The Sync Changes button combines pull + push in one click. The numbers show incoming (↓) and outgoing (↑) commit counts."
+			/>
+
+			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+				Try It: Fetch and Merge Remote Updates
+			</h4>
+			<PlaygroundNote>
+				The playground simulates a remote called <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">origin</code> — no real network calls. After <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git fetch origin</code>, run <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git log --oneline --all</code> to see both local and remote branches.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Sync with Remote"
+				steps={syncSteps}
+				scenarioId="sync-remote"
+				id="sync-remote"
 			/>
 
 			<VibeBox prompts={[
@@ -231,6 +245,9 @@ git merge origin/main   # Merge the updates into your branch`}
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Branch, Commit, and Push
 			</h4>
+			<PlaygroundNote>
+				<code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git push</code> in the playground updates a simulated remote — try <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git remote -v</code> to see it.
+			</PlaygroundNote>
 			<LessonActivity
 				title="Branching Workflow"
 				steps={branchingSteps}

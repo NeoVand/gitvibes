@@ -46,8 +46,9 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sandbox</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							Create an isolated branch — or practice in the
-							<a href="{base}/playground" class="underline underline-offset-2" style="color: var(--color-primary);">Git Playground</a>.
+							Create an isolated branch — or practice every step in the
+							<a href="{base}/playground" class="underline underline-offset-2" style="color: var(--color-primary);">Git Playground</a>
+							(Watch guided demos in each lesson, or Try it yourself with real in-browser Git).
 							<code style="font-family: var(--font-mono);">git switch -c ai-experiment/new-feature</code>
 						</p>
 					</div>
@@ -187,6 +188,11 @@
 							<td class="px-3 py-2">Safe force push</td>
 							<td class="px-3 py-2"><code style="font-family: var(--font-mono);">git push --force-with-lease</code></td>
 							<td class="px-3 py-2">Terminal only</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-3 py-2">Practice all commands</td>
+							<td class="px-3 py-2"><a href="{base}/playground" class="underline underline-offset-2" style="color: var(--color-primary);">Git Playground</a></td>
+							<td class="px-3 py-2">Try it yourself tabs in Parts 2–5</td>
 						</tr>
 					</tbody>
 				</table>

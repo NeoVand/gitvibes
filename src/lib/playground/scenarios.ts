@@ -1,5 +1,11 @@
 import type { RepoSeed, GitEngine } from './git-engine';
-import { buildMergeConflictRepo, buildMergeRebaseRepo } from './seed-builders';
+import {
+	buildBranchingRepo,
+	buildMergeConflictRepo,
+	buildMergeRebaseRepo,
+	buildSyncRemoteRepo,
+	buildUndoRepo
+} from './seed-builders';
 
 export interface PlaygroundScenario {
 	id: string;
@@ -16,11 +22,12 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		id: 'core-loop',
 		title: 'AI changed 4 files',
 		description: 'The AI modified three files and created one new file. Review and commit safely.',
-		hint: 'Start with git status, stage what you trust, then commit.',
+		hint: 'Try git add -p to stage file-by-file, or git add on specific paths you trust.',
 		suggestedCommands: [
 			'git status',
-			'git add src/auth.py src/routes.py',
-			'git add .',
+			'git add -p',
+			'y',
+			'n',
 			'git commit -m "feat: Add user authentication"'
 		],
 		seed: {
@@ -47,55 +54,42 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	{
 		id: 'branching',
 		title: 'Branch for AI experiment',
-		description: 'Main is stable. Create a branch and commit AI work without touching main.',
-		hint: 'Create a branch with git switch -c, then commit on it.',
+		description: 'Main is stable. Create a branch, commit AI work, and push to origin.',
+		hint: 'Create a branch, commit, then git push -u origin with your branch name.',
 		suggestedCommands: [
 			'git log --oneline',
 			'git switch -c feature/ai-experiment',
 			'git add .',
-			'git commit -m "feat: AI refactor attempt 1"'
+			'git commit -m "feat: AI refactor attempt 1"',
+			'git push -u origin feature/ai-experiment'
 		],
-		seed: {
-			commits: [
-				{
-					message: 'Initial commit',
-					files: [{ path: 'src/main.py', content: 'def main():\n    pass\n' }]
-				},
-				{ message: 'Stable feature A', files: [{ path: 'src/main.py', content: 'def main():\n    run()\n' }] }
-			],
-			workingFiles: [
-				{ path: 'src/main.py', content: 'def main():\n    run_ai_pipeline()\n' },
-				{ path: 'src/utils.py', content: 'def helper():\n    return 42\n' }
-			]
-		}
+		seedFn: buildBranchingRepo
+	},
+	{
+		id: 'sync-remote',
+		title: 'Sync with teammates',
+		description: 'Your feature branch is ready, but origin/main has new commits. Fetch and merge them.',
+		hint: 'Use git fetch origin, then git merge origin/main — or git pull origin main in one step.',
+		suggestedCommands: [
+			'git fetch origin',
+			'git log --oneline --all',
+			'git merge origin/main'
+		],
+		seedFn: buildSyncRemoteRepo
 	},
 	{
 		id: 'undo',
 		title: 'Undo toolkit',
-		description: 'AI made a mess. Practice restore, unstage, amend, and soft reset.',
-		hint: 'Try git restore on one file, git restore --staged to unstage, or git reset --soft HEAD~1.',
+		description: 'AI made a mess. Practice restore, unstage, amend, soft reset, and revert.',
+		hint: 'Try git revert HEAD for the pushed bad commit, or git commit --amend after staging a fix.',
 		suggestedCommands: [
 			'git status',
 			'git restore src/model.py',
-			'git restore --staged src/utils.py',
-			'git reset --soft HEAD~1'
+			'git log --oneline',
+			'git revert HEAD',
+			'git commit --amend -m "feat: experiment (fixed)"'
 		],
-		seed: {
-			commits: [{ message: 'Initial commit', files: [{ path: 'src/model.py', content: 'v1\n' }] }],
-			branches: [
-				{
-					name: 'feature/experiment',
-					commits: [{ message: 'feat: experiment', files: [{ path: 'src/model.py', content: 'v2\n' }] }]
-				}
-			],
-			branch: 'feature/experiment',
-			workingFiles: [
-				{ path: 'src/model.py', content: 'messed up by ai\n' },
-				{ path: 'src/utils.py', content: 'bad ai output\n' },
-				{ path: 'src/config.py', content: 'wrong config\n' }
-			],
-			stagedFiles: ['src/utils.py']
-		}
+		seedFn: buildUndoRepo
 	},
 	{
 		id: 'stash',
@@ -137,7 +131,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		id: 'conflicts',
 		title: 'Merge conflict',
 		description: 'A merge is in progress with a conflict in src/model.py. Resolve and commit.',
-		hint: 'Check git status, fix src/model.py with echo, then git add and commit.',
+		hint: 'Use echo to write the resolved file, then git add and git commit.',
 		suggestedCommands: [
 			'git status',
 			"echo 'x = 10' > src/model.py",
@@ -149,14 +143,13 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	{
 		id: 'clean-slate',
 		title: 'Clean slate',
-		description: 'Empty repo — practice any Git commands from scratch.',
-		hint: 'Type help to see all supported commands.',
+		description: 'Empty repo — type help to see all supported commands.',
+		hint: 'Type help to see the full command list.',
 		suggestedCommands: ['git status', 'git branch', 'help'],
 		seed: { commits: [] }
 	}
 ];
 
-/** Backward-compatible aliases for standalone playground */
 export const scenarioAliases: Record<string, string> = {
 	'ai-changes': 'core-loop',
 	'branch-experiment': 'branching',
@@ -176,10 +169,10 @@ export async function loadScenarioSeed(engine: GitEngine, scenario: PlaygroundSc
 	}
 }
 
-/** Lesson sections that embed the playground */
 export const lessonScenarioIds = [
 	'core-loop',
 	'branching',
+	'sync-remote',
 	'undo',
 	'stash',
 	'rebase-merge',
@@ -191,3 +184,19 @@ export type LessonScenarioId = (typeof lessonScenarioIds)[number];
 export function isLessonScenario(id: string): id is LessonScenarioId {
 	return (lessonScenarioIds as readonly string[]).includes(id);
 }
+
+export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
+  git status | git diff | git log [--oneline] [--all]
+  git add <file> | git add . | git add -p [--patch]
+  git commit -m "msg" | git commit --amend [--no-edit] [-m "msg"]
+  git branch | git switch [-c] <branch> | git checkout [-b] <branch>
+  git restore <file> | git restore --staged <file>
+  git reset --soft|--mixed|--hard HEAD~N
+  git merge <branch> | git rebase <branch>
+  git stash push -m "msg" | git stash pop | git stash list
+  git fetch origin | git pull origin <branch> | git push [-u] origin [branch]
+  git remote -v | git revert <commit>
+  echo "content" > file  (edit files / resolve conflicts)
+  y | n | q | a  (responses during git add -p)
+
+Other: clear, help`;

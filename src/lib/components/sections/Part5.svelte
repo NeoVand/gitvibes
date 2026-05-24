@@ -4,6 +4,7 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { stashSteps, rebaseMergeSteps, conflictSteps } from '$lib/data/sandbox-steps';
 	import VibeBox from '../ui/VibeBox.svelte';
@@ -197,7 +198,8 @@ x = 5
 				Delete all the markers (<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">&lt;&lt;&lt;</code>,
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">===</code>,
 				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">&gt;&gt;&gt;</code>) and edit the code to
-				be the correct final version, then stage and commit.
+				be the correct final version, then stage and commit. In the playground, you can write the resolved file with
+				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">echo 'x = 10' &gt; src/model.py</code>.
 			</p>
 
 			<h4 class="mb-3 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -239,6 +241,9 @@ x = 5
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Resolving a Merge Conflict
 			</h4>
+			<PlaygroundNote>
+				The scenario starts mid-merge with conflict markers in <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">src/model.py</code>. Use <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">echo</code> to overwrite the file, then <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code> to finish.
+			</PlaygroundNote>
 			<LessonActivity title="Merge Conflict Resolution" steps={conflictSteps} scenarioId="conflicts" id="conflicts" />
 
 			<VibeBox prompts={[

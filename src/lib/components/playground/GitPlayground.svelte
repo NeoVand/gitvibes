@@ -86,21 +86,34 @@
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		const command = input.trim();
-		if (!command || !engine) return;
+		if (!command) return;
 
 		history = [...history, { type: 'input', text: command }];
 		input = '';
 		historyIndex = -1;
 
-		const result = await runGitCommand(engine, command);
-
-		if (result.output === '__CLEAR__') {
-			history = [];
-		} else if (result.output) {
-			history = [...history, { type: 'output', text: result.output, error: result.error }];
+		if (!engine) {
+			history = [
+				...history,
+				{ type: 'output', text: 'Repository still initializing. Try again in a moment.', error: true }
+			];
+			return;
 		}
 
-		await refreshDiagram();
+		try {
+			const result = await runGitCommand(engine, command);
+
+			if (result.output === '__CLEAR__') {
+				history = [];
+			} else if (result.output) {
+				history = [...history, { type: 'output', text: result.output, error: result.error }];
+			}
+
+			await refreshDiagram();
+		} catch (err) {
+			const message = err instanceof Error ? err.message : String(err);
+			history = [...history, { type: 'output', text: `error: ${message}`, error: true }];
+		}
 		scrollTerminal();
 	}
 
