@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { base } from '$app/paths';
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';
@@ -11,73 +12,54 @@
 	import Part5 from '$lib/components/sections/Part5.svelte';
 	import Part6 from '$lib/components/sections/Part6.svelte';
 	import Part7 from '$lib/components/sections/Part7.svelte';
+	import { sectionIds } from '$lib/data/sections';
+	import {
+		loadThemePreference,
+		saveThemePreference,
+		getEffectiveTheme,
+		applyTheme,
+		type ThemePreference
+	} from '$lib/theme';
 
 	let sidebarOpen = $state(false);
 	let cheatSheetOpen = $state(false);
 	let activeSection = $state('hero');
-	let theme = $state<'light' | 'dark' | 'system'>('system');
+	let theme = $state<ThemePreference>('system');
 	let navClickActive = false;
 
-	const sectionIds = [
-		'hero',
-		'section-intro-what',
-		'section-intro-install',
-		'section-intro-repo',
-		'part-1',
-		'section-1-1',
-		'section-1-2',
-		'section-1-3',
-		'part-2',
-		'section-2-1',
-		'section-2-2',
-		'section-2-3',
-		'part-3',
-		'section-3-1',
-		'section-3-2',
-		'section-3-3',
-		'part-4',
-		'section-4-1',
-		'section-4-2',
-		'section-4-3',
-		'section-4-4',
-		'section-4-5',
-		'section-4-6',
-		'section-4-7',
-		'part-5',
-		'section-5-1',
-		'section-5-2',
-		'section-5-3',
-		'part-6',
-		'section-6-1',
-		'section-6-2',
-		'section-6-3',
-		'part-7',
-		'section-7-1',
-		'section-7-2',
-		'section-7-3'
-	];
-
-	function getEffectiveTheme(): 'light' | 'dark' {
-		if (theme !== 'system') return theme;
-		if (typeof window === 'undefined') return 'dark';
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+	function getEffectiveThemeLocal(): 'light' | 'dark' {
+		return getEffectiveTheme(theme);
 	}
 
 	function toggleTheme() {
-		const effective = getEffectiveTheme();
+		const effective = getEffectiveThemeLocal();
 		theme = effective === 'dark' ? 'light' : 'dark';
-		applyTheme();
+		saveThemePreference(theme);
+		applyTheme(theme);
 	}
 
-	function applyTheme() {
-		const root = document.documentElement;
-		root.classList.remove('light', 'dark');
-		if (theme !== 'system') {
-			root.classList.add(theme);
+	function scrollToSection(id: string) {
+		const el = document.getElementById(id);
+		if (el) {
+			el.scrollIntoView({ behavior: 'smooth' });
+		}
+		if (typeof window !== 'undefined') {
+			const url = `${window.location.pathname}${window.location.search}#${id}`;
+			history.replaceState(null, '', url);
 		}
 	}
 
 	onMount(() => {
+		theme = loadThemePreference();
+		applyTheme(theme);
+
+		const hash = window.location.hash.slice(1);
+		if (hash && sectionIds.includes(hash as (typeof sectionIds)[number])) {
+			activeSection = hash;
+			navClickActive = true;
+			requestAnimationFrame(() => scrollToSection(hash));
+		}
+
 		const visibleSections = new Set<string>();
 
 		const observer = new IntersectionObserver(
@@ -129,6 +111,7 @@
 	function handleNavigate(id: string) {
 		activeSection = id;
 		navClickActive = true;
+		scrollToSection(id);
 	}
 
 	function toggleSidebar() {
@@ -148,7 +131,12 @@
 	/>
 </svelte:head>
 
-<Header theme={getEffectiveTheme()} onToggleTheme={toggleTheme} onToggleCheatSheet={toggleCheatSheet} />
+<Header
+	theme={getEffectiveThemeLocal()}
+	onToggleTheme={toggleTheme}
+	onToggleCheatSheet={toggleCheatSheet}
+	onNavigate={handleNavigate}
+/>
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
 

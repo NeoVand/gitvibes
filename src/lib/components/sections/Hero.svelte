@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { GitBranch, Undo2, Users, Monitor, Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 
 	const cards = [
@@ -48,11 +49,27 @@
 		<div class="space-y-3">
 			<div
 				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
+				style="background: var(--color-important-bg);"
+			>
+				<Gamepad2 size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-important);" />
+				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
+					<strong style="color: var(--color-text);">Try it now:</strong> Open the
+					<a
+						href="{base}/playground"
+						class="font-medium underline underline-offset-2"
+						style="color: var(--color-important);"
+					>Git Playground</a>
+					— run real Git commands in your browser with live commit graphs. No install required.
+				</p>
+			</div>
+
+			<div
+				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
 				style="background: var(--color-tip-bg);"
 			>
 				<Gamepad2 size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-tip);" />
 				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
-					<strong style="color: var(--color-text);">Learn by doing:</strong> Before diving in, spend 30 minutes with
+					<strong style="color: var(--color-text);">Learn by doing:</strong> Spend 30 minutes with
 					<a
 						href="https://learngitbranching.js.org/"
 						target="_blank"
@@ -60,7 +77,7 @@
 						class="font-medium underline underline-offset-2"
 						style="color: var(--color-tip);"
 					>Learn Git Branching</a>
-					— an interactive, visual tutorial that runs in your browser. The muscle memory will save you hours later.
+					— a visual tutorial for branching puzzles. The muscle memory will save you hours later.
 				</p>
 			</div>
 

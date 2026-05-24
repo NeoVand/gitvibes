@@ -1,15 +1,18 @@
 <script lang="ts">
-	import { GitBranch, Sun, Moon, ScrollText, Github, MoreVertical } from 'lucide-svelte';
+	import { GitBranch, Sun, Moon, ScrollText, Github, MoreVertical, Gamepad2 } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Search from './Search.svelte';
 
 	let {
 		theme = 'system',
 		onToggleTheme,
-		onToggleCheatSheet
+		onToggleCheatSheet,
+		onNavigate
 	}: {
 		theme: string;
 		onToggleTheme: () => void;
 		onToggleCheatSheet: () => void;
+		onNavigate?: (id: string) => void;
 	} = $props();
 
 	let menuOpen = $state(false);
@@ -52,11 +55,21 @@
 	</span>
 
 	<div class="flex min-w-0 flex-1 justify-center px-2">
-		<Search />
+		<Search {onNavigate} />
 	</div>
 
 	<!-- Desktop: show all icons -->
 	<div class="hidden flex-shrink-0 items-center gap-0.5 pr-4 sm:flex">
+		<a
+			href="{base}/playground"
+			class="flex h-8 items-center gap-1.5 rounded-lg px-2.5 transition-opacity hover:opacity-70"
+			style="color: var(--color-text-muted);"
+			aria-label="Git Playground"
+		>
+			<Gamepad2 size={16} />
+			<span class="text-xs font-medium">Playground</span>
+		</a>
+
 		<button
 			onclick={onToggleCheatSheet}
 			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
@@ -107,6 +120,16 @@
 				class="absolute right-0 top-full mt-1 flex items-center gap-0.5 rounded-lg p-1 shadow-lg"
 				style="background: var(--color-surface); border: 1px solid var(--color-border); z-index: 100;"
 			>
+				<a
+					href="{base}/playground"
+					class="flex h-8 items-center gap-1 rounded-md px-2 transition-opacity hover:opacity-70"
+					style="color: var(--color-text-muted);"
+					aria-label="Git Playground"
+					onclick={() => { menuOpen = false; }}
+				>
+					<Gamepad2 size={16} />
+				</a>
+
 				<button
 					onclick={() => { onToggleCheatSheet(); menuOpen = false; }}
 					class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-opacity hover:opacity-70"

@@ -4,7 +4,7 @@ An interactive, visual guide to Git and version control for developers who use A
 
 **[Live Site →](https://neovand.github.io/gitvibes/)**
 
-![GitVibes Screenshot](static/screenshot.png)
+![GitVibes Screenshot](static/screenshot.svg)
 
 ## What is this?
 
@@ -22,6 +22,7 @@ GitVibes is a beginner-friendly tutorial that teaches Git through the lens of AI
 
 ### Features
 
+- **Git Playground** — run real Git commands in the browser (powered by isomorphic-git)
 - Interactive Git sandboxes that simulate real workflows
 - Real VS Code screenshots with step-by-step instructions
 - Mermaid diagrams for visualizing branching and commit history

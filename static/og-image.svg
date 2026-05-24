@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#0f1117"/>
+  <rect x="80" y="80" width="1040" height="470" rx="24" fill="#1a1d27" stroke="#334155"/>
+  <circle cx="130" cy="130" r="28" fill="#6366f1"/>
+  <path d="M118 130 L142 130 M130 118 L130 142 M124 124 L136 136 M136 124 L124 136" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="180" y="142" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="42" font-weight="800">GitVibes</text>
+  <text x="180" y="190" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="28" font-weight="500">Git for Vibe Coders</text>
+  <text x="180" y="280" fill="#cbd5e1" font-family="system-ui, sans-serif" font-size="24">Interactive tutorial + in-browser Git playground</text>
+  <rect x="180" y="330" width="220" height="48" rx="10" fill="#312e81"/>
+  <text x="210" y="362" fill="#c7d2fe" font-family="ui-monospace, monospace" font-size="18">git commit -m "save"</text>
+  <rect x="420" y="330" width="180" height="48" rx="10" fill="#1e293b" stroke="#475569"/>
+  <text x="450" y="362" fill="#86efac" font-family="ui-monospace, monospace" font-size="18">git playground</text>
+  <text x="180" y="450" fill="#64748b" font-family="system-ui, sans-serif" font-size="20">Branch safely · Review AI changes · Undo anything</text>
+</svg>

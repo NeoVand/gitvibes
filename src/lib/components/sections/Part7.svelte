@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { BookOpen, Workflow, Table, Sparkles, MessageSquare } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -45,6 +46,8 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sandbox</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
+							Create an isolated branch — or practice in the
+							<a href="{base}/playground" class="underline underline-offset-2" style="color: var(--color-primary);">Git Playground</a>.
 							<code style="font-family: var(--font-mono);">git switch -c ai-experiment/new-feature</code>
 						</p>
 					</div>

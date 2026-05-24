@@ -6,6 +6,7 @@
 	let container: HTMLDivElement;
 	let mermaidModule: typeof import('mermaid') | null = $state(null);
 	let renderCount = $state(0);
+	let isVisible = $state(false);
 
 	function isDark(): boolean {
 		const root = document.documentElement;
@@ -170,31 +171,46 @@
 	}
 
 	onMount(() => {
-		let obs: MutationObserver;
+		let themeObs: MutationObserver | undefined;
 
-		import('mermaid').then((m) => {
-			m.default.initialize(getMermaidConfig(isDark()));
-			mermaidModule = m;
+		const viewportObserver = new IntersectionObserver(
+			([entry]) => {
+				if (entry?.isIntersecting) isVisible = true;
+			},
+			{ rootMargin: '100px' }
+		);
+		viewportObserver.observe(container);
 
-			const mql = window.matchMedia('(prefers-color-scheme: dark)');
-			mql.addEventListener('change', () => {
-				m.default.initialize(getMermaidConfig(isDark()));
-				renderCount++;
-			});
-
-			// Watch for class changes on root (theme toggle)
-			obs = new MutationObserver(() => {
-				m.default.initialize(getMermaidConfig(isDark()));
-				renderCount++;
-			});
-			obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-		});
-
-		return () => obs?.disconnect();
+		return () => {
+			viewportObserver.disconnect();
+			themeObs?.disconnect();
+		};
 	});
 
 	$effect(() => {
-		if (!mermaidModule || !container || !definition) return;
+		if (!isVisible) return;
+
+		if (!mermaidModule) {
+			import('mermaid').then((m) => {
+				m.default.initialize(getMermaidConfig(isDark()));
+				mermaidModule = m;
+
+				const mql = window.matchMedia('(prefers-color-scheme: dark)');
+				mql.addEventListener('change', () => {
+					m.default.initialize(getMermaidConfig(isDark()));
+					renderCount++;
+				});
+
+				const themeObs = new MutationObserver(() => {
+					m.default.initialize(getMermaidConfig(isDark()));
+					renderCount++;
+				});
+				themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+			});
+			return;
+		}
+
+		if (!container || !definition) return;
 		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		renderCount;
 

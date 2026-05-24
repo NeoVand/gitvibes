@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ChevronLeft, ChevronRight, Terminal, GitBranch } from 'lucide-svelte';
+	import { ChevronLeft, ChevronRight, Terminal, GitBranch, RotateCcw } from 'lucide-svelte';
 	import MermaidDiagram from './MermaidDiagram.svelte';
 
 	interface SandboxStep {
@@ -16,6 +16,7 @@
 	}: { title?: string; steps: SandboxStep[]; id?: string } = $props();
 
 	let currentStep = $state(0);
+	let isHovered = $state(false);
 
 	let visibleCommands = $derived(steps.slice(0, currentStep + 1));
 	let currentDiagram = $derived(steps[currentStep].diagram);
@@ -26,11 +27,31 @@
 	function prev() {
 		if (currentStep > 0) currentStep--;
 	}
+	function reset() {
+		currentStep = 0;
+	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (!isHovered) return;
+		if (e.key === 'ArrowRight') {
+			e.preventDefault();
+			next();
+		} else if (e.key === 'ArrowLeft') {
+			e.preventDefault();
+			prev();
+		}
+	}
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <div
 	class="my-6 overflow-hidden rounded-xl"
 	style="background: var(--color-bg-secondary);"
+	onmouseenter={() => (isHovered = true)}
+	onmouseleave={() => (isHovered = false)}
+	role="region"
+	aria-label="{title} interactive sandbox"
 >
 	<!-- Header -->
 	<div
@@ -42,6 +63,16 @@
 			<span class="text-sm font-semibold" style="color: var(--color-text);">{title}</span>
 		</div>
 		<div class="flex items-center gap-2">
+			<button
+				onclick={reset}
+				disabled={currentStep === 0}
+				class="flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30"
+				style="color: var(--color-text-muted);"
+				aria-label="Reset sandbox"
+			>
+				<RotateCcw size={12} />
+				Reset
+			</button>
 			<span class="text-xs tabular-nums" style="color: var(--color-text-muted);">
 				Step {currentStep + 1} of {steps.length}
 			</span>
@@ -156,3 +187,7 @@
 		</button>
 	</div>
 </div>
+
+<p class="-mt-4 mb-6 text-center text-[11px]" style="color: var(--color-text-muted);">
+	Hover the sandbox and use ← → arrow keys to step through
+</p>

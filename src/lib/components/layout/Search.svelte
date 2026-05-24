@@ -2,6 +2,12 @@
 	import { Search, X } from 'lucide-svelte';
 	import { searchIndex, type SearchEntry } from '$lib/data/search-index';
 
+	let {
+		onNavigate
+	}: {
+		onNavigate?: (id: string) => void;
+	} = $props();
+
 	let query = $state('');
 	let isOpen = $state(false);
 	let selectedIndex = $state(0);
@@ -28,9 +34,13 @@
 	}
 
 	function navigateTo(entry: SearchEntry) {
-		const el = document.getElementById(entry.id);
-		if (el) {
-			el.scrollIntoView({ behavior: 'smooth' });
+		if (onNavigate) {
+			onNavigate(entry.id);
+		} else {
+			const el = document.getElementById(entry.id);
+			if (el) {
+				el.scrollIntoView({ behavior: 'smooth' });
+			}
 		}
 		close();
 	}

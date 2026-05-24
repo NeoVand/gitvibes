@@ -43,6 +43,9 @@
 		"vite-plugin-devtools-json": "^1.0.0"
 	},
 	"dependencies": {
+		"@isomorphic-git/lightning-fs": "^4.6.2",
+		"buffer": "^6.0.3",
+		"isomorphic-git": "^1.38.1",
 		"lucide-svelte": "^0.577.0",
 		"mermaid": "^11.13.0"
 	}

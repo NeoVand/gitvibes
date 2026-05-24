@@ -9,10 +9,14 @@
 
 	let copied = $state(false);
 
-	function copyCode() {
-		navigator.clipboard.writeText(code);
-		copied = true;
-		setTimeout(() => (copied = false), 2000);
+	async function copyCode() {
+		try {
+			await navigator.clipboard.writeText(code);
+			copied = true;
+			setTimeout(() => (copied = false), 2000);
+		} catch {
+			// Clipboard API not available
+		}
 	}
 </script>
 
