@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Search, X } from 'lucide-svelte';
-	import { searchIndex, type SearchEntry } from '$lib/data/search-index';
+	import { searchEntries, type SearchEntry } from '$lib/data/search-index';
 
 	let {
 		onNavigate
@@ -14,30 +14,15 @@
 	let inputEl: HTMLInputElement | undefined = $state(undefined);
 	let containerEl: HTMLDivElement | undefined = $state(undefined);
 
-	const filtered = $derived.by(() => {
-		if (!query.trim()) return [];
-		const q = query.toLowerCase().trim();
-		return searchIndex
-			.filter((entry) => {
-				const haystack = `${entry.title} ${entry.keywords.join(' ')}`.toLowerCase();
-				return haystack.includes(q);
-			})
-			.slice(0, 8);
-	});
+	const filtered = $derived.by(() => searchEntries(query));
 
-	const isVisible = $derived(isOpen && filtered.length > 0);
-
-	function getFirstMatchingKeyword(entry: SearchEntry, q: string): string | null {
-		const lower = q.toLowerCase().trim();
-		if (!lower) return null;
-		return entry.keywords.find((kw) => kw.toLowerCase().includes(lower)) ?? null;
-	}
+	const isVisible = $derived(isOpen && query.trim().length > 0 && filtered.length > 0);
 
 	function navigateTo(entry: SearchEntry) {
 		if (onNavigate) {
-			onNavigate(entry.id);
+			onNavigate(entry.sectionId);
 		} else {
-			const el = document.getElementById(entry.id);
+			const el = document.getElementById(entry.sectionId);
 			if (el) {
 				el.scrollIntoView({ behavior: 'smooth' });
 			}
@@ -133,7 +118,6 @@
 	{#if isVisible}
 		<div class="search-dropdown" role="listbox">
 			{#each filtered as entry, i (entry.id)}
-				{@const matchedKeyword = getFirstMatchingKeyword(entry, query)}
 				<button
 					class="search-result"
 					class:selected={i === selectedIndex}
@@ -142,13 +126,21 @@
 					onclick={() => navigateTo(entry)}
 					onmouseenter={() => (selectedIndex = i)}
 				>
-					<span class="result-title">{entry.title}</span>
+					<div class="result-main">
+						{#if entry.command}
+							<span class="result-command">{entry.command}</span>
+						{:else}
+							<span class="result-title">{entry.title}</span>
+						{/if}
+						<span class="result-description">{entry.description}</span>
+					</div>
 					<span class="result-part">{entry.part}</span>
-					{#if matchedKeyword}
-						<span class="result-keyword">{matchedKeyword}</span>
-					{/if}
 				</button>
 			{/each}
+		</div>
+	{:else if isOpen && query.trim().length > 0}
+		<div class="search-dropdown search-empty" role="status">
+			<p>No commands match “{query.trim()}”</p>
 		</div>
 	{/if}
 </div>
@@ -241,7 +233,7 @@
 		top: calc(100% + 6px);
 		left: 0;
 		right: 0;
-		min-width: 320px;
+		min-width: 360px;
 		background: var(--color-surface);
 		border: 1px solid var(--color-border);
 		border-radius: 10px;
@@ -253,10 +245,20 @@
 		padding: 4px;
 	}
 
+	.search-empty {
+		padding: 12px 14px;
+	}
+
+	.search-empty p {
+		margin: 0;
+		font-size: 12px;
+		color: var(--color-text-muted);
+	}
+
 	.search-result {
 		display: flex;
-		align-items: center;
-		gap: 8px;
+		align-items: flex-start;
+		gap: 10px;
 		width: 100%;
 		padding: 8px 10px;
 		border: none;
@@ -272,36 +274,46 @@
 		background: var(--color-primary-dim);
 	}
 
+	.result-main {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
+		flex: 1;
+	}
+
+	.result-command,
 	.result-title {
-		font-size: 13px;
+		font-family: var(--font-mono);
+		font-size: 12px;
 		font-weight: 500;
 		color: var(--color-text);
 		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
+	.search-result.selected .result-command,
 	.search-result.selected .result-title {
 		color: var(--color-primary-text);
 	}
 
-	.result-part {
+	.result-description {
 		font-size: 11px;
+		line-height: 1.35;
+		color: var(--color-text-muted);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.result-part {
+		font-size: 10px;
 		color: var(--color-text-muted);
 		white-space: nowrap;
-		margin-left: auto;
-	}
-
-	.result-keyword {
-		font-family: var(--font-mono);
-		font-size: 11px;
-		color: var(--color-primary-text);
-		background: var(--color-primary-dim);
-		padding: 1px 6px;
-		border-radius: 4px;
-		white-space: nowrap;
 		flex-shrink: 0;
-	}
-
-	.search-result.selected .result-keyword {
-		background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+		padding-top: 2px;
 	}
 </style>
