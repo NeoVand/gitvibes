@@ -3,7 +3,7 @@
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
-	import Sandbox from '../ui/Sandbox.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { branchingSteps } from '$lib/data/sandbox-steps';
@@ -231,7 +231,12 @@ git merge origin/main   # Merge the updates into your branch`}
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Branch, Commit, and Push
 			</h4>
-			<Sandbox title="Branching Workflow" steps={branchingSteps} id="branching" />
+			<LessonActivity
+				title="Branching Workflow"
+				steps={branchingSteps}
+				scenarioId="branching"
+				id="branching"
+			/>
 
 			<VibeBox prompts={[
 				"Push this branch and create a pull request with a good description",

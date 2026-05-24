@@ -3,7 +3,7 @@
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
-	import Sandbox from '../ui/Sandbox.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { stashSteps, rebaseMergeSteps, conflictSteps } from '$lib/data/sandbox-steps';
 	import VibeBox from '../ui/VibeBox.svelte';
@@ -82,7 +82,7 @@ git stash pop`}
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Stash Workflow
 			</h4>
-			<Sandbox title="Stash: Context-Switch Safely" steps={stashSteps} id="stash" />
+			<LessonActivity title="Stash: Context-Switch Safely" steps={stashSteps} scenarioId="stash" id="stash" />
 
 			<VibeBox prompts={[
 				"I need to switch branches but I'm not done here — save my work temporarily",
@@ -154,7 +154,7 @@ git stash pop`}
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Merge vs. Rebase
 			</h4>
-			<Sandbox title="Merge vs. Rebase" steps={rebaseMergeSteps} id="rebase-merge" />
+			<LessonActivity title="Merge vs. Rebase" steps={rebaseMergeSteps} scenarioId="rebase-merge" id="rebase-merge" />
 
 			<VibeBox prompts={[
 				"My branch is behind main — rebase my changes on top of the latest main",
@@ -239,7 +239,7 @@ x = 5
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Resolving a Merge Conflict
 			</h4>
-			<Sandbox title="Merge Conflict Resolution" steps={conflictSteps} id="conflicts" />
+			<LessonActivity title="Merge Conflict Resolution" steps={conflictSteps} scenarioId="conflicts" id="conflicts" />
 
 			<VibeBox prompts={[
 				"I have a merge conflict in model.py — help me resolve it, keeping both changes",

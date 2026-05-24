@@ -12,11 +12,22 @@ export interface SeedCommit {
 	files?: PlaygroundFile[];
 }
 
+export interface BranchSeed {
+	name: string;
+	from?: string;
+	atCommit?: number;
+	commits: SeedCommit[];
+}
+
 export interface RepoSeed {
 	branch?: string;
 	commits: SeedCommit[];
+	branches?: BranchSeed[];
 	workingFiles?: PlaygroundFile[];
+	stagedFiles?: string[];
 }
+
+const AUTHOR = { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' };
 
 export class GitEngine {
 	fs: LightningFS;
@@ -30,27 +41,21 @@ export class GitEngine {
 	async reset(seed?: RepoSeed): Promise<void> {
 		this.fs = new LightningFS(`${this.fsName}-${Date.now()}`);
 		this.initPromise = null;
-		await this.ensureInit(seed?.branch ?? 'main');
+		await this.ensureInit();
 
 		if (!seed) return;
 
 		for (const commit of seed.commits) {
-			if (commit.files) {
-				for (const file of commit.files) {
-					await this.writeFile(file.path, file.content);
-					await git.add({ fs: this.fs, dir: this.dir, filepath: file.path });
-				}
-			}
-			await git.commit({
-				fs: this.fs,
-				dir: this.dir,
-				message: commit.message,
-				author: { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' }
-			});
+			await this.commitFiles(commit.message, commit.files ?? []);
 		}
 
-		if (seed.branch && seed.branch !== 'main') {
-			await git.branch({ fs: this.fs, dir: this.dir, ref: seed.branch });
+		if (seed.branches) {
+			for (const branch of seed.branches) {
+				await this.seedBranch(branch);
+			}
+		}
+
+		if (seed.branch) {
 			await git.checkout({ fs: this.fs, dir: this.dir, ref: seed.branch });
 		}
 
@@ -59,6 +64,58 @@ export class GitEngine {
 				await this.writeFile(file.path, file.content);
 			}
 		}
+
+		if (seed.stagedFiles) {
+			for (const filepath of seed.stagedFiles) {
+				await git.add({ fs: this.fs, dir: this.dir, filepath });
+			}
+		}
+	}
+
+	async resetWith(fn: (engine: GitEngine) => Promise<void>): Promise<void> {
+		this.fs = new LightningFS(`${this.fsName}-${Date.now()}`);
+		this.initPromise = null;
+		await this.ensureInit();
+		await fn(this);
+	}
+
+	async commitFiles(message: string, files: PlaygroundFile[]): Promise<string> {
+		for (const file of files) {
+			await this.writeFile(file.path, file.content);
+			await git.add({ fs: this.fs, dir: this.dir, filepath: file.path });
+		}
+		return git.commit({
+			fs: this.fs,
+			dir: this.dir,
+			message,
+			author: AUTHOR
+		});
+	}
+
+	async getCommitOid(branch: string, depthFromTip = 0): Promise<string> {
+		const log = await git.log({ fs: this.fs, dir: this.dir, ref: branch, depth: depthFromTip + 1 });
+		return log[depthFromTip].oid;
+	}
+
+	private async seedBranch(branch: BranchSeed): Promise<void> {
+		const from = branch.from ?? 'main';
+		let baseOid: string | undefined;
+
+		if (branch.atCommit !== undefined) {
+			baseOid = await this.getCommitOid(from, branch.atCommit);
+		}
+
+		await git.branch({
+			fs: this.fs,
+			dir: this.dir,
+			ref: branch.name,
+			object: baseOid,
+			checkout: true
+		});
+
+		for (const commit of branch.commits) {
+			await this.commitFiles(commit.message, commit.files ?? []);
+		}
 	}
 
 	private async ensureInit(defaultBranch = 'main'): Promise<void> {
@@ -66,8 +123,8 @@ export class GitEngine {
 			this.initPromise = (async () => {
 				await this.fs.promises.mkdir(this.dir);
 				await git.init({ fs: this.fs, dir: this.dir, defaultBranch });
-				await git.setConfig({ fs: this.fs, dir: this.dir, path: 'user.name', value: 'Vibe Coder' });
-				await git.setConfig({ fs: this.fs, dir: this.dir, path: 'user.email', value: 'vibe@gitvibes.dev' });
+				await git.setConfig({ fs: this.fs, dir: this.dir, path: 'user.name', value: AUTHOR.name });
+				await git.setConfig({ fs: this.fs, dir: this.dir, path: 'user.email', value: AUTHOR.email });
 			})();
 		}
 		await this.initPromise;
@@ -125,6 +182,21 @@ export class GitEngine {
 
 		await walk(this.fs, this.dir, '');
 		return results.sort();
+	}
+
+	async resolveHead(rev: string): Promise<string> {
+		if (rev === 'HEAD') {
+			const log = await git.log({ fs: this.fs, dir: this.dir, depth: 1 });
+			return log[0]?.oid ?? '';
+		}
+		const match = rev.match(/^HEAD~(\d+)$/);
+		if (match) {
+			const n = Number(match[1]);
+			const log = await git.log({ fs: this.fs, dir: this.dir, depth: n + 1 });
+			if (log.length <= n) throw new Error(`ambiguous argument ${rev}: unknown revision`);
+			return log[n].oid;
+		}
+		return rev;
 	}
 }
 

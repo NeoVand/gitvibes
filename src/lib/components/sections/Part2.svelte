@@ -3,7 +3,7 @@
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
-	import Sandbox from '../ui/Sandbox.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { coreLoopSteps } from '$lib/data/sandbox-steps';
@@ -302,7 +302,12 @@
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Complete Loop
 			</h4>
-			<Sandbox title="The Core Safety Loop" steps={coreLoopSteps} id="core-loop" />
+			<LessonActivity
+				title="The Core Safety Loop"
+				steps={coreLoopSteps}
+				scenarioId="core-loop"
+				id="core-loop"
+			/>
 
 			<VibeBox prompts={[
 				"Commit the staged changes with a good conventional commit message",

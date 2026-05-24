@@ -3,7 +3,7 @@
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
-	import Sandbox from '../ui/Sandbox.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import { undoSteps } from '$lib/data/sandbox-steps';
@@ -403,7 +403,7 @@ git push                   # Push the revert`}
 			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Undo Toolkit
 			</h4>
-			<Sandbox title="Undo Operations" steps={undoSteps} id="undo" />
+			<LessonActivity title="Undo Operations" steps={undoSteps} scenarioId="undo" id="undo" />
 		</div>
 	</div>
 </section>

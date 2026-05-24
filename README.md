@@ -23,6 +23,7 @@ GitVibes is a beginner-friendly tutorial that teaches Git through the lens of AI
 ### Features
 
 - **Git Playground** — run real Git commands in the browser (powered by isomorphic-git)
+- **Try it yourself tabs** — embedded playground in every hands-on lesson (Parts 2–5)
 - Interactive Git sandboxes that simulate real workflows
 - Real VS Code screenshots with step-by-step instructions
 - Mermaid diagrams for visualizing branching and commit history

@@ -12,8 +12,9 @@
 	let {
 		title = 'Git Sandbox',
 		steps,
-		id = 'sandbox'
-	}: { title?: string; steps: SandboxStep[]; id?: string } = $props();
+		id = 'sandbox',
+		bare = false
+	}: { title?: string; steps: SandboxStep[]; id?: string; bare?: boolean } = $props();
 
 	let currentStep = $state(0);
 	let isHovered = $state(false);
@@ -46,7 +47,9 @@
 <svelte:window onkeydown={handleKeydown} />
 
 <div
-	class="my-6 overflow-hidden rounded-xl"
+	class:my-6={!bare}
+	class:rounded-xl={!bare}
+	class="overflow-hidden outline-none"
 	style="background: var(--color-bg-secondary);"
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}
@@ -188,6 +191,8 @@
 	</div>
 </div>
 
+{#if !bare}
 <p class="-mt-4 mb-6 text-center text-[11px]" style="color: var(--color-text-muted);">
 	Hover the sandbox and use ← → arrow keys to step through
 </p>
+{/if}

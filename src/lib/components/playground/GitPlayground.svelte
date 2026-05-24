@@ -5,7 +5,12 @@
 	import { GitEngine } from '$lib/playground/git-engine';
 	import { runGitCommand } from '$lib/playground/commands';
 	import { buildGitGraph } from '$lib/playground/git-graph';
-	import { playgroundScenarios, getScenario, type PlaygroundScenario } from '$lib/playground/scenarios';
+	import {
+		playgroundScenarios,
+		getScenario,
+		loadScenarioSeed,
+		type PlaygroundScenario
+	} from '$lib/playground/scenarios';
 
 	interface HistoryLine {
 		type: 'input' | 'output' | 'system';
@@ -13,7 +18,19 @@
 		error?: boolean;
 	}
 
-	let scenarioId = $state('ai-changes');
+	let {
+		scenarioId = 'core-loop',
+		embedded = false,
+		showScenarioPicker = !embedded,
+		id = 'playground'
+	}: {
+		scenarioId?: string;
+		embedded?: boolean;
+		showScenarioPicker?: boolean;
+		id?: string;
+	} = $props();
+
+	let activeScenarioId = $state(scenarioId);
 	let engine = $state<GitEngine | null>(null);
 	let history = $state<HistoryLine[]>([]);
 	let input = $state('');
@@ -23,7 +40,14 @@
 	let inputEl: HTMLInputElement | undefined = $state(undefined);
 	let terminalEl: HTMLDivElement | undefined = $state(undefined);
 
-	let scenario = $derived(getScenario(scenarioId));
+	let scenario = $derived(getScenario(activeScenarioId));
+
+	$effect(() => {
+		if (scenarioId !== activeScenarioId && embedded) {
+			activeScenarioId = scenarioId;
+			loadScenario(getScenario(scenarioId));
+		}
+	});
 
 	async function refreshDiagram() {
 		if (!engine) return;
@@ -33,13 +57,18 @@
 	async function loadScenario(next: PlaygroundScenario) {
 		loading = true;
 		try {
-			engine = new GitEngine();
-			await engine.reset(next.seed);
-			history = [
-				{ type: 'system', text: `Scenario: ${next.title}` },
-				{ type: 'system', text: next.description },
-				{ type: 'system', text: 'Type git commands below. Enter "help" for supported commands.' }
-			];
+			engine = new GitEngine(embedded ? `embedded-${id}` : 'gitvibes-playground');
+			await loadScenarioSeed(engine, next);
+			history = embedded
+				? [
+						{ type: 'system', text: next.description },
+						{ type: 'system', text: 'Type git commands below. Enter "help" for supported commands.' }
+					]
+				: [
+						{ type: 'system', text: `Scenario: ${next.title}` },
+						{ type: 'system', text: next.description },
+						{ type: 'system', text: 'Type git commands below. Enter "help" for supported commands.' }
+					];
 			await refreshDiagram();
 		} catch (err) {
 			const message = err instanceof Error ? err.message : String(err);
@@ -51,7 +80,7 @@
 	}
 
 	onMount(() => {
-		loadScenario(getScenario(scenarioId));
+		loadScenario(getScenario(activeScenarioId));
 	});
 
 	async function handleSubmit(e: Event) {
@@ -102,12 +131,12 @@
 	}
 
 	async function resetScenario() {
-		await loadScenario(getScenario(scenarioId));
+		await loadScenario(getScenario(activeScenarioId));
 	}
 
-	async function changeScenario(id: string) {
-		scenarioId = id;
-		await loadScenario(getScenario(id));
+	async function changeScenario(nextId: string) {
+		activeScenarioId = nextId;
+		await loadScenario(getScenario(nextId));
 	}
 
 	function runSuggested(command: string) {
@@ -124,23 +153,27 @@
 	>
 		<div class="flex items-center gap-2">
 			<GitBranch size={16} style="color: var(--color-primary);" />
-			<span class="text-sm font-semibold" style="color: var(--color-text);">Git Playground</span>
+			<span class="text-sm font-semibold" style="color: var(--color-text);">
+				{embedded ? 'Try it yourself' : 'Git Playground'}
+			</span>
 			<span class="rounded-full px-2 py-0.5 text-[10px] font-medium" style="background: var(--color-tip-bg); color: var(--color-tip);">
 				real git
 			</span>
 		</div>
 		<div class="flex flex-wrap items-center gap-2">
-			<select
-				value={scenarioId}
-				onchange={(e) => changeScenario(e.currentTarget.value)}
-				class="rounded-md px-2 py-1.5 text-xs"
-				style="background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border);"
-				disabled={loading}
-			>
-				{#each playgroundScenarios as s (s.id)}
-					<option value={s.id}>{s.title}</option>
-				{/each}
-			</select>
+			{#if showScenarioPicker}
+				<select
+					value={activeScenarioId}
+					onchange={(e) => changeScenario(e.currentTarget.value)}
+					class="rounded-md px-2 py-1.5 text-xs"
+					style="background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border);"
+					disabled={loading}
+				>
+					{#each playgroundScenarios as s (s.id)}
+						<option value={s.id}>{s.title}</option>
+					{/each}
+				</select>
+			{/if}
 			<button
 				onclick={resetScenario}
 				disabled={loading}
@@ -162,13 +195,10 @@
 		<span>{scenario.hint}</span>
 	</div>
 
-	<div class="grid grid-cols-1 lg:grid-cols-2" style="min-height: 420px;">
+	<div class="grid grid-cols-1 lg:grid-cols-2" style="min-height: {embedded ? '340px' : '420px'};">
 		<!-- Terminal -->
 		<div class="flex flex-col" style="border-right: 1px solid var(--color-border);">
-			<div
-				class="flex items-center gap-2 px-4 py-2"
-				style="background: var(--color-terminal-bg);"
-			>
+			<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-terminal-bg);">
 				<div class="flex gap-1.5">
 					<span class="block h-3 w-3 rounded-full" style="background: #ef4444;"></span>
 					<span class="block h-3 w-3 rounded-full" style="background: #f59e0b;"></span>
@@ -181,7 +211,7 @@
 			<div
 				bind:this={terminalEl}
 				class="flex-1 overflow-y-auto p-4"
-				style="background: var(--color-terminal-bg); min-height: 280px; max-height: 360px;"
+				style="background: var(--color-terminal-bg); min-height: {embedded ? '220px' : '280px'}; max-height: {embedded ? '300px' : '360px'};"
 			>
 				{#each history as line, i (i)}
 					{#if line.type === 'input'}
@@ -235,7 +265,7 @@
 			</div>
 			<div class="flex flex-1 items-center justify-center p-4">
 				{#key diagram}
-					<MermaidDiagram definition={diagram} id="playground-graph" />
+					<MermaidDiagram definition={diagram} id="{id}-graph" />
 				{/key}
 			</div>
 		</div>
