@@ -86,6 +86,13 @@ git restore src/bad_file.py  # Discard a single file`}
 		<div id="section-4-2" class="mb-14">
 			<SectionHeader level="section" icon={MinusCircle} title="4.2 &quot;I Staged This by Accident&quot; (Staged, Not Committed)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-restore-staged.png"
+					alt="git restore --staged — move files out of the staging area without losing your edits"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You used <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code>
@@ -164,6 +171,13 @@ git commit --amend`}
 		<div id="section-4-4" class="mb-14">
 			<SectionHeader level="section" icon={RotateCcw} title="4.4 &quot;Nuke This Whole Feature&quot; (Locally, Committed)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-reset.png"
+					alt="git reset — soft, mixed, and hard modes for rolling back local commits"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> Your last three commits were a single bad AI experiment. You
@@ -228,6 +242,13 @@ git commit --amend`}
 		<!-- 4.5 Revert -->
 		<div id="section-4-5" class="mb-14">
 			<SectionHeader level="section" icon={Undo2} title="4.5 &quot;I Pushed a Bug to the Team!&quot; (Public, Pushed)" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-revert.png"
+					alt="git revert — undo a pushed commit safely with a new commit"
+				/>
+			</div>
 
 			<Callout type="caution">
 				{#snippet children()}
