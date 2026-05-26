@@ -325,7 +325,7 @@
 					/>
 				</button>
 				{#if !graphCollapsed}
-					<div class="pg-graph-body flex items-center justify-center px-4 py-3" style="background: var(--color-bg-secondary);">
+					<div class="pg-graph-body flex items-center justify-center px-4 py-1" style="background: var(--color-bg-secondary);">
 						{#key diagram}
 							<MermaidDiagram definition={diagram} id="{id}-graph" />
 						{/key}
@@ -435,7 +435,7 @@
 				<GitBranch size={13} style="color: var(--color-important);" />
 				<span class="text-xs font-medium" style="color: var(--color-text-secondary);">Commit Graph</span>
 				</div>
-				<div class="flex flex-1 items-center justify-center p-4">
+				<div class="flex flex-1 items-center justify-center px-4 py-1">
 					{#key diagram}
 						<MermaidDiagram definition={diagram} id="{id}-graph" />
 					{/key}
