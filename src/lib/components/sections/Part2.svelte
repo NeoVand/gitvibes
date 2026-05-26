@@ -61,6 +61,10 @@
 		<div id="section-2-1" class="mb-14">
 			<SectionHeader level="section" icon={Eye} title="2.1 &quot;What Did the AI Just Do?&quot;" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You just prompted the AI to refactor a module, and it went silent for a moment. What exactly did it touch? Before you do anything, you need situational awareness.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/git-status.png"
@@ -135,6 +139,10 @@
 		<!-- 2.2 Staging -->
 		<div id="section-2-2" class="mb-14">
 			<SectionHeader level="section" icon={FolderPlus} title="2.2 Reviewing and Staging the AI's Work" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Now you know what changed. The next step is the most important one: reviewing the AI's work line by line, and only approving what you trust. This is staging — your quality gate.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
@@ -245,6 +253,10 @@
 		<!-- 2.3 Committing -->
 		<div id="section-2-3" class="mb-8">
 			<SectionHeader level="section" icon={Save} title="2.3 Creating the Save Point" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You've reviewed the changes and staged the ones you trust. Now it's time to freeze this moment in time — a commit is your permanent save point that you can always travel back to.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage

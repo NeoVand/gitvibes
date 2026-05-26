@@ -57,6 +57,10 @@
 		<div id="section-6-1" class="mb-14">
 			<SectionHeader level="section" icon={Layout} title="6.1 The Source Control View" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				This single panel replaces a dozen terminal commands. Status, staging, committing, branching — it's all here in one visual interface that makes Git feel approachable.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/source-control.png"
@@ -66,7 +70,7 @@
 			</div>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				This is your command center. Everything you've learned maps directly to the UI:
+				Everything you've learned maps directly to the UI:
 			</p>
 
 			<div class="mb-6 grid gap-3 sm:grid-cols-2">
@@ -127,6 +131,10 @@
 		<!-- 6.2 Timeline & GitLens -->
 		<div id="section-6-2" class="mb-14">
 			<SectionHeader level="section" icon={Clock} title="6.2 The Timeline View & GitLens" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				When you're staring at a line of code and wondering "who changed this, and why?" — VS Code has the answer built right in. Timeline and GitLens turn your editor into a time machine.
+			</p>
 
 			<Callout type="note">
 				{#snippet children()}

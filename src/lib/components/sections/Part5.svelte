@@ -44,6 +44,10 @@
 		<div id="section-5-1" class="mb-14">
 			<SectionHeader level="section" icon={Archive} title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You're deep in a feature branch with ten modified files when your manager says "urgent bug on main." You can't commit half-finished work, and you can't lose it either. The stash is your escape hatch.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/git-stash.png"
@@ -115,6 +119,10 @@ git stash pop`}
 		<!-- 5.2 Rebase vs Merge -->
 		<div id="section-5-2" class="mb-14">
 			<SectionHeader level="section" icon={GitMerge} title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Your feature branch has been alive for a few days and main has moved on without you. Now you need to catch up — and Git offers two philosophies with very different trade-offs.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
@@ -195,6 +203,10 @@ git stash pop`}
 		<!-- 5.3 Merge Conflicts -->
 		<div id="section-5-3" class="mb-8">
 			<SectionHeader level="section" icon={FileWarning} title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				This is the moment every developer dreads the first time — and handles calmly by the tenth. Two people changed the same lines, and Git needs a human to decide which version wins.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage

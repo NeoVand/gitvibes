@@ -33,6 +33,10 @@
 		<div id="section-1-1" class="mb-14">
 			<SectionHeader level="section" icon={UserCheck} title="1.1 First-Time Local Configuration" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Every commit you make carries a name and email — your digital signature. Before anything else, Git needs to know who you are.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/P1.Section1-git-config.png"
@@ -79,6 +83,10 @@ git config --global user.email "your-enterprise-email@company.com"`}
 		<!-- 1.2 Authentication -->
 		<div id="section-1-2" class="mb-14">
 			<SectionHeader level="section" icon={KeyRound} title="1.2 Authentication with Personal Access Token" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Your company's code lives in a private repository. To access it, you need to prove you're allowed in — and passwords are no longer enough.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
@@ -151,6 +159,10 @@ git config --global credential.helper libsecret`}
 		<!-- 1.3 Cloning -->
 		<div id="section-1-3">
 			<SectionHeader level="section" icon={Download} title="1.3 The First Pull (Cloning the Repository)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Your team's code exists on a remote server. Cloning is the act of bringing the entire project — every file, every branch, every commit in its history — right onto your machine.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage

@@ -53,6 +53,10 @@
 		<div id="section-4-1" class="mb-14">
 			<SectionHeader level="section" icon={Trash2} title="4.1 &quot;Discard This Mess&quot; (Local, Not Committed)" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				The AI just rewrote half your file and it's completely wrong. You haven't committed anything yet. This is the simplest undo — just throw it all away and go back to your last save point.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/git-restore.png"
@@ -99,6 +103,10 @@ git restore src/bad_file.py  # Discard a single file`}
 		<div id="section-4-2" class="mb-14">
 			<SectionHeader level="section" icon={MinusCircle} title="4.2 &quot;I Staged This by Accident&quot; (Staged, Not Committed)" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You hit <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code> a bit too quickly and staged files you didn't mean to include. No worries — unstaging is completely harmless and doesn't touch your code.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/git-restore-staged.png"
@@ -144,6 +152,10 @@ git restore src/bad_file.py  # Discard a single file`}
 		<div id="section-4-3" class="mb-14">
 			<SectionHeader level="section" icon={PenLine} title="4.3 &quot;I Forgot a File in My Last Commit&quot;" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You just committed — and immediately realized you forgot a file, or there's a typo in the message. Instead of creating a messy "oops" commit, you can quietly fix the last one.
+			</p>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You just committed but missed a file, or there's a typo in
@@ -184,6 +196,10 @@ git commit --amend`}
 		<!-- 4.4 Reset -->
 		<div id="section-4-4" class="mb-14">
 			<SectionHeader level="section" icon={RotateCcw} title="4.4 &quot;Nuke This Whole Feature&quot; (Locally, Committed)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Sometimes the AI experiment was a dead end — three commits deep, and none of it is salvageable. If you haven't pushed yet, you can erase those commits entirely and start fresh.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
@@ -257,6 +273,10 @@ git commit --amend`}
 		<!-- 4.5 Revert -->
 		<div id="section-4-5" class="mb-14">
 			<SectionHeader level="section" icon={Undo2} title="4.5 &quot;I Pushed a Bug to the Team!&quot; (Public, Pushed)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				This is the "oh no" moment — you pushed a bad commit and your teammates already pulled it. You can't erase history, but you can create a new commit that perfectly reverses the damage.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
@@ -339,6 +359,10 @@ git push                   # Push the revert`}
 		<!-- 4.6 Force Push -->
 		<div id="section-4-6" class="mb-14">
 			<SectionHeader level="section" icon={AlertTriangle} title="4.6 The &quot;Break Glass&quot; Command" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You rewrote local history with a reset or amend — and now Git refuses to push because local and remote have diverged. This is the emergency tool: a force push with a built-in safety net.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage

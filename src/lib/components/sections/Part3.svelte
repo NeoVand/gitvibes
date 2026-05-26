@@ -47,6 +47,10 @@
 		<div id="section-3-1" class="mb-14">
 			<SectionHeader level="section" icon={GitBranch} title="3.1 &quot;I Have a New Idea (or AI Prompt)&quot;" color="var(--color-primary)" />
 
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You have a feature idea — or maybe an ambitious AI prompt that might refactor half your codebase. Before you do anything, create a sandbox where it's safe to experiment.
+			</p>
+
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/git-branch.png"
@@ -117,6 +121,10 @@
 		<!-- 3.2 Syncing -->
 		<div id="section-3-2" class="mb-14">
 			<SectionHeader level="section" icon={RefreshCcw} title="3.2 &quot;My Teammate Pushed Updates&quot; (Syncing)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You're not working in a vacuum. While you've been building your feature, your teammates have been merging theirs. Staying in sync is how you avoid painful surprises later.
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
@@ -225,6 +233,10 @@ git merge origin/main   # Merge the updates into your branch`}
 		<!-- 3.3 Pull Requests -->
 		<div id="section-3-3" class="mb-8">
 			<SectionHeader level="section" icon={GitPullRequest} title="3.3 &quot;My AI-Generated Feature is Ready&quot; (The Pull Request)" color="var(--color-primary)" />
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Your feature is built, tested, and committed. But you don't just push it into production — you propose it. A pull request is a conversation: "Here's what I built. Let's review it together."
+			</p>
 
 			<div class="my-6">
 				<ExpandableImage
