@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GitBranch, Sun, Moon, ScrollText, Github, MoreVertical, Gamepad2, X, Linkedin } from 'lucide-svelte';
+	import { GitBranch, Sun, Moon, ScrollText, Github, Gamepad2, X, Linkedin } from 'lucide-svelte';
 	import Search from './Search.svelte';
 
 	let {
@@ -16,24 +16,7 @@
 		onNavigate?: (id: string) => void;
 	} = $props();
 
-	let menuOpen = $state(false);
 	let aboutOpen = $state(false);
-	let menuRef: HTMLDivElement | undefined = $state(undefined);
-
-	function toggleMenu() {
-		menuOpen = !menuOpen;
-	}
-
-	function handleClickOutside(e: MouseEvent) {
-		if (menuRef && !menuRef.contains(e.target as Node)) {
-			menuOpen = false;
-		}
-	}
-
-	$effect(() => {
-		document.addEventListener('click', handleClickOutside);
-		return () => document.removeEventListener('click', handleClickOutside);
-	});
 </script>
 
 <header
@@ -109,68 +92,40 @@
 		</button>
 	</div>
 
-	<!-- Mobile: search + burger menu -->
-	<div class="flex-shrink-0 sm:hidden">
+	<!-- Mobile: all actions inline -->
+	<div class="flex flex-shrink-0 items-center gap-0.5 pr-2 sm:hidden">
 		<Search {onNavigate} />
-	</div>
-	<div class="relative flex-shrink-0 pr-2 sm:hidden" bind:this={menuRef}>
+
 		<button
-			onclick={toggleMenu}
-			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
-			style="color: var(--color-text-muted);"
-			aria-label="Menu"
+			onclick={onTogglePlayground}
+			class="playground-btn flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all"
+			aria-label="Open Git Playground"
 		>
-			<MoreVertical size={16} />
+			<Gamepad2 size={16} />
 		</button>
 
-		{#if menuOpen}
-			<div
-				class="absolute right-0 top-full mt-1 flex items-center gap-0.5 rounded-lg p-1 shadow-lg"
-				style="background: var(--color-surface); border: 1px solid var(--color-border); z-index: 100;"
-			>
-				<button
-					onclick={() => { onTogglePlayground(); menuOpen = false; }}
-					class="playground-btn flex h-8 cursor-pointer items-center gap-1 rounded-md px-2 transition-all"
-					aria-label="Open Git Playground"
-				>
-					<Gamepad2 size={16} />
-				</button>
+		<button
+			onclick={onToggleCheatSheet}
+			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
+			style="color: var(--color-text-muted);"
+			aria-label="Git Cheat Sheet"
+		>
+			<ScrollText size={16} />
+		</button>
 
-				<button
-					onclick={() => { onToggleCheatSheet(); menuOpen = false; }}
-					class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-opacity hover:opacity-70"
-					style="color: var(--color-text-muted);"
-					aria-label="Git Cheat Sheet"
-				>
-					<ScrollText size={16} />
-				</button>
+		<button
+			onclick={onToggleTheme}
+			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
+			style="color: var(--color-text-muted);"
+			aria-label="Toggle theme"
+		>
+			{#if theme === 'dark'}
+				<Sun size={16} />
+			{:else}
+				<Moon size={16} />
+			{/if}
+		</button>
 
-				<a
-					href="https://github.com/NeoVand/gitvibes"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="flex h-8 w-8 items-center justify-center rounded-md transition-opacity hover:opacity-70"
-					style="color: var(--color-text-muted);"
-					aria-label="View on GitHub"
-					onclick={() => { menuOpen = false; }}
-				>
-					<Github size={16} />
-				</a>
-
-				<button
-					onclick={() => { onToggleTheme(); menuOpen = false; }}
-					class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-opacity hover:opacity-70"
-					style="color: var(--color-text-muted);"
-					aria-label="Toggle theme"
-				>
-					{#if theme === 'dark'}
-						<Sun size={16} />
-					{:else}
-						<Moon size={16} />
-					{/if}
-				</button>
-			</div>
-		{/if}
 	</div>
 </header>
 

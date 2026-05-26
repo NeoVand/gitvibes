@@ -259,6 +259,13 @@ strong {
 	}
 }
 
+/* On desktop, balance the collapsed sidebar offset so content centers visually */
+@media (min-width: 1024px) {
+	.main-content {
+		padding-right: var(--sidebar-collapsed-width);
+	}
+}
+
 code,
 pre,
 kbd {

@@ -35,6 +35,8 @@
 		id?: string;
 	} = $props();
 
+	let graphCollapsed = $state(false);
+
 	let activeScenarioId = $state(scenarioId);
 	let engine = $state<GitEngine | null>(null);
 	let history = $state<HistoryLine[]>([]);
@@ -261,14 +263,14 @@
 {#if panel}
 	<div class="pg-shell flex min-h-0 flex-1 flex-col overflow-hidden">
 		<header
-			class="flex shrink-0 flex-wrap items-center gap-2.5 px-4 py-3 sm:px-5"
+			class="flex shrink-0 flex-wrap items-center gap-2 px-3 py-2 sm:gap-2.5 sm:px-5 sm:py-3"
 			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 		>
 		<Terminal size={14} style="color: var(--color-important);" />
 		<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
-		<span class="pg-badge">real git</span>
+		<span class="pg-badge hidden sm:inline">real git</span>
 
-			<div class="ml-auto flex flex-wrap items-center gap-2">
+			<div class="ml-auto flex flex-wrap items-center gap-1.5 sm:gap-2">
 				{@render scenarioSelect()}
 				<button
 					type="button"
@@ -288,7 +290,7 @@
 		</header>
 
 		<p
-			class="shrink-0 px-5 py-2.5 text-xs leading-relaxed"
+			class="shrink-0 px-3 py-2 text-[11px] leading-snug sm:px-5 sm:py-2.5 sm:text-xs sm:leading-relaxed"
 			style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); background: var(--color-bg-secondary);"
 		>
 			{scenario.hint}
@@ -299,20 +301,31 @@
 				class="shrink-0"
 				style="border-bottom: 1px solid var(--color-border);"
 			>
-				<div
-					class="flex items-center gap-2 px-5 py-2"
+				<button
+					type="button"
+					class="flex w-full cursor-pointer items-center gap-2 px-5 py-2"
 					style="background: var(--color-bg-tertiary);"
+					onclick={() => (graphCollapsed = !graphCollapsed)}
+					aria-expanded={!graphCollapsed}
+					aria-label="Toggle commit graph"
 				>
-				<GitBranch size={13} style="color: var(--color-important);" />
-				<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
-					Commit Graph
-				</span>
-				</div>
-				<div class="flex items-center justify-center px-4 py-3" style="background: var(--color-bg-secondary);">
-					{#key diagram}
-						<MermaidDiagram definition={diagram} id="{id}-graph" />
-					{/key}
-				</div>
+					<GitBranch size={13} style="color: var(--color-important);" />
+					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
+						Commit Graph
+					</span>
+					<ChevronDown
+						size={12}
+						class="ml-auto transition-transform duration-150"
+						style="color: var(--color-text-muted); transform: rotate({graphCollapsed ? '-90deg' : '0deg'});"
+					/>
+				</button>
+				{#if !graphCollapsed}
+					<div class="pg-graph-body flex items-center justify-center px-4 py-3" style="background: var(--color-bg-secondary);">
+						{#key diagram}
+							<MermaidDiagram definition={diagram} id="{id}-graph" />
+						{/key}
+					</div>
+				{/if}
 			</section>
 
 			<section class="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -338,10 +351,10 @@
 			</section>
 
 			<section
-				class="shrink-0 px-5 py-3"
+				class="pg-suggestions shrink-0 px-4 py-2"
 				style="border-top: 1px solid var(--color-border); background: var(--color-bg-tertiary);"
 			>
-				<p class="mb-2 text-[10px] font-semibold uppercase tracking-widest" style="color: var(--color-text-muted);">
+				<p class="mb-1.5 text-[10px] font-semibold uppercase tracking-widest" style="color: var(--color-text-muted);">
 					Try these
 				</p>
 				{@render suggestedCommands()}
@@ -543,10 +556,16 @@
 	.pg-prompt {
 		flex-shrink: 0;
 		font-family: var(--font-mono);
-		font-size: 12.5px;
+		font-size: 16px;
 		font-weight: 600;
 		color: var(--color-terminal-prompt);
 		user-select: none;
+	}
+
+	@media (min-width: 640px) {
+		.pg-prompt {
+			font-size: 12.5px;
+		}
 	}
 
 	.pg-input {
@@ -559,10 +578,16 @@
 		appearance: none;
 		-webkit-appearance: none;
 		font-family: var(--font-mono);
-		font-size: 12.5px;
+		font-size: 16px;
 		line-height: 1.4;
 		color: var(--color-terminal-command);
 		caret-color: var(--color-terminal-prompt);
+	}
+
+	@media (min-width: 640px) {
+		.pg-input {
+			font-size: 12.5px;
+		}
 	}
 
 	.pg-input::placeholder {
@@ -633,5 +658,32 @@
 		border-color: var(--color-important);
 		color: var(--color-important);
 		background: color-mix(in srgb, var(--color-important) 8%, var(--color-surface));
+	}
+
+	@media (max-width: 639px) {
+		.pg-graph-body {
+			max-height: 120px;
+			overflow: auto;
+			padding-top: 0.5rem;
+			padding-bottom: 0.5rem;
+		}
+
+		.pg-suggestions {
+			padding: 0.375rem 0.75rem;
+		}
+
+		.pg-suggestions .pg-chip {
+			font-size: 10px;
+			padding: 0.2rem 0.5rem;
+		}
+
+		.pg-prompt-line {
+			padding: 0.5rem 0.75rem;
+		}
+
+		.pg-chip {
+			font-size: 10px;
+			padding: 0.2rem 0.5rem;
+		}
 	}
 </style>
