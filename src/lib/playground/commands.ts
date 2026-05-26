@@ -13,9 +13,61 @@ import { listFilesAtCommit, readFileAtCommit, resolveCommitOid } from './tree-ut
 export interface CommandResult {
 	output: string;
 	error?: boolean;
+	colored?: boolean;
 }
 
 const AUTHOR = { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' };
+
+function esc(s: string): string {
+	return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function colorizeStatus(raw: string): string {
+	return raw.split('\n').map(line => {
+		const e = esc(line);
+		if (line.startsWith('On branch ')) return `<span style="font-weight:600">${e}</span>`;
+		if (line.startsWith('Your branch')) return `<span style="color:var(--color-terminal-output);font-style:italic">${e}</span>`;
+		if (line.startsWith('\t') && (line.includes('modified:') || line.includes('both modified:'))) {
+			if (raw.includes('Changes to be committed') && !raw.split('Changes not staged')[0]?.includes(line)) {
+				return `<span style="color:#a6e3a1">\t${esc(line.trim())}</span>`;
+			}
+			return `<span style="color:#f38ba8">\t${esc(line.trim())}</span>`;
+		}
+		if (line.startsWith('\t')) return `<span style="color:#f38ba8">\t${esc(line.trim())}</span>`;
+		if (line.startsWith('Changes to be committed')) return `<span style="color:#a6e3a1;font-weight:500">${e}</span>`;
+		if (line.startsWith('Changes not staged') || line.startsWith('Untracked files') || line.startsWith('Unmerged paths')) return `<span style="color:#f38ba8;font-weight:500">${e}</span>`;
+		if (line.startsWith('nothing to commit')) return `<span style="color:var(--color-terminal-prompt)">${e}</span>`;
+		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
+	}).join('\n');
+}
+
+function colorizeDiff(raw: string): string {
+	return raw.split('\n').map(line => {
+		const e = esc(line);
+		if (line.startsWith('diff --git')) return `<span style="font-weight:600;color:var(--color-terminal-command)">${e}</span>`;
+		if (line.startsWith('---')) return `<span style="font-weight:600;color:#f38ba8">${e}</span>`;
+		if (line.startsWith('+++')) return `<span style="font-weight:600;color:#a6e3a1">${e}</span>`;
+		if (line.startsWith('new file')) return `<span style="color:#a6e3a1">${e}</span>`;
+		if (line.startsWith('+')) return `<span style="color:#a6e3a1;background:rgba(166,227,161,0.1)">${e}</span>`;
+		if (line.startsWith('-')) return `<span style="color:#f38ba8;background:rgba(243,139,168,0.1)">${e}</span>`;
+		if (line.startsWith('@@')) return `<span style="color:#89b4fa">${e}</span>`;
+		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
+	}).join('\n');
+}
+
+function colorizeLog(raw: string): string {
+	return raw.split('\n').map(line => {
+		const e = esc(line);
+		if (/^[0-9a-f]{7}\s/.test(line)) {
+			return e
+				.replace(/^([0-9a-f]{7})/, '<span style="color:#f9e2af">$1</span>')
+				.replace(/(\(.*?\))/, '<span style="color:#a6e3a1;font-weight:500">$1</span>');
+		}
+		if (line.startsWith('commit ')) return `<span style="color:#f9e2af">${e}</span>`;
+		if (line.startsWith('Author:')) return `<span style="color:#a6e3a1">${e}</span>`;
+		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
+	}).join('\n');
+}
 
 function parseQuotedMessage(input: string): string | null {
 	const match = input.match(/-m\s+("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|[^\s-][^\s]*)/);
@@ -442,13 +494,15 @@ export async function runGitCommand(engine: GitEngine, rawInput: string): Promis
 
 	const segments = input.includes('&&') ? input.split('&&').map((s) => s.trim()) : [input];
 	const outputs: string[] = [];
+	let hasColored = false;
 	for (const segment of segments) {
 		const result = await runSingleCommand(engine, segment);
 		if (result.output === '__CLEAR__') return result;
 		if (result.output) outputs.push(result.output);
+		if (result.colored) hasColored = true;
 		if (result.error) return { output: outputs.join('\n'), error: true };
 	}
-	return { output: outputs.join('\n') };
+	return { output: outputs.join('\n'), colored: hasColored };
 }
 
 async function runSingleCommand(engine: GitEngine, input: string): Promise<CommandResult> {
@@ -461,8 +515,10 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 
 	try {
 		switch (sub) {
-			case 'status':
-				return { output: await formatStatus(engine) };
+			case 'status': {
+				const raw = await formatStatus(engine);
+				return { output: colorizeStatus(raw), colored: true };
+			}
 
 			case 'add': {
 				if (rest.includes('-p') || rest.includes('--patch')) {
@@ -514,7 +570,8 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			case 'log': {
 				const oneline = rest.includes('--oneline');
 				const all = rest.includes('--all');
-				return { output: await formatLog(engine, oneline, all) };
+				const raw = await formatLog(engine, oneline, all);
+				return { output: colorizeLog(raw), colored: true };
 			}
 
 			case 'branch': {
@@ -620,7 +677,8 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 
 			case 'diff': {
 				const staged = rest.includes('--staged') || rest.includes('--cached');
-				return { output: await formatDiff(engine, staged) };
+				const raw = await formatDiff(engine, staged);
+				return { output: colorizeDiff(raw), colored: true };
 			}
 
 			default:

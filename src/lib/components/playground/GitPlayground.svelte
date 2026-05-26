@@ -16,6 +16,7 @@
 		type: 'input' | 'output' | 'system';
 		text: string;
 		error?: boolean;
+		colored?: boolean;
 	}
 
 	let {
@@ -115,7 +116,7 @@
 			if (result.output === '__CLEAR__') {
 				history = [];
 			} else if (result.output) {
-				history = [...history, { type: 'output', text: result.output, error: result.error }];
+				history = [...history, { type: 'output', text: result.output, error: result.error, colored: result.colored }];
 			}
 
 			await refreshDiagram();
@@ -191,17 +192,24 @@
 {#snippet terminalHistory()}
 	{#each history as line, i (i)}
 		{#if line.type === 'input'}
-			<div class="mb-2 flex gap-2" style="font-family: var(--font-mono); font-size: 13.5px;">
+			<div class="mb-1.5 flex gap-2" style="font-family: var(--font-mono); font-size: 12.5px;">
 				<span style="color: var(--color-terminal-prompt);">$</span>
 				<span style="color: var(--color-terminal-command);">{line.text}</span>
 			</div>
 		{:else if line.type === 'output'}
-			<pre
-				class="mb-3 whitespace-pre-wrap pl-5 text-[13px] leading-relaxed"
-				style="color: {line.error ? 'var(--color-warning)' : 'var(--color-terminal-output)'}; font-family: var(--font-mono);"
-			>{line.text}</pre>
+			{#if line.colored}
+				<pre
+					class="mb-2.5 whitespace-pre-wrap pl-5 text-[11.5px] leading-relaxed"
+					style="font-family: var(--font-mono);"
+				>{@html line.text}</pre>
+			{:else}
+				<pre
+					class="mb-2.5 whitespace-pre-wrap pl-5 text-[11.5px] leading-relaxed"
+					style="color: {line.error ? 'var(--color-warning)' : 'var(--color-terminal-output)'}; font-family: var(--font-mono);"
+				>{line.text}</pre>
+			{/if}
 		{:else}
-			<p class="mb-2 text-[13px] italic" style="color: var(--color-text-muted); font-family: var(--font-mono);">
+			<p class="mb-1.5 text-[11.5px] italic" style="color: var(--color-text-muted); font-family: var(--font-mono);">
 				# {line.text}
 			</p>
 		{/if}
@@ -228,12 +236,14 @@
 			enterkeyhint="send"
 			aria-label="Git command"
 		/>
-		<span
+		<button
+			type="submit"
 			class="pg-return-hint"
-			aria-hidden="true"
+			disabled={loading || !input.trim()}
+			aria-label="Run command (Enter)"
 		>
 			<CornerDownLeft size={12} />
-		</span>
+		</button>
 	</form>
 {/snippet}
 
@@ -533,7 +543,7 @@
 	.pg-prompt {
 		flex-shrink: 0;
 		font-family: var(--font-mono);
-		font-size: 14px;
+		font-size: 12.5px;
 		font-weight: 600;
 		color: var(--color-terminal-prompt);
 		user-select: none;
@@ -549,7 +559,7 @@
 		appearance: none;
 		-webkit-appearance: none;
 		font-family: var(--font-mono);
-		font-size: 14px;
+		font-size: 12.5px;
 		line-height: 1.4;
 		color: var(--color-terminal-command);
 		caret-color: var(--color-terminal-prompt);
@@ -574,14 +584,31 @@
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		padding: 0.2rem 0.4rem;
-		border-radius: 0.25rem;
+		padding: 0.25rem 0.45rem;
+		border-radius: 0.3rem;
 		border: 1px solid var(--color-terminal-border);
 		background: color-mix(in srgb, var(--color-terminal-header) 80%, transparent);
 		color: var(--color-terminal-output);
 		opacity: 0.5;
 		font-size: 10px;
 		user-select: none;
+		cursor: pointer;
+		transition: opacity 0.15s ease, border-color 0.15s ease;
+	}
+
+	.pg-return-hint:hover:not(:disabled) {
+		opacity: 0.8;
+		border-color: var(--color-terminal-prompt);
+		color: var(--color-terminal-prompt);
+	}
+
+	.pg-return-hint:active:not(:disabled) {
+		opacity: 1;
+	}
+
+	.pg-return-hint:disabled {
+		opacity: 0.25;
+		cursor: default;
 	}
 
 	.pg-chip {
