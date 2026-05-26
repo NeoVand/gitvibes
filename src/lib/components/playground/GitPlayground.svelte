@@ -413,10 +413,10 @@
 			class="grid grid-cols-1 lg:grid-cols-2"
 			style="min-height: {embedded ? '340px' : '420px'};"
 		>
-			<div class="flex flex-col" style="border-right: 1px solid var(--color-border);">
+			<div class="order-2 flex flex-col border-t lg:order-1 lg:border-t-0 lg:border-r" style="border-top-color: var(--color-terminal-border); border-right-color: var(--color-border);">
 				<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-terminal-bg);">
-					<Terminal size={12} style="color: var(--color-text-muted);" />
-					<span class="text-xs" style="color: var(--color-text-muted);">Terminal</span>
+					<Terminal size={13} style="color: var(--color-important);" />
+					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">Terminal</span>
 				</div>
 
 				<div
@@ -430,10 +430,10 @@
 				{@render promptForm()}
 			</div>
 
-		<div class="flex flex-col">
+		<div class="order-1 flex flex-col lg:order-2">
 			<div class="flex items-center gap-2 px-4 py-2">
-				<GitBranch size={12} style="color: var(--color-important);" />
-				<span class="text-xs font-medium" style="color: var(--color-text-muted);">Commit Graph</span>
+				<GitBranch size={13} style="color: var(--color-important);" />
+				<span class="text-xs font-medium" style="color: var(--color-text-secondary);">Commit Graph</span>
 				</div>
 				<div class="flex flex-1 items-center justify-center p-4">
 					{#key diagram}
