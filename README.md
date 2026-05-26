@@ -35,6 +35,50 @@ GitVibes teaches Git through the lens of AI-assisted development. Instead of dry
 - **Light / dark theme**
 - **Fully static** — no backend; deploys to GitHub Pages
 
+## How the Git Playground works
+
+The playground lets you run real Git commands in the browser — no server, no sandboxed iframe. It pairs [isomorphic-git](https://isomorphic-git.org/) (a full Git implementation in JavaScript) with [LightningFS](https://github.com/nicolo-ribaudo/lightning-fs) (an in-memory virtual filesystem backed by IndexedDB) so every `git commit`, `git merge`, and `git stash` behaves like the real thing.
+
+```mermaid
+flowchart TD
+    subgraph Browser["Browser (no backend)"]
+        Input["⌨️ User types a command\n<code>git commit -m 'fix bug'</code>"]
+        Parse["Parse & dispatch\n<b>commands.ts</b>"]
+        Engine["Run Git operation\n<b>git-engine.ts</b>"]
+
+        subgraph VFS["Virtual Filesystem (LightningFS)"]
+            FS["In-memory <code>/repo</code>\nfiles, staging area, .git/"]
+        end
+
+        subgraph GitImpl["Git Implementation (isomorphic-git)"]
+            Ops["init · add · commit\nmerge · rebase · stash\nbranch · checkout · …"]
+        end
+
+        Remote["Simulated origin remote\n<b>remote-state.ts</b>\n(fetch / push without network)"]
+
+        Output["Format & colorize output\nHTML-styled terminal lines"]
+        Graph["Build Mermaid git graph\n<b>git-graph.ts</b>"]
+        Terminal["🖥️ Terminal output"]
+        Diagram["📊 Live commit graph (SVG)"]
+    end
+
+    Input --> Parse
+    Parse --> Engine
+    Engine <--> FS
+    Engine <--> Ops
+    Engine <--> Remote
+    Engine --> Output
+    Engine --> Graph
+    Output --> Terminal
+    Graph --> Diagram
+
+    style Browser fill:transparent,stroke:#555,stroke-width:1px
+    style VFS fill:transparent,stroke:#7aa2f7,stroke-width:1px,stroke-dasharray:5
+    style GitImpl fill:transparent,stroke:#9ece6a,stroke-width:1px,stroke-dasharray:5
+```
+
+After every command, both the terminal and the commit graph update in sync — so you can see the effect of each operation instantly. Scenarios pre-seed the virtual repo with commits, branches, and working-tree changes to set up each lesson.
+
 ## Tech stack
 
 | Layer | Tool |
