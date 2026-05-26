@@ -227,6 +227,15 @@
 		<div id="section-2-3" class="mb-8">
 			<SectionHeader level="section" icon={Save} title="2.3 Creating the Save Point" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<img
+					src="{base}/images/git-commit.png"
+					alt="git commit — each save point frozen as a checkpoint on the timeline"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You've staged your reviewed changes. Now, bundle them into a
