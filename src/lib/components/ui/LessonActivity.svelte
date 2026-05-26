@@ -16,7 +16,7 @@
 	let resetFn = $state<(() => void) | null>(null);
 </script>
 
-<div class="my-6" {id}>
+<div class="my-6">
 	<div class="activity-header">
 		<span class="text-sm font-semibold" style="color: var(--color-important);">{title}</span>
 		<button

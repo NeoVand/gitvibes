@@ -142,7 +142,7 @@ git restore src/bad_file.py  # Discard a single file`}
 				caption="Click the − button next to any staged file to unstage it. It moves back to the 'Changes' section."
 			/>
 
-			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="accidental-stage" class="mb-3 mt-8 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Unstage Dangerous Files
 			</h4>
 			<PlaygroundNote>
@@ -424,7 +424,7 @@ git push                   # Push the revert`}
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="force-push" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Reset and Force Push
 			</h4>
 			<PlaygroundNote>
@@ -526,7 +526,7 @@ git push                   # Push the revert`}
 				</table>
 			</div>
 
-			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="undo" class="mb-3 mt-8 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: The Undo Toolkit
 			</h4>
 			<PlaygroundNote>

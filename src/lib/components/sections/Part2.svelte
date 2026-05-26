@@ -374,7 +374,7 @@
 				caption="Click the sparkle icon and AI generates a commit message based on your staged changes. Always review it before committing!"
 			/>
 
-			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="core-loop" class="mb-3 mt-8 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: The Complete Loop
 			</h4>
 			<PlaygroundNote>

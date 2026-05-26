@@ -105,7 +105,7 @@ git stash pop`}
 				Choose <strong>"Stash (Include Untracked)"</strong> to save all your work. When you're ready to come back, go to <strong>...</strong> → Stash → <strong>"Pop Latest Stash"</strong> to restore everything exactly where you left off.
 			</p>
 
-			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="stash" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: The Stash Workflow
 			</h4>
 			<PlaygroundNote>
@@ -192,7 +192,7 @@ git stash pop`}
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="rebase-merge" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Merge vs. Rebase
 			</h4>
 			<PlaygroundNote>
@@ -293,7 +293,7 @@ x = 5
 				caption="The 3-way Merge Editor: Incoming changes (left), your changes (right), and the final result (bottom). Use checkboxes to select which changes to keep."
 			/>
 
-			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="conflicts" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Resolving a Merge Conflict
 			</h4>
 			<PlaygroundNote>

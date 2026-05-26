@@ -112,7 +112,7 @@
 				{/snippet}
 			</Callout>
 
-			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="wrong-branch" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Oops — Committed to Main
 			</h4>
 			<PlaygroundNote>
@@ -223,7 +223,7 @@ git merge origin/main   # Merge the updates into your branch`}
 				caption="The Sync Changes button combines pull + push in one click. The numbers show incoming (↓) and outgoing (↑) commit counts."
 			/>
 
-			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="sync-remote" class="mb-3 mt-8 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Fetch and Merge Remote Updates
 			</h4>
 			<PlaygroundNote>
@@ -309,7 +309,7 @@ git merge origin/main   # Merge the updates into your branch`}
 				caption="Create Pull Requests directly in VS Code with the GitHub Pull Requests extension. AI can even generate the PR description for you."
 			/>
 
-			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+			<h4 id="branching" class="mb-3 mt-8 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
 				Try It: Branch, Commit, and Push
 			</h4>
 			<PlaygroundNote>
