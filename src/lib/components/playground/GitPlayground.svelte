@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { GitBranch, Terminal, RotateCcw, Lightbulb, ChevronRight, ChevronDown, X } from 'lucide-svelte';
+	import { GitBranch, Terminal, RotateCcw, Lightbulb, ChevronRight, ChevronDown, X, Send } from 'lucide-svelte';
 	import MermaidDiagram from '$lib/components/ui/MermaidDiagram.svelte';
 	import { GitEngine } from '$lib/playground/git-engine';
 	import { runGitCommand } from '$lib/playground/commands';
@@ -225,8 +225,17 @@
 			class="pg-input"
 			autocomplete="off"
 			spellcheck="false"
+			enterkeyhint="send"
 			aria-label="Git command"
 		/>
+		<button
+			type="submit"
+			class="pg-send-btn"
+			disabled={loading || !input.trim()}
+			aria-label="Run command"
+		>
+			<Send size={14} />
+		</button>
 	</form>
 {/snippet}
 
@@ -247,11 +256,6 @@
 			class="flex shrink-0 flex-wrap items-center gap-2 px-3 py-2.5 sm:px-4"
 			style="background: var(--color-terminal-header); border-bottom: 1px solid var(--color-terminal-border);"
 		>
-			<div class="flex gap-1.5">
-				<span class="pg-dot" style="background: #ef4444;"></span>
-				<span class="pg-dot" style="background: #f59e0b;"></span>
-				<span class="pg-dot" style="background: #10b981;"></span>
-			</div>
 			<Terminal size={12} style="color: var(--color-text-muted);" />
 			<span class="text-xs font-medium" style="color: var(--color-terminal-output);">Playground</span>
 			<span class="pg-badge">real git</span>
@@ -383,11 +387,6 @@
 		>
 			<div class="flex flex-col" style="border-right: 1px solid var(--color-border);">
 				<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-terminal-bg);">
-					<div class="flex gap-1.5">
-						<span class="pg-dot" style="background: #ef4444;"></span>
-						<span class="pg-dot" style="background: #f59e0b;"></span>
-						<span class="pg-dot" style="background: #10b981;"></span>
-					</div>
 					<Terminal size={12} style="color: var(--color-text-muted);" />
 					<span class="text-xs" style="color: var(--color-text-muted);">Terminal</span>
 				</div>
@@ -438,13 +437,6 @@
 <style>
 	.pg-shell {
 		background: var(--color-terminal-bg);
-	}
-
-	.pg-dot {
-		display: block;
-		height: 0.625rem;
-		width: 0.625rem;
-		border-radius: 9999px;
 	}
 
 	.pg-badge {
@@ -576,6 +568,34 @@
 
 	.pg-input:disabled {
 		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
+	.pg-send-btn {
+		display: inline-flex;
+		flex-shrink: 0;
+		height: 1.75rem;
+		width: 1.75rem;
+		cursor: pointer;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0.5rem;
+		border: 1px solid var(--color-terminal-border);
+		background: color-mix(in srgb, var(--color-terminal-prompt) 18%, var(--color-terminal-header));
+		color: var(--color-terminal-prompt);
+		transition:
+			border-color 0.15s ease,
+			background 0.15s ease,
+			opacity 0.15s ease;
+	}
+
+	.pg-send-btn:hover:not(:disabled) {
+		border-color: var(--color-terminal-prompt);
+		background: color-mix(in srgb, var(--color-terminal-prompt) 28%, var(--color-terminal-header));
+	}
+
+	.pg-send-btn:disabled {
+		opacity: 0.35;
 		cursor: not-allowed;
 	}
 
