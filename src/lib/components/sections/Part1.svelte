@@ -142,6 +142,15 @@ git config --global credential.helper libsecret`}
 		<div id="section-1-3">
 			<SectionHeader level="section" icon={Download} title="1.3 The First Pull (Cloning the Repository)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<img
+					src="{base}/images/git-clone.png"
+					alt="git clone — remote repository copied to your local machine"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> The code exists on the server, but not on your machine.
