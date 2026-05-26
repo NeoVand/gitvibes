@@ -87,6 +87,14 @@
 			<h2 class="text-xl font-bold" style="color: var(--color-text);">What Is Git?</h2>
 		</div>
 
+		<div class="my-6">
+			<ExpandableImage
+				src="{base}/images/what-is-git.png"
+				alt="What Is Git? — version control as unlimited undo for your whole project"
+				caption="Branch the risky experiments, contain the failures, merge the wins — every save becomes a recoverable moment"
+			/>
+		</div>
+
 		<p class="mb-4 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 			Git is a <strong style="color: var(--color-text);">version control system</strong> — software that tracks every change you make to your code and lets you travel back in time to any previous version. Think of it like an unlimited undo history for your entire project, not just a single file.
 		</p>
