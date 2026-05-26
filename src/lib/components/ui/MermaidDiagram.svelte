@@ -219,6 +219,10 @@
 			.render(uniqueId, definition)
 			.then(({ svg }) => {
 				container.innerHTML = svg;
+				for (const circle of container.querySelectorAll('circle')) {
+					const r = parseFloat(circle.getAttribute('r') ?? '0');
+					if (r > 10) circle.setAttribute('r', '10');
+				}
 			})
 			.catch((err) => {
 				console.warn('Mermaid render error:', err);
@@ -228,7 +232,7 @@
 </script>
 
 <div
-	class="mermaid-container flex items-center justify-center overflow-x-auto py-6"
+	class="mermaid-container flex items-center justify-center overflow-x-auto py-1"
 	bind:this={container}
 ></div>
 
@@ -237,4 +241,10 @@
 		max-width: 100%;
 		height: auto;
 	}
+
+	.mermaid-container :global(.commit-id),
+	.mermaid-container :global(.commit-msg) {
+		font-size: 11px !important;
+	}
+
 </style>
