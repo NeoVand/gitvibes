@@ -29,13 +29,13 @@ function colorizeStatus(raw: string): string {
 		if (line.startsWith('Your branch')) return `<span style="color:var(--color-terminal-output);font-style:italic">${e}</span>`;
 		if (line.startsWith('\t') && (line.includes('modified:') || line.includes('both modified:'))) {
 			if (raw.includes('Changes to be committed') && !raw.split('Changes not staged')[0]?.includes(line)) {
-				return `<span style="color:#a6e3a1">\t${esc(line.trim())}</span>`;
+				return `<span style="color:var(--color-diff-add)">\t${esc(line.trim())}</span>`;
 			}
-			return `<span style="color:#f38ba8">\t${esc(line.trim())}</span>`;
+			return `<span style="color:var(--color-diff-del)">\t${esc(line.trim())}</span>`;
 		}
-		if (line.startsWith('\t')) return `<span style="color:#f38ba8">\t${esc(line.trim())}</span>`;
-		if (line.startsWith('Changes to be committed')) return `<span style="color:#a6e3a1;font-weight:500">${e}</span>`;
-		if (line.startsWith('Changes not staged') || line.startsWith('Untracked files') || line.startsWith('Unmerged paths')) return `<span style="color:#f38ba8;font-weight:500">${e}</span>`;
+		if (line.startsWith('\t')) return `<span style="color:var(--color-diff-del)">\t${esc(line.trim())}</span>`;
+		if (line.startsWith('Changes to be committed')) return `<span style="color:var(--color-diff-add);font-weight:500">${e}</span>`;
+		if (line.startsWith('Changes not staged') || line.startsWith('Untracked files') || line.startsWith('Unmerged paths')) return `<span style="color:var(--color-diff-del);font-weight:500">${e}</span>`;
 		if (line.startsWith('nothing to commit')) return `<span style="color:var(--color-terminal-prompt)">${e}</span>`;
 		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
 	}).join('\n');
@@ -45,12 +45,12 @@ function colorizeDiff(raw: string): string {
 	return raw.split('\n').map(line => {
 		const e = esc(line);
 		if (line.startsWith('diff --git')) return `<span style="font-weight:600;color:var(--color-terminal-command)">${e}</span>`;
-		if (line.startsWith('---')) return `<span style="font-weight:600;color:#f38ba8">${e}</span>`;
-		if (line.startsWith('+++')) return `<span style="font-weight:600;color:#a6e3a1">${e}</span>`;
-		if (line.startsWith('new file')) return `<span style="color:#a6e3a1">${e}</span>`;
-		if (line.startsWith('+')) return `<span style="color:#a6e3a1;background:rgba(166,227,161,0.1)">${e}</span>`;
-		if (line.startsWith('-')) return `<span style="color:#f38ba8;background:rgba(243,139,168,0.1)">${e}</span>`;
-		if (line.startsWith('@@')) return `<span style="color:#89b4fa">${e}</span>`;
+		if (line.startsWith('---')) return `<span style="font-weight:600;color:var(--color-diff-del)">${e}</span>`;
+		if (line.startsWith('+++')) return `<span style="font-weight:600;color:var(--color-diff-add)">${e}</span>`;
+		if (line.startsWith('new file')) return `<span style="color:var(--color-diff-add)">${e}</span>`;
+		if (line.startsWith('+')) return `<span style="color:var(--color-diff-add);background:var(--color-diff-add-bg)">${e}</span>`;
+		if (line.startsWith('-')) return `<span style="color:var(--color-diff-del);background:var(--color-diff-del-bg)">${e}</span>`;
+		if (line.startsWith('@@')) return `<span style="color:var(--color-diff-hunk)">${e}</span>`;
 		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
 	}).join('\n');
 }
@@ -60,11 +60,11 @@ function colorizeLog(raw: string): string {
 		const e = esc(line);
 		if (/^[0-9a-f]{7}\s/.test(line)) {
 			return e
-				.replace(/^([0-9a-f]{7})/, '<span style="color:#f9e2af">$1</span>')
-				.replace(/(\(.*?\))/, '<span style="color:#a6e3a1;font-weight:500">$1</span>');
+				.replace(/^([0-9a-f]{7})/, '<span style="color:var(--color-diff-hash)">$1</span>')
+				.replace(/(\(.*?\))/, '<span style="color:var(--color-diff-meta);font-weight:500">$1</span>');
 		}
-		if (line.startsWith('commit ')) return `<span style="color:#f9e2af">${e}</span>`;
-		if (line.startsWith('Author:')) return `<span style="color:#a6e3a1">${e}</span>`;
+		if (line.startsWith('commit ')) return `<span style="color:var(--color-diff-hash)">${e}</span>`;
+		if (line.startsWith('Author:')) return `<span style="color:var(--color-diff-meta)">${e}</span>`;
 		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
 	}).join('\n');
 }

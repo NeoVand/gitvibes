@@ -264,9 +264,9 @@
 			class="flex shrink-0 flex-wrap items-center gap-2.5 px-4 py-3 sm:px-5"
 			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 		>
-			<Terminal size={14} style="color: var(--color-primary);" />
-			<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
-			<span class="pg-badge">real git</span>
+		<Terminal size={14} style="color: var(--color-important);" />
+		<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
+		<span class="pg-badge">real git</span>
 
 			<div class="ml-auto flex flex-wrap items-center gap-2">
 				{@render scenarioSelect()}
@@ -303,10 +303,10 @@
 					class="flex items-center gap-2 px-5 py-2"
 					style="background: var(--color-bg-tertiary);"
 				>
-					<GitBranch size={13} style="color: var(--color-primary);" />
-					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
-						Commit Graph
-					</span>
+				<GitBranch size={13} style="color: var(--color-important);" />
+				<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
+					Commit Graph
+				</span>
 				</div>
 				<div class="flex items-center justify-center px-4 py-3" style="background: var(--color-bg-secondary);">
 					{#key diagram}
@@ -357,15 +357,15 @@
 			class="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
 			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 		>
-			<div class="flex items-center gap-2">
-				<GitBranch size={16} style="color: var(--color-primary);" />
-				<span class="text-sm font-semibold" style="color: var(--color-text);">
-					{embedded ? 'Try it yourself' : 'Git Playground'}
-				</span>
-				<span class="rounded-full px-2 py-0.5 text-[10px] font-medium" style="background: var(--color-tip-bg); color: var(--color-tip);">
-					real git
-				</span>
-			</div>
+		<div class="flex items-center gap-2">
+			<GitBranch size={16} style="color: var(--color-important);" />
+			<span class="text-sm font-semibold" style="color: var(--color-text);">
+				{embedded ? 'Try it yourself' : 'Git Playground'}
+			</span>
+			<span class="rounded-full px-2 py-0.5 text-[10px] font-medium" style="background: color-mix(in srgb, var(--color-important) 12%, var(--color-bg-tertiary)); color: var(--color-important);">
+				real git
+			</span>
+		</div>
 			<div class="flex flex-wrap items-center gap-2">
 				{@render scenarioSelect()}
 				<button
@@ -383,9 +383,9 @@
 
 		<div
 			class="flex items-start gap-2 px-5 py-2.5 text-xs"
-			style="background: var(--color-tip-bg); border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary);"
+			style="background: color-mix(in srgb, var(--color-important) 5%, var(--color-bg-secondary)); border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary);"
 		>
-			<Lightbulb size={14} class="mt-0.5 flex-shrink-0" style="color: var(--color-tip);" />
+			<Lightbulb size={14} class="mt-0.5 flex-shrink-0" style="color: var(--color-important);" />
 			<span>{scenario.hint}</span>
 		</div>
 
@@ -410,10 +410,10 @@
 				{@render promptForm()}
 			</div>
 
-			<div class="flex flex-col">
-				<div class="flex items-center gap-2 px-4 py-2">
-					<GitBranch size={12} style="color: var(--color-primary);" />
-					<span class="text-xs" style="color: var(--color-text-muted);">Live commit graph</span>
+		<div class="flex flex-col">
+			<div class="flex items-center gap-2 px-4 py-2">
+				<GitBranch size={12} style="color: var(--color-important);" />
+				<span class="text-xs font-medium" style="color: var(--color-text-muted);">Commit Graph</span>
 				</div>
 				<div class="flex flex-1 items-center justify-center p-4">
 					{#key diagram}
@@ -452,8 +452,8 @@
 		padding: 0.175rem 0.5rem;
 		font-size: 10px;
 		font-weight: 600;
-		color: var(--color-primary);
-		background: var(--color-primary-dim);
+		color: var(--color-important);
+		background: color-mix(in srgb, var(--color-important) 12%, var(--color-bg-tertiary));
 	}
 
 	.pg-select-wrap {
@@ -481,13 +481,13 @@
 	}
 
 	.pg-select:hover:not(:disabled) {
-		border-color: var(--color-primary);
+		border-color: var(--color-important);
 	}
 
 	.pg-select:focus {
 		outline: none;
-		border-color: var(--color-primary);
-		box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 18%, transparent);
+		border-color: var(--color-important);
+		box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-important) 18%, transparent);
 	}
 
 	.pg-select:disabled {
@@ -522,8 +522,8 @@
 	}
 
 	.pg-icon-btn:hover:not(:disabled) {
-		border-color: var(--color-primary);
-		color: var(--color-primary);
+		border-color: var(--color-important);
+		color: var(--color-important);
 	}
 
 	.pg-icon-btn:disabled {
@@ -630,8 +630,8 @@
 	}
 
 	.pg-chip:hover {
-		border-color: var(--color-primary);
-		color: var(--color-primary);
-		background: var(--color-primary-dim);
+		border-color: var(--color-important);
+		color: var(--color-important);
+		background: color-mix(in srgb, var(--color-important) 8%, var(--color-surface));
 	}
 </style>

@@ -59,25 +59,25 @@
 	<!-- Header -->
 	<div
 		class="flex items-center justify-between px-5 py-3"
-		style="background: var(--color-bg-tertiary);"
+		style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 	>
 		<div class="flex items-center gap-2">
-			<GitBranch size={16} style="color: var(--color-primary);" />
+			<GitBranch size={14} style="color: var(--color-important);" />
 			<span class="text-sm font-semibold" style="color: var(--color-text);">{title}</span>
 		</div>
-		<div class="flex items-center gap-2">
+		<div class="flex items-center gap-2.5">
 			<button
 				onclick={reset}
 				disabled={currentStep === 0}
-				class="flex items-center gap-1 rounded-md px-2 py-1 text-xs transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30"
+				class="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-30"
 				style="color: var(--color-text-muted);"
 				aria-label="Reset sandbox"
 			>
 				<RotateCcw size={12} />
 				Reset
 			</button>
-			<span class="text-xs tabular-nums" style="color: var(--color-text-muted);">
-				Step {currentStep + 1} of {steps.length}
+			<span class="text-[11px] font-medium tabular-nums" style="color: var(--color-text-muted);">
+				{currentStep + 1} / {steps.length}
 			</span>
 		</div>
 	</div>
@@ -90,13 +90,8 @@
 				class="flex items-center gap-2 px-4 py-2"
 				style="background: var(--color-terminal-bg);"
 			>
-				<div class="flex gap-1.5">
-					<span class="block h-3 w-3 rounded-full" style="background: #ef4444;"></span>
-					<span class="block h-3 w-3 rounded-full" style="background: #f59e0b;"></span>
-					<span class="block h-3 w-3 rounded-full" style="background: #10b981;"></span>
-				</div>
 				<Terminal size={12} style="color: var(--color-text-muted);" />
-				<span class="text-xs" style="color: var(--color-text-muted);">Terminal</span>
+				<span class="text-xs font-medium" style="color: var(--color-text-muted);">Terminal</span>
 			</div>
 			<div
 				class="flex-1 overflow-y-auto p-4"
@@ -134,10 +129,10 @@
 		</div>
 
 		<!-- Visualization pane -->
-		<div class="flex flex-col">
+		<div class="flex flex-col" style="border-left: 1px solid var(--color-border);">
 			<div class="flex items-center gap-2 px-4 py-2">
-				<GitBranch size={12} style="color: var(--color-primary);" />
-				<span class="text-xs" style="color: var(--color-text-muted);">Visualization</span>
+				<GitBranch size={12} style="color: var(--color-important);" />
+				<span class="text-xs font-medium" style="color: var(--color-text-muted);">Commit Graph</span>
 			</div>
 			<div class="flex flex-1 items-center justify-center p-4">
 				{#key currentStep}
@@ -150,15 +145,16 @@
 	<!-- Navigation footer -->
 	<div
 		class="flex items-center justify-between px-5 py-3"
+		style="border-top: 1px solid var(--color-border);"
 	>
 		<button
 			onclick={prev}
 			disabled={currentStep === 0}
-			class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
+			class="flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
 			style="color: var(--color-text-muted);"
 		>
-			<ChevronLeft size={16} />
-			Previous
+			<ChevronLeft size={14} />
+			Prev
 		</button>
 
 		<!-- Step dots -->
@@ -166,11 +162,11 @@
 			{#each steps as _, i}
 				<button
 					onclick={() => (currentStep = i)}
-					class="h-1.5 rounded-full transition-all"
+					class="h-1.5 cursor-pointer rounded-full transition-all"
 					class:w-5={i === currentStep}
 					class:w-1.5={i !== currentStep}
 					style="background: {i === currentStep
-						? 'var(--color-text-muted)'
+						? 'var(--color-important)'
 						: i < currentStep
 							? 'var(--color-text-muted)'
 							: 'var(--color-border)'}; opacity: {i === currentStep ? '1' : i < currentStep ? '0.5' : '0.3'};"
@@ -182,17 +178,17 @@
 		<button
 			onclick={next}
 			disabled={currentStep === steps.length - 1}
-			class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
-			style="color: var(--color-text-secondary);"
+			class="flex items-center gap-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
+			style="color: var(--color-important);"
 		>
 			Next
-			<ChevronRight size={16} />
+			<ChevronRight size={14} />
 		</button>
 	</div>
 </div>
 
 {#if !bare}
-<p class="-mt-4 mb-6 text-center text-[11px]" style="color: var(--color-text-muted);">
-	Hover the sandbox and use ← → arrow keys to step through
+<p class="mt-2 mb-6 text-center text-[11px]" style="color: var(--color-text-muted);">
+	Use ← → arrow keys to step through
 </p>
 {/if}

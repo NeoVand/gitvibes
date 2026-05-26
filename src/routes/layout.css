@@ -52,6 +52,13 @@
 	--color-terminal-output: #4b5563;
 	--color-terminal-border: #d1d5db;
 	--color-terminal-header: #e5e7eb;
+	--color-diff-add: #166534;
+	--color-diff-add-bg: rgba(22, 101, 52, 0.08);
+	--color-diff-del: #b91c1c;
+	--color-diff-del-bg: rgba(185, 28, 28, 0.06);
+	--color-diff-hunk: #1d4ed8;
+	--color-diff-hash: #92400e;
+	--color-diff-meta: #166534;
 
 	--color-code-bg: #f3f4f6;
 	--color-code-text: #1f2937;
@@ -106,6 +113,13 @@
 		--color-terminal-output: #a6adc8;
 		--color-terminal-border: #2a2d3a;
 		--color-terminal-header: #13151e;
+		--color-diff-add: #a6e3a1;
+		--color-diff-add-bg: rgba(166, 227, 161, 0.1);
+		--color-diff-del: #f38ba8;
+		--color-diff-del-bg: rgba(243, 139, 168, 0.1);
+		--color-diff-hunk: #89b4fa;
+		--color-diff-hash: #f9e2af;
+		--color-diff-meta: #a6e3a1;
 
 		--color-code-bg: #1a1d28;
 		--color-code-text: #e8eaf0;
@@ -147,6 +161,13 @@
 	--color-vibe: #8b5cf6;
 	--color-vibe-text: #7c3aed;
 	--color-vibe-bg: #f5f3ff;
+	--color-diff-add: #166534;
+	--color-diff-add-bg: rgba(22, 101, 52, 0.08);
+	--color-diff-del: #b91c1c;
+	--color-diff-del-bg: rgba(185, 28, 28, 0.06);
+	--color-diff-hunk: #1d4ed8;
+	--color-diff-hash: #92400e;
+	--color-diff-meta: #166534;
 }
 
 :root.dark {
@@ -182,6 +203,13 @@
 	--color-terminal-output: #a6adc8;
 	--color-terminal-border: #2a2d3a;
 	--color-terminal-header: #13151e;
+	--color-diff-add: #a6e3a1;
+	--color-diff-add-bg: rgba(166, 227, 161, 0.1);
+	--color-diff-del: #f38ba8;
+	--color-diff-del-bg: rgba(243, 139, 168, 0.1);
+	--color-diff-hunk: #89b4fa;
+	--color-diff-hash: #f9e2af;
+	--color-diff-meta: #a6e3a1;
 	--color-code-bg: #1a1d28;
 	--color-code-text: #e8eaf0;
 	--color-vibe: #a78bfa;

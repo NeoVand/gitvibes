@@ -53,12 +53,9 @@
 		role="tabpanel"
 	>
 		{#if tab === 'watch'}
-			<div class="[&>div]:rounded-none">
-				<Sandbox {title} {steps} {id} bare />
-			</div>
-			<p class="px-5 pb-3 text-center text-[11px]" style="color: var(--color-text-muted);">
-				Hover the sandbox and use ← → arrow keys to step through
-			</p>
+		<div class="[&>div]:rounded-none">
+			<Sandbox {title} {steps} {id} bare />
+		</div>
 	{:else}
 		{#await import('$lib/components/playground/GitPlayground.svelte')}
 			<div class="flex items-center justify-center p-8" style="color: var(--color-text-muted);">
