@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { BookOpen, Workflow, Table, Sparkles, MessageSquare } from 'lucide-svelte';
+	import { base } from '$app/paths';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import Callout from '../ui/Callout.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -24,6 +26,13 @@
 		<!-- 7.1 AI-First Workflow -->
 		<div id="section-7-1" class="mb-14">
 			<SectionHeader level="section" icon={Workflow} title="7.1 The AI-First Workflow (Summary)" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/save-game-loop.png"
+					alt="The Save Game Loop — 8-step AI-first Git workflow from sandbox to recover"
+				/>
+			</div>
 
 			<p class="mb-6" style="color: var(--color-text-secondary);">
 				This is your new "save game" loop. Follow these 8 steps for every piece of work:
@@ -131,6 +140,13 @@
 			<!-- 7.2 Quick Reference -->
 		<div id="section-7-2" class="mb-8">
 			<SectionHeader level="section" icon={Table} title="7.2 Quick Reference Card" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/quick-reference.png"
+					alt="Quick Reference Card — Git tasks with terminal commands and VS Code equivalents"
+				/>
+			</div>
 
 			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
 				Keep this handy. It covers the most common Git tasks with both the terminal command and the VS Code equivalent, so you can use whichever feels more natural.

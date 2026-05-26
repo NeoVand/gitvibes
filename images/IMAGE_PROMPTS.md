@@ -396,45 +396,97 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 ### section-7-1 — The AI-First Workflow (8-Step Summary)
 
-> Create a cinematic editorial poster about a complete developer workflow.
+> Create a cinematic editorial infographic poster titled **"The Save Game Loop"** — the 8-step AI-first Git workflow from the GitVibes conclusion.
 >
-> Asymmetrical composition. A single flowing arc crosses the frame from lower left to upper right — along it, eight minimal nodes are placed at uneven intervals. Each node is a different muted color (purple, pink, amber, green, cyan, blue, indigo, emerald) but all are restrained and desaturated. The arc itself shifts color gradually along its length.
+> CONCEPT: A horizontal flowing arc crosses the frame from lower-left to upper-right. Along it sit **eight numbered nodes** (1–8), evenly readable at poster size — each node is a small pill or circle with a step name and a tiny monospace command beneath. This is an infographic, not an abstract unlabeled arc. The arc gradient shifts subtly purple → emerald along the flow.
 >
-> Upper left: large weathered serif typography "The Loop" with aged print texture.
+> THE EIGHT STEPS (include this text legibly on or beside each node, in order):
 >
-> The mood is elegant completeness — a full cycle rendered as one graceful gesture. Premium developer aesthetic, not a pipeline diagram.
+> 1. **Sandbox** — `git switch -c feature/name` · isolated branch for AI experiments
+> 2. **Generate** — prompt your AI assistant · "vibe" and generate code
+> 3. **Review** — `git add -p` · or VS Code "Stage Selected Ranges"
+> 4. **Save** — `git commit -m "feat: ..."` · commit small, commit often
+> 5. **Sync** — `git fetch origin` → `git rebase origin/main` · stay current with main
+> 6. **Push** — `git push --force-with-lease` · safe push after rebase
+> 7. **Propose** — open a Pull Request · human review gate
+> 8. **Recover** — `git revert` · never reset a public branch
 >
-> Dark navy background (#0f1117) with soft film grain and faint paper texture. The nodes carry selective localized glow in their respective colors. The arc between them is barely luminous. Strong negative space above and below the arc.
+> LAYOUT:
+> - Upper left: large weathered serif **"The Save Game Loop"** with aged print texture.
+> - Subtitle in muted blue sans-serif: **"8 steps for every piece of work"**
+> - The arc and nodes occupy the central band; each node gets a distinct restrained accent color (purple, pink, amber, green, cyan, blue, indigo, emerald) with localized glow.
+> - Small footer: **"AI generates · Git protects · Humans review"**
 >
-> Avoid circular nodes with icons, labeled steps, monospace commands below each node, or starfield backgrounds. One arc, eight color points, one flowing movement. 16:9 aspect ratio.
+> MOOD: Elegant completeness — a full professional cycle, not a generic pipeline. Premium developer-tooling poster. Calm, confident, spacious.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, faint paper texture. Monospace commands in JetBrains-style font. 90% dark, selective glow on nodes only. 16:9 aspect ratio.
+>
+> AVOID: Unlabeled colored dots, the vague title "The Loop" without context, starfield backgrounds, circular icon badges, or a literal Mermaid flowchart UI. Keep all eight steps named and readable.
 
 ### section-7-2 — Quick Reference Card
 
-> Create a cinematic editorial poster styled as a premium reference card.
+> Create a cinematic editorial infographic poster styled as a **premium quick-reference card** — terminal command on the left, VS Code equivalent on the right.
 >
-> Asymmetrical composition. A single dark card shape — with rounded corners, worn edges, and subtle emboss texture — floats slightly off-center to the right. On its surface, two columns of faint monospace text are barely legible — command on the left, action on the right. The text is deliberately aged and partially faded, like a well-used desk reference.
+> CONCEPT: A dark floating card (rounded corners, worn edges, subtle emboss) occupies the right two-thirds. Inside: a **three-column reference table** rendered as an infographic — NOT illegible faded text. Columns labeled **Task · Command · VS Code** in tiny uppercase headers. Eleven data rows, legible at poster size in monospace (commands) and sans-serif (tasks/UI).
 >
-> Left of the card: large weathered serif typography "Quick Ref" with editorial print treatment.
+> THE ELEVEN ROWS (include this content on the card):
 >
-> The mood is worn utility — something printed, pinned up, and used daily until the ink fades. Tactile and premium.
+> | Task | Command | VS Code |
+> | Check what changed | `git status` | Source Control panel |
+> | Stage specific lines | `git add -p` | Stage Selected Ranges |
+> | Commit changes | `git commit -m "feat: ..."` | message box + checkmark |
+> | Create new branch | `git switch -c feature/name` | branch name (bottom-left) |
+> | Discard local changes | `git restore .` | Discard Changes |
+> | Undo last commit (keep) | `git reset --soft HEAD~1` | GitLens: Reset |
+> | Revert public commit | `git revert <hash>` | Revert Commit |
+> | Stash work in progress | `git stash push -m "..."` | ... menu: Stash |
+> | Update branch | `git fetch && git rebase origin/main` | ... menu: Pull, Rebase |
+> | Safe force push | `git push --force-with-lease` | Terminal only |
+> | Practice all commands | Git Playground | Try it yourself tabs |
 >
-> Dark navy background (#0f1117) with soft film grain. The card has subtle depth, a faint border glow in indigo, and paper texture on its surface. The text on the card is intentionally low-contrast — it suggests rather than explains. Slight analog feel throughout.
+> LAYOUT:
+> - Left of card: large weathered serif **"Quick Reference"** with editorial print treatment.
+> - Subtitle: **"Terminal or VS Code — pick your path"**
+> - Alternate rows on the card have barely-there background tint for scanability.
+> - Thin indigo border glow on the card edge.
 >
-> Avoid clean table layouts, alternating row colors, brand badges, or fully legible content. A beautiful worn card object with implied density. 16:9 aspect ratio.
+> MOOD: Worn utility pinned to a developer's desk — tactile, trusted, used daily. Infographic clarity inside a cinematic frame.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, paper texture on card surface. Commands in monospace; task/UI labels in clean sans-serif. High contrast for readability despite aged aesthetic. 16:9 aspect ratio.
+>
+> AVOID: Fully illegible faded text, brand logos, the abbreviated title "Quick Ref" without "Reference", or a blank card with implied density. The table content must be readable.
 
 ### section-7-3 — Teaching Your AI to Use Git
 
-> Create a cinematic editorial poster about AI agents learning developer conventions.
+> Create a cinematic editorial infographic poster about **configuring AI tools to follow your Git conventions** — not generic "AI brain" art.
 >
-> Off-center composition. Center-right: a single abstract neural-network form — rendered as a minimal geometric shape with restrained internal glow. Thin luminous threads extend from it toward three small configuration file silhouettes positioned at varying distances, partially cropped by the frame edges.
+> CONCEPT: Center-right, a minimal abstract agent form (geometric, restrained indigo-purple inner glow). Three **configuration channels** extend from it as thin luminous threads to three labeled panels — each panel is a small worn card with a tool name, file path, and example rules. This is an infographic mapping real tools from the tutorial.
 >
-> Left side: large weathered serif typography "Configure Once" with aged print texture and editorial treatment.
+> THE THREE PANELS (legible text on each card):
 >
-> The mood is quiet intelligence — an agent that listens and follows conventions permanently. Futuristic but atmospheric and aged, not glossy AI marketing.
+> **Panel 1 — Cursor Rules**
+> File: `.cursor/rules`
+> Examples: "Conventional Commits only" · "All work on `feature/` branches"
 >
-> Dark navy background (#0f1117) with soft film grain and analog paper texture. The neural form carries selective indigo-purple inner glow. The config file silhouettes are barely visible — ghostly outlines. The connecting threads are thin and luminous but restrained.
+> **Panel 2 — Claude Code**
+> File: `CLAUDE.md`
+> Examples: branch naming · commit format · PR templates
 >
-> Avoid brain icons, robot avatars, multiple labeled elements, or busy connected-node diagrams. One central intelligence, a few trailing connections, implied obedience. 16:9 aspect ratio.
+> **Panel 3 — GitHub Actions**
+> Label: AI Agents
+> Examples: auto-review PRs · update docs · manage branches
+>
+> LAYOUT:
+> - Left side: large weathered serif **"Configure Once"** with aged print texture.
+> - Subtitle in muted monospace: **"AI manages Git · Git manages accountability"**
+> - Bottom footer (small): **"Rules persist · Conventions stick · Humans stay in the loop"**
+> - Optional faint quote strip referencing the closing idea: Git = system of accountability for AI-assisted coding.
+>
+> MOOD: Quiet intelligence — conventions wired in permanently, not one-off prompts. Futuristic but atmospheric and aged, not glossy AI marketing.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, analog paper texture. Agent glow and thread accents in indigo-purple. Config cards desaturated with faint borders. 16:9 aspect ratio.
+>
+> AVOID: Brain icons, robot mascots, unlabeled ghost file silhouettes, busy neural-network diagrams with dozens of nodes, or the phrase "Configure Once" with no supporting detail. All three tools must be named with readable example rules.
 
 ---
 
