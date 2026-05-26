@@ -22,36 +22,34 @@
 <div class="my-6" {id}>
 	<!-- Tab bar -->
 	<div
-		class="mb-0 flex overflow-hidden rounded-t-xl"
-		style="border: 1px solid var(--color-border); border-bottom: none; background: var(--color-bg-tertiary);"
+		class="activity-tabbar"
 		role="tablist"
 		aria-label="{title} activity"
 	>
 		<button
 			role="tab"
 			aria-selected={tab === 'watch'}
-			class="flex flex-1 items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors sm:flex-none sm:px-6"
-			style="color: {tab === 'watch' ? 'var(--color-text)' : 'var(--color-text-muted)'}; background: {tab === 'watch' ? 'var(--color-bg-secondary)' : 'transparent'}; border-bottom: {tab === 'watch' ? '2px solid var(--color-primary)' : '2px solid transparent'};"
+			class="activity-tab"
+			class:active={tab === 'watch'}
 			onclick={() => (tab = 'watch')}
 		>
-			<Eye size={15} />
+			<Eye size={14} />
 			Watch
 		</button>
 		<button
 			role="tab"
 			aria-selected={tab === 'try'}
-			class="flex flex-1 items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors sm:flex-none sm:px-6"
-			style="color: {tab === 'try' ? 'var(--color-text)' : 'var(--color-text-muted)'}; background: {tab === 'try' ? 'var(--color-bg-secondary)' : 'transparent'}; border-bottom: {tab === 'try' ? '2px solid var(--color-primary)' : '2px solid transparent'};"
+			class="activity-tab"
+			class:active={tab === 'try'}
 			onclick={() => (tab = 'try')}
 		>
-			<Gamepad2 size={15} />
+			<Gamepad2 size={14} />
 			Try it yourself
 		</button>
 	</div>
 
 	<div
-		class="overflow-hidden rounded-b-xl"
-		style="border: 1px solid var(--color-border); border-top: none;"
+		class="activity-panel"
 		role="tabpanel"
 	>
 		{#if tab === 'watch'}
@@ -86,3 +84,70 @@
 		{/if}
 	</div>
 </div>
+
+<style>
+	.activity-tabbar {
+		display: flex;
+		gap: 0;
+		border: 1px solid color-mix(in srgb, var(--color-important) 35%, var(--color-border));
+		border-bottom: none;
+		border-radius: 0.75rem 0.75rem 0 0;
+		overflow: hidden;
+		background: transparent;
+		position: relative;
+	}
+
+	.activity-tabbar::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: color-mix(in srgb, var(--color-important) 25%, var(--color-border));
+	}
+
+	.activity-tab {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: 0.625rem 1.5rem;
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--color-text-muted);
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		position: relative;
+		transition: color 0.15s ease;
+	}
+
+	.activity-tab:hover:not(.active) {
+		color: var(--color-text-secondary);
+	}
+
+	.activity-tab.active {
+		color: var(--color-important);
+		font-weight: 600;
+	}
+
+	.activity-tab.active::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0.75rem;
+		right: 0.75rem;
+		height: 2px;
+		background: var(--color-important);
+		border-radius: 1px 1px 0 0;
+		z-index: 1;
+	}
+
+	.activity-panel {
+		overflow: hidden;
+		border-radius: 0 0 0.75rem 0.75rem;
+		border: 1px solid color-mix(in srgb, var(--color-important) 35%, var(--color-border));
+		border-top: none;
+	}
+</style>
