@@ -94,8 +94,8 @@
 
 <!-- ───── EXPANDED SIDEBAR ───── -->
 <aside
-	class="sidebar-drawer fixed top-0 bottom-0 left-0 z-40 flex flex-col transition-all duration-200 ease-out"
-	style="width: var(--sidebar-width); padding-top: var(--header-height); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
+	class="sidebar-expanded fixed top-0 bottom-0 left-0 z-40 flex flex-col border-r transition-all duration-200 ease-out"
+	style="width: var(--sidebar-width); padding-top: var(--header-height); border-color: var(--color-border-light);"
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
 >
@@ -119,11 +119,14 @@
 	<nav class="flex-1 overflow-y-auto px-3 py-2">
 		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
-			<div class="mb-1">
+			<div class="mb-0.5">
 				<div
-					class="nav-section flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left transition-colors"
-					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
+					class="nav-item relative flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition-all"
+					style="color: {active ? 'var(--color-primary)' : 'var(--color-text)'};"
 				>
+					{#if active}
+						<span class="absolute top-1.5 bottom-1.5 left-0 w-[3px] rounded-r-full" style="background: var(--color-primary);"></span>
+					{/if}
 					<button
 						onclick={() => {
 							if (section.children) {
@@ -137,7 +140,7 @@
 						style="color: inherit;"
 					>
 						{@render navIcon(section, active, 17)}
-						<span class="nav-section-label flex-1" style="font-family: var(--font-heading); font-weight: {active ? '700' : '600'}; font-size: 14.5px; letter-spacing: -0.01em;">
+						<span class="flex-1" style="font-family: var(--font-heading); font-weight: {active ? '700' : '500'}; font-size: 14.5px; letter-spacing: -0.01em;">
 							{section.label}
 						</span>
 					</button>
@@ -165,8 +168,8 @@
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px] transition-colors"
-								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
+								class="nav-child-item relative flex w-full cursor-pointer items-center gap-2 px-2.5 py-1.5 text-left text-[13px] transition-all"
+								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
 							>
 								{@render navIcon(child, childActive, 13)}
 								<span>{child.label}</span>
@@ -182,8 +185,8 @@
 <!-- ───── COLLAPSED ICON RAIL ───── -->
 {#if !open}
 	<aside
-		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2"
-		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
+		class="sidebar-collapsed fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2"
+		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px);"
 	>
 		<button
 			onclick={onToggle}
@@ -207,8 +210,8 @@
 						closeFlyout();
 					}
 				}}
-				class="group relative mb-0.5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-all"
-				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
+				class="group relative mb-0.5 flex h-10 w-10 cursor-pointer items-center justify-center transition-all"
+				style="color: {active ? 'var(--color-primary)' : 'var(--color-text-muted)'};"
 				aria-label={section.label}
 			>
 				{@render navIcon(section, active, 17)}
@@ -248,8 +251,8 @@
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
-								class="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors"
-								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
+								class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-[13px] transition-all"
+								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'};"
 							>
 								{@render navIcon(child, childActive, 13)}
 								<span>{child.label}</span>
@@ -261,3 +264,26 @@
 		{/if}
 	{/if}
 {/if}
+
+<style>
+	.sidebar-expanded {
+		background: color-mix(in srgb, var(--color-bg) 55%, transparent);
+		backdrop-filter: blur(28px) saturate(1.5);
+		-webkit-backdrop-filter: blur(28px) saturate(1.5);
+	}
+
+	.sidebar-collapsed {
+		background: color-mix(in srgb, var(--color-bg) 40%, transparent);
+		backdrop-filter: blur(24px) saturate(1.4);
+		-webkit-backdrop-filter: blur(24px) saturate(1.4);
+	}
+
+	.nav-item:hover {
+		background: color-mix(in srgb, var(--color-text) 4%, transparent);
+	}
+
+	.nav-child-item:hover {
+		background: color-mix(in srgb, var(--color-text) 4%, transparent);
+		border-radius: 6px;
+	}
+</style>

@@ -11,7 +11,7 @@
 <div
 	class="vibe-box my-5 rounded-lg px-5 py-4"
 >
-	<div class="mb-2.5 flex items-center gap-2 text-sm font-bold uppercase tracking-wide" style="color: var(--color-vibe);">
+	<div class="mb-2.5 flex items-center gap-2 text-sm font-bold uppercase tracking-wide" style="color: var(--color-vibe); font-family: var(--font-heading); letter-spacing: 0.08em;">
 		<Sparkles size={16} strokeWidth={2.5} />
 		<span>Vibe it</span>
 	</div>
