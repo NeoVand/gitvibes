@@ -62,36 +62,32 @@
 			requestAnimationFrame(() => scrollToSection(hash));
 		}
 
-		const visibleSections = new Set<string>();
+		const sectionEls = sectionIds
+			.map((id) => document.getElementById(id))
+			.filter((el): el is HTMLElement => el !== null);
 
-		const observer = new IntersectionObserver(
-			(entries) => {
-				for (const entry of entries) {
-					if (entry.isIntersecting) {
-						visibleSections.add(entry.target.id);
-					} else {
-						visibleSections.delete(entry.target.id);
-					}
+		function updateActiveSection() {
+			if (navClickActive) return;
+			const offset = window.innerHeight * 0.2;
+			let best: string | null = null;
+			for (const el of sectionEls) {
+				if (el.getBoundingClientRect().top <= offset) {
+					best = el.id;
+				} else {
+					break;
 				}
-				if (!navClickActive) {
-					for (const id of sectionIds) {
-						if (visibleSections.has(id)) {
-							activeSection = id;
-							break;
-						}
-					}
-				}
-			},
-			{
-				rootMargin: '-10% 0px -70% 0px',
-				threshold: 0
 			}
-		);
-
-		for (const id of sectionIds) {
-			const el = document.getElementById(id);
-			if (el) observer.observe(el);
+			if (best) activeSection = best;
 		}
+
+		let rafId = 0;
+		function onScroll() {
+			cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(updateActiveSection);
+		}
+
+		window.addEventListener('scroll', onScroll, { passive: true });
+		updateActiveSection();
 
 		if (window.innerWidth >= 1024) {
 			sidebarOpen = true;
@@ -111,7 +107,8 @@
 		window.addEventListener('touchmove', clearNavClick, { passive: true });
 
 		return () => {
-			observer.disconnect();
+			window.removeEventListener('scroll', onScroll);
+			cancelAnimationFrame(rafId);
 			window.removeEventListener('wheel', clearNavClick);
 			window.removeEventListener('touchmove', clearNavClick);
 		};

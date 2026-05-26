@@ -347,7 +347,7 @@
 				<div
 					bind:this={terminalEl}
 					class="min-h-0 flex-1 overflow-y-auto px-4 py-3"
-					style="background: var(--color-terminal-bg);"
+					style="background: var(--color-playground-bg);"
 				>
 					{@render terminalHistory()}
 				</div>
@@ -413,8 +413,8 @@
 			class="grid grid-cols-1 lg:grid-cols-2"
 			style="min-height: {embedded ? '340px' : '420px'};"
 		>
-			<div class="order-2 flex flex-col border-t lg:order-1 lg:border-t-0 lg:border-r" style="border-top-color: var(--color-terminal-border); border-right-color: var(--color-border);">
-				<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-terminal-bg);">
+			<div class="order-2 flex flex-col border-t lg:order-1 lg:border-t-0 lg:border-r" style="border-top-color: var(--color-playground-border); border-right-color: var(--color-border);">
+				<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-playground-bg);">
 					<Terminal size={13} style="color: var(--color-important);" />
 					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">Terminal</span>
 				</div>
@@ -422,7 +422,7 @@
 				<div
 					bind:this={terminalEl}
 					class="flex-1 overflow-y-auto p-4"
-					style="background: var(--color-terminal-bg); min-height: {embedded ? '220px' : '280px'}; max-height: {embedded ? '300px' : '360px'};"
+					style="background: var(--color-playground-bg); min-height: {embedded ? '220px' : '280px'}; max-height: {embedded ? '300px' : '360px'};"
 				>
 					{@render terminalHistory()}
 				</div>
@@ -556,8 +556,8 @@
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.75rem 1.25rem;
-		border-top: 1px solid var(--color-terminal-border);
-		background: color-mix(in srgb, var(--color-terminal-bg) 94%, var(--color-terminal-prompt) 6%);
+		border-top: 1px solid var(--color-playground-border);
+		background: color-mix(in srgb, var(--color-playground-bg) 94%, var(--color-terminal-prompt) 6%);
 	}
 
 	.pg-prompt {
@@ -618,8 +618,8 @@
 		justify-content: center;
 		padding: 0.25rem 0.45rem;
 		border-radius: 0.3rem;
-		border: 1px solid var(--color-terminal-border);
-		background: color-mix(in srgb, var(--color-terminal-header) 80%, transparent);
+		border: 1px solid var(--color-playground-border);
+		background: color-mix(in srgb, var(--color-playground-header) 80%, transparent);
 		color: var(--color-terminal-output);
 		opacity: 0.5;
 		font-size: 10px;
