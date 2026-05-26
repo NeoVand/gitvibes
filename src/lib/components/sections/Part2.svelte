@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { RefreshCw, Eye, FolderPlus, Save } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
@@ -47,6 +48,15 @@
 		<!-- 2.1 git status -->
 		<div id="section-2-1" class="mb-14">
 			<SectionHeader level="section" icon={Eye} title="2.1 &quot;What Did the AI Just Do?&quot;" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<img
+					src="{base}/images/git-status.png"
+					alt="git status — situational awareness for every change in your working tree"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
 
 			<Callout type="note">
 				{#snippet children()}
@@ -114,6 +124,15 @@
 		<!-- 2.2 Staging -->
 		<div id="section-2-2" class="mb-14">
 			<SectionHeader level="section" icon={FolderPlus} title="2.2 Reviewing and Staging the AI's Work" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<img
+					src="{base}/images/git-add-p.png"
+					alt="git add -p — interactively stage only the hunks you approve"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
 
 			<Callout type="warning">
 				{#snippet children()}

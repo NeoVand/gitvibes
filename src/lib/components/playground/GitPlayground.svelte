@@ -282,18 +282,11 @@
 			{scenario.hint}
 		</p>
 
-		<div class="flex min-h-0 flex-1 flex-col overflow-y-auto">
-			<div
-				bind:this={terminalEl}
-				class="min-h-[140px] flex-1 overflow-y-auto px-4 py-3"
-				style="background: var(--color-terminal-bg);"
+		<div class="flex min-h-0 flex-1 flex-col overflow-hidden">
+			<section
+				class="shrink-0"
+				style="border-bottom: 1px solid var(--color-terminal-border);"
 			>
-				{@render terminalHistory()}
-			</div>
-
-			{@render promptForm()}
-
-			<section style="border-top: 1px solid var(--color-terminal-border);">
 				<div
 					class="flex items-center gap-2 px-4 py-2"
 					style="background: var(--color-terminal-header);"
@@ -303,15 +296,37 @@
 						commit graph
 					</span>
 				</div>
-				<div class="flex items-center justify-center px-3 py-4">
+				<div class="flex items-center justify-center px-3 py-3">
 					{#key diagram}
 						<MermaidDiagram definition={diagram} id="{id}-graph" />
 					{/key}
 				</div>
 			</section>
 
+			<section class="flex min-h-0 flex-1 flex-col overflow-hidden">
+				<div
+					class="flex items-center gap-2 px-4 py-2"
+					style="background: var(--color-terminal-header); border-bottom: 1px solid var(--color-terminal-border);"
+				>
+					<Terminal size={12} style="color: var(--color-text-muted);" />
+					<span class="text-[11px] font-medium" style="color: var(--color-terminal-output);">
+						terminal
+					</span>
+				</div>
+
+				<div
+					bind:this={terminalEl}
+					class="min-h-0 flex-1 overflow-y-auto px-4 py-3"
+					style="background: var(--color-terminal-bg);"
+				>
+					{@render terminalHistory()}
+				</div>
+
+				{@render promptForm()}
+			</section>
+
 			<section
-				class="px-4 py-3"
+				class="shrink-0 px-4 py-3"
 				style="border-top: 1px solid var(--color-terminal-border); background: var(--color-terminal-header);"
 			>
 				<p class="mb-2 text-[10px] font-medium uppercase tracking-wider" style="color: var(--color-text-muted);">
