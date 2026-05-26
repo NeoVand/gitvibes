@@ -69,6 +69,15 @@ git config --global user.email "your-enterprise-email@company.com"`}
 		<div id="section-1-2" class="mb-14">
 			<SectionHeader level="section" icon={KeyRound} title="1.2 Authentication with Personal Access Token" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<img
+					src="{base}/images/personal-access-token.png"
+					alt="Personal Access Token — a token proves identity and carries permission"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
+
 			<Callout type="warning">
 				{#snippet children()}
 					<strong>The Problem:</strong> Your company's code is in a private repository. Most enterprises
