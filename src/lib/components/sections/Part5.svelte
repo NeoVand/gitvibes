@@ -104,6 +104,13 @@ git stash pop`}
 		<div id="section-5-2" class="mb-14">
 			<SectionHeader level="section" icon={GitMerge} title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/merge-rebase.png"
+					alt="merge vs rebase — two ways to update a stale feature branch with main"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> Your feature branch is "stale." <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code>
