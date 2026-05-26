@@ -632,7 +632,7 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				const mixed = rest.includes('--mixed') || (!hard && !soft);
 				const rev = rest.find((r) => !r.startsWith('-')) ?? 'HEAD~1';
 				const oid = await engine.resolveHead(rev);
-				await git.writeRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD', value: oid });
+				await git.writeRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD', value: oid, force: true });
 				if (hard) {
 					await git.checkout({ fs: engine.fs, dir: engine.dir, ref: oid, force: true });
 				} else if (mixed) {
