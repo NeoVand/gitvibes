@@ -3,6 +3,7 @@
 	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
@@ -22,11 +23,9 @@
 			<SectionHeader level="section" icon={UserCheck} title="1.1 First-Time Local Configuration" color="var(--color-primary)" />
 
 			<div class="my-6">
-				<img
+				<ExpandableImage
 					src="{base}/images/P1.Section1-git-config.png"
 					alt="Git config — configured once, carried by every commit"
-					class="w-full rounded-xl"
-					loading="lazy"
 				/>
 			</div>
 
@@ -70,11 +69,9 @@ git config --global user.email "your-enterprise-email@company.com"`}
 			<SectionHeader level="section" icon={KeyRound} title="1.2 Authentication with Personal Access Token" color="var(--color-primary)" />
 
 			<div class="my-6">
-				<img
+				<ExpandableImage
 					src="{base}/images/personal-access-token.png"
 					alt="Personal Access Token — a token proves identity and carries permission"
-					class="w-full rounded-xl"
-					loading="lazy"
 				/>
 			</div>
 
@@ -143,11 +140,9 @@ git config --global credential.helper libsecret`}
 			<SectionHeader level="section" icon={Download} title="1.3 The First Pull (Cloning the Repository)" color="var(--color-primary)" />
 
 			<div class="my-6">
-				<img
+				<ExpandableImage
 					src="{base}/images/git-clone.png"
 					alt="git clone — remote repository copied to your local machine"
-					class="w-full rounded-xl"
-					loading="lazy"
 				/>
 			</div>
 

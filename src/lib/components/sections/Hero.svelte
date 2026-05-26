@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
 	import { base } from '$app/paths';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 
@@ -16,7 +17,7 @@
 <section id="hero" class="px-6 py-16">
 	<!-- Hero image -->
 	<div class="mx-auto max-w-4xl mb-12">
-		<img
+		<ExpandableImage
 			src="{base}/images/Hero.png"
 			alt="Git for Vibe Coders — your safety net for AI-assisted coding"
 			class="w-full rounded-xl shadow-2xl"

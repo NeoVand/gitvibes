@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Monitor } from 'lucide-svelte';
+	import { Monitor, Maximize2 } from 'lucide-svelte';
+	import ImageLightbox from './ImageLightbox.svelte';
 
 	let {
 		src,
@@ -8,6 +9,10 @@
 	}: { src: string; alt: string; caption?: string } = $props();
 
 	const baseUrl = 'https://code.visualstudio.com/assets/docs/sourcecontrol';
+
+	let open = $state(false);
+
+	const imageUrl = $derived(src.startsWith('http') ? src : `${baseUrl}/${src}`);
 </script>
 
 <figure
@@ -20,14 +25,24 @@
 			VS Code
 		</span>
 	</div>
-	<div class="flex items-center justify-center px-2 pb-2">
+	<div class="group relative flex items-center justify-center px-2 pb-2">
 		<img
-			src={src.startsWith('http') ? src : `${baseUrl}/${src}`}
+			src={imageUrl}
 			{alt}
 			class="w-full rounded"
 			loading="lazy"
 			style="max-height: 500px; object-fit: contain;"
 		/>
+		<button
+			type="button"
+			onclick={() => (open = true)}
+			class="absolute top-2 right-2 flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity opacity-0 group-hover:opacity-100"
+			style="background: rgba(0, 0, 0, 0.65); color: white;"
+			aria-label="Expand screenshot"
+		>
+			<Maximize2 size={14} />
+			<span>Expand</span>
+		</button>
 	</div>
 	{#if caption}
 		<figcaption
@@ -38,3 +53,5 @@
 		</figcaption>
 	{/if}
 </figure>
+
+<ImageLightbox {open} src={imageUrl} {alt} onClose={() => (open = false)} />

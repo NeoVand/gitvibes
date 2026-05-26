@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Undo2, Trash2, MinusCircle, PenLine, RotateCcw, AlertTriangle, Table } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
@@ -19,6 +21,13 @@
 			title="The &quot;Undo&quot; Toolkit: Reversing AI Mistakes"
 			color="var(--color-primary)"
 		/>
+
+		<div class="my-6">
+			<ExpandableImage
+				src="{base}/images/undo.png"
+				alt="Undo — choose the least destructive tool that solves the problem"
+			/>
+		</div>
 
 		<Callout type="important">
 			{#snippet children()}

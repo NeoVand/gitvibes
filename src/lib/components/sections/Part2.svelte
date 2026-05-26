@@ -3,6 +3,7 @@
 	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
@@ -50,11 +51,9 @@
 			<SectionHeader level="section" icon={Eye} title="2.1 &quot;What Did the AI Just Do?&quot;" color="var(--color-primary)" />
 
 			<div class="my-6">
-				<img
+				<ExpandableImage
 					src="{base}/images/git-status.png"
 					alt="git status — situational awareness for every change in your working tree"
-					class="w-full rounded-xl"
-					loading="lazy"
 				/>
 			</div>
 
@@ -126,11 +125,9 @@
 			<SectionHeader level="section" icon={FolderPlus} title="2.2 Reviewing and Staging the AI's Work" color="var(--color-primary)" />
 
 			<div class="my-6">
-				<img
+				<ExpandableImage
 					src="{base}/images/git-add-p.png"
 					alt="git add -p — interactively stage only the hunks you approve"
-					class="w-full rounded-xl"
-					loading="lazy"
 				/>
 			</div>
 
@@ -228,11 +225,9 @@
 			<SectionHeader level="section" icon={Save} title="2.3 Creating the Save Point" color="var(--color-primary)" />
 
 			<div class="my-6">
-				<img
+				<ExpandableImage
 					src="{base}/images/git-commit.png"
 					alt="git commit — each save point frozen as a checkpoint on the timeline"
-					class="w-full rounded-xl"
-					loading="lazy"
 				/>
 			</div>
 
