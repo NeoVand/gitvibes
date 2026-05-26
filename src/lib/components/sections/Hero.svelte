@@ -1,14 +1,7 @@
 <script lang="ts">
-	import { GitBranch, Undo2, Users, Monitor, Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
+	import { Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
-
-	const cards = [
-		{ icon: GitBranch, title: 'Branch & Experiment', desc: 'Create safe sandboxes for AI work', color: 'var(--color-tip)' },
-		{ icon: Undo2, title: 'Undo Any Mistake', desc: 'Recover instantly when AI goes wrong', color: 'var(--color-warning)' },
-		{ icon: Users, title: 'Collaborate Safely', desc: 'Share AI-generated code professionally', color: 'var(--color-important)' },
-		{ icon: Monitor, title: 'VS Code Workflows', desc: 'Step-by-step visual instructions', color: 'var(--color-primary)' }
-	];
 
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
 </script>
@@ -24,38 +17,8 @@
 		/>
 	</div>
 
-	<!-- Title block -->
-	<div class="mx-auto max-w-2xl text-center mb-16">
-		<h1
-			class="mb-5 text-4xl leading-[1.15] font-extrabold tracking-tight sm:text-5xl"
-			style="color: var(--color-text); letter-spacing: -0.025em;"
-		>
-			Git for
-			<span style="color: var(--color-primary);">Vibe Coders</span>
-		</h1>
-
-		<p
-			class="mx-auto mb-8 max-w-lg text-[15px] leading-relaxed"
-			style="color: var(--color-text-secondary);"
-		>
-			Version control is your essential safety net — your "save game" system
-			that lets you experiment fearlessly, review every AI-generated change,
-			and instantly undo any mistake.
-		</p>
-
-		<div class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-			{#each cards as card (card.title)}
-				<div
-					class="flex flex-col items-center gap-2 rounded-lg p-4"
-					style="background: var(--color-surface);"
-				>
-					<card.icon size={18} style="color: {card.color};" strokeWidth={2} />
-					<span class="text-[13px] font-semibold" style="color: var(--color-text);">{card.title}</span>
-					<span class="text-xs" style="color: var(--color-text-muted);">{card.desc}</span>
-				</div>
-			{/each}
-		</div>
-
+	<!-- Quick links -->
+	<div class="mx-auto max-w-4xl mb-16">
 		<div class="space-y-3">
 			<div
 				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
@@ -109,7 +72,7 @@
 	</div>
 
 	<!-- What is Git? -->
-	<div id="section-intro-what" class="mx-auto max-w-3xl mb-16">
+	<div id="section-intro-what" class="mx-auto max-w-4xl mb-16">
 		<div class="flex items-center gap-2.5 mb-6">
 			<HelpCircle size={20} style="color: var(--color-primary);" strokeWidth={2.5} />
 			<h2 class="text-xl font-bold" style="color: var(--color-text);">What Is Git?</h2>
@@ -136,7 +99,7 @@
 	</div>
 
 	<!-- Installing Git -->
-	<div id="section-intro-install" class="mx-auto max-w-3xl mb-16">
+	<div id="section-intro-install" class="mx-auto max-w-4xl mb-16">
 		<div class="flex items-center gap-2.5 mb-6">
 			<Download size={20} style="color: var(--color-primary);" strokeWidth={2.5} />
 			<h2 class="text-xl font-bold" style="color: var(--color-text);">Installing Git</h2>
@@ -225,7 +188,7 @@
 	</div>
 
 	<!-- What is a Repository? -->
-	<div id="section-intro-repo" class="mx-auto max-w-3xl">
+	<div id="section-intro-repo" class="mx-auto max-w-4xl">
 		<div class="flex items-center gap-2.5 mb-6">
 			<FolderGit2 size={20} style="color: var(--color-primary);" strokeWidth={2.5} />
 			<h2 class="text-xl font-bold" style="color: var(--color-text);">What Is a Repository?</h2>
