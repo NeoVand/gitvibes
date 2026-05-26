@@ -373,6 +373,13 @@ git push                   # Push the revert`}
 		<div id="section-4-7" class="mb-8">
 			<SectionHeader level="section" icon={Table} title="4.7 The Git &quot;Undo&quot; Recovery Matrix" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/recovery-matrix.png"
+					alt="Recovery Matrix — match what went wrong to the least destructive Git undo command"
+				/>
+			</div>
+
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
 				Before moving to advanced topics, here's a quick-reference matrix summarizing every undo technique and when to use it:
 			</p>

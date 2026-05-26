@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { Layers, Archive, GitMerge, FileWarning } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
@@ -30,6 +32,13 @@
 		<!-- 5.1 Stash -->
 		<div id="section-5-1" class="mb-14">
 			<SectionHeader level="section" icon={Archive} title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-stash.png"
+					alt="git stash — shelve uncommitted work and switch branches without losing progress"
+				/>
+			</div>
 
 			<Callout type="note">
 				{#snippet children()}
