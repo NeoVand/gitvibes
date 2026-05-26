@@ -41,6 +41,13 @@
 		<div id="section-4-1" class="mb-14">
 			<SectionHeader level="section" icon={Trash2} title="4.1 &quot;Discard This Mess&quot; (Local, Not Committed)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-restore.png"
+					alt="git restore . — discard local changes and return to a clean working directory"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> The AI modified files and the result is completely wrong. You
