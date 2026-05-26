@@ -99,30 +99,30 @@
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
 >
-	<div class="flex items-center justify-between px-4 py-2">
+	<div class="flex items-center justify-between px-4 py-3">
 		<span
-			class="text-xs font-semibold tracking-wider uppercase"
-			style="color: var(--color-text-muted); letter-spacing: 0.08em;"
+			class="text-[11px] font-bold tracking-widest uppercase"
+			style="color: var(--color-text-muted); letter-spacing: 0.1em;"
 		>
 			Contents
 		</span>
 		<button
 			onclick={onToggle}
-			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors"
+			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
 			style="color: var(--color-text-muted);"
 			aria-label="Collapse sidebar"
 		>
-			<PanelLeftClose size={15} />
+			<PanelLeftClose size={16} />
 		</button>
 	</div>
 
-	<nav class="flex-1 overflow-y-auto px-3 py-3">
+	<nav class="flex-1 overflow-y-auto px-3 py-2">
 		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
 			<div class="mb-0.5">
 				<div
-					class="flex w-full items-center gap-2 px-2.5 py-[7px] text-left text-[13px] transition-colors"
-					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {active ? '600' : '500'};"
+					class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors"
+					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {active ? '600' : '500'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
 				>
 					<button
 						onclick={() => {
@@ -133,10 +133,10 @@
 							}
 							scrollTo(section.id);
 						}}
-						class="flex flex-1 cursor-pointer items-center gap-2 text-left"
+						class="flex flex-1 cursor-pointer items-center gap-2.5 text-left"
 						style="color: inherit;"
 					>
-						{@render navIcon(section, active, 14)}
+						{@render navIcon(section, active, 16)}
 						<span class="flex-1">{section.label}</span>
 					</button>
 					{#if section.children}
@@ -146,7 +146,7 @@
 							aria-label={expandedSections.has(section.id) ? 'Collapse' : 'Expand'}
 						>
 							<ChevronRight
-								size={12}
+								size={13}
 								class="transition-transform duration-150"
 								style="transform: rotate({expandedSections.has(section.id) ? '90deg' : '0deg'}); opacity: 0.5;"
 							/>
@@ -156,17 +156,17 @@
 
 				{#if section.children && expandedSections.has(section.id)}
 					<div
-						class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5"
+						class="mt-0.5 ml-[26px] space-y-0.5 border-l pl-3"
 						style="border-color: var(--color-border);"
 					>
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="flex w-full cursor-pointer items-center gap-2 px-2 py-[5px] text-left text-xs transition-colors"
-								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
+								class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px] transition-colors"
+								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
 							>
-								{@render navIcon(child, childActive, 12)}
+								{@render navIcon(child, childActive, 13)}
 								<span>{child.label}</span>
 							</button>
 						{/each}
@@ -185,14 +185,14 @@
 	>
 		<button
 			onclick={onToggle}
-			class="mb-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-colors"
+			class="mb-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
 			style="color: var(--color-text-muted);"
 			aria-label="Expand sidebar"
 		>
-			<PanelLeft size={16} />
+			<PanelLeft size={17} />
 		</button>
 
-		<div class="mb-2"></div>
+		<div class="mb-1.5"></div>
 
 		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
@@ -205,14 +205,14 @@
 						closeFlyout();
 					}
 				}}
-				class="group relative mb-0.5 flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-all"
-				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'};"
+				class="group relative mb-0.5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-all"
+				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
 				aria-label={section.label}
 			>
-				{@render navIcon(section, active, 16)}
+				{@render navIcon(section, active, 17)}
 				{#if !flyoutSection}
 					<span
-						class="pointer-events-none absolute left-12 z-50 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+						class="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
 						style="background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border);"
 					>
 						{section.label}
@@ -226,30 +226,30 @@
 		{@const section = sections.find((s) => s.id === flyoutSection)}
 		{#if section}
 			<div
-				class="fixed z-50 min-w-[220px] rounded-lg border shadow-xl"
+				class="fixed z-50 min-w-[240px] rounded-xl border shadow-xl"
 				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; background: var(--color-surface); border-color: var(--color-border);"
 			>
 				<button
 					onclick={() => {
 						handleFlyoutNavigate(section.id);
 					}}
-					class="flex w-full cursor-pointer items-center gap-2 rounded-t-lg px-3 py-2.5 text-left text-[13px] font-semibold transition-colors"
+					class="flex w-full cursor-pointer items-center gap-2.5 rounded-t-xl px-3.5 py-3 text-left text-sm font-semibold transition-colors"
 					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light);"
 				>
-					{@render navIcon(section, isActive(section.id), 14)}
+					{@render navIcon(section, isActive(section.id), 15)}
 					{section.label}
 				</button>
 
 				{#if section.children}
-					<div class="px-1.5 py-1.5">
+					<div class="px-2 py-2">
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
-								class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2.5 py-[6px] text-left text-xs transition-colors"
+								class="flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors"
 								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
 							>
-								{@render navIcon(child, childActive, 12)}
+								{@render navIcon(child, childActive, 13)}
 								<span>{child.label}</span>
 							</button>
 						{/each}

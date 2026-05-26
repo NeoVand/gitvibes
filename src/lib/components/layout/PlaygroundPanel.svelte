@@ -32,8 +32,8 @@
 {/if}
 
 <aside
-	class="fixed top-0 right-0 bottom-0 z-40 flex w-full flex-col border-l transition-transform duration-200 ease-out md:w-[min(50vw,42rem)]"
-	style="padding-top: var(--header-height); border-color: var(--color-terminal-border); background: var(--color-terminal-bg);"
+	class="fixed top-0 right-0 bottom-0 z-40 flex w-full flex-col border-l shadow-2xl transition-transform duration-200 ease-out md:w-[min(50vw,44rem)]"
+	style="padding-top: var(--header-height); border-color: var(--color-border); background: var(--color-bg-secondary);"
 	class:translate-x-0={open}
 	class:translate-x-full={!open}
 	aria-hidden={!open}

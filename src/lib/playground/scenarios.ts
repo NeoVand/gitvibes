@@ -20,14 +20,16 @@ export interface PlaygroundScenario {
 export const playgroundScenarios: PlaygroundScenario[] = [
 	{
 		id: 'core-loop',
-		title: 'AI changed 4 files',
-		description: 'The AI modified three files and created one new file. Review and commit safely.',
-		hint: 'Try git add -p to stage file-by-file, or git add on specific paths you trust.',
+		title: 'AI changed 4 files — review before commit',
+		description: 'Your AI assistant just modified three files and created one new file. Don\'t blindly git add . — review each change and stage only what you trust.',
+		hint: 'Start with git status, then git diff to see what changed. Use git add -p to review hunks interactively, or git add <file> to stage specific files you trust.',
 		suggestedCommands: [
 			'git status',
+			'git diff',
 			'git add -p',
 			'y',
 			'n',
+			'git add src/auth.py',
 			'git commit -m "feat: Add user authentication"'
 		],
 		seed: {
@@ -53,11 +55,12 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	},
 	{
 		id: 'branching',
-		title: 'Branch for AI experiment',
-		description: 'Main is stable. Create a branch, commit AI work, and push to origin.',
-		hint: 'Create a branch, commit, then git push -u origin with your branch name.',
+		title: 'Isolate AI work on a branch',
+		description: 'Main is stable and pushed. Your AI just generated new code in the working directory. Create a branch to isolate the experiment before committing.',
+		hint: 'Always branch before committing AI work. Use git switch -c <name> to create and switch, then stage, commit, and push with -u to set upstream tracking.',
 		suggestedCommands: [
-			'git log --oneline',
+			'git status',
+			'git diff',
 			'git switch -c feature/ai-experiment',
 			'git add .',
 			'git commit -m "feat: AI refactor attempt 1"',
@@ -67,40 +70,45 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	},
 	{
 		id: 'sync-remote',
-		title: 'Sync with teammates',
-		description: 'Your feature branch is ready, but origin/main has new commits. Fetch and merge them.',
-		hint: 'Use git fetch origin, then git merge origin/main — or git pull origin main in one step.',
+		title: 'Teammates pushed — sync before PR',
+		description: 'You\'re on a feature branch ready to open a PR, but your teammates have pushed new commits to origin/main. You need to incorporate their changes first.',
+		hint: 'Fetch first to download remote changes without merging. Then merge origin/main into your branch. Alternatively, use git pull origin main to fetch + merge in one step.',
 		suggestedCommands: [
+			'git log --oneline --all',
 			'git fetch origin',
 			'git log --oneline --all',
-			'git merge origin/main'
+			'git merge origin/main',
+			'git log --oneline'
 		],
 		seedFn: buildSyncRemoteRepo
 	},
 	{
 		id: 'undo',
-		title: 'Undo toolkit',
-		description: 'AI made a mess. Practice restore, unstage, amend, soft reset, and revert.',
-		hint: 'Try git revert HEAD for the pushed bad commit, or git commit --amend after staging a fix.',
+		title: 'AI broke everything — undo it all',
+		description: 'The AI made a mess: bad working directory changes, a file accidentally staged, and a broken commit already pushed. Practice every undo tool in your toolkit.',
+		hint: 'Use git restore <file> to discard working changes, git restore --staged <file> to unstage, and git revert HEAD to safely undo a pushed commit without rewriting history.',
 		suggestedCommands: [
 			'git status',
+			'git diff',
 			'git restore src/model.py',
+			'git restore --staged src/utils.py',
 			'git log --oneline',
-			'git revert HEAD',
-			'git commit --amend -m "feat: experiment (fixed)"'
+			'git revert HEAD'
 		],
 		seedFn: buildUndoRepo
 	},
 	{
 		id: 'stash',
-		title: 'Stash workflow',
-		description: 'Uncommitted work on feature/A — stash it, switch branches, then pop the stash.',
-		hint: 'Use git stash push -m "message", switch branches, then git stash pop.',
+		title: 'Urgent hotfix — stash AI work first',
+		description: 'You\'re mid-refactor on feature/A when a critical bug report comes in. Stash your work-in-progress, switch to main, create a hotfix branch, then come back.',
+		hint: 'Use git stash push -m "message" to save work, switch branches freely, then git stash pop to restore. Use git stash list to see saved stashes.',
 		suggestedCommands: [
 			'git status',
 			'git stash push -m "WIP: pipeline refactor"',
+			'git stash list',
 			'git switch main',
 			'git switch -c hotfix/urgent-bug',
+			'git switch feature/A',
 			'git stash pop'
 		],
 		seed: {
@@ -121,19 +129,26 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	},
 	{
 		id: 'rebase-merge',
-		title: 'Merge vs rebase',
-		description: 'Your feature branch diverged from main. Try git merge main or git rebase main.',
-		hint: 'Run git log --oneline --all first, then merge or rebase.',
-		suggestedCommands: ['git log --oneline --all', 'git merge main', 'git rebase main'],
+		title: 'Rebase vs merge — choose your strategy',
+		description: 'Your feature branch and main have diverged. Try both strategies: git merge main keeps a merge commit, git rebase main replays your work on top for a linear history.',
+		hint: 'Run git log --oneline --all to see the divergence. Try git merge main first. Reset and try git rebase main to compare. Rebase = cleaner history, merge = safer for shared branches.',
+		suggestedCommands: [
+			'git log --oneline --all',
+			'git merge main',
+			'git log --oneline --all',
+			'git reset --hard HEAD~1',
+			'git rebase main'
+		],
 		seedFn: buildMergeRebaseRepo
 	},
 	{
 		id: 'conflicts',
-		title: 'Merge conflict',
-		description: 'A merge is in progress with a conflict in src/model.py. Resolve and commit.',
-		hint: 'Use echo to write the resolved file, then git add and git commit.',
+		title: 'Resolve a merge conflict',
+		description: 'A merge left a conflict in src/model.py — the file has <<<<<<< and >>>>>>> markers. You need to pick the right version, stage it, and complete the merge commit.',
+		hint: 'Check git status to see conflicted files. Use echo to write the resolved content, then git add the file and git commit to finalize the merge.',
 		suggestedCommands: [
 			'git status',
+			'git diff',
 			"echo 'x = 10' > src/model.py",
 			'git add src/model.py',
 			'git commit -m "fix: Resolve merge conflict in model.py"'
@@ -142,10 +157,16 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	},
 	{
 		id: 'clean-slate',
-		title: 'Clean slate',
-		description: 'Empty repo — type help to see all supported commands.',
-		hint: 'Type help to see the full command list.',
-		suggestedCommands: ['git status', 'git branch', 'help'],
+		title: 'Sandbox — start from scratch',
+		description: 'An empty repo for free experimentation. Create files, branches, commits — try anything. Type help to see all supported commands.',
+		hint: 'Use echo "content" > filename to create files, then git add and git commit. Try creating branches with git switch -c.',
+		suggestedCommands: [
+			'help',
+			'echo "hello world" > README.md',
+			'git add .',
+			'git commit -m "Initial commit"',
+			'git switch -c experiment'
+		],
 		seed: { commits: [] }
 	}
 ];

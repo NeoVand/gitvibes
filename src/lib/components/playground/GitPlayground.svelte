@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { GitBranch, Terminal, RotateCcw, Lightbulb, ChevronRight, ChevronDown, X, Send } from 'lucide-svelte';
+	import { GitBranch, Terminal, RotateCcw, Lightbulb, ChevronRight, ChevronDown, X, CornerDownLeft } from 'lucide-svelte';
 	import MermaidDiagram from '$lib/components/ui/MermaidDiagram.svelte';
 	import { GitEngine } from '$lib/playground/git-engine';
 	import { runGitCommand } from '$lib/playground/commands';
@@ -191,17 +191,17 @@
 {#snippet terminalHistory()}
 	{#each history as line, i (i)}
 		{#if line.type === 'input'}
-			<div class="mb-2 flex gap-2" style="font-family: var(--font-mono); font-size: 13px;">
+			<div class="mb-2 flex gap-2" style="font-family: var(--font-mono); font-size: 13.5px;">
 				<span style="color: var(--color-terminal-prompt);">$</span>
 				<span style="color: var(--color-terminal-command);">{line.text}</span>
 			</div>
 		{:else if line.type === 'output'}
 			<pre
-				class="mb-3 whitespace-pre-wrap pl-5 text-xs leading-relaxed"
+				class="mb-3 whitespace-pre-wrap pl-5 text-[13px] leading-relaxed"
 				style="color: {line.error ? 'var(--color-warning)' : 'var(--color-terminal-output)'}; font-family: var(--font-mono);"
 			>{line.text}</pre>
 		{:else}
-			<p class="mb-2 text-xs italic" style="color: var(--color-text-muted); font-family: var(--font-mono);">
+			<p class="mb-2 text-[13px] italic" style="color: var(--color-text-muted); font-family: var(--font-mono);">
 				# {line.text}
 			</p>
 		{/if}
@@ -228,14 +228,12 @@
 			enterkeyhint="send"
 			aria-label="Git command"
 		/>
-		<button
-			type="submit"
-			class="pg-send-btn"
-			disabled={loading || !input.trim()}
-			aria-label="Run command"
+		<span
+			class="pg-return-hint"
+			aria-hidden="true"
 		>
-			<Send size={14} />
-		</button>
+			<CornerDownLeft size={12} />
+		</span>
 	</form>
 {/snippet}
 
@@ -253,11 +251,11 @@
 {#if panel}
 	<div class="pg-shell flex min-h-0 flex-1 flex-col overflow-hidden">
 		<header
-			class="flex shrink-0 flex-wrap items-center gap-2 px-3 py-2.5 sm:px-4"
-			style="background: var(--color-terminal-header); border-bottom: 1px solid var(--color-terminal-border);"
+			class="flex shrink-0 flex-wrap items-center gap-2.5 px-4 py-3 sm:px-5"
+			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 		>
-			<Terminal size={12} style="color: var(--color-text-muted);" />
-			<span class="text-xs font-medium" style="color: var(--color-terminal-output);">Playground</span>
+			<Terminal size={14} style="color: var(--color-primary);" />
+			<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
 			<span class="pg-badge">real git</span>
 
 			<div class="ml-auto flex flex-wrap items-center gap-2">
@@ -280,8 +278,8 @@
 		</header>
 
 		<p
-			class="shrink-0 px-4 py-2 text-[11px] leading-relaxed"
-			style="color: var(--color-terminal-output); border-bottom: 1px solid var(--color-terminal-border);"
+			class="shrink-0 px-5 py-2.5 text-xs leading-relaxed"
+			style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); background: var(--color-bg-secondary);"
 		>
 			{scenario.hint}
 		</p>
@@ -289,18 +287,18 @@
 		<div class="flex min-h-0 flex-1 flex-col overflow-hidden">
 			<section
 				class="shrink-0"
-				style="border-bottom: 1px solid var(--color-terminal-border);"
+				style="border-bottom: 1px solid var(--color-border);"
 			>
 				<div
-					class="flex items-center gap-2 px-4 py-2"
-					style="background: var(--color-terminal-header);"
+					class="flex items-center gap-2 px-5 py-2"
+					style="background: var(--color-bg-tertiary);"
 				>
-					<GitBranch size={12} style="color: var(--color-terminal-prompt);" />
-					<span class="text-[11px] font-medium" style="color: var(--color-terminal-output);">
-						commit graph
+					<GitBranch size={13} style="color: var(--color-primary);" />
+					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
+						Commit Graph
 					</span>
 				</div>
-				<div class="flex items-center justify-center px-3 py-3">
+				<div class="flex items-center justify-center px-4 py-3" style="background: var(--color-bg-secondary);">
 					{#key diagram}
 						<MermaidDiagram definition={diagram} id="{id}-graph" />
 					{/key}
@@ -309,12 +307,12 @@
 
 			<section class="flex min-h-0 flex-1 flex-col overflow-hidden">
 				<div
-					class="flex items-center gap-2 px-4 py-2"
-					style="background: var(--color-terminal-header); border-bottom: 1px solid var(--color-terminal-border);"
+					class="flex items-center gap-2 px-5 py-2"
+					style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 				>
-					<Terminal size={12} style="color: var(--color-text-muted);" />
-					<span class="text-[11px] font-medium" style="color: var(--color-terminal-output);">
-						terminal
+					<Terminal size={13} style="color: var(--color-text-muted);" />
+					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
+						Terminal
 					</span>
 				</div>
 
@@ -330,10 +328,10 @@
 			</section>
 
 			<section
-				class="shrink-0 px-4 py-3"
-				style="border-top: 1px solid var(--color-terminal-border); background: var(--color-terminal-header);"
+				class="shrink-0 px-5 py-3"
+				style="border-top: 1px solid var(--color-border); background: var(--color-bg-tertiary);"
 			>
-				<p class="mb-2 text-[10px] font-medium uppercase tracking-wider" style="color: var(--color-text-muted);">
+				<p class="mb-2 text-[10px] font-semibold uppercase tracking-widest" style="color: var(--color-text-muted);">
 					Try these
 				</p>
 				{@render suggestedCommands()}
@@ -436,16 +434,16 @@
 
 <style>
 	.pg-shell {
-		background: var(--color-terminal-bg);
+		background: var(--color-bg-secondary);
 	}
 
 	.pg-badge {
 		border-radius: 9999px;
-		padding: 0.125rem 0.5rem;
+		padding: 0.175rem 0.5rem;
 		font-size: 10px;
-		font-weight: 500;
-		color: var(--color-terminal-prompt);
-		background: color-mix(in srgb, var(--color-terminal-prompt) 14%, transparent);
+		font-weight: 600;
+		color: var(--color-primary);
+		background: var(--color-primary-dim);
 	}
 
 	.pg-select-wrap {
@@ -459,13 +457,13 @@
 		-webkit-appearance: none;
 		cursor: pointer;
 		border-radius: 0.5rem;
-		border: 1px solid var(--color-terminal-border);
-		background: color-mix(in srgb, var(--color-terminal-header) 88%, var(--color-terminal-prompt) 12%);
-		padding: 0.375rem 1.75rem 0.375rem 0.625rem;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		padding: 0.4rem 1.75rem 0.4rem 0.75rem;
 		font-family: var(--font-mono);
 		font-size: 11px;
-		line-height: 1.2;
-		color: var(--color-terminal-command);
+		line-height: 1.3;
+		color: var(--color-text);
 		transition:
 			border-color 0.15s ease,
 			background 0.15s ease,
@@ -473,13 +471,13 @@
 	}
 
 	.pg-select:hover:not(:disabled) {
-		border-color: color-mix(in srgb, var(--color-terminal-prompt) 45%, var(--color-terminal-border));
+		border-color: var(--color-primary);
 	}
 
 	.pg-select:focus {
 		outline: none;
-		border-color: var(--color-terminal-prompt);
-		box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-terminal-prompt) 22%, transparent);
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 18%, transparent);
 	}
 
 	.pg-select:disabled {
@@ -492,21 +490,21 @@
 		right: 0.5rem;
 		display: inline-flex;
 		pointer-events: none;
-		color: var(--color-terminal-output);
+		color: var(--color-text-muted);
 		opacity: 0.7;
 	}
 
 	.pg-icon-btn {
 		display: inline-flex;
-		height: 1.75rem;
-		width: 1.75rem;
+		height: 1.875rem;
+		width: 1.875rem;
 		cursor: pointer;
 		align-items: center;
 		justify-content: center;
 		border-radius: 0.5rem;
-		border: 1px solid var(--color-terminal-border);
-		background: color-mix(in srgb, var(--color-terminal-header) 90%, transparent);
-		color: var(--color-terminal-output);
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		color: var(--color-text-secondary);
 		transition:
 			border-color 0.15s ease,
 			color 0.15s ease,
@@ -514,8 +512,8 @@
 	}
 
 	.pg-icon-btn:hover:not(:disabled) {
-		border-color: color-mix(in srgb, var(--color-terminal-prompt) 40%, var(--color-terminal-border));
-		color: var(--color-terminal-command);
+		border-color: var(--color-primary);
+		color: var(--color-primary);
 	}
 
 	.pg-icon-btn:disabled {
@@ -527,7 +525,7 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		padding: 0.625rem 1rem;
+		padding: 0.75rem 1.25rem;
 		border-top: 1px solid var(--color-terminal-border);
 		background: color-mix(in srgb, var(--color-terminal-bg) 94%, var(--color-terminal-prompt) 6%);
 	}
@@ -535,7 +533,7 @@
 	.pg-prompt {
 		flex-shrink: 0;
 		font-family: var(--font-mono);
-		font-size: 13px;
+		font-size: 14px;
 		font-weight: 600;
 		color: var(--color-terminal-prompt);
 		user-select: none;
@@ -551,14 +549,14 @@
 		appearance: none;
 		-webkit-appearance: none;
 		font-family: var(--font-mono);
-		font-size: 13px;
+		font-size: 14px;
 		line-height: 1.4;
 		color: var(--color-terminal-command);
 		caret-color: var(--color-terminal-prompt);
 	}
 
 	.pg-input::placeholder {
-		color: color-mix(in srgb, var(--color-terminal-output) 72%, transparent);
+		color: color-mix(in srgb, var(--color-terminal-output) 55%, transparent);
 	}
 
 	.pg-input:focus {
@@ -571,32 +569,19 @@
 		cursor: not-allowed;
 	}
 
-	.pg-send-btn {
+	.pg-return-hint {
 		display: inline-flex;
 		flex-shrink: 0;
-		height: 1.75rem;
-		width: 1.75rem;
-		cursor: pointer;
 		align-items: center;
 		justify-content: center;
-		border-radius: 0.5rem;
+		padding: 0.2rem 0.4rem;
+		border-radius: 0.25rem;
 		border: 1px solid var(--color-terminal-border);
-		background: color-mix(in srgb, var(--color-terminal-prompt) 18%, var(--color-terminal-header));
-		color: var(--color-terminal-prompt);
-		transition:
-			border-color 0.15s ease,
-			background 0.15s ease,
-			opacity 0.15s ease;
-	}
-
-	.pg-send-btn:hover:not(:disabled) {
-		border-color: var(--color-terminal-prompt);
-		background: color-mix(in srgb, var(--color-terminal-prompt) 28%, var(--color-terminal-header));
-	}
-
-	.pg-send-btn:disabled {
-		opacity: 0.35;
-		cursor: not-allowed;
+		background: color-mix(in srgb, var(--color-terminal-header) 80%, transparent);
+		color: var(--color-terminal-output);
+		opacity: 0.5;
+		font-size: 10px;
+		user-select: none;
 	}
 
 	.pg-chip {
@@ -604,12 +589,12 @@
 		align-items: center;
 		gap: 0.25rem;
 		border-radius: 9999px;
-		border: 1px solid var(--color-terminal-border);
-		background: color-mix(in srgb, var(--color-terminal-bg) 82%, transparent);
-		padding: 0.25rem 0.625rem;
+		border: 1px solid var(--color-border);
+		background: var(--color-surface);
+		padding: 0.3rem 0.75rem;
 		font-family: var(--font-mono);
 		font-size: 11px;
-		color: var(--color-terminal-output);
+		color: var(--color-text-secondary);
 		cursor: pointer;
 		transition:
 			border-color 0.15s ease,
@@ -618,8 +603,8 @@
 	}
 
 	.pg-chip:hover {
-		border-color: color-mix(in srgb, var(--color-terminal-prompt) 35%, var(--color-terminal-border));
-		color: var(--color-terminal-command);
-		background: color-mix(in srgb, var(--color-terminal-prompt) 8%, var(--color-terminal-bg));
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+		background: var(--color-primary-dim);
 	}
 </style>

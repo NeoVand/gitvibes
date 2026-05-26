@@ -1,5 +1,5 @@
-import { Buffer } from 'buffer';
-
-if (typeof globalThis.Buffer === 'undefined') {
-	globalThis.Buffer = Buffer;
+if (typeof window !== 'undefined' && typeof globalThis.Buffer === 'undefined') {
+	import('buffer').then(({ Buffer }) => {
+		globalThis.Buffer = Buffer;
+	});
 }

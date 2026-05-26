@@ -63,12 +63,11 @@
 	<div class="hidden flex-shrink-0 items-center gap-0.5 pr-4 sm:flex">
 		<button
 			onclick={onTogglePlayground}
-			class="flex h-8 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 transition-opacity hover:opacity-70"
-			style="color: var(--color-text-muted);"
+			class="playground-btn flex h-8 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 transition-all"
 			aria-label="Open Git Playground"
 		>
 			<Gamepad2 size={16} />
-			<span class="text-xs font-medium">Playground</span>
+			<span class="text-xs font-semibold">Playground</span>
 		</button>
 
 		<button
@@ -123,8 +122,7 @@
 			>
 				<button
 					onclick={() => { onTogglePlayground(); menuOpen = false; }}
-					class="flex h-8 cursor-pointer items-center gap-1 rounded-md px-2 transition-opacity hover:opacity-70"
-					style="color: var(--color-text-muted);"
+					class="playground-btn flex h-8 cursor-pointer items-center gap-1 rounded-md px-2 transition-all"
 					aria-label="Open Git Playground"
 				>
 					<Gamepad2 size={16} />
@@ -167,3 +165,13 @@
 		{/if}
 	</div>
 </header>
+
+<style>
+	.playground-btn {
+		color: var(--color-important);
+	}
+
+	.playground-btn:hover {
+		background: color-mix(in srgb, var(--color-important) 10%, transparent);
+	}
+</style>
