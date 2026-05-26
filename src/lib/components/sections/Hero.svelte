@@ -2,6 +2,7 @@
 	import { Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
+	import CodeBlock from '../ui/CodeBlock.svelte';
 
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
 </script>
@@ -140,14 +141,14 @@
 				<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 					The easiest way is to install the <strong style="color: var(--color-text);">Xcode Command Line Tools</strong>, which include Git. Open Terminal and run:
 				</p>
-				<pre class="mb-4 overflow-x-auto rounded-lg p-4 text-sm" style="background: var(--color-terminal-bg); color: var(--color-terminal-text); font-family: var(--font-mono);"><code><span style="color: var(--color-terminal-prompt);">$</span> xcode-select --install</code></pre>
+				<CodeBlock code="xcode-select --install" title="Install Xcode CLI Tools" />
 				<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 					A dialog will pop up asking you to install. Click <strong style="color: var(--color-text);">Install</strong> and wait a few minutes.
 				</p>
 				<p class="text-[14px]" style="color: var(--color-text-secondary);">
 					Alternatively, if you use <strong style="color: var(--color-text);">Homebrew</strong>:
 				</p>
-				<pre class="mt-3 overflow-x-auto rounded-lg p-4 text-sm" style="background: var(--color-terminal-bg); color: var(--color-terminal-text); font-family: var(--font-mono);"><code><span style="color: var(--color-terminal-prompt);">$</span> brew install git</code></pre>
+				<CodeBlock code="brew install git" title="Or via Homebrew" />
 
 			{:else if activeTab === 'windows'}
 				<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -156,7 +157,7 @@
 				<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 					Alternatively, if you use <strong style="color: var(--color-text);">winget</strong> (built into Windows 11):
 				</p>
-				<pre class="mb-4 overflow-x-auto rounded-lg p-4 text-sm" style="background: var(--color-terminal-bg); color: var(--color-terminal-text); font-family: var(--font-mono);"><code><span style="color: var(--color-terminal-prompt);">&gt;</span> winget install --id Git.Git -e --source winget</code></pre>
+				<CodeBlock code="winget install --id Git.Git -e --source winget" title="Install via winget" />
 				<p class="text-[14px]" style="color: var(--color-text-secondary);">
 					After installation, restart your terminal (or VS Code) so it picks up the new <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git</code> command.
 				</p>
@@ -165,14 +166,14 @@
 				<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 					Git is available in every major package manager. Use the one for your distribution:
 				</p>
-				<pre class="mb-3 overflow-x-auto rounded-lg p-4 text-sm" style="background: var(--color-terminal-bg); color: var(--color-terminal-text); font-family: var(--font-mono);"><code><span style="color: var(--color-text-muted);"># Debian / Ubuntu</span>
-<span style="color: var(--color-terminal-prompt);">$</span> sudo apt install git
+				<CodeBlock code={`# Debian / Ubuntu
+sudo apt install git
 
-<span style="color: var(--color-text-muted);"># Fedora</span>
-<span style="color: var(--color-terminal-prompt);">$</span> sudo dnf install git
+# Fedora
+sudo dnf install git
 
-<span style="color: var(--color-text-muted);"># Arch</span>
-<span style="color: var(--color-terminal-prompt);">$</span> sudo pacman -S git</code></pre>
+# Arch
+sudo pacman -S git`} title="Install via package manager" />
 			{/if}
 		</div>
 
@@ -180,8 +181,8 @@
 		<p class="mt-4 text-[14px]" style="color: var(--color-text-secondary);">
 			To confirm Git is installed, open a terminal and run:
 		</p>
-		<pre class="mt-3 overflow-x-auto rounded-lg p-4 text-sm" style="background: var(--color-terminal-bg); color: var(--color-terminal-text); font-family: var(--font-mono);"><code><span style="color: var(--color-terminal-prompt);">$</span> git --version
-<span style="color: var(--color-terminal-output);">git version 2.44.0</span></code></pre>
+		<CodeBlock code={`git --version
+# git version 2.44.0`} title="Verify installation" />
 		<p class="mt-3 text-[13px]" style="color: var(--color-text-muted);">
 			If you see a version number, you're ready to go. The exact number doesn't matter much — anything 2.30+ is fine.
 		</p>
