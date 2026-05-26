@@ -14,6 +14,16 @@
 </script>
 
 <section id="hero" class="px-6 py-16">
+	<!-- Hero image -->
+	<div class="mx-auto max-w-4xl mb-12">
+		<img
+			src="/images/Hero.png"
+			alt="Git for Vibe Coders — your safety net for AI-assisted coding"
+			class="w-full rounded-xl shadow-2xl"
+			loading="eager"
+		/>
+	</div>
+
 	<!-- Title block -->
 	<div class="mx-auto max-w-2xl text-center mb-16">
 		<h1

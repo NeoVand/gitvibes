@@ -20,6 +20,15 @@
 		<div id="section-1-1" class="mb-14">
 			<SectionHeader level="section" icon={UserCheck} title="1.1 First-Time Local Configuration" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<img
+					src="/images/P1.Section1-git-config.png"
+					alt="Git config — configured once, carried by every commit"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You have a new machine with a fresh Git installation. Before
