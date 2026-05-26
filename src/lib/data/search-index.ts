@@ -72,7 +72,7 @@ function buildCommandEntries(): SearchEntry[] {
 			const baseCommand = cmd.command.split('<')[0].trim();
 
 			entries.push({
-				id: `${sectionId}-${slugify(baseCommand)}`,
+				id: `${sectionId}-${slugify(cmd.command)}-${slugify(cmd.description)}`,
 				sectionId,
 				command: cmd.command,
 				title: baseCommand,

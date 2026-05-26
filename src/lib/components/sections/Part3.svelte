@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { GitBranch, GitPullRequest, RefreshCcw } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
@@ -33,6 +34,15 @@
 		<!-- 3.1 Creating Branches -->
 		<div id="section-3-1" class="mb-14">
 			<SectionHeader level="section" icon={GitBranch} title="3.1 &quot;I Have a New Idea (or AI Prompt)&quot;" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<img
+					src="{base}/images/git-branch.png"
+					alt="git branch — a parallel path diverging from main for safe experimentation"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
 
 			<Callout type="note">
 				{#snippet children()}
