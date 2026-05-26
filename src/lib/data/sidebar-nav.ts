@@ -9,6 +9,7 @@ import {
 	FileWarning,
 	FolderGit2,
 	FolderPlus,
+	Gamepad2,
 	GitBranch,
 	GitMerge,
 	GitPullRequest,
@@ -38,6 +39,7 @@ export interface NavItem {
 	label: string;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	icon: any;
+	isPlayground?: boolean;
 }
 
 export interface NavSection extends NavItem {
@@ -72,7 +74,8 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-2-1', label: 'git status', icon: Eye },
 			{ id: 'section-2-2', label: 'Staging Changes', icon: FolderPlus },
-			{ id: 'section-2-3', label: 'Committing', icon: Save }
+			{ id: 'section-2-3', label: 'Committing', icon: Save },
+			{ id: 'core-loop', label: 'Core Safety Loop', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{
@@ -81,8 +84,11 @@ export const sidebarNav: NavSection[] = [
 		icon: GitBranch,
 		children: [
 			{ id: 'section-3-1', label: 'Creating Branches', icon: GitBranch },
+			{ id: 'wrong-branch', label: 'Move Commit', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-3-2', label: 'Syncing Changes', icon: RefreshCcw },
-			{ id: 'section-3-3', label: 'Pull Requests', icon: GitPullRequest }
+			{ id: 'sync-remote', label: 'Sync with Remote', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-3-3', label: 'Pull Requests', icon: GitPullRequest },
+			{ id: 'branching', label: 'Branching Workflow', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{
@@ -92,11 +98,14 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-4-1', label: 'Discard Local', icon: Trash2 },
 			{ id: 'section-4-2', label: 'Unstage Files', icon: MinusCircle },
+			{ id: 'accidental-stage', label: 'Unstage Secrets', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-4-3', label: 'Amend Commits', icon: PenLine },
 			{ id: 'section-4-4', label: 'Reset (Local)', icon: RotateCcw },
 			{ id: 'section-4-5', label: 'Revert (Public)', icon: Undo2 },
 			{ id: 'section-4-6', label: 'Force Push', icon: AlertTriangle },
-			{ id: 'section-4-7', label: 'Recovery Matrix', icon: Table }
+			{ id: 'force-push', label: 'Reset & Force Push', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-4-7', label: 'Recovery Matrix', icon: Table },
+			{ id: 'undo', label: 'Undo Operations', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{
@@ -105,8 +114,11 @@ export const sidebarNav: NavSection[] = [
 		icon: Layers,
 		children: [
 			{ id: 'section-5-1', label: 'Git Stash', icon: Archive },
+			{ id: 'stash', label: 'Stash Workflow', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-5-2', label: 'Rebase vs Merge', icon: GitMerge },
-			{ id: 'section-5-3', label: 'Merge Conflicts', icon: FileWarning }
+			{ id: 'rebase-merge', label: 'Merge vs. Rebase', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-5-3', label: 'Merge Conflicts', icon: FileWarning },
+			{ id: 'conflicts', label: 'Conflict Resolution', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{

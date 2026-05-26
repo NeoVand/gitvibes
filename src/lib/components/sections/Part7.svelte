@@ -41,7 +41,7 @@
 			<div class="my-6">
 				<ExpandableImage
 					src="{base}/images/save-game-loop.png"
-					alt="The Save Game Loop — 8-step AI-first Git workflow from sandbox to recover"
+					alt="The Save Game Loop — 8-step AI-first Git workflow from branch to recover"
 					caption="The complete 8-step AI-first Git workflow — your daily rhythm"
 				/>
 			</div>
@@ -52,7 +52,7 @@
 
 			<MermaidDiagram
 				definition={`graph LR
-  A(["1. Sandbox"]) --> B(["2. Generate"])
+  A(["1. Branch"]) --> B(["2. Generate"])
   B --> C(["3. Review"])
   C --> D(["4. Save"])
   D --> E(["5. Sync"])
@@ -70,7 +70,7 @@
 				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">1</span>
 					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sandbox</p>
+						<p class="text-[13px] font-medium" style="color: var(--color-text);">Branch</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
 							Create an isolated branch — or practice every step in the
 							<button

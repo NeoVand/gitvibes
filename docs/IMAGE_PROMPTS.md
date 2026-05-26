@@ -426,7 +426,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 >
 > THE EIGHT STEPS (include this text legibly on or beside each node, in order):
 >
-> 1. **Sandbox** — `git switch -c feature/name` · isolated branch for AI experiments
+> 1. **Branch** — `git switch -c feature/name` · isolated branch for AI experiments
 > 2. **Generate** — prompt your AI assistant · "vibe" and generate code
 > 3. **Review** — `git add -p` · or VS Code "Stage Selected Ranges"
 > 4. **Save** — `git commit -m "feat: ..."` · commit small, commit often

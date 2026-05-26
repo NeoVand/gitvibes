@@ -5,7 +5,7 @@
 > 
 > Reading about Git is valuable, but nothing beats hands-on practice. Before you dive into the rest of this guide, we highly recommend spending 30-60 minutes with [Learn Git Branching](https://learngitbranching.js.org/)—an interactive, visual Git tutorial that runs right in your browser.
 > 
-> This gamified environment lets you experiment with branching, merging, rebasing, and all the "undo" commands in a safe sandbox where mistakes are not just okay—they're encouraged. You'll build muscle memory for the exact workflows described in this guide, and when you encounter your first real merge conflict or need to rebase a branch, you'll have the confidence to do it correctly.
+> This gamified environment lets you experiment with branching, merging, rebasing, and all the "undo" commands in a safe playground where mistakes are not just okay—they're encouraged. You'll build muscle memory for the exact workflows described in this guide, and when you encounter your first real merge conflict or need to rebase a branch, you'll have the confidence to do it correctly.
 > 
 > **Trust me**: 30 minutes of interactive practice now will save you hours of panic later.
 
@@ -282,7 +282,7 @@ gitGraph
 ### 3.1. Scenario: "I Have a New Idea (or AI Prompt)"
 
 > [!NOTE]
-> **The Problem:** You want to try a new feature or a massive AI-driven refactor. Before you write a single line or prompt, you must create a safe, isolated sandbox for this work.
+> **The Problem:** You want to try a new feature or a massive AI-driven refactor. Before you write a single line or prompt, you must create a safe, isolated branch for this work.
 
 **The Command:**
 
@@ -678,7 +678,7 @@ gitGraph
 > **The Golden Rule of Rebasing:** Never rebase a public branch (one your team is also using), as it rewrites history.
 
 > [!TIP]
-> **The AI-First Developer's Choice:** Since your `ai-experiment` branch is your private sandbox, **rebase** is the preferred method to keep it clean before you create a PR. Rebasing your branch makes the subsequent PR much cleaner for your teammates to review, as it won't contain 10 "I merged main" commits.
+> **The AI-First Developer's Choice:** Since your `ai-experiment` branch is your private playground, **rebase** is the preferred method to keep it clean before you create a PR. Rebasing your branch makes the subsequent PR much cleaner for your teammates to review, as it won't contain 10 "I merged main" commits.
 
 ---
 
@@ -798,7 +798,7 @@ This is your new "save game" loop.
 
 ```mermaid
 graph LR
-    A([1. Sandbox]) --> B([2. Generate])
+    A([1. Branch]) --> B([2. Generate])
     B --> C([3. Review])
     C --> D([4. Save])
     D --> E([5. Sync])
@@ -807,7 +807,7 @@ graph LR
     G --> H([8. Recover if Needed])
 ```
 
-1. **Sandbox**: `git switch -c ai-experiment/new-feature`.
+1. **Branch**: `git switch -c ai-experiment/new-feature`.
 2. **Generate**: "Vibe" with your AI assistant and prompt it to generate code.
 3. **Review**: Use `git add -p` or the VS Code "Stage Selected Ranges" UI to meticulously review every line the AI wrote.
 4. **Save**: `git commit -m "feat: <message>"`. Commit small, commit often.

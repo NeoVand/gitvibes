@@ -203,7 +203,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 	},
 	{
 		id: 'clean-slate',
-		title: 'Sandbox — start from scratch',
+		title: 'Playground — start from scratch',
 		description: 'An empty repo for free experimentation. Create files, branches, commits — try anything. Type help to see all supported commands.',
 		hint: 'Use echo "content" > filename to create files, then git add and git commit. Try creating branches with git switch -c.',
 		suggestedCommands: [

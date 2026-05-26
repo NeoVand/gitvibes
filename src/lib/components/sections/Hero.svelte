@@ -106,7 +106,7 @@
 		<ul class="mb-4 space-y-2 pl-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 			<li class="list-disc"><strong style="color: var(--color-text);">Review</strong> every AI change before it becomes permanent</li>
 			<li class="list-disc"><strong style="color: var(--color-text);">Undo</strong> any mistake instantly — whether it's yours or the AI's</li>
-			<li class="list-disc"><strong style="color: var(--color-text);">Branch</strong> to experiment in a safe sandbox without risking stable code</li>
+			<li class="list-disc"><strong style="color: var(--color-text);">Branch</strong> to experiment in a safe playground without risking stable code</li>
 			<li class="list-disc"><strong style="color: var(--color-text);">Collaborate</strong> with teammates by sharing code through a structured review process</li>
 		</ul>
 

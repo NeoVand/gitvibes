@@ -166,12 +166,15 @@
 					>
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
+							{@const playgroundColor = child.isPlayground ? 'var(--color-important)' : undefined}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="nav-child-item relative flex w-full cursor-pointer items-center gap-2 px-2.5 py-1.5 text-left text-[13px] transition-all"
-								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
+								class="nav-child-item relative flex w-full cursor-pointer items-center gap-2 py-1.5 text-left text-[13px] transition-all"
+								class:pl-5={child.isPlayground}
+								class:px-2.5={!child.isPlayground}
+								style="color: {playgroundColor ?? (childActive ? 'var(--color-primary)' : 'var(--color-text-muted)')}; font-weight: {childActive ? '600' : '400'}; opacity: {child.isPlayground && !childActive ? '0.7' : '1'}; font-size: {child.isPlayground ? '12px' : '13px'};"
 							>
-								{@render navIcon(child, childActive, 13)}
+								{@render navIcon(child, childActive, child.isPlayground ? 11 : 13)}
 								<span>{child.label}</span>
 							</button>
 						{/each}
@@ -255,12 +258,15 @@
 					<div class="px-1.5 py-1.5">
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
+							{@const playgroundColor = child.isPlayground ? 'var(--color-important)' : undefined}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
-								class="flyout-child flex w-full cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-left text-[12px] transition-all"
-								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'};"
+								class="flyout-child flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 text-left transition-all"
+								class:pl-5={child.isPlayground}
+								class:px-2.5={!child.isPlayground}
+								style="color: {playgroundColor ?? (childActive ? 'var(--color-primary)' : 'var(--color-text-secondary)')}; font-weight: {childActive ? '600' : '400'}; opacity: {child.isPlayground && !childActive ? '0.7' : '1'}; font-size: {child.isPlayground ? '11px' : '12px'};"
 							>
-								{@render navIcon(child, childActive, 12)}
+								{@render navIcon(child, childActive, child.isPlayground ? 10 : 12)}
 								<span>{child.label}</span>
 							</button>
 						{/each}

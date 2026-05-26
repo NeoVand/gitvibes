@@ -8,7 +8,7 @@ An interactive, visual guide to Git for developers who use AI-assisted coding to
 
 ## What is this?
 
-GitVibes teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks through real scenarios — *"the AI just changed 10 files, what do I do?"* — with cinematic section banners, interactive sandboxes, Mermaid diagrams, and step-by-step VS Code screenshots.
+GitVibes teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks through real scenarios — *"the AI just changed 10 files, what do I do?"* — with cinematic section banners, interactive playgrounds, Mermaid diagrams, and step-by-step VS Code screenshots.
 
 ### Curriculum
 

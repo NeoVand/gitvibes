@@ -187,7 +187,7 @@ git stash pop`}
 			<Callout type="tip">
 				{#snippet children()}
 					<strong>The AI-First Developer's Choice:</strong> Since your experiment branch is your
-					private sandbox, <strong>rebase</strong> is preferred to keep it clean before creating a PR.
+					private playground, <strong>rebase</strong> is preferred to keep it clean before creating a PR.
 					It avoids cluttering the PR with "I merged main" commits.
 				{/snippet}
 			</Callout>

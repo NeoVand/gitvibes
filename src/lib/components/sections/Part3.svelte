@@ -48,7 +48,7 @@
 			<SectionHeader level="section" icon={GitBranch} title="3.1 &quot;I Have a New Idea (or AI Prompt)&quot;" color="var(--color-primary)" />
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				You have a feature idea — or maybe an ambitious AI prompt that might refactor half your codebase. Before you do anything, create a sandbox where it's safe to experiment.
+				You have a feature idea — or maybe an ambitious AI prompt that might refactor half your codebase. Before you do anything, create a branch where it's safe to experiment.
 			</p>
 
 			<div class="my-6">
@@ -62,7 +62,7 @@
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You want to try a new feature or a massive AI-driven refactor.
-					Before you write a single line or prompt, create a safe, isolated sandbox.
+					Before you write a single line or prompt, create a safe, isolated branch.
 				{/snippet}
 			</Callout>
 
