@@ -1,6 +1,6 @@
 # GitVibes — Git for Vibe Coders
 
-An interactive, visual guide to Git and version control for developers who use AI-assisted coding tools like GitHub Copilot, Cursor, and Claude Code.
+An interactive, visual guide to Git for developers who use AI-assisted coding tools like GitHub Copilot, Cursor, and Claude Code.
 
 **[Live Site →](https://neovand.github.io/gitvibes/)**
 
@@ -8,28 +8,32 @@ An interactive, visual guide to Git and version control for developers who use A
 
 ## What is this?
 
-GitVibes is a beginner-friendly tutorial that teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks you through real scenarios — "the AI just changed 10 files, what do I do?" — with interactive sandboxes, Mermaid diagrams, and step-by-step VS Code screenshots.
+GitVibes teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks through real scenarios — *"the AI just changed 10 files, what do I do?"* — with cinematic section banners, interactive sandboxes, Mermaid diagrams, and step-by-step VS Code screenshots.
 
-### Topics covered
+### Curriculum
 
-1. **Enterprise Onboarding** — Cloning repos, authentication, SSH vs HTTPS
-2. **The Core Safety Loop** — Status → Stage → Commit, reviewing AI changes
-3. **Branching & PRs** — Creating branches, syncing, pull requests
-4. **The Undo Toolkit** — Checkout, revert, reset, amending commits
-5. **Advanced Workflows** — Stash, rebase vs merge, conflict resolution
-6. **VS Code Cockpit** — Source Control view, Timeline, GitLens, 3-way merge editor
-7. **Cheat Sheet** — Quick reference for common commands
+| Part | Topics |
+|------|--------|
+| **Introduction** | What Git is, installing Git, what a repository is |
+| **1. Enterprise Onboarding** | Git config, authentication, cloning |
+| **2. Core Safety Loop** | `git status` → stage → commit, reviewing AI changes |
+| **3. Branching & PRs** | Branches, fetch/pull/push, pull requests |
+| **4. Undo Toolkit** | Restore, unstage, amend, reset, revert, force-with-lease, recovery matrix |
+| **5. Advanced Workflows** | Stash, rebase vs merge, merge conflicts |
+| **6. VS Code Cockpit** | Source Control, Timeline & GitLens, 3-way merge editor |
+| **7. Conclusion** | AI-first workflow, quick reference card, teaching agents Git (`AGENTS.md`, skills, custom agents) |
 
 ### Features
 
-- **Git Playground** — run real Git commands in the browser (powered by isomorphic-git)
-- **Try it yourself tabs** — embedded playground in every hands-on lesson (Parts 2–5)
-- Interactive Git sandboxes that simulate real workflows
-- Real VS Code screenshots with step-by-step instructions
-- Mermaid diagrams for visualizing branching and commit history
-- Light/dark theme support
-- Searchable command reference
-- Fully static — no backend required
+- **Git Playground** — run real Git commands in the browser (isomorphic-git), opened as a sidebar panel from anywhere on the site
+- **Try it yourself** — embedded playground tabs in hands-on lessons (Parts 2–5)
+- **Expandable banners** — click any section poster to open a full-screen lightbox
+- **VS Code screenshots** — real UI with hover-to-expand and captions
+- **Vibe prompts** — copy-paste AI prompts for common Git workflows
+- **Search** — `⌘K` / `Ctrl+K` command palette across the whole tutorial
+- **Cheat sheet** — quick command reference from the header
+- **Light / dark theme**
+- **Fully static** — no backend; deploys to GitHub Pages
 
 ## Tech stack
 
@@ -37,39 +41,41 @@ GitVibes is a beginner-friendly tutorial that teaches Git through the lens of AI
 |-------|------|
 | Framework | [SvelteKit](https://svelte.dev) (Svelte 5) |
 | Styling | [Tailwind CSS](https://tailwindcss.com) v4 |
+| In-browser Git | [isomorphic-git](https://isomorphic-git.org/) |
 | Diagrams | [Mermaid.js](https://mermaid.js.org) |
 | Icons | [Lucide](https://lucide.dev) |
-| Markdown | [mdsvex](https://mdsvex.pngwn.io) |
-| Hosting | GitHub Pages (static adapter) |
+| Testing | [Playwright](https://playwright.dev) |
+| Hosting | GitHub Pages (`@sveltejs/adapter-static`) |
 
 ## Getting started
 
 ```bash
-# Clone the repo
 git clone https://github.com/NeoVand/gitvibes.git
 cd gitvibes
-
-# Install dependencies
 npm install
-
-# Start dev server
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) to view it locally.
+Open [http://localhost:5173](http://localhost:5173).
 
-## Building
+## Scripts
 
-```bash
-npm run build
-npm run preview  # preview the production build
-```
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build → `build/` |
+| `npm run preview` | Preview production build |
+| `npm run check` | Type-check |
+| `npm run lint` | Prettier + ESLint |
+| `npm run test` | Playwright e2e tests |
 
-The static site is output to the `build/` directory.
+## Assets
+
+Section banner images live in `static/images/` (kebab-case filenames). Image generation prompts for creating or updating posters are in [`docs/IMAGE_PROMPTS.md`](docs/IMAGE_PROMPTS.md).
 
 ## Deployment
 
-This project deploys automatically to GitHub Pages on every push to `main` via GitHub Actions. The workflow is defined in `.github/workflows/deploy.yml`.
+Pushes to `main` deploy automatically to GitHub Pages via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ## License
 

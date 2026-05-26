@@ -2,6 +2,8 @@
 
 Each prompt below is self-contained. Copy and paste directly into your image model.
 
+**Asset location:** Finished images belong in `static/images/` using kebab-case filenames (e.g. `what-is-git.png`). The app serves assets from there only — do not keep duplicate copies in the repo.
+
 ---
 
 ## Hero / Introduction
