@@ -13,14 +13,22 @@
 	const sections = sidebarNav;
 
 	let expandedSections = $state<Set<string>>(new Set());
+	let manuallyExpanded = $state<Set<string>>(new Set());
 	let flyoutSection = $state<string | null>(null);
 	let flyoutY = $state(0);
 
 	function toggleSection(id: string) {
 		const next = new Set(expandedSections);
-		if (next.has(id)) next.delete(id);
-		else next.add(id);
+		const nextManual = new Set(manuallyExpanded);
+		if (next.has(id)) {
+			next.delete(id);
+			nextManual.delete(id);
+		} else {
+			next.add(id);
+			nextManual.add(id);
+		}
 		expandedSections = next;
+		manuallyExpanded = nextManual;
 	}
 
 	function scrollTo(id: string, closeSidebarOnMobile = true) {
@@ -57,14 +65,17 @@
 
 	$effect(() => {
 		const current = activeSection;
+		let activeSectionParent: string | null = null;
 		for (const section of sections) {
-			if (
-				section.children?.some((c) => c.id === current) &&
-				!expandedSections.has(section.id)
-			) {
-				expandedSections = new Set([...expandedSections, section.id]);
+			if (section.children?.some((c) => c.id === current)) {
+				activeSectionParent = section.id;
 				break;
 			}
+		}
+		if (activeSectionParent && isActive(activeSectionParent)) {
+			const next = new Set(manuallyExpanded);
+			next.add(activeSectionParent);
+			expandedSections = next;
 		}
 	});
 </script>

@@ -3,7 +3,6 @@
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import Callout from '../ui/Callout.svelte';
-	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 
@@ -50,19 +49,7 @@
 				This is your new "save game" loop — the practical rhythm between you and your agent. Follow these 8 steps for every piece of work. Encode your Git conventions once in the repo (see section 7.3) so agents follow them automatically instead of re-explaining branch rules in every chat.
 			</p>
 
-			<MermaidDiagram
-				definition={`graph LR
-  A(["1. Branch"]) --> B(["2. Generate"])
-  B --> C(["3. Review"])
-  C --> D(["4. Save"])
-  D --> E(["5. Sync"])
-  E --> F(["6. Push"])
-  F --> G(["7. Propose"])
-  G --> H(["8. Recover"])`}
-				id="workflow-summary"
-			/>
-
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				Here's what each step looks like in practice, along with the commands you'll use.
 			</p>
 
