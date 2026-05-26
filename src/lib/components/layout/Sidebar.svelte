@@ -185,8 +185,8 @@
 <!-- ───── COLLAPSED ICON RAIL ───── -->
 {#if !open}
 	<aside
-		class="sidebar-collapsed fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2"
-		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px);"
+		class="sidebar-collapsed fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center border-r py-2"
+		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); border-color: var(--color-border-light);"
 	>
 		<button
 			onclick={onToggle}
@@ -210,6 +210,11 @@
 						closeFlyout();
 					}
 				}}
+				onmouseenter={(e) => {
+					if (section.children) {
+						openFlyout(section.id, e);
+					}
+				}}
 				class="group relative mb-0.5 flex h-10 w-10 cursor-pointer items-center justify-center transition-all"
 				style="color: {active ? 'var(--color-primary)' : 'var(--color-text-muted)'};"
 				aria-label={section.label}
@@ -231,30 +236,31 @@
 		{@const section = sections.find((s) => s.id === flyoutSection)}
 		{#if section}
 			<div
-				class="fixed z-50 min-w-[240px] rounded-xl border shadow-xl"
-				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; background: var(--color-surface); border-color: var(--color-border);"
+				class="fixed z-50 w-max rounded-xl border shadow-xl"
+				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; background: var(--color-surface); border-color: var(--color-border); max-width: 220px;"
+				onmouseleave={closeFlyout}
 			>
 				<button
 					onclick={() => {
 						handleFlyoutNavigate(section.id);
 					}}
-					class="flex w-full cursor-pointer items-center gap-2.5 rounded-t-xl px-3.5 py-3 text-left transition-colors"
-					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light); font-family: var(--font-heading); font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em;"
+					class="flex w-full cursor-pointer items-center gap-2 rounded-t-xl px-3 py-2.5 text-left transition-colors"
+					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light); font-family: var(--font-heading); font-size: 13.5px; font-weight: 600; letter-spacing: -0.01em;"
 				>
-					{@render navIcon(section, isActive(section.id), 16)}
+					{@render navIcon(section, isActive(section.id), 15)}
 					{section.label}
 				</button>
 
 				{#if section.children}
-					<div class="px-2 py-2">
+					<div class="px-1.5 py-1.5">
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
-								class="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-[13px] transition-all"
+								class="flex w-full cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-left text-[12px] transition-all"
 								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'};"
 							>
-								{@render navIcon(child, childActive, 13)}
+								{@render navIcon(child, childActive, 12)}
 								<span>{child.label}</span>
 							</button>
 						{/each}
