@@ -269,42 +269,42 @@
 					</thead>
 					<tbody style="color: var(--color-text-secondary);">
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">feat:</code></td>
-							<td class="px-4 py-2">A new feature</td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-branch-feature);">feat:</code></td>
+							<td class="px-4 py-2">A new feature for the user</td>
 							<td class="px-4 py-2 text-xs">feat: Add login button to homepage</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">fix:</code></td>
-							<td class="px-4 py-2">A bug fix</td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-caution);">fix:</code></td>
+							<td class="px-4 py-2">A bug fix for the user</td>
 							<td class="px-4 py-2 text-xs">fix: Resolve dimension mismatch</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">docs:</code></td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-note);">docs:</code></td>
 							<td class="px-4 py-2">Documentation only changes</td>
 							<td class="px-4 py-2 text-xs">docs: Update API reference</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">style:</code></td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-vibe-text);">style:</code></td>
 							<td class="px-4 py-2">Formatting, missing semicolons, etc.</td>
 							<td class="px-4 py-2 text-xs">style: Fix indentation in utils</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">refactor:</code></td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-warning);">refactor:</code></td>
 							<td class="px-4 py-2">Code change that neither fixes a bug nor adds a feature</td>
 							<td class="px-4 py-2 text-xs">refactor: Simplify form validation</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">test:</code></td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-tip);">test:</code></td>
 							<td class="px-4 py-2">Adding or correcting tests</td>
 							<td class="px-4 py-2 text-xs">test: Add unit tests for auth</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">chore:</code></td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-branch-release);">chore:</code></td>
 							<td class="px-4 py-2">Build process or tools changes</td>
 							<td class="px-4 py-2 text-xs">chore: Update dependencies</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">perf:</code></td>
+							<td class="px-4 py-2"><code class="commit-type-badge" style="--badge-color: var(--color-primary);">perf:</code></td>
 							<td class="px-4 py-2">A code change that improves performance</td>
 							<td class="px-4 py-2 text-xs">perf: Cache database queries</td>
 						</tr>
@@ -359,3 +359,17 @@
 		</div>
 	</div>
 </section>
+
+<style>
+	.commit-type-badge {
+		display: inline-block;
+		border-radius: 0.25rem;
+		padding: 0.0625rem 0.375rem;
+		font-size: 0.75rem;
+		font-family: var(--font-mono);
+		font-weight: 500;
+		color: var(--badge-color);
+		background: color-mix(in srgb, var(--badge-color) 12%, transparent);
+		border: 1px solid color-mix(in srgb, var(--badge-color) 25%, transparent);
+	}
+</style>
