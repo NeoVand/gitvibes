@@ -108,6 +108,9 @@ git stash pop`}
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: The Stash Workflow
 			</h4>
+			<PlaygroundNote>
+				You're mid-refactor on <code>feature/A</code> when a critical bug comes in. Stash your work, fix the bug on a hotfix branch, then come back and pop the stash.
+			</PlaygroundNote>
 			<LessonActivity title="Stash: Context-Switch Safely" steps={stashSteps} scenarioId="stash" id="stash" />
 
 			<VibeBox prompts={[
@@ -192,6 +195,9 @@ git stash pop`}
 			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
 				Try It: Merge vs. Rebase
 			</h4>
+			<PlaygroundNote>
+				Your feature branch and <code>main</code> have diverged. Try <code>git merge main</code> first, then reset and try <code>git rebase main</code> to compare the resulting history.
+			</PlaygroundNote>
 			<LessonActivity title="Merge vs. Rebase" steps={rebaseMergeSteps} scenarioId="rebase-merge" id="rebase-merge" />
 
 			<VibeBox prompts={[

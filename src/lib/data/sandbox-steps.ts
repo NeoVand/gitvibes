@@ -377,6 +377,166 @@ x = 5
 	}
 ];
 
+// ── Part 3: Wrong branch — committed to main ────────────────────────
+export const wrongBranchSteps: SandboxStep[] = [
+	{
+		command: 'git log --oneline',
+		description: 'You accidentally committed to main',
+		output: `c3d4e5f (HEAD -> main) feat: Add payment processing
+b2c3d4e feat: Add user model
+a1b2c3d Initial commit`,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add user model"
+  commit id: "Payment (oops!)" type: REVERSE`
+	},
+	{
+		command: 'git branch feature/payments',
+		description: 'Create a branch that includes the accidental commit',
+		output: ``,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add user model"
+  commit id: "Payment"
+  branch feature/payments`
+	},
+	{
+		command: 'git reset --hard HEAD~1',
+		description: 'Remove the commit from main',
+		output: `HEAD is now at b2c3d4e feat: Add user model`,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add user model"
+  branch feature/payments
+  commit id: "Payment"`
+	},
+	{
+		command: 'git switch feature/payments',
+		description: 'Switch to the feature branch to verify',
+		output: `Switched to branch 'feature/payments'`,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add user model"
+  branch feature/payments
+  checkout feature/payments
+  commit id: "Payment" type: HIGHLIGHT`
+	}
+];
+
+// ── Part 4: Accidental stage — unstage secrets ──────────────────────
+export const accidentalStageSteps: SandboxStep[] = [
+	{
+		command: 'git status',
+		description: 'You ran git add . and staged everything',
+		output: `On branch main
+Changes to be committed:
+\tmodified:   src/app.py
+\tmodified:   .env
+\tnew file:   src/debug.py
+\tnew file:   src/feature.py`,
+		diagram: `graph TD
+  A[".env ⚠️"] --> S["Staging"]
+  B["debug.py ⚠️"] --> S
+  C["app.py ✓"] --> S
+  D["feature.py ✓"] --> S`
+	},
+	{
+		command: 'git restore --staged .env',
+		description: 'Unstage the secrets file',
+		output: ``,
+		diagram: `graph TD
+  A[".env"] -.->|unstaged| W["Working Dir"]
+  B["debug.py ⚠️"] --> S["Staging"]
+  C["app.py ✓"] --> S
+  D["feature.py ✓"] --> S`
+	},
+	{
+		command: 'git restore --staged src/debug.py',
+		description: 'Unstage the debug file with pdb',
+		output: ``,
+		diagram: `graph TD
+  A[".env"] -.-> W["Working Dir"]
+  B["debug.py"] -.-> W
+  C["app.py ✓"] --> S["Staging"]
+  D["feature.py ✓"] --> S`
+	},
+	{
+		command: 'git status',
+		description: 'Verify only safe files remain staged',
+		output: `On branch main
+Changes to be committed:
+\tmodified:   src/app.py
+\tnew file:   src/feature.py
+
+Changes not staged for commit:
+\tmodified:   .env
+
+Untracked files:
+\tnew file:   src/debug.py`,
+		diagram: `graph TD
+  C["app.py ✓"] --> S["Staging"]
+  D["feature.py ✓"] --> S
+  S --> R["Ready to commit"]`
+	},
+	{
+		command: 'git commit -m "feat: Add server runner and new feature"',
+		description: 'Commit only the safe, reviewed files',
+		output: `[main f1a2b3c] feat: Add server runner and new feature
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+ create mode 100644 src/feature.py`,
+		diagram: `graph TD
+  S["Staging"] -->|"git commit"| R["Repository"]
+  W[".env + debug.py"] -.-> W2["Still in working dir"]`
+	}
+];
+
+// ── Part 4: Force push — rewrite remote history ─────────────────────
+export const forcePushSteps: SandboxStep[] = [
+	{
+		command: 'git log --oneline',
+		description: 'Two bad commits on your feature branch',
+		output: `d0e1f2a (HEAD -> feature/cleanup) wip: trying to fix
+c3d4e5f bad: AI broke everything
+b2c3d4e feat: Add core logic
+a1b2c3d Initial commit`,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add core logic"
+  branch feature/cleanup
+  commit id: "AI broke it" type: REVERSE
+  commit id: "Trying to fix" type: REVERSE`
+	},
+	{
+		command: 'git reset --hard HEAD~2',
+		description: 'Go back to the last good commit',
+		output: `HEAD is now at b2c3d4e feat: Add core logic`,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add core logic" type: HIGHLIGHT`
+	},
+	{
+		command: 'git log --oneline',
+		description: 'Verify history is clean',
+		output: `b2c3d4e (HEAD -> feature/cleanup) feat: Add core logic
+a1b2c3d Initial commit`,
+		diagram: `gitGraph
+  commit id: "Initial commit"
+  commit id: "Add core logic" type: HIGHLIGHT`
+	},
+	{
+		command: 'git push --force origin feature/cleanup',
+		description: 'Force push to overwrite the remote',
+		output: `Total 0 (delta 0), reused 0 (delta 0)
+To https://github.com/your-org/project.git
+ + d0e1f2a...b2c3d4e feature/cleanup -> feature/cleanup (forced update)`,
+		diagram: `sequenceDiagram
+  participant L as Local
+  participant R as origin
+  L->>R: push --force
+  Note over R: History rewritten`
+	}
+];
+
 // ── Part 3: Sync with remote ─────────────────────────────────────────
 export const syncSteps: SandboxStep[] = [
 	{

@@ -9,7 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { undoSteps } from '$lib/data/sandbox-steps';
+	import { undoSteps, accidentalStageSteps, forcePushSteps } from '$lib/data/sandbox-steps';
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -140,6 +140,19 @@ git restore src/bad_file.py  # Discard a single file`}
 				src="staging-commits/unstage-changes.png"
 				alt="VS Code Source Control panel showing the unstage button (minus icon) on a staged file"
 				caption="Click the − button next to any staged file to unstage it. It moves back to the 'Changes' section."
+			/>
+
+			<h4 class="mb-3 mt-8 text-lg font-semibold" style="color: var(--color-text);">
+				Try It: Unstage Dangerous Files
+			</h4>
+			<PlaygroundNote>
+				You ran <code>git add .</code> too quickly and staged <code>.env</code> with credentials and a debug file. Unstage them with <code>git restore --staged</code> before committing.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Unstage Secrets & Debug Files"
+				steps={accidentalStageSteps}
+				scenarioId="accidental-stage"
+				id="accidental-stage"
 			/>
 
 			<VibeBox prompts={[
@@ -408,9 +421,22 @@ git push                   # Push the revert`}
 				{#snippet children()}
 					<strong>What does the error look like?</strong> When you try to push after rewriting history, Git will reject it with:
 					<code class="mt-1 block rounded px-2 py-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">! [rejected] (non-fast-forward) — hint: Updates were rejected because the tip of your current branch is behind</code>
-					This is Git protecting you. Try the <strong>"Reset and force push"</strong> playground scenario to see this error and practice the fix.
+					This is Git protecting you. Try it yourself below:
 				{/snippet}
 			</Callout>
+
+			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+				Try It: Reset and Force Push
+			</h4>
+			<PlaygroundNote>
+				Your feature branch has two bad commits already pushed. Use <code>git reset --hard HEAD~2</code> to go back, then <code>git push --force</code> to overwrite the remote. Never do this on shared branches!
+			</PlaygroundNote>
+			<LessonActivity
+				title="Reset and Force Push"
+				steps={forcePushSteps}
+				scenarioId="force-push"
+				id="force-push"
+			/>
 
 			<VibeBox prompts={[
 				"I amended a commit I already pushed and now I can't push — help me fix it safely",

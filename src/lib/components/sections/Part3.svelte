@@ -9,7 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { branchingSteps, syncSteps } from '$lib/data/sandbox-steps';
+	import { branchingSteps, syncSteps, wrongBranchSteps } from '$lib/data/sandbox-steps';
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -108,9 +108,22 @@
 			<Callout type="warning">
 				{#snippet children()}
 					<strong>Common mistake — committed to main by accident?</strong> Don't panic. If you haven't pushed yet, the fix is simple:
-					create the feature branch (your commits come with it), then switch back to main and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset --hard HEAD~1</code> to remove the commit from main. Try this in the <strong>"Oops — committed to main"</strong> playground scenario.
+					create the feature branch (your commits come with it), then switch back to main and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset --hard HEAD~1</code> to remove the commit from main. Try it yourself below:
 				{/snippet}
 			</Callout>
+
+			<h4 class="mb-3 mt-6 text-lg font-semibold" style="color: var(--color-text);">
+				Try It: Oops — Committed to Main
+			</h4>
+			<PlaygroundNote>
+				The playground starts with a payment commit on <code>main</code> that should be on a feature branch. Create the branch, then reset <code>main</code> with <code>git reset --hard HEAD~1</code>.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Move Commit to Feature Branch"
+				steps={wrongBranchSteps}
+				scenarioId="wrong-branch"
+				id="wrong-branch"
+			/>
 
 			<VibeBox prompts={[
 				"Create a new branch called feature/user-auth and switch to it",
