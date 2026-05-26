@@ -236,15 +236,15 @@
 		{@const section = sections.find((s) => s.id === flyoutSection)}
 		{#if section}
 			<div
-				class="fixed z-50 w-max rounded-xl border shadow-xl"
-				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; background: var(--color-surface); border-color: var(--color-border); max-width: 220px;"
+				class="fixed z-50 rounded-xl border shadow-xl"
+				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; width: 210px; background: var(--color-surface); border-color: var(--color-border);"
 				onmouseleave={closeFlyout}
 			>
 				<button
 					onclick={() => {
 						handleFlyoutNavigate(section.id);
 					}}
-					class="flex w-full cursor-pointer items-center gap-2 rounded-t-xl px-3 py-2.5 text-left transition-colors"
+					class="flyout-header flex w-full cursor-pointer items-center gap-2 rounded-t-xl px-3 py-2.5 text-left transition-colors"
 					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light); font-family: var(--font-heading); font-size: 13.5px; font-weight: 600; letter-spacing: -0.01em;"
 				>
 					{@render navIcon(section, isActive(section.id), 15)}
@@ -257,7 +257,7 @@
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
-								class="flex w-full cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-left text-[12px] transition-all"
+								class="flyout-child flex w-full cursor-pointer items-center gap-1.5 rounded-md px-2.5 py-1.5 text-left text-[12px] transition-all"
 								style="color: {childActive ? 'var(--color-primary)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'};"
 							>
 								{@render navIcon(child, childActive, 12)}
@@ -291,5 +291,13 @@
 	.nav-child-item:hover {
 		background: color-mix(in srgb, var(--color-text) 4%, transparent);
 		border-radius: 6px;
+	}
+
+	.flyout-header:hover {
+		background: color-mix(in srgb, var(--color-text) 4%, transparent);
+	}
+
+	.flyout-child:hover {
+		background: color-mix(in srgb, var(--color-text) 6%, transparent);
 	}
 </style>

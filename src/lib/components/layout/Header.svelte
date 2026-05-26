@@ -44,7 +44,7 @@
 	<div class="flex-1"></div>
 
 	<!-- Desktop: show all icons -->
-	<div class="hidden flex-shrink-0 items-center gap-1 pr-4 sm:flex">
+	<div class="hidden flex-shrink-0 items-center gap-1 pr-2 sm:flex">
 		<div class="mr-1">
 			<Search {onNavigate} />
 		</div>

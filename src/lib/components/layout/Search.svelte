@@ -229,11 +229,10 @@
 	}
 
 	.search-dropdown {
-		position: absolute;
-		top: calc(100% + 6px);
-		left: 0;
-		right: 0;
-		min-width: 360px;
+		position: fixed;
+		top: var(--header-height);
+		left: 0.5rem;
+		right: 0.5rem;
 		background: var(--color-surface);
 		border: 1px solid var(--color-border);
 		border-radius: 10px;
@@ -243,6 +242,16 @@
 		overflow: hidden;
 		z-index: 100;
 		padding: 4px;
+	}
+
+	@media (min-width: 640px) {
+		.search-dropdown {
+			position: absolute;
+			top: calc(100% + 6px);
+			left: 0;
+			right: auto;
+			min-width: 360px;
+		}
 	}
 
 	.search-empty {
@@ -258,15 +267,22 @@
 	.search-result {
 		display: flex;
 		align-items: flex-start;
-		gap: 10px;
+		gap: 8px;
 		width: 100%;
-		padding: 8px 10px;
+		padding: 6px 8px;
 		border: none;
 		background: none;
 		cursor: pointer;
 		border-radius: 6px;
 		text-align: left;
 		transition: background 0.1s ease;
+	}
+
+	@media (min-width: 640px) {
+		.search-result {
+			gap: 10px;
+			padding: 8px 10px;
+		}
 	}
 
 	.search-result:hover,
@@ -285,12 +301,19 @@
 	.result-command,
 	.result-title {
 		font-family: var(--font-mono);
-		font-size: 12px;
+		font-size: 11px;
 		font-weight: 500;
 		color: var(--color-text);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
+	}
+
+	@media (min-width: 640px) {
+		.result-command,
+		.result-title {
+			font-size: 12px;
+		}
 	}
 
 	.search-result.selected .result-command,
@@ -299,8 +322,8 @@
 	}
 
 	.result-description {
-		font-size: 11px;
-		line-height: 1.35;
+		font-size: 10px;
+		line-height: 1.3;
 		color: var(--color-text-muted);
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
@@ -309,11 +332,24 @@
 		overflow: hidden;
 	}
 
+	@media (min-width: 640px) {
+		.result-description {
+			font-size: 11px;
+			line-height: 1.35;
+		}
+	}
+
 	.result-part {
-		font-size: 10px;
+		font-size: 9px;
 		color: var(--color-text-muted);
 		white-space: nowrap;
 		flex-shrink: 0;
 		padding-top: 2px;
+	}
+
+	@media (min-width: 640px) {
+		.result-part {
+			font-size: 10px;
+		}
 	}
 </style>
