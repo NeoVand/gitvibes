@@ -4,7 +4,10 @@ import {
 	buildMergeConflictRepo,
 	buildMergeRebaseRepo,
 	buildSyncRemoteRepo,
-	buildUndoRepo
+	buildUndoRepo,
+	buildWrongBranchRepo,
+	buildAccidentalStageRepo,
+	buildForcePushRepo
 } from './seed-builders';
 
 export interface PlaygroundScenario {
@@ -156,6 +159,49 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		seedFn: buildMergeConflictRepo
 	},
 	{
+		id: 'wrong-branch',
+		title: 'Oops — committed to main instead of a branch',
+		description: 'You accidentally committed a payment feature directly to main instead of creating a feature branch first. The commit is local (not pushed). Move it to the right branch.',
+		hint: 'Create the feature branch (it will include your commit), then switch to main and git reset --hard HEAD~1 to remove it from main. Switch back to the feature branch to verify.',
+		suggestedCommands: [
+			'git log --oneline',
+			'git branch feature/payments',
+			'git reset --hard HEAD~1',
+			'git switch feature/payments',
+			'git log --oneline'
+		],
+		seedFn: buildWrongBranchRepo
+	},
+	{
+		id: 'accidental-stage',
+		title: 'Staged secrets and debug files — unstage them',
+		description: 'You ran git add . too quickly and staged everything — including .env with credentials and a debug file with pdb. Unstage the dangerous files before committing.',
+		hint: 'Use git status to see what is staged. Use git restore --staged <file> to unstage files you don\'t want to commit. Use git diff --staged to verify what remains.',
+		suggestedCommands: [
+			'git status',
+			'git diff --staged',
+			'cat .env',
+			'git restore --staged .env',
+			'git restore --staged src/debug.py',
+			'git status',
+			'git commit -m "feat: Add server runner and new feature"'
+		],
+		seedFn: buildAccidentalStageRepo
+	},
+	{
+		id: 'force-push',
+		title: 'Reset and force push — rewrite pushed history',
+		description: 'You pushed two bad commits to your feature branch. Nobody else is working on it. Reset to before the bad commits and force push to clean up the remote.',
+		hint: 'Use git log to find the good commit, git reset --hard to go back, then git push --force (or --force-with-lease for safety). Never do this on shared branches like main!',
+		suggestedCommands: [
+			'git log --oneline',
+			'git reset --hard HEAD~2',
+			'git log --oneline',
+			'git push --force origin feature/cleanup'
+		],
+		seedFn: buildForcePushRepo
+	},
+	{
 		id: 'clean-slate',
 		title: 'Sandbox — start from scratch',
 		description: 'An empty repo for free experimentation. Create files, branches, commits — try anything. Type help to see all supported commands.',
@@ -197,7 +243,10 @@ export const lessonScenarioIds = [
 	'undo',
 	'stash',
 	'rebase-merge',
-	'conflicts'
+	'conflicts',
+	'wrong-branch',
+	'accidental-stage',
+	'force-push'
 ] as const;
 
 export type LessonScenarioId = (typeof lessonScenarioIds)[number];
@@ -207,10 +256,10 @@ export function isLessonScenario(id: string): id is LessonScenarioId {
 }
 
 export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
-  git status | git diff | git log [--oneline] [--all]
+  git status | git diff [--staged] | git log [--oneline] [--all]
   git add <file> | git add . | git add -p [--patch]
   git commit -m "msg" | git commit --amend [--no-edit] [-m "msg"]
-  git branch | git switch [-c] <branch> | git checkout [-b] <branch>
+  git branch [-d] | git switch [-c] <branch> | git checkout [-b] <branch>
   git restore <file> | git restore --staged <file>
   git reset --soft|--mixed|--hard HEAD~N
   git merge <branch> | git rebase <branch>
@@ -218,6 +267,8 @@ export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
   git fetch origin | git pull origin <branch> | git push [-u] origin [branch]
   git remote -v | git revert <commit>
   echo "content" > file  (edit files / resolve conflicts)
+  cat <file>  (view file contents)
+  ls  (list all files in working directory)
   y | n | q | a  (responses during git add -p)
 
 Other: clear, help`;

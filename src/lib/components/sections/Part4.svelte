@@ -363,6 +363,14 @@ git push                   # Push the revert`}
 					</p>
 				</div>
 			</div>
+			<Callout type="caution">
+				{#snippet children()}
+					<strong>What does the error look like?</strong> When you try to push after rewriting history, Git will reject it with:
+					<code class="mt-1 block rounded px-2 py-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">! [rejected] (non-fast-forward) — hint: Updates were rejected because the tip of your current branch is behind</code>
+					This is Git protecting you. Try the <strong>"Reset and force push"</strong> playground scenario to see this error and practice the fix.
+				{/snippet}
+			</Callout>
+
 			<VibeBox prompts={[
 				"I amended a commit I already pushed and now I can't push — help me fix it safely",
 				"What's the safest way to force push after rewriting history on my branch?"

@@ -89,6 +89,13 @@
 				{/snippet}
 			</Callout>
 
+			<Callout type="warning">
+				{#snippet children()}
+					<strong>Common mistake — committed to main by accident?</strong> Don't panic. If you haven't pushed yet, the fix is simple:
+					create the feature branch (your commits come with it), then switch back to main and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset --hard HEAD~1</code> to remove the commit from main. Try this in the <strong>"Oops — committed to main"</strong> playground scenario.
+				{/snippet}
+			</Callout>
+
 			<VibeBox prompts={[
 				"Create a new branch called feature/user-auth and switch to it",
 				"I need to start working on the payment integration — set up a branch for me"

@@ -270,6 +270,8 @@ async function runFetch(engine: GitEngine, remote = DEFAULT_REMOTE): Promise<Com
 async function runPush(engine: GitEngine, args: string): Promise<CommandResult> {
 	const { fs, dir } = engine;
 	const setUpstream = args.includes('-u');
+	const isForce = args.includes('--force') || args.includes('-f');
+	const isForceWithLease = args.includes('--force-with-lease');
 	const parts = args.split(/\s+/).filter((p) => !p.startsWith('-'));
 	const remote = parts[0] ?? DEFAULT_REMOTE;
 	let branch = parts[1] ?? (await git.currentBranch({ fs, dir }));
@@ -277,14 +279,28 @@ async function runPush(engine: GitEngine, args: string): Promise<CommandResult> 
 	if (!branch) return { output: 'fatal: no branch checked out', error: true };
 
 	const oid = await git.resolveRef({ fs, dir, ref: `refs/heads/${branch}` });
+	const existingRemoteOid = engine.remote.getBranch(branch);
+
+	if (existingRemoteOid && !isForce && !isForceWithLease) {
+		const localLog = await git.log({ fs, dir, ref: branch, depth: 50 });
+		const localOids = new Set(localLog.map((e) => e.oid));
+		if (!localOids.has(existingRemoteOid)) {
+			return {
+				output: `To ${DEFAULT_REMOTE_URL}\n ! [rejected]        ${branch} -> ${branch} (non-fast-forward)\nerror: failed to push some refs\nhint: Updates were rejected because the tip of your current branch is behind\nhint: its remote counterpart. Use --force or --force-with-lease to override.`,
+				error: true
+			};
+		}
+	}
+
 	engine.remote.setBranch(branch, oid);
 	await writeRemoteTrackingRef(engine, remote, branch, oid);
 	if (setUpstream) engine.remote.upstream = branch;
 
-	const isNew = !parts[1] || setUpstream;
+	const forceLabel = isForceWithLease ? ' (force-with-lease)' : isForce ? ' (forced update)' : '';
+	const isNew = !existingRemoteOid;
 	return {
 		output: `To ${DEFAULT_REMOTE_URL}
-${isNew ? ` * [new branch]      ${branch} -> ${branch}` : `   ${shortOid(oid)}..${shortOid(oid)}  ${branch} -> ${branch}`}${setUpstream ? `\nBranch '${branch}' set up to track '${remote}/${branch}'.` : ''}`
+${isNew ? ` * [new branch]      ${branch} -> ${branch}` : ` + ${existingRemoteOid ? shortOid(existingRemoteOid) : '0000000'}...${shortOid(oid)}  ${branch} -> ${branch}${forceLabel}`}${setUpstream ? `\nBranch '${branch}' set up to track '${remote}/${branch}'.` : ''}`
 	};
 }
 
@@ -329,6 +345,69 @@ async function runRevert(engine: GitEngine, ref: string): Promise<CommandResult>
 	return { output: `[${branch} ${shortOid(newOid)}] ${message}` };
 }
 
+async function runCat(engine: GitEngine, filepath: string): Promise<CommandResult> {
+	const content = await engine.readFile(filepath);
+	if (content === null) return { output: `cat: ${filepath}: No such file or directory`, error: true };
+	return { output: content };
+}
+
+async function formatDiff(engine: GitEngine, staged: boolean): Promise<string> {
+	const { fs, dir } = engine;
+	const matrix = await git.statusMatrix({ fs, dir });
+	const lines: string[] = [];
+
+	for (const [filepath, head, workdir, stage] of matrix) {
+		const headNum = head as number;
+		const workdirNum = workdir as number;
+		const stageNum = stage as number;
+
+		if (staged) {
+			if (stageNum !== 2) continue;
+		} else {
+			const isUnstaged = headNum === 1 && workdirNum === 2 && stageNum === 1;
+			const isNew = headNum === 0 && workdirNum === 2 && stageNum === 0;
+			if (!isUnstaged && !isNew) continue;
+		}
+
+		const currentContent = await engine.readFile(filepath);
+		let previousContent: string | null = null;
+
+		if (headNum === 1) {
+			previousContent = await readFileAtCommit(engine, await git.resolveRef({ fs, dir, ref: 'HEAD' }), filepath);
+		}
+
+		if (currentContent === null) continue;
+
+		lines.push(`diff --git a/${filepath} b/${filepath}`);
+		if (previousContent === null) {
+			lines.push(`new file mode 100644`);
+			lines.push(`--- /dev/null`);
+			lines.push(`+++ b/${filepath}`);
+			const contentLines = currentContent.split('\n');
+			for (const line of contentLines) {
+				if (line) lines.push(`+${line}`);
+			}
+		} else {
+			lines.push(`--- a/${filepath}`);
+			lines.push(`+++ b/${filepath}`);
+			const oldLines = previousContent.split('\n');
+			const newLines = currentContent.split('\n');
+			for (const line of oldLines) {
+				if (line && !newLines.includes(line)) lines.push(`-${line}`);
+			}
+			for (const line of newLines) {
+				if (line && !oldLines.includes(line)) lines.push(`+${line}`);
+			}
+			for (const line of newLines) {
+				if (line && oldLines.includes(line)) lines.push(` ${line}`);
+			}
+		}
+		lines.push('');
+	}
+
+	return lines.join('\n') || (staged ? 'No staged changes.' : '');
+}
+
 export async function runGitCommand(engine: GitEngine, rawInput: string): Promise<CommandResult> {
 	const input = rawInput.trim();
 	if (!input) return { output: '' };
@@ -338,6 +417,17 @@ export async function runGitCommand(engine: GitEngine, rawInput: string): Promis
 	}
 
 	if (input === 'clear') return { output: '__CLEAR__' };
+
+	const catMatch = input.match(/^cat\s+(.+)$/);
+	if (catMatch) {
+		return runCat(engine, catMatch[1].trim());
+	}
+
+	const lsMatch = input.match(/^ls\s*(.*)$/);
+	if (lsMatch) {
+		const files = await engine.listWorkingFiles();
+		return { output: files.join('\n') || '(empty directory)' };
+	}
 
 	const shellWrite = input.match(/^(?:echo|printf)\s+(.+?)\s*>\s*(.+)$/);
 	if (shellWrite) {
@@ -430,6 +520,20 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			case 'branch': {
 				const branches = await git.listBranches({ fs: engine.fs, dir: engine.dir });
 				const current = await git.currentBranch({ fs: engine.fs, dir: engine.dir });
+
+				if (rest.includes('-d') || rest.includes('-D') || rest.includes('--delete')) {
+					const branchName = rest.filter((a) => !a.startsWith('-')).pop();
+					if (!branchName) return { output: 'fatal: branch name required', error: true };
+					if (branchName === current) {
+						return { output: `error: Cannot delete branch '${branchName}' checked out at '${engine.dir}'`, error: true };
+					}
+					if (!branches.includes(branchName)) {
+						return { output: `error: branch '${branchName}' not found.`, error: true };
+					}
+					await git.deleteBranch({ fs: engine.fs, dir: engine.dir, ref: branchName });
+					return { output: `Deleted branch ${branchName}.` };
+				}
+
 				if (rest.length === 0 || rest.includes('-a')) {
 					const remoteLines = [...engine.remote.branches.keys()].map((b) => `  remotes/origin/${b}`);
 					return {
@@ -515,10 +619,8 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			}
 
 			case 'diff': {
-				const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
-				const changed = matrix.filter(([, head, workdir]) => head !== workdir);
-				if (changed.length === 0) return { output: '' };
-				return { output: changed.map(([filepath]) => `modified: ${filepath}`).join('\n') };
+				const staged = rest.includes('--staged') || rest.includes('--cached');
+				return { output: await formatDiff(engine, staged) };
 			}
 
 			default:

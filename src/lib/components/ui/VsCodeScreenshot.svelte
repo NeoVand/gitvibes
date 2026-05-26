@@ -38,17 +38,20 @@
 		</button>
 	</div>
 	<div class="flex items-center justify-center px-2 pb-2">
-		<img
-			src={imageUrl}
-			{alt}
-			class="w-full cursor-zoom-in rounded"
-			loading="lazy"
-			style="max-height: 500px; object-fit: contain;"
+		<button
+			type="button"
 			onclick={() => (open = true)}
-			role="button"
-			tabindex="0"
-			onkeydown={(e) => { if (e.key === 'Enter') open = true; }}
-		/>
+			class="w-full cursor-zoom-in border-none bg-transparent p-0"
+			aria-label={`Expand: ${alt}`}
+		>
+			<img
+				src={imageUrl}
+				{alt}
+				class="w-full rounded"
+				loading="lazy"
+				style="max-height: 500px; object-fit: contain;"
+			/>
+		</button>
 	</div>
 	{#if caption}
 		<figcaption

@@ -103,3 +103,52 @@ export async function buildBranchingRepo(engine: GitEngine): Promise<void> {
 	await engine.writeFile('src/main.py', 'def main():\n    run_ai_pipeline()\n');
 	await engine.writeFile('src/utils.py', 'def helper():\n    return 42\n');
 }
+
+/** Committed to wrong branch — need to move commit to a feature branch */
+export async function buildWrongBranchRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# App\n' }]);
+	await engine.commitFiles('feat: Add user model', [{ path: 'src/models.py', content: 'class User:\n    pass\n' }]);
+
+	const mainOid = await engine.getCommitOid('main', 0);
+	engine.remote.setBranch('main', mainOid);
+	await writeRemoteTrackingRef(engine, 'origin', 'main', mainOid);
+
+	await engine.commitFiles('feat: Add payment processing', [
+		{ path: 'src/payments.py', content: 'def process_payment():\n    return True\n' },
+		{ path: 'src/billing.py', content: 'def create_invoice():\n    pass\n' }
+	]);
+}
+
+/** Accidentally staged files that shouldn't be committed */
+export async function buildAccidentalStageRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'README.md', content: '# My App\n' },
+		{ path: 'src/app.py', content: 'def main():\n    pass\n' },
+		{ path: '.env', content: 'SECRET_KEY=old_key\n' }
+	]);
+
+	await engine.writeFile('src/app.py', 'def main():\n    run_server()\n');
+	await engine.writeFile('.env', 'SECRET_KEY=supersecret123\nDB_PASSWORD=admin\n');
+	await engine.writeFile('src/debug.py', 'import pdb; pdb.set_trace()\n');
+	await engine.writeFile('src/feature.py', 'def new_feature():\n    return True\n');
+
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: 'src/app.py' });
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: '.env' });
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: 'src/debug.py' });
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: 'src/feature.py' });
+}
+
+/** Diverged from remote — need to force push safely */
+export async function buildForcePushRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# App\n' }]);
+	await engine.commitFiles('feat: Add core logic', [{ path: 'src/core.py', content: 'v1\n' }]);
+
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/cleanup', checkout: true });
+	await engine.commitFiles('bad: AI broke everything', [{ path: 'src/core.py', content: 'broken\n' }]);
+	await engine.commitFiles('wip: trying to fix', [{ path: 'src/core.py', content: 'still broken\n' }]);
+
+	const pushedOid = await engine.getCommitOid('feature/cleanup', 0);
+	engine.remote.setBranch('feature/cleanup', pushedOid);
+	engine.remote.upstream = 'feature/cleanup';
+	await writeRemoteTrackingRef(engine, 'origin', 'feature/cleanup', pushedOid);
+}

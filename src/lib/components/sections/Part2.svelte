@@ -218,6 +218,15 @@
 				"Stage only the files related to the authentication feature",
 				"Review the diff of each changed file and stage the ones that look correct"
 			]} />
+
+			<Callout type="warning">
+				{#snippet children()}
+					<strong>Accidentally staged everything with <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code>?</strong> Use
+					<code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git restore --staged &lt;file&gt;</code> to unstage specific files
+					before committing. This is especially critical if you accidentally staged <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code> files
+					with secrets or debug files. Try the <strong>"Staged secrets and debug files"</strong> playground scenario to practice this.
+				{/snippet}
+			</Callout>
 		</div>
 
 		<!-- 2.3 Committing -->
