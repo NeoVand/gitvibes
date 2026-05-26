@@ -4,6 +4,12 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 
+	let {
+		onOpenPlayground
+	}: {
+		onOpenPlayground?: () => void;
+	} = $props();
+
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
 </script>
 
@@ -28,11 +34,12 @@
 				<Gamepad2 size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-important);" />
 				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
 					<strong style="color: var(--color-text);">Try it now:</strong> Open the
-					<a
-						href="{base}/playground"
-						class="font-medium underline underline-offset-2"
+					<button
+						type="button"
+						onclick={onOpenPlayground}
+						class="cursor-pointer font-medium underline underline-offset-2"
 						style="color: var(--color-important);"
-					>Git Playground</a>
+					>Git Playground</button>
 					— run real Git commands in your browser with live commit graphs. No install required.
 				</p>
 			</div>

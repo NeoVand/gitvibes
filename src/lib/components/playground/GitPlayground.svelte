@@ -21,11 +21,13 @@
 	let {
 		scenarioId = 'core-loop',
 		embedded = false,
+		panel = false,
 		showScenarioPicker = !embedded,
 		id = 'playground'
 	}: {
 		scenarioId?: string;
 		embedded?: boolean;
+		panel?: boolean;
 		showScenarioPicker?: boolean;
 		id?: string;
 	} = $props();
@@ -158,7 +160,14 @@
 	}
 </script>
 
-<div class="overflow-hidden rounded-xl" style="background: var(--color-bg-secondary);">
+<div
+	class="overflow-hidden rounded-xl"
+	class:flex-1={panel}
+	class:flex={panel}
+	class:flex-col={panel}
+	class:min-h-0={panel}
+	style="background: var(--color-bg-secondary);"
+>
 	<!-- Toolbar -->
 	<div
 		class="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
@@ -208,7 +217,11 @@
 		<span>{scenario.hint}</span>
 	</div>
 
-	<div class="grid grid-cols-1 lg:grid-cols-2" style="min-height: {embedded ? '340px' : '420px'};">
+	<div
+		class="grid grid-cols-1 flex-1 min-h-0"
+		class:lg:grid-cols-2={!panel}
+		style="min-height: {panel ? '0' : embedded ? '340px' : '420px'};"
+	>
 		<!-- Terminal -->
 		<div class="flex flex-col" style="border-right: 1px solid var(--color-border);">
 			<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-terminal-bg);">
@@ -224,7 +237,7 @@
 			<div
 				bind:this={terminalEl}
 				class="flex-1 overflow-y-auto p-4"
-				style="background: var(--color-terminal-bg); min-height: {embedded ? '220px' : '280px'}; max-height: {embedded ? '300px' : '360px'};"
+				style="background: var(--color-terminal-bg); min-height: {panel ? '180px' : embedded ? '220px' : '280px'}; max-height: {panel ? 'none' : embedded ? '300px' : '360px'};"
 			>
 				{#each history as line, i (i)}
 					{#if line.type === 'input'}

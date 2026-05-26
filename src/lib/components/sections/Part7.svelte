@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { BookOpen, Workflow, Table, Sparkles, MessageSquare } from 'lucide-svelte';
-	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+
+	let {
+		onOpenPlayground
+	}: {
+		onOpenPlayground?: () => void;
+	} = $props();
 </script>
 
 <section id="part-7" class="border-t py-16" style="border-color: var(--color-border-light);">
@@ -47,7 +52,12 @@
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sandbox</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
 							Create an isolated branch — or practice every step in the
-							<a href="{base}/playground" class="underline underline-offset-2" style="color: var(--color-primary);">Git Playground</a>
+							<button
+								type="button"
+								onclick={onOpenPlayground}
+								class="cursor-pointer underline underline-offset-2"
+								style="color: var(--color-primary);"
+							>Git Playground</button>
 							(Watch guided demos in each lesson, or Try it yourself with real in-browser Git).
 							<code style="font-family: var(--font-mono);">git switch -c ai-experiment/new-feature</code>
 						</p>
@@ -191,7 +201,14 @@
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Practice all commands</td>
-							<td class="px-3 py-2"><a href="{base}/playground" class="underline underline-offset-2" style="color: var(--color-primary);">Git Playground</a></td>
+							<td class="px-3 py-2">
+								<button
+									type="button"
+									onclick={onOpenPlayground}
+									class="cursor-pointer underline underline-offset-2"
+									style="color: var(--color-primary);"
+								>Git Playground</button>
+							</td>
 							<td class="px-3 py-2">Try it yourself tabs in Parts 2–5</td>
 						</tr>
 					</tbody>

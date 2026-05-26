@@ -1,17 +1,18 @@
 <script lang="ts">
 	import { GitBranch, Sun, Moon, ScrollText, Github, MoreVertical, Gamepad2 } from 'lucide-svelte';
-	import { base } from '$app/paths';
 	import Search from './Search.svelte';
 
 	let {
 		theme = 'system',
 		onToggleTheme,
 		onToggleCheatSheet,
+		onTogglePlayground,
 		onNavigate
 	}: {
 		theme: string;
 		onToggleTheme: () => void;
 		onToggleCheatSheet: () => void;
+		onTogglePlayground: () => void;
 		onNavigate?: (id: string) => void;
 	} = $props();
 
@@ -60,15 +61,15 @@
 
 	<!-- Desktop: show all icons -->
 	<div class="hidden flex-shrink-0 items-center gap-0.5 pr-4 sm:flex">
-		<a
-			href="{base}/playground"
-			class="flex h-8 items-center gap-1.5 rounded-lg px-2.5 transition-opacity hover:opacity-70"
+		<button
+			onclick={onTogglePlayground}
+			class="flex h-8 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 transition-opacity hover:opacity-70"
 			style="color: var(--color-text-muted);"
-			aria-label="Git Playground"
+			aria-label="Open Git Playground"
 		>
 			<Gamepad2 size={16} />
 			<span class="text-xs font-medium">Playground</span>
-		</a>
+		</button>
 
 		<button
 			onclick={onToggleCheatSheet}
@@ -120,15 +121,14 @@
 				class="absolute right-0 top-full mt-1 flex items-center gap-0.5 rounded-lg p-1 shadow-lg"
 				style="background: var(--color-surface); border: 1px solid var(--color-border); z-index: 100;"
 			>
-				<a
-					href="{base}/playground"
-					class="flex h-8 items-center gap-1 rounded-md px-2 transition-opacity hover:opacity-70"
+				<button
+					onclick={() => { onTogglePlayground(); menuOpen = false; }}
+					class="flex h-8 cursor-pointer items-center gap-1 rounded-md px-2 transition-opacity hover:opacity-70"
 					style="color: var(--color-text-muted);"
-					aria-label="Git Playground"
-					onclick={() => { menuOpen = false; }}
+					aria-label="Open Git Playground"
 				>
 					<Gamepad2 size={16} />
-				</a>
+				</button>
 
 				<button
 					onclick={() => { onToggleCheatSheet(); menuOpen = false; }}

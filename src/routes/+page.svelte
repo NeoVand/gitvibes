@@ -4,6 +4,7 @@
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';
+	import PlaygroundPanel from '$lib/components/layout/PlaygroundPanel.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import Part1 from '$lib/components/sections/Part1.svelte';
 	import Part2 from '$lib/components/sections/Part2.svelte';
@@ -23,6 +24,7 @@
 
 	let sidebarOpen = $state(false);
 	let cheatSheetOpen = $state(false);
+	let playgroundOpen = $state(false);
 	let activeSection = $state('hero');
 	let theme = $state<ThemePreference>('system');
 	let navClickActive = false;
@@ -95,6 +97,13 @@
 			sidebarOpen = true;
 		}
 
+		const params = new URLSearchParams(window.location.search);
+		if (params.has('playground')) {
+			playgroundOpen = true;
+			const url = `${window.location.pathname}${window.location.hash}`;
+			history.replaceState(null, '', url);
+		}
+
 		const clearNavClick = () => {
 			navClickActive = false;
 		};
@@ -119,7 +128,22 @@
 	}
 
 	function toggleCheatSheet() {
+		if (!cheatSheetOpen) {
+			playgroundOpen = false;
+		}
 		cheatSheetOpen = !cheatSheetOpen;
+	}
+
+	function togglePlayground() {
+		if (!playgroundOpen) {
+			cheatSheetOpen = false;
+		}
+		playgroundOpen = !playgroundOpen;
+	}
+
+	function openPlayground() {
+		cheatSheetOpen = false;
+		playgroundOpen = true;
 	}
 </script>
 
@@ -135,23 +159,25 @@
 	theme={getEffectiveThemeLocal()}
 	onToggleTheme={toggleTheme}
 	onToggleCheatSheet={toggleCheatSheet}
+	onTogglePlayground={togglePlayground}
 	onNavigate={handleNavigate}
 />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
+<PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} />
 
 <main
 	class="main-content transition-[margin-left] duration-200 ease-out"
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)'};"
 >
-	<Hero />
+	<Hero onOpenPlayground={openPlayground} />
 	<Part1 />
 	<Part2 />
 	<Part3 />
 	<Part4 />
 	<Part5 />
 	<Part6 />
-	<Part7 />
+	<Part7 onOpenPlayground={openPlayground} />
 
 	<footer
 		class="py-10 text-center"
