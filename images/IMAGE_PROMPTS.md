@@ -22,6 +22,28 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 >
 > Avoid symmetry, clutter, excessive particles, sparkle effects, or busy infographic layouts. Few but meaningful elements. The design should feel calm, confident, spacious, and cinematic. Subtle aged print feel, light film grain, soft worn edges. 16:9 aspect ratio.
 
+### section-intro-what — What Is Git?
+
+> Create a cinematic editorial poster explaining **Git as version control** — the foundation before any commands. Not a tutorial diagram; an atmospheric "why this exists" poster for vibe coders.
+>
+> CONCEPT: Asymmetrical composition. Left third: large weathered serif **"What Is Git?"** with aged print texture. Below it in muted monospace: **"Unlimited undo · for your whole project"**
+>
+> Right two-thirds: a vertical **timeline of snapshots** — five or six minimal commit nodes stacked along a thin luminous spine, like frames on a film strip or save points in a game. Each node is a small worn card with a faint timestamp glow. The bottom node glows brightest (present); older nodes fade upward into the past. A single graceful rewind arc curves from the present node back toward an earlier one — implying time travel, not a labeled arrow.
+>
+> Four quiet annotation chips along the bottom edge (small, legible, not crowded):
+> - **Review** — inspect before it sticks
+> - **Undo** — recover from any mistake
+> - **Branch** — experiment safely
+> - **Collaborate** — share through structured review
+>
+> Optional subtle detail: a few abstract code fragments near the present node — some glowing clean (good AI output), one fragment drifting off-axis (bad suggestion caught before commit). Implies AI velocity without robot mascots or brain icons.
+>
+> MOOD: Foundational calm — Git as memory and accountability, not a scary enterprise tool. Premium developer-tooling campaign poster. Confident, spacious, slightly aged.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, faint paper texture, worn typography edges. Timeline spine and active node glow in selective indigo and emerald. Rewind arc in soft amber. 90% of the image dark and desaturated; localized color energy only.
+>
+> AVOID: Git logo, Linus Torvalds portrait, labeled flowcharts, terminal screenshots, symmetric layouts, brain/robot icons, the phrase "version control system" spelled out as tiny unreadable body copy, or more than four bottom chips. The timeline + rewind metaphor should carry the idea. 16:9 aspect ratio.
+
 ---
 
 ## Part 1: Enterprise Onboarding

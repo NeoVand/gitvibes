@@ -249,7 +249,7 @@
 
 {#snippet suggestedCommands()}
 	<div class="flex flex-wrap gap-1.5">
-		{#each scenario.suggestedCommands as command (command)}
+		{#each scenario.suggestedCommands as command, i (i)}
 			<button type="button" onclick={() => runSuggested(command)} class="pg-chip">
 				{command}
 				<ChevronRight size={11} />
@@ -426,17 +426,17 @@
 		<div class="px-5 py-3" style="border-top: 1px solid var(--color-border);">
 			<p class="mb-2 text-xs font-medium" style="color: var(--color-text-muted);">Try these commands</p>
 			<div class="flex flex-wrap gap-2">
-				{#each scenario.suggestedCommands as command (command)}
-					<button
-						type="button"
-						onclick={() => runSuggested(command)}
-						class="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-opacity hover:opacity-80"
-						style="background: var(--color-surface); color: var(--color-text-secondary); border: 1px solid var(--color-border); font-family: var(--font-mono);"
-					>
-						{command}
-						<ChevronRight size={12} />
-					</button>
-				{/each}
+		{#each scenario.suggestedCommands as command, i (i)}
+				<button
+					type="button"
+					onclick={() => runSuggested(command)}
+					class="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-opacity hover:opacity-80"
+					style="background: var(--color-surface); color: var(--color-text-secondary); border: 1px solid var(--color-border); font-family: var(--font-mono);"
+				>
+					{command}
+					<ChevronRight size={12} />
+				</button>
+			{/each}
 			</div>
 		</div>
 	</div>

@@ -61,12 +61,28 @@
 			<p class="px-5 pb-3 text-center text-[11px]" style="color: var(--color-text-muted);">
 				Hover the sandbox and use ← → arrow keys to step through
 			</p>
-		{:else}
-			{#await import('$lib/components/playground/GitPlayground.svelte') then { default: GitPlayground }}
-				<div class="[&>div]:rounded-none">
-					<GitPlayground {scenarioId} embedded {id} showScenarioPicker={false} />
-				</div>
-			{/await}
+	{:else}
+		{#await import('$lib/components/playground/GitPlayground.svelte')}
+			<div class="flex items-center justify-center p-8" style="color: var(--color-text-muted);">
+				<p class="text-sm">Loading playground...</p>
+			</div>
+		{:then { default: GitPlayground }}
+			<div class="[&>div]:rounded-none">
+				<GitPlayground {scenarioId} embedded {id} showScenarioPicker={false} />
+			</div>
+		{:catch error}
+			<div class="p-6 text-center">
+				<p class="text-sm" style="color: var(--color-warning);">Failed to load playground: {error?.message ?? 'Unknown error'}</p>
+				<button
+					type="button"
+					onclick={() => { tab = 'watch'; requestAnimationFrame(() => { tab = 'try'; }); }}
+					class="mt-2 cursor-pointer rounded-md px-3 py-1.5 text-xs font-medium"
+					style="background: var(--color-bg-tertiary); color: var(--color-text-secondary); border: 1px solid var(--color-border);"
+				>
+					Retry
+				</button>
+			</div>
+		{/await}
 		{/if}
 	</div>
 </div>
