@@ -100,6 +100,15 @@
 		<div id="section-3-2" class="mb-14">
 			<SectionHeader level="section" icon={RefreshCcw} title="3.2 &quot;My Teammate Pushed Updates&quot; (Syncing)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<img
+					src="{base}/images/fetch-pull-push.png"
+					alt="fetch · pull · push — syncing local and remote repositories"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
+
 			<Callout type="note">
 				{#snippet children()}
 					<strong>The Problem:</strong> You've been working on your feature branch for a few days. Your
@@ -199,6 +208,15 @@ git merge origin/main   # Merge the updates into your branch`}
 		<!-- 3.3 Pull Requests -->
 		<div id="section-3-3" class="mb-8">
 			<SectionHeader level="section" icon={GitPullRequest} title="3.3 &quot;My AI-Generated Feature is Ready&quot; (The Pull Request)" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<img
+					src="{base}/images/pull-request.png"
+					alt="Pull request — the quality gate before code merges into main"
+					class="w-full rounded-xl"
+					loading="lazy"
+				/>
+			</div>
 
 			<Callout type="note">
 				{#snippet children()}

@@ -1,17 +1,6 @@
 <script lang="ts">
-	import {
-		Laptop,
-		RefreshCw,
-		GitBranch,
-		Undo2,
-		Layers,
-		Monitor,
-		BookOpen,
-		ChevronRight,
-		Rocket,
-		PanelLeftClose,
-		PanelLeft
-	} from 'lucide-svelte';
+	import { ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-svelte';
+	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
 
 	let {
 		open = false,
@@ -21,100 +10,7 @@
 	}: { open: boolean; activeSection: string; onToggle: () => void; onNavigate: (id: string) => void } =
 		$props();
 
-	interface SectionItem {
-		id: string;
-		label: string;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		icon: any;
-		children?: { id: string; label: string }[];
-	}
-
-	const sections: SectionItem[] = [
-		{
-			id: 'hero',
-			label: 'Introduction',
-			icon: Rocket,
-			children: [
-				{ id: 'section-intro-what', label: 'What Is Git?' },
-				{ id: 'section-intro-install', label: 'Installing Git' },
-				{ id: 'section-intro-repo', label: 'What Is a Repository?' }
-			]
-		},
-		{
-			id: 'part-1',
-			label: 'Enterprise Onboarding',
-			icon: Laptop,
-			children: [
-				{ id: 'section-1-1', label: 'Git Configuration' },
-				{ id: 'section-1-2', label: 'Authentication' },
-				{ id: 'section-1-3', label: 'Cloning a Repo' }
-			]
-		},
-		{
-			id: 'part-2',
-			label: 'Core Safety Loop',
-			icon: RefreshCw,
-			children: [
-				{ id: 'section-2-1', label: 'git status' },
-				{ id: 'section-2-2', label: 'Staging Changes' },
-				{ id: 'section-2-3', label: 'Committing' }
-			]
-		},
-		{
-			id: 'part-3',
-			label: 'Branching & PRs',
-			icon: GitBranch,
-			children: [
-				{ id: 'section-3-1', label: 'Creating Branches' },
-				{ id: 'section-3-2', label: 'Syncing Changes' },
-				{ id: 'section-3-3', label: 'Pull Requests' }
-			]
-		},
-		{
-			id: 'part-4',
-			label: 'Undo Toolkit',
-			icon: Undo2,
-			children: [
-				{ id: 'section-4-1', label: 'Discard Local' },
-				{ id: 'section-4-2', label: 'Unstage Files' },
-				{ id: 'section-4-3', label: 'Amend Commits' },
-				{ id: 'section-4-4', label: 'Reset (Local)' },
-				{ id: 'section-4-5', label: 'Revert (Public)' },
-				{ id: 'section-4-6', label: 'Force Push' },
-				{ id: 'section-4-7', label: 'Recovery Matrix' }
-			]
-		},
-		{
-			id: 'part-5',
-			label: 'Advanced Workflows',
-			icon: Layers,
-			children: [
-				{ id: 'section-5-1', label: 'Git Stash' },
-				{ id: 'section-5-2', label: 'Rebase vs Merge' },
-				{ id: 'section-5-3', label: 'Merge Conflicts' }
-			]
-		},
-		{
-			id: 'part-6',
-			label: 'VS Code Cockpit',
-			icon: Monitor,
-			children: [
-				{ id: 'section-6-1', label: 'Source Control View' },
-				{ id: 'section-6-2', label: 'Timeline & GitLens' },
-				{ id: 'section-6-3', label: 'Merge Editor' }
-			]
-		},
-		{
-			id: 'part-7',
-			label: 'Conclusion',
-			icon: BookOpen,
-			children: [
-				{ id: 'section-7-1', label: 'AI-First Workflow' },
-				{ id: 'section-7-2', label: 'Quick Reference' },
-				{ id: 'section-7-3', label: 'Teaching AI Git' }
-			]
-		}
-	];
+	const sections = sidebarNav;
 
 	let expandedSections = $state<Set<string>>(new Set());
 	let flyoutSection = $state<string | null>(null);
@@ -173,6 +69,11 @@
 	});
 </script>
 
+{#snippet navIcon(item: NavItem, active: boolean, size: number)}
+	{@const Icon = item.icon}
+	<Icon size={size} strokeWidth={active ? 2.5 : 2} />
+{/snippet}
+
 <!-- Backdrop on mobile when expanded -->
 {#if open}
 	<button
@@ -198,9 +99,7 @@
 	class:translate-x-0={open}
 	class:-translate-x-full={!open}
 >
-	<div
-		class="flex items-center justify-between px-4 py-2"
-	>
+	<div class="flex items-center justify-between px-4 py-2">
 		<span
 			class="text-xs font-semibold tracking-wider uppercase"
 			style="color: var(--color-text-muted); letter-spacing: 0.08em;"
@@ -218,7 +117,7 @@
 	</div>
 
 	<nav class="flex-1 overflow-y-auto px-3 py-3">
-		{#each sections as section}
+		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
 			<div class="mb-0.5">
 				<div
@@ -237,7 +136,7 @@
 						class="flex flex-1 cursor-pointer items-center gap-2 text-left"
 						style="color: inherit;"
 					>
-						<svelte:component this={section.icon} size={14} strokeWidth={active ? 2.5 : 2} />
+						{@render navIcon(section, active, 14)}
 						<span class="flex-1">{section.label}</span>
 					</button>
 					{#if section.children}
@@ -257,16 +156,18 @@
 
 				{#if section.children && expandedSections.has(section.id)}
 					<div
-						class="mt-0.5 ml-[22px] space-y-px pl-2.5"
+						class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5"
+						style="border-color: var(--color-border);"
 					>
-						{#each section.children as child}
+						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => scrollTo(child.id)}
-								class="block w-full cursor-pointer px-2 py-[5px] text-left text-xs transition-colors"
+								class="flex w-full cursor-pointer items-center gap-2 px-2 py-[5px] text-left text-xs transition-colors"
 								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-muted)'}; font-weight: {childActive ? '600' : '400'};"
 							>
-								{child.label}
+								{@render navIcon(child, childActive, 12)}
+								<span>{child.label}</span>
 							</button>
 						{/each}
 					</div>
@@ -282,7 +183,6 @@
 		class="fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center py-2"
 		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); background: linear-gradient(to right, var(--color-bg-secondary), transparent);"
 	>
-		<!-- Expand button -->
 		<button
 			onclick={onToggle}
 			class="mb-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-colors"
@@ -294,10 +194,8 @@
 
 		<div class="mb-2"></div>
 
-		<!-- Icon buttons -->
-		{#each sections as section}
+		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
-			{@const isFlyoutOpen = flyoutSection === section.id}
 			<button
 				onclick={(e) => {
 					if (section.children) {
@@ -311,12 +209,7 @@
 				style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-muted)'};"
 				aria-label={section.label}
 			>
-				<svelte:component
-					this={section.icon}
-					size={16}
-					strokeWidth={active ? 2.5 : 1.8}
-				/>
-				<!-- Tooltip (only when no flyout is open) -->
+				{@render navIcon(section, active, 16)}
 				{#if !flyoutSection}
 					<span
 						class="pointer-events-none absolute left-12 z-50 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
@@ -329,15 +222,13 @@
 		{/each}
 	</aside>
 
-	<!-- ───── FLYOUT PANEL ───── -->
 	{#if flyoutSection}
 		{@const section = sections.find((s) => s.id === flyoutSection)}
 		{#if section}
 			<div
-				class="fixed z-50 min-w-[180px] rounded-lg border shadow-xl"
+				class="fixed z-50 min-w-[220px] rounded-lg border shadow-xl"
 				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; background: var(--color-surface); border-color: var(--color-border);"
 			>
-				<!-- Flyout header -->
 				<button
 					onclick={() => {
 						handleFlyoutNavigate(section.id);
@@ -345,21 +236,21 @@
 					class="flex w-full cursor-pointer items-center gap-2 rounded-t-lg px-3 py-2.5 text-left text-[13px] font-semibold transition-colors"
 					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light);"
 				>
-					<svelte:component this={section.icon} size={14} />
+					{@render navIcon(section, isActive(section.id), 14)}
 					{section.label}
 				</button>
 
-				<!-- Flyout children -->
 				{#if section.children}
 					<div class="px-1.5 py-1.5">
-						{#each section.children as child}
+						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
-								class="block w-full cursor-pointer rounded-md px-2.5 py-[6px] text-left text-xs transition-colors"
+								class="flex w-full cursor-pointer items-center gap-2 rounded-md px-2.5 py-[6px] text-left text-xs transition-colors"
 								style="color: {childActive ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {childActive ? '600' : '400'}; background: {childActive ? 'var(--color-primary-dim)' : 'transparent'};"
 							>
-								{child.label}
+								{@render navIcon(child, childActive, 12)}
+								<span>{child.label}</span>
 							</button>
 						{/each}
 					</div>
