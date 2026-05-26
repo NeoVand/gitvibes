@@ -460,33 +460,37 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 > Create a cinematic editorial infographic poster about **configuring AI tools to follow your Git conventions** — not generic "AI brain" art.
 >
-> CONCEPT: Center-right, a minimal abstract agent form (geometric, restrained indigo-purple inner glow). Three **configuration channels** extend from it as thin luminous threads to three labeled panels — each panel is a small worn card with a tool name, file path, and example rules. This is an infographic mapping real tools from the tutorial.
+> CONCEPT: Center-right, a minimal abstract agent form (geometric, restrained indigo-purple inner glow). Four **configuration channels** extend from it as thin luminous threads to four labeled panels — each panel is a small worn card with a mechanism name, file path, and example rules. This is an infographic mapping real, current tooling from the tutorial.
 >
-> THE THREE PANELS (legible text on each card):
+> THE FOUR PANELS (legible text on each card):
 >
-> **Panel 1 — Cursor Rules**
-> File: `.cursor/rules`
-> Examples: "Conventional Commits only" · "All work on `feature/` branches"
+> **Panel 1 — Always-on instructions**
+> Files: `AGENTS.md` · `CLAUDE.md` · `.github/copilot-instructions.md`
+> Examples: "Conventional Commits only" · "All work on `feature/` branches" · "Never reset shared branches"
 >
-> **Panel 2 — Claude Code**
-> File: `CLAUDE.md`
-> Examples: branch naming · commit format · PR templates
+> **Panel 2 — Agent Skills**
+> Path: `.agents/skills/*/SKILL.md`
+> Examples: git-save-game checklist · on-demand load · open standard (agentskills.io)
 >
-> **Panel 3 — GitHub Actions**
-> Label: AI Agents
-> Examples: auto-review PRs · update docs · manage branches
+> **Panel 3 — VS Code agents**
+> Files: `.github/agents/*.agent.md` · `.github/instructions/*.instructions.md`
+> Examples: Git Review agent · scoped `applyTo` globs · `/create-agent`
+>
+> **Panel 4 — CI automations**
+> Label: GitHub Copilot review · Actions
+> Examples: auto-review PRs · flag risky Git ops · update docs on merge
 >
 > LAYOUT:
 > - Left side: large weathered serif **"Configure Once"** with aged print texture.
-> - Subtitle in muted monospace: **"AI manages Git · Git manages accountability"**
-> - Bottom footer (small): **"Rules persist · Conventions stick · Humans stay in the loop"**
+> - Subtitle in muted monospace: **"Instructions always on · Skills on demand · Git manages accountability"**
+> - Bottom footer (small): **"AGENTS.md for conventions · SKILL.md for workflows · Humans stay in the loop"**
 > - Optional faint quote strip referencing the closing idea: Git = system of accountability for AI-assisted coding.
 >
 > MOOD: Quiet intelligence — conventions wired in permanently, not one-off prompts. Futuristic but atmospheric and aged, not glossy AI marketing.
 >
 > STYLE: Dark navy background (#0f1117), soft film grain, analog paper texture. Agent glow and thread accents in indigo-purple. Config cards desaturated with faint borders. 16:9 aspect ratio.
 >
-> AVOID: Brain icons, robot mascots, unlabeled ghost file silhouettes, busy neural-network diagrams with dozens of nodes, or the phrase "Configure Once" with no supporting detail. All three tools must be named with readable example rules.
+> AVOID: Brain icons, robot mascots, outdated `.cursor/rules` references, unlabeled ghost file silhouettes, busy neural-network diagrams with dozens of nodes, or the phrase "Configure Once" with no supporting detail. All four mechanisms must be named with readable example rules.
 
 ---
 

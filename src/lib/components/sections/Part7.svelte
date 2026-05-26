@@ -35,7 +35,7 @@
 			</div>
 
 			<p class="mb-6" style="color: var(--color-text-secondary);">
-				This is your new "save game" loop. Follow these 8 steps for every piece of work:
+				This is your new "save game" loop — the practical rhythm between you and your agent. Follow these 8 steps for every piece of work. Encode your Git conventions once in the repo (see section 7.3) so agents follow them automatically instead of re-explaining branch rules in every chat.
 			</p>
 
 			<MermaidDiagram
@@ -76,7 +76,9 @@
 					<span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold" style="background: var(--color-primary); color: white;">2</span>
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Generate</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">"Vibe" with your AI assistant and prompt it to generate code.</p>
+						<p class="text-xs" style="color: var(--color-text-muted);">
+							Work with your AI agent to implement the change. With <code style="font-family: var(--font-mono);">AGENTS.md</code> and skills configured, it already knows your branch naming, commit format, and safety rules.
+						</p>
 					</div>
 				</div>
 				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
@@ -236,40 +238,56 @@
 		<div id="section-7-3" class="mb-14">
 			<SectionHeader level="section" icon={Sparkles} title="7.3 Teaching Your AI to Use Git" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/configure-once.png"
+					alt="Configure Once — AGENTS.md, skills, VS Code agents, and CI automations for Git conventions"
+				/>
+			</div>
+
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
-				The next level is not just using Git to manage AI — it's using AI to manage Git. Modern AI coding tools can be configured to follow your team's Git conventions automatically.
+				The next level is not just using Git to manage AI — it's encoding your Git workflow so agents follow it automatically. Modern tools share a simple pattern: <strong style="color: var(--color-text);">always-on project instructions</strong> for conventions that apply everywhere, plus <strong style="color: var(--color-text);">skills</strong> for detailed procedures that load only when relevant.
 			</p>
 
 			<div class="mb-6 space-y-3">
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-						Cursor Rules
+						Always-on instructions: AGENTS.md &amp; friends
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Cursor allows you to create <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.cursor/rules</code> files within your repository. You can teach your AI your team's Git workflow: "All commit messages must follow Conventional Commits" or "All new work must be on a <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">feature/</code> branch."
+						<code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">AGENTS.md</code> is the cross-tool standard for project-wide rules — recognized by GitHub Copilot, Claude Code, Codex, and other agents. In monorepos, the nearest file to the code you're editing takes precedence. Claude Code also reads <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">CLAUDE.md</code> for the same role. In VS Code, add <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.github/copilot-instructions.md</code> for Copilot-specific standards. Put your team's Git constitution here: branch naming, Conventional Commits, "never reset shared branches," PR expectations. Keep it concise — this loads on every session.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-						Claude Code & CLAUDE.md
+						Agent Skills (SKILL.md)
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Claude Code reads <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">CLAUDE.md</code> files for project-specific instructions. You can define branch naming conventions, commit message formats, and PR templates that Claude will follow automatically.
+						Skills are the open <a href="https://agentskills.io" class="underline underline-offset-2" style="color: var(--color-primary);" target="_blank" rel="noopener noreferrer">Agent Skills</a> format: a folder with a <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">SKILL.md</code> file (name + description in YAML frontmatter, instructions in the body). Store them in <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.agents/skills/</code> for portable, version-controlled workflows your whole team shares. Agents discover skills at startup and load the full instructions only when a task matches — perfect for detailed Git procedures without bloating every chat. Example: a <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git-save-game/</code> skill that walks through the 8-step loop before every PR.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-						GitHub Actions & AI Agents
+						VS Code: scoped rules &amp; custom agents
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Create automations where AI agents automatically review new PRs, update documentation to reflect code changes, and help manage branches — turning your Git workflow into a fully automated pipeline.
+						For rules that apply only to certain files, add <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">*.instructions.md</code> files under <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.github/instructions/</code> with an <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">applyTo</code> glob in the frontmatter. For specialized personas, define custom agents as <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.github/agents/*.agent.md</code> — YAML frontmatter sets the name, description, tools, and model; the body holds focused instructions (e.g., a "Git Review" agent that inspects staged diffs and suggests commit splits). Use <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">/create-instruction</code> or <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">/create-agent</code> in VS Code chat to scaffold these files.
+					</p>
+				</div>
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						CI &amp; repository automations
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Repo instructions also power GitHub Copilot code review and cloud agents on pull requests. Combine with GitHub Actions to auto-review PRs, flag risky Git operations, or update docs when code changes — Git remains the audit trail even when agents operate in CI.
 					</p>
 				</div>
 			</div>
 
 			<VibeBox prompts={[
-				"Create a .cursor/rules file that enforces Conventional Commits and feature branches",
-				"Set up a CLAUDE.md with our team's Git workflow and branch naming conventions"
+				"Draft an AGENTS.md with our Git branch naming and Conventional Commits rules",
+				"Create a git-save-game SKILL.md that walks through our 8-step workflow before every PR",
+				"Set up a VS Code custom agent (.agent.md) that reviews staged changes before commit"
 			]} />
 		</div>
 
