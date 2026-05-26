@@ -24,14 +24,18 @@
 		embedded = false,
 		panel = false,
 		showScenarioPicker = !embedded,
+		hideHeader = false,
 		onClose,
+		onResetReady,
 		id = 'playground'
 	}: {
 		scenarioId?: string;
 		embedded?: boolean;
 		panel?: boolean;
 		showScenarioPicker?: boolean;
+		hideHeader?: boolean;
 		onClose?: () => void;
+		onResetReady?: (reset: () => void) => void;
 		id?: string;
 	} = $props();
 
@@ -93,6 +97,7 @@
 
 	onMount(() => {
 		loadScenario(getScenario(activeScenarioId));
+		onResetReady?.(resetScenario);
 	});
 
 	async function handleSubmit(e: Event) {
@@ -366,6 +371,7 @@
 		class="overflow-hidden rounded-xl"
 		style="background: var(--color-bg-secondary);"
 	>
+		{#if !hideHeader}
 		<div
 			class="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
 			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
@@ -393,6 +399,7 @@
 				</button>
 			</div>
 		</div>
+		{/if}
 
 		<div
 			class="flex items-start gap-2 px-5 py-2.5 text-xs"

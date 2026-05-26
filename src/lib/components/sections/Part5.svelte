@@ -8,7 +8,7 @@
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { stashSteps, rebaseMergeSteps, conflictSteps } from '$lib/data/sandbox-steps';
+
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -111,7 +111,7 @@ git stash pop`}
 			<PlaygroundNote>
 				You're mid-refactor on <code>feature/A</code> when a critical bug comes in. Stash your work, fix the bug on a hotfix branch, then come back and pop the stash.
 			</PlaygroundNote>
-			<LessonActivity title="Stash: Context-Switch Safely" steps={stashSteps} scenarioId="stash" id="stash" />
+			<LessonActivity title="Stash: Context-Switch Safely" scenarioId="stash" id="stash" />
 
 			<VibeBox prompts={[
 				"I need to switch branches but I'm not done here — save my work temporarily",
@@ -198,7 +198,7 @@ git stash pop`}
 			<PlaygroundNote>
 				Your feature branch and <code>main</code> have diverged. Try <code>git merge main</code> first, then reset and try <code>git rebase main</code> to compare the resulting history.
 			</PlaygroundNote>
-			<LessonActivity title="Merge vs. Rebase" steps={rebaseMergeSteps} scenarioId="rebase-merge" id="rebase-merge" />
+			<LessonActivity title="Merge vs. Rebase" scenarioId="rebase-merge" id="rebase-merge" />
 
 			<VibeBox prompts={[
 				"My branch is behind main — rebase my changes on top of the latest main",
@@ -299,7 +299,7 @@ x = 5
 			<PlaygroundNote>
 				The scenario starts mid-merge with conflict markers in <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">src/model.py</code>. Use <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">echo</code> to overwrite the file, then <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code> to finish.
 			</PlaygroundNote>
-			<LessonActivity title="Merge Conflict Resolution" steps={conflictSteps} scenarioId="conflicts" id="conflicts" />
+			<LessonActivity title="Merge Conflict Resolution" scenarioId="conflicts" id="conflicts" />
 
 			<VibeBox prompts={[
 				"I have a merge conflict in model.py — help me resolve it, keeping both changes",

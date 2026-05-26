@@ -136,8 +136,8 @@ const topicEntries: SearchEntry[] = [
 		sectionId: 'core-loop',
 		title: 'Git Playground',
 		part: 'Try it yourself',
-		description: 'Practice Git commands in a real in-browser repo with Watch and Try it yourself tabs.',
-		keywords: ['playground', 'practice', 'try it yourself', 'sandbox', 'terminal', 'interactive'],
+		description: 'Practice Git commands in a real in-browser repo.',
+		keywords: ['playground', 'practice', 'try it yourself', 'terminal', 'interactive'],
 		kind: 'topic'
 	}
 ];

@@ -79,7 +79,7 @@
 								class="cursor-pointer underline underline-offset-2"
 								style="color: var(--color-primary);"
 							>Git Playground</button>
-							(Watch guided demos in each lesson, or Try it yourself with real in-browser Git).
+							(Try real Git commands in your browser from each lesson).
 							<code style="font-family: var(--font-mono);">git switch -c ai-experiment/new-feature</code>
 						</p>
 					</div>

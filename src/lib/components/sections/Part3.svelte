@@ -9,7 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { branchingSteps, syncSteps, wrongBranchSteps } from '$lib/data/sandbox-steps';
+
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -120,7 +120,6 @@
 			</PlaygroundNote>
 			<LessonActivity
 				title="Move Commit to Feature Branch"
-				steps={wrongBranchSteps}
 				scenarioId="wrong-branch"
 				id="wrong-branch"
 			/>
@@ -232,7 +231,6 @@ git merge origin/main   # Merge the updates into your branch`}
 			</PlaygroundNote>
 			<LessonActivity
 				title="Sync with Remote"
-				steps={syncSteps}
 				scenarioId="sync-remote"
 				id="sync-remote"
 			/>
@@ -319,7 +317,6 @@ git merge origin/main   # Merge the updates into your branch`}
 			</PlaygroundNote>
 			<LessonActivity
 				title="Branching Workflow"
-				steps={branchingSteps}
 				scenarioId="branching"
 				id="branching"
 			/>

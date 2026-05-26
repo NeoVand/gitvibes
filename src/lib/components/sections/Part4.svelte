@@ -9,7 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { undoSteps, accidentalStageSteps, forcePushSteps } from '$lib/data/sandbox-steps';
+
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -150,7 +150,6 @@ git restore src/bad_file.py  # Discard a single file`}
 			</PlaygroundNote>
 			<LessonActivity
 				title="Unstage Secrets & Debug Files"
-				steps={accidentalStageSteps}
 				scenarioId="accidental-stage"
 				id="accidental-stage"
 			/>
@@ -433,7 +432,6 @@ git push                   # Push the revert`}
 			</PlaygroundNote>
 			<LessonActivity
 				title="Reset and Force Push"
-				steps={forcePushSteps}
 				scenarioId="force-push"
 				id="force-push"
 			/>
@@ -534,7 +532,7 @@ git push                   # Push the revert`}
 			<PlaygroundNote>
 				The playground includes <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git revert HEAD</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit --amend</code>. Try reverting the pushed bad commit, then amending after staging a fix.
 			</PlaygroundNote>
-			<LessonActivity title="Undo Operations" steps={undoSteps} scenarioId="undo" id="undo" />
+			<LessonActivity title="Undo Operations" scenarioId="undo" id="undo" />
 		</div>
 	</div>
 </section>

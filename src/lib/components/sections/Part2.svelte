@@ -9,7 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
-	import { coreLoopSteps } from '$lib/data/sandbox-steps';
+
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
@@ -378,11 +378,10 @@
 				Try It: The Complete Loop
 			</h4>
 			<PlaygroundNote>
-				Use <strong>Watch</strong> to step through the workflow with guided examples, or <strong>Try it yourself</strong> to run real Git commands in your browser. Type <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">help</code> in the terminal for the full command list.
+				Run real Git commands in your browser. Type <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">help</code> in the terminal for the full command list.
 			</PlaygroundNote>
 			<LessonActivity
 				title="The Core Safety Loop"
-				steps={coreLoopSteps}
 				scenarioId="core-loop"
 				id="core-loop"
 			/>

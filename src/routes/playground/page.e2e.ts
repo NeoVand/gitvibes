@@ -145,8 +145,6 @@ test.describe('Tutorial', () => {
 	test('sync-remote lesson activity loads in part 3', async ({ page }) => {
 		await page.goto('/#section-3-2');
 		const activity = page.locator('#sync-remote');
-		await expect(activity.getByRole('tab', { name: 'Watch' })).toBeVisible();
-		await activity.getByRole('tab', { name: 'Try it yourself' }).click();
 		await expect(activity.getByText('# Your feature branch is ready')).toBeVisible({ timeout: 15000 });
 
 		const input = activity.locator('input[placeholder="git status"]');
