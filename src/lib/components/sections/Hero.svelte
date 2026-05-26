@@ -17,7 +17,7 @@
 	<!-- Hero image -->
 	<div class="mx-auto max-w-4xl mb-12">
 		<img
-			src="/images/Hero.png"
+			src="{base}/images/Hero.png"
 			alt="Git for Vibe Coders — your safety net for AI-assisted coding"
 			class="w-full rounded-xl shadow-2xl"
 			loading="eager"

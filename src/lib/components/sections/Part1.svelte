@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Laptop, UserCheck, KeyRound, Download } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
@@ -22,7 +23,7 @@
 
 			<div class="my-6">
 				<img
-					src="/images/P1.Section1-git-config.png"
+					src="{base}/images/P1.Section1-git-config.png"
 					alt="Git config — configured once, carried by every commit"
 					class="w-full rounded-xl"
 					loading="lazy"
