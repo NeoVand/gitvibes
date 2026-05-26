@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { Monitor, Layout, Clock, Columns } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
@@ -43,6 +45,13 @@
 		<!-- 6.1 Source Control View -->
 		<div id="section-6-1" class="mb-14">
 			<SectionHeader level="section" icon={Layout} title="6.1 The Source Control View" color="var(--color-primary)" />
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/source-control.png"
+					alt="Source Control view — Changes, Staged Changes, commit box, and the branch graph in VS Code"
+				/>
+			</div>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
 				This is your command center. Everything you've learned maps directly to the UI:
