@@ -279,19 +279,34 @@
 							<td class="px-4 py-2 text-xs">fix: Resolve dimension mismatch</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">refactor:</code></td>
-							<td class="px-4 py-2">Code restructuring</td>
-							<td class="px-4 py-2 text-xs">refactor: Optimize data query</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">docs:</code></td>
-							<td class="px-4 py-2">Documentation only</td>
+							<td class="px-4 py-2">Documentation only changes</td>
 							<td class="px-4 py-2 text-xs">docs: Update API reference</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">style:</code></td>
+							<td class="px-4 py-2">Formatting, missing semicolons, etc.</td>
+							<td class="px-4 py-2 text-xs">style: Fix indentation in utils</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">refactor:</code></td>
+							<td class="px-4 py-2">Code change that neither fixes a bug nor adds a feature</td>
+							<td class="px-4 py-2 text-xs">refactor: Simplify form validation</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">test:</code></td>
-							<td class="px-4 py-2">Adding or fixing tests</td>
+							<td class="px-4 py-2">Adding or correcting tests</td>
 							<td class="px-4 py-2 text-xs">test: Add unit tests for auth</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">chore:</code></td>
+							<td class="px-4 py-2">Build process or tools changes</td>
+							<td class="px-4 py-2 text-xs">chore: Update dependencies</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-4 py-2"><code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">perf:</code></td>
+							<td class="px-4 py-2">A code change that improves performance</td>
+							<td class="px-4 py-2 text-xs">perf: Cache database queries</td>
 						</tr>
 					</tbody>
 				</table>
