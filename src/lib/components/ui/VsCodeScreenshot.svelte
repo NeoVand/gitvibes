@@ -19,30 +19,36 @@
 	class="my-5 overflow-hidden rounded-lg"
 	style="background: var(--color-bg-tertiary);"
 >
-	<div class="flex items-center gap-2 px-4 py-2">
-		<Monitor size={14} style="color: var(--color-primary);" />
-		<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
-			VS Code
+	<div class="group flex items-center justify-between px-4 py-2">
+		<span class="flex items-center gap-2">
+			<Monitor size={14} style="color: var(--color-primary);" />
+			<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
+				VS Code
+			</span>
 		</span>
-	</div>
-	<div class="group relative flex items-center justify-center px-2 pb-2">
-		<img
-			src={imageUrl}
-			{alt}
-			class="w-full rounded"
-			loading="lazy"
-			style="max-height: 500px; object-fit: contain;"
-		/>
 		<button
 			type="button"
 			onclick={() => (open = true)}
-			class="absolute top-2 right-2 flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity opacity-0 group-hover:opacity-100"
-			style="background: rgba(0, 0, 0, 0.65); color: white;"
+			class="flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity {open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}"
+			style="color: var(--color-text-muted);"
 			aria-label="Expand screenshot"
 		>
 			<Maximize2 size={14} />
 			<span>Expand</span>
 		</button>
+	</div>
+	<div class="flex items-center justify-center px-2 pb-2">
+		<img
+			src={imageUrl}
+			{alt}
+			class="w-full cursor-zoom-in rounded"
+			loading="lazy"
+			style="max-height: 500px; object-fit: contain;"
+			onclick={() => (open = true)}
+			role="button"
+			tabindex="0"
+			onkeydown={(e) => { if (e.key === 'Enter') open = true; }}
+		/>
 	</div>
 	{#if caption}
 		<figcaption
