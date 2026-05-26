@@ -12,7 +12,7 @@
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
 
-<section id="part-5" class="border-t py-16" style="border-color: var(--color-border-light);">
+<section id="part-5" class="py-10">
 	<div class="mx-auto max-w-4xl px-6">
 		<SectionHeader
 			icon={Layers}
