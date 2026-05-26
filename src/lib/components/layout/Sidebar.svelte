@@ -35,7 +35,6 @@
 		const el = document.getElementById(id);
 		if (el) {
 			onNavigate(id);
-			el.scrollIntoView({ behavior: 'smooth' });
 			if (closeSidebarOnMobile && open && window.innerWidth < 1024) onToggle();
 		}
 	}

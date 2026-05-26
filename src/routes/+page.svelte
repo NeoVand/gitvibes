@@ -43,7 +43,9 @@
 	function scrollToSection(id: string) {
 		const el = document.getElementById(id);
 		if (el) {
-			el.scrollIntoView({ behavior: 'smooth' });
+			const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 48;
+			const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+			window.scrollTo({ top, behavior: 'smooth' });
 		}
 		if (typeof window !== 'undefined') {
 			const url = `${window.location.pathname}${window.location.search}#${id}`;
