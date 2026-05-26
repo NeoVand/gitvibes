@@ -324,6 +324,13 @@ git push                   # Push the revert`}
 		<div id="section-4-6" class="mb-14">
 			<SectionHeader level="section" icon={AlertTriangle} title="4.6 The &quot;Break Glass&quot; Command" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/force-with-lease.png"
+					alt="git push --force-with-lease — force push with a safety check against overwriting teammates' work"
+				/>
+			</div>
+
 			<Callout type="warning">
 				{#snippet children()}
 					<strong>The Problem:</strong> You used <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code>
