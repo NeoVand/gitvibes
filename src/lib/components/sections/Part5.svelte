@@ -183,6 +183,13 @@ git stash pop`}
 		<div id="section-5-3" class="mb-8">
 			<SectionHeader level="section" icon={FileWarning} title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)" color="var(--color-primary)" />
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/merge-conflict.png"
+					alt="merge conflict — two edits collide and Git needs you to choose the resolution"
+				/>
+			</div>
+
 			<Callout type="warning">
 				{#snippet children()}
 					<strong>The Problem:</strong> You run <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code>

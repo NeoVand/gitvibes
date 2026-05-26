@@ -342,17 +342,25 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 ### section-6-1 — The Source Control View
 
-> Create a cinematic editorial poster about the VS Code source control interface.
+> Create a cinematic editorial poster about the VS Code **Source Control** sidebar — the panel you open with Cmd+Shift+G / Ctrl+Shift+G.
 >
-> Off-center composition. A stylized dark editor window — abstracted, not a literal screenshot — occupies the right two-thirds at a subtle angle. Inside, only a few suggested UI zones are visible as faint rectangular regions with barely-there borders. One zone (the staging area) glows with selective indigo highlight.
+> CONCEPT: A stylized dark editor sidebar (abstracted, not a literal screenshot) shown at a subtle angle on the right two-thirds of the frame. It should read as the **Source Control view**, not a generic IDE or "command center." The panel maps the core Git loop from the tutorial: status → stage → commit.
 >
-> Left side: large weathered serif typography "Command Center" with aged print texture, positioned low.
+> Inside the sidebar, show four clearly separated zones stacked vertically (faint borders, minimal UI shapes — not a detailed mockup):
+> 1. **Changes** — muted zone at top; small M/U badges suggested; label "Changes" in tiny sans-serif. Represents `git status` (modified & untracked files in the working directory).
+> 2. **Staged Changes** — zone below with selective indigo glow; label "Staged Changes". Represents the staging area after `git add`.
+> 3. **Commit message box** — a thin input field shape with a small checkmark button beside it; faint placeholder text `feat: ...`; label "Commit". Represents `git commit -m`.
+> 4. **... menu** — a minimal ellipsis row near the top-right of the panel; tiny hint list: Pull, Push, Stash, Amend, Branch, Revert (very small, secondary).
 >
-> The mood is quiet power — an instrument panel for professionals. Cinematic and premium rather than tutorial-like.
+> Below these zones, a **Source Control Graph** strip: a horizontal commit timeline with 3–4 branch nodes and thin connecting lines — visual branch history, not a file list.
 >
-> Dark navy background (#0f1117) with soft film grain and analog texture. The editor window has subtle depth — a faint drop shadow and worn edges. Only the highlighted zone carries indigo glow. Everything else is deeply muted and atmospheric.
+> Left side: large weathered serif title **"Source Control"** with aged print texture. Subtitle in muted blue monospace: `Cmd+Shift+G` · status → stage → commit.
 >
-> Avoid numbered annotations, callout arrows, explicit labels, or detailed UI mockups. An abstracted editor shape with one luminous focal zone. 16:9 aspect ratio.
+> MOOD: Quiet instrument panel — Git concepts made visible. Premium developer-tooling poster, not a tutorial screenshot or marketing splash.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, faint paper texture. Editor chrome deeply muted; only Staged Changes and the graph nodes carry selective indigo/emerald glow. 90% dark, localized color. Worn typography edges. 16:9 aspect ratio.
+>
+> AVOID: The phrase "Command Center" as a title or label (that is not the VS Code name). Avoid numbered callout arrows, dense UI chrome, literal VS Code branding/logos, symmetric layouts, or glossy startup marketing art. Keep labels sparse and legible — four zones + graph, not an exhaustive menu map.
 
 ### section-6-2 — Timeline & GitLens
 
