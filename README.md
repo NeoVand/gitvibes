@@ -4,7 +4,7 @@ An interactive, visual guide to Git and version control for developers who use A
 
 **[Live Site →](https://neovand.github.io/gitvibes/)**
 
-![GitVibes Screenshot](static/screenshot.svg)
+![GitVibes — Git for Vibe Coders](static/images/Hero.png)
 
 ## What is this?
 
