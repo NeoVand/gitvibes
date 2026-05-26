@@ -119,9 +119,9 @@
 		--color-terminal-border: #2a2d3a;
 		--color-terminal-header: #13151e;
 
-		--color-playground-bg: #1a0e16;
+		--color-playground-bg: #110a0f;
 		--color-playground-border: #2e1725;
-		--color-playground-header: #140a11;
+		--color-playground-header: #0d070b;
 
 		--color-diff-add: #a6e3a1;
 		--color-diff-add-bg: rgba(166, 227, 161, 0.1);
@@ -213,9 +213,9 @@
 	--color-terminal-output: #a6adc8;
 	--color-terminal-border: #2a2d3a;
 	--color-terminal-header: #13151e;
-	--color-playground-bg: #1a0e16;
+	--color-playground-bg: #110a0f;
 	--color-playground-border: #2e1725;
-	--color-playground-header: #140a11;
+	--color-playground-header: #0d070b;
 	--color-diff-add: #a6e3a1;
 	--color-diff-add-bg: rgba(166, 227, 161, 0.1);
 	--color-diff-del: #f38ba8;
