@@ -22,6 +22,17 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"Commit early, commit often. Every save point is a universe you can return to."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			This is the heartbeat of your entire Git workflow. Every time the AI generates code, you'll follow this three-step rhythm: check what changed, approve what you trust, and freeze it in time. Master this loop and you'll never lose work again.
+		</p>
+
 		<MermaidDiagram
 			definition={`graph TD
   A(["AI Generates Code"]) --> B(["Status: Review Changes"])
@@ -54,6 +65,7 @@
 				<ExpandableImage
 					src="{base}/images/git-status.png"
 					alt="git status — situational awareness for every change in your working tree"
+					caption="Always check your status before staging — know exactly what the AI changed"
 				/>
 			</div>
 
@@ -128,6 +140,7 @@
 				<ExpandableImage
 					src="{base}/images/git-add-p.png"
 					alt="git add -p — interactively stage only the hunks you approve"
+					caption="Selective staging lets you approve AI changes hunk by hunk"
 				/>
 			</div>
 
@@ -237,6 +250,7 @@
 				<ExpandableImage
 					src="{base}/images/git-commit.png"
 					alt="git commit — each save point frozen as a checkpoint on the timeline"
+					caption="Each commit is a checkpoint you can always travel back to"
 				/>
 			</div>
 

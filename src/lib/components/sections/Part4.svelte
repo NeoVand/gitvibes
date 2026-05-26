@@ -22,10 +22,22 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"The AI will break things. Your job isn't to prevent that — it's to recover instantly."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			No matter how good your AI assistant is, it will occasionally hallucinate, delete the wrong file, or introduce a subtle bug. Git gives you a full spectrum of undo tools — from gentle nudges to nuclear resets. Knowing which tool to reach for in each situation is what separates a confident developer from a panicked one.
+		</p>
+
 		<div class="my-6">
 			<ExpandableImage
 				src="{base}/images/undo.png"
 				alt="Undo — choose the least destructive tool that solves the problem"
+				caption="Choose the least destructive tool that solves the problem"
 			/>
 		</div>
 
@@ -45,6 +57,7 @@
 				<ExpandableImage
 					src="{base}/images/git-restore.png"
 					alt="git restore . — discard local changes and return to a clean working directory"
+					caption="Discard local edits and return to the last committed state"
 				/>
 			</div>
 
@@ -90,6 +103,7 @@ git restore src/bad_file.py  # Discard a single file`}
 				<ExpandableImage
 					src="{base}/images/git-restore-staged.png"
 					alt="git restore --staged — move files out of the staging area without losing your edits"
+					caption="Unstage files without losing your edits — a gentle undo"
 				/>
 			</div>
 
@@ -175,6 +189,7 @@ git commit --amend`}
 				<ExpandableImage
 					src="{base}/images/git-reset.png"
 					alt="git reset — soft, mixed, and hard modes for rolling back local commits"
+					caption="Three reset modes from gentle (soft) to nuclear (hard)"
 				/>
 			</div>
 
@@ -247,6 +262,7 @@ git commit --amend`}
 				<ExpandableImage
 					src="{base}/images/git-revert.png"
 					alt="git revert — undo a pushed commit safely with a new commit"
+					caption="Revert creates a new commit that undoes the damage — safe for shared branches"
 				/>
 			</div>
 
@@ -328,6 +344,7 @@ git push                   # Push the revert`}
 				<ExpandableImage
 					src="{base}/images/force-with-lease.png"
 					alt="git push --force-with-lease — force push with a safety check against overwriting teammates' work"
+					caption="Force push with --force-with-lease protects teammates' work"
 				/>
 			</div>
 
@@ -385,6 +402,7 @@ git push                   # Push the revert`}
 				<ExpandableImage
 					src="{base}/images/recovery-matrix.png"
 					alt="Recovery Matrix — match what went wrong to the least destructive Git undo command"
+					caption="The recovery matrix — match your mistake to the right undo tool"
 				/>
 			</div>
 

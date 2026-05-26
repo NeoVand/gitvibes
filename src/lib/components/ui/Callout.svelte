@@ -27,11 +27,11 @@
 	class="my-5 rounded-lg px-5 py-4"
 	style="background: {c.bg};"
 >
-	<div class="mb-2.5 flex items-center gap-2 text-sm font-bold uppercase tracking-wide" style="color: {c.color};">
-		<c.icon size={16} strokeWidth={2.5} />
+	<div class="mb-2.5 flex items-center gap-2 text-[13px] font-bold uppercase" style="color: {c.color}; font-family: var(--font-heading); letter-spacing: 0.08em;">
+		<c.icon size={15} strokeWidth={2.5} />
 		<span>{title || c.label}</span>
 	</div>
-	<div class="callout-content text-sm leading-relaxed" style="color: var(--color-text);">
+	<div class="callout-content text-[14px] leading-relaxed" style="color: var(--color-text);">
 		{@render children()}
 	</div>
 </div>

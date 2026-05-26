@@ -18,6 +18,17 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"The best tools disappear into your workflow. VS Code makes Git visual, intuitive, and fast."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			Everything you've learned so far in the terminal works beautifully from VS Code's built-in Git UI. Staging, committing, branching, merging, resolving conflicts — all with rich visual feedback and just a few clicks. Let's explore the cockpit.
+		</p>
+
 		<MermaidDiagram
 			definition={`graph TD
   A(["VS Code Git Integration"]) --> B(["Source Control View"])
@@ -50,6 +61,7 @@
 				<ExpandableImage
 					src="{base}/images/source-control.png"
 					alt="Source Control view — Changes, Staged Changes, commit box, and the branch graph in VS Code"
+					caption="VS Code's Source Control panel — your visual command center for Git"
 				/>
 			</div>
 

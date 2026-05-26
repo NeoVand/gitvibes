@@ -101,8 +101,8 @@
 >
 	<div class="flex items-center justify-between px-4 py-3">
 		<span
-			class="text-[11px] font-bold tracking-widest uppercase"
-			style="color: var(--color-text-muted); letter-spacing: 0.1em;"
+			class="text-xs font-bold tracking-widest uppercase"
+			style="color: var(--color-text-muted); letter-spacing: 0.14em; font-family: var(--font-heading);"
 		>
 			Contents
 		</span>
@@ -119,10 +119,10 @@
 	<nav class="flex-1 overflow-y-auto px-3 py-2">
 		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
-			<div class="mb-0.5">
+			<div class="mb-1">
 				<div
-					class="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors"
-					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text-secondary)'}; font-weight: {active ? '600' : '500'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
+					class="nav-section flex w-full items-center gap-2.5 rounded-lg px-3 py-2.5 text-left transition-colors"
+					style="color: {active ? 'var(--color-primary-text)' : 'var(--color-text)'}; background: {active ? 'var(--color-primary-dim)' : 'transparent'};"
 				>
 					<button
 						onclick={() => {
@@ -136,8 +136,10 @@
 						class="flex flex-1 cursor-pointer items-center gap-2.5 text-left"
 						style="color: inherit;"
 					>
-						{@render navIcon(section, active, 16)}
-						<span class="flex-1">{section.label}</span>
+						{@render navIcon(section, active, 17)}
+						<span class="nav-section-label flex-1" style="font-family: var(--font-heading); font-weight: {active ? '700' : '600'}; font-size: 14.5px; letter-spacing: -0.01em;">
+							{section.label}
+						</span>
 					</button>
 					{#if section.children}
 						<button
@@ -156,7 +158,7 @@
 
 				{#if section.children && expandedSections.has(section.id)}
 					<div
-						class="mt-0.5 ml-[26px] space-y-0.5 border-l pl-3"
+						class="mt-0.5 ml-[28px] space-y-0.5 border-l pl-3"
 						style="border-color: var(--color-border);"
 					>
 						{#each section.children as child (child.id)}
@@ -233,10 +235,10 @@
 					onclick={() => {
 						handleFlyoutNavigate(section.id);
 					}}
-					class="flex w-full cursor-pointer items-center gap-2.5 rounded-t-xl px-3.5 py-3 text-left text-sm font-semibold transition-colors"
-					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light);"
+					class="flex w-full cursor-pointer items-center gap-2.5 rounded-t-xl px-3.5 py-3 text-left transition-colors"
+					style="color: var(--color-text); border-bottom: 1px solid var(--color-border-light); font-family: var(--font-heading); font-size: 14.5px; font-weight: 600; letter-spacing: -0.01em;"
 				>
-					{@render navIcon(section, isActive(section.id), 15)}
+					{@render navIcon(section, isActive(section.id), 16)}
 					{section.label}
 				</button>
 

@@ -54,7 +54,7 @@
 		</button>
 	</div>
 
-	<span class="hidden text-[15px] font-bold tracking-tight sm:inline" style="color: var(--color-text);">
+	<span class="hidden text-[15px] font-bold tracking-tight sm:inline" style="color: var(--color-text); font-family: var(--font-heading); letter-spacing: -0.02em;">
 		GitVibes
 	</span>
 
@@ -202,7 +202,7 @@
 					<GitBranch size={22} strokeWidth={2.5} />
 				</div>
 				<div>
-					<h2 class="text-lg font-bold" style="color: var(--color-text);">GitVibes</h2>
+					<h2 class="text-lg font-bold" style="color: var(--color-text); font-family: var(--font-heading); letter-spacing: -0.02em;">GitVibes</h2>
 					<p class="text-xs" style="color: var(--color-text-muted);">Git for Vibe Coders</p>
 				</div>
 			</div>

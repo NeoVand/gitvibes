@@ -18,6 +18,17 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"Every great journey begins with a single <code class="not-italic rounded px-1.5 py-0.5 text-sm" style="background: var(--color-code-bg); font-family: var(--font-mono);">git clone</code>."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			Before you write your first line of code — or prompt your first AI — you need Git set up and talking to your team's repository. This is a one-time ritual: configure your identity, authenticate, and clone. Once it's done, it's done forever.
+		</p>
+
 		<!-- 1.1 Git Config -->
 		<div id="section-1-1" class="mb-14">
 			<SectionHeader level="section" icon={UserCheck} title="1.1 First-Time Local Configuration" color="var(--color-primary)" />
@@ -26,6 +37,7 @@
 				<ExpandableImage
 					src="{base}/images/P1.Section1-git-config.png"
 					alt="Git config — configured once, carried by every commit"
+					caption="Your identity is baked into every commit — configure it once and forget about it"
 				/>
 			</div>
 
@@ -72,6 +84,7 @@ git config --global user.email "your-enterprise-email@company.com"`}
 				<ExpandableImage
 					src="{base}/images/personal-access-token.png"
 					alt="Personal Access Token — a token proves identity and carries permission"
+					caption="A personal access token proves your identity to GitHub without a password"
 				/>
 			</div>
 
@@ -143,6 +156,7 @@ git config --global credential.helper libsecret`}
 				<ExpandableImage
 					src="{base}/images/git-clone.png"
 					alt="git clone — remote repository copied to your local machine"
+					caption="Cloning creates a complete copy of the remote repository on your machine"
 				/>
 			</div>
 

@@ -21,6 +21,17 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"Real projects are messy. Stash your work, resolve your conflicts, and keep moving."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			By now you know the fundamentals. But real-world development is rarely linear — you'll be mid-feature when a critical bug drops, your branch will diverge from a teammate's, and two files will clash during a merge. These advanced tools handle the chaos.
+		</p>
+
 		<Callout type="note">
 			{#snippet children()}
 				As you grow, you'll often work on multiple tasks at once. Your AI-driven workflow will
@@ -37,6 +48,7 @@
 				<ExpandableImage
 					src="{base}/images/git-stash.png"
 					alt="git stash — shelve uncommitted work and switch branches without losing progress"
+					caption="Stash your work-in-progress to switch context without losing anything"
 				/>
 			</div>
 
@@ -108,6 +120,7 @@ git stash pop`}
 				<ExpandableImage
 					src="{base}/images/merge-rebase.png"
 					alt="merge vs rebase — two ways to update a stale feature branch with main"
+					caption="Merge preserves history, rebase rewrites it — choose based on your team's convention"
 				/>
 			</div>
 
@@ -187,6 +200,7 @@ git stash pop`}
 				<ExpandableImage
 					src="{base}/images/merge-conflict.png"
 					alt="merge conflict — two edits collide and Git needs you to choose the resolution"
+					caption="When two edits collide, Git asks you to choose — this is a merge conflict"
 				/>
 			</div>
 

@@ -22,6 +22,17 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"A branch is a safe space to be wrong. Create one every time you have an idea."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			Branches are what make Git magical. They let you experiment freely — try a wild AI refactor, explore an alternative architecture — without ever risking the stable codebase. Think of them as parallel timelines that you can merge back or discard entirely.
+		</p>
+
 		<Callout type="important">
 			{#snippet children()}
 				The most important rule in collaborative software development: <strong>you never, ever
@@ -40,6 +51,7 @@
 				<ExpandableImage
 					src="{base}/images/git-branch.png"
 					alt="git branch — a parallel path diverging from main for safe experimentation"
+					caption="Branches let you experiment without risking the stable codebase"
 				/>
 			</div>
 
@@ -110,6 +122,7 @@
 				<ExpandableImage
 					src="{base}/images/fetch-pull-push.png"
 					alt="fetch · pull · push — syncing local and remote repositories"
+					caption="Fetch checks for updates, pull downloads them, push shares your work"
 				/>
 			</div>
 
@@ -217,6 +230,7 @@ git merge origin/main   # Merge the updates into your branch`}
 				<ExpandableImage
 					src="{base}/images/pull-request.png"
 					alt="Pull request — the quality gate before code merges into main"
+					caption="Pull requests are the quality gate between your branch and production"
 				/>
 			</div>
 

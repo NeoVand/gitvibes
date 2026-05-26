@@ -23,6 +23,17 @@
 			color="var(--color-primary)"
 		/>
 
+		<blockquote
+			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
+			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
+		>
+			"Git isn't just version control — it's the bridge between human intent and AI capability."
+		</blockquote>
+
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			You've learned the full toolkit. Now let's put it all together into a cohesive workflow — the daily rhythm that keeps you productive, your code safe, and your AI assistants working within guardrails you control.
+		</p>
+
 		<!-- 7.1 AI-First Workflow -->
 		<div id="section-7-1" class="mb-14">
 			<SectionHeader level="section" icon={Workflow} title="7.1 The AI-First Workflow (Summary)" color="var(--color-primary)" />
@@ -31,6 +42,7 @@
 				<ExpandableImage
 					src="{base}/images/save-game-loop.png"
 					alt="The Save Game Loop — 8-step AI-first Git workflow from sandbox to recover"
+					caption="The complete 8-step AI-first Git workflow — your daily rhythm"
 				/>
 			</div>
 
@@ -147,6 +159,7 @@
 				<ExpandableImage
 					src="{base}/images/quick-reference.png"
 					alt="Quick Reference Card — Git tasks with terminal commands and VS Code equivalents"
+					caption="Keep this cheat sheet handy — terminal commands and their VS Code equivalents"
 				/>
 			</div>
 
@@ -242,6 +255,7 @@
 				<ExpandableImage
 					src="{base}/images/configure-once.png"
 					alt="Configure Once — AGENTS.md, skills, VS Code agents, and CI automations for Git conventions"
+					caption="Encode your conventions once and let AI agents follow them automatically"
 				/>
 			</div>
 
