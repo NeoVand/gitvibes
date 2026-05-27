@@ -669,8 +669,6 @@
 
 	@media (max-width: 639px) {
 		.pg-graph-body {
-			max-height: 120px;
-			overflow: auto;
 			padding-top: 0.5rem;
 			padding-bottom: 0.5rem;
 		}

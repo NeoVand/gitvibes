@@ -303,7 +303,7 @@ kbd {
 
 /* Mermaid overrides for professional look */
 .mermaid-container svg {
-	max-width: 100%;
+	width: 100%;
 	height: auto;
 }
 

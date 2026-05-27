@@ -219,6 +219,21 @@
 			.render(uniqueId, definition)
 			.then(({ svg }) => {
 				container.innerHTML = svg;
+
+				const svgEl = container.querySelector('svg');
+				if (svgEl) {
+					if (!svgEl.getAttribute('viewBox')) {
+						const w = svgEl.getAttribute('width');
+						const h = svgEl.getAttribute('height');
+						if (w && h) {
+							svgEl.setAttribute('viewBox', `0 0 ${parseFloat(w)} ${parseFloat(h)}`);
+						}
+					}
+					svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+					svgEl.removeAttribute('width');
+					svgEl.removeAttribute('height');
+				}
+
 				for (const circle of container.querySelectorAll('circle')) {
 					const r = parseFloat(circle.getAttribute('r') ?? '0');
 					if (r > 10) circle.setAttribute('r', '10');
@@ -232,13 +247,13 @@
 </script>
 
 <div
-	class="mermaid-container flex items-center justify-center overflow-x-auto py-1"
+	class="mermaid-container flex items-center justify-center overflow-hidden py-1"
 	bind:this={container}
 ></div>
 
 <style>
 	.mermaid-container :global(svg) {
-		max-width: 100%;
+		width: 100%;
 		height: auto;
 	}
 
