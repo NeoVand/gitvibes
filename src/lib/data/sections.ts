@@ -1,6 +1,7 @@
 export const sectionIds = [
 	'hero',
 	'section-intro-what',
+	'section-intro-history',
 	'section-intro-install',
 	'section-intro-repo',
 	'part-1',

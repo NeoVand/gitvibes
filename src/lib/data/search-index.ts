@@ -96,6 +96,25 @@ function buildCommandEntries(): SearchEntry[] {
 /** Concept / workflow searches that are not a single cheat-sheet row */
 const topicEntries: SearchEntry[] = [
 	{
+		id: 'topic-git-history',
+		sectionId: 'section-intro-history',
+		title: 'A Brief History of Git',
+		part: 'Introduction',
+		description: 'How Linus Torvalds created Git in 2005 after the BitKeeper license crisis.',
+		keywords: [
+			'history',
+			'linus',
+			'torvalds',
+			'bitkeeper',
+			'who created git',
+			'origin',
+			'2005',
+			'linux kernel',
+			'junio hamano'
+		],
+		kind: 'topic'
+	},
+	{
 		id: 'topic-merge-conflict',
 		sectionId: 'section-5-3',
 		title: 'Merge conflicts',

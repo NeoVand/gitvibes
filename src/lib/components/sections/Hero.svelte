@@ -1,9 +1,10 @@
 <script lang="ts">
-	import { Gamepad2, ScrollText, Download, FolderGit2, HelpCircle } from 'lucide-svelte';
+	import { Gamepad2, ScrollText, Download, FolderGit2, HelpCircle, History } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
+	import Callout from '../ui/Callout.svelte';
 
 	let {
 		onOpenPlayground
@@ -12,6 +13,33 @@
 	} = $props();
 
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
+
+	const gitTimeline = [
+		{
+			year: '2002',
+			text: 'The Linux kernel adopts BitKeeper, a proprietary version control tool, to coordinate thousands of contributors.'
+		},
+		{
+			year: 'Apr 2005',
+			text: 'BitKeeper withdraws its free license. Linus Torvalds pauses kernel work and starts writing Git — within four days it is tracking its own source code.'
+		},
+		{
+			year: 'Jun 2005',
+			text: 'Git manages its first Linux kernel release (2.6.12), two months after the first line of code.'
+		},
+		{
+			year: 'Jul 2005',
+			text: 'Linus hands maintenance to Junio Hamano, who still leads Git development today.'
+		},
+		{
+			year: '2008',
+			text: 'GitHub launches, and Git rapidly becomes the default way the world shares code.'
+		},
+		{
+			year: 'Today',
+			text: 'Over 90% of developers use Git — and every AI coding tool assumes it is there.'
+		}
+	];
 </script>
 
 <section id="hero" class="px-6 py-16">
@@ -111,7 +139,65 @@
 		</ul>
 
 		<p class="text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
-			Git was created in 2005 by Linus Torvalds (the creator of Linux) and is used by virtually every software team in the world. Learning it is non-negotiable if you want to write code professionally — with or without AI.
+			Git is used by virtually every software team in the world. Learning it is non-negotiable if you want to write code professionally — with or without AI. But where did it come from? The story is worth two minutes of your time.
+		</p>
+	</div>
+
+	<!-- A Brief History of Git -->
+	<div id="section-intro-history" class="mx-auto max-w-4xl mb-16">
+		<div class="flex items-center gap-2.5 mb-6">
+			<History size={20} style="color: var(--color-primary);" strokeWidth={2.5} />
+			<h2 class="text-xl font-bold" style="color: var(--color-text);">A Brief History of Git</h2>
+		</div>
+
+		<div class="mb-6 flex flex-col gap-6 sm:flex-row sm:items-start">
+			<div class="min-w-0 flex-1">
+				<p class="mb-4 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+					Git was born out of a crisis. In the early 2000s the Linux kernel — one of the largest collaborative software projects on Earth — was managed with a proprietary tool called <strong style="color: var(--color-text);">BitKeeper</strong>. In April 2005 its owner withdrew the kernel community's free license, and overnight thousands of contributors had no version control at all.
+				</p>
+				<p class="mb-4 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+					<strong style="color: var(--color-text);">Linus Torvalds</strong>, who had created Linux 14 years earlier, looked at the alternatives and found them all too slow or too centralized. So he stopped kernel work and wrote his own. Development began on April 3, 2005 — and by April 7, Git was already managing its own source code. Two months later it shipped an entire kernel release. A tool sketched out in about ten days now runs the world's software.
+				</p>
+				<p class="text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+					That speed wasn't luck. Git was designed around three ideas that still define it: it had to be <strong style="color: var(--color-text);">fast</strong> (applying hundreds of patches in seconds), <strong style="color: var(--color-text);">distributed</strong> (every developer holds a complete copy of the history — no central server required), and <strong style="color: var(--color-text);">tamper-evident</strong> (every commit is checksummed, so history can never change silently).
+				</p>
+			</div>
+			<div class="mx-auto w-48 flex-shrink-0 sm:mx-0 sm:w-52">
+				<ExpandableImage
+					src="{base}/images/linus-torvalds.jpg"
+					alt="Linus Torvalds, creator of Linux and Git, speaking at LinuxCon Europe 2014"
+					caption="Linus Torvalds, creator of Linux and Git. Photo: Krd / Wikimedia Commons, CC BY-SA 4.0"
+				/>
+			</div>
+		</div>
+
+		<div class="mb-5 rounded-lg p-5" style="background: var(--color-bg-secondary);">
+			{#each gitTimeline as entry (entry.year)}
+				<div class="flex gap-4 py-2">
+					<span
+						class="w-20 flex-shrink-0 text-right text-[12px] font-semibold"
+						style="color: var(--color-primary-text); font-family: var(--font-mono);"
+					>
+						{entry.year}
+					</span>
+					<span
+						class="border-l pl-4 text-[13px] leading-relaxed"
+						style="border-color: var(--color-border); color: var(--color-text-secondary);"
+					>
+						{entry.text}
+					</span>
+				</div>
+			{/each}
+		</div>
+
+		<Callout type="note" title="Why 'Git'?">
+			{#snippet children()}
+				In British slang, a <em>git</em> is an unpleasant person. Linus joked: <em>"I'm an egotistical bastard, and I name all my projects after myself. First Linux, now Git."</em> The manual page keeps the joke going — it describes Git as "the stupid content tracker."
+			{/snippet}
+		</Callout>
+
+		<p class="text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+			Why does this history matter to you? Because Git was built to let thousands of strangers change the same codebase at once without destroying each other's work. That is <em>exactly</em> the problem you face when an AI assistant generates code at machine speed — Git is the safety net that was already waiting for the AI era.
 		</p>
 	</div>
 

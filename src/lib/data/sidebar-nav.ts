@@ -14,6 +14,7 @@ import {
 	GitMerge,
 	GitPullRequest,
 	HelpCircle,
+	History,
 	KeyRound,
 	Laptop,
 	Layers,
@@ -53,6 +54,7 @@ export const sidebarNav: NavSection[] = [
 		icon: Rocket,
 		children: [
 			{ id: 'section-intro-what', label: 'What Is Git?', icon: HelpCircle },
+			{ id: 'section-intro-history', label: 'A Brief History', icon: History },
 			{ id: 'section-intro-install', label: 'Installing Git', icon: Download },
 			{ id: 'section-intro-repo', label: 'What Is a Repository?', icon: FolderGit2 }
 		]
