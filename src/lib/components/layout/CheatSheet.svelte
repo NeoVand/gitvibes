@@ -17,6 +17,7 @@
 		Copy
 	} from 'lucide-svelte';
 	import { cheatSheet, type CheatSheetCategory } from '$lib/data/cheat-sheet';
+	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 
 	let {
 		open = false,
@@ -182,9 +183,10 @@
 									<code
 										class="inline-block break-all rounded px-1 py-0.5 text-[11px] leading-relaxed"
 										style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
+										>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span
+												class="tok tok-{token.type}">{token.text}</span
+											>{/each}</code
 									>
-										{cmd.command}
-									</code>
 									<span
 										class="mt-0.5 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
 										style="color: {isCopied ? 'var(--color-tip)' : 'var(--color-text-muted)'};"
