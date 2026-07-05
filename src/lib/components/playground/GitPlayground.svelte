@@ -626,7 +626,8 @@
 		--color-diff-meta: #a6e3a1;
 	}
 
-	/* Light mode: a crisp dark terminal against the light playground chrome. */
+	/* The terminal surface is always a crisp near-black, in both themes,
+	   so it reads as a real terminal against the playground chrome. */
 	.pg-terminal {
 		background: #0a0813;
 		color: var(--color-terminal-text);
@@ -639,25 +640,6 @@
 		padding: 0.75rem 1.25rem;
 		border-top: 1px solid color-mix(in srgb, var(--color-playground-border) 55%, transparent);
 		background: #14101f;
-	}
-
-	/* Dark mode: stay in the theme's rosy playground palette instead of
-	   near-black, matching how layout.css scopes its theme blocks. */
-	@media (prefers-color-scheme: dark) {
-		:global(:root:not(.light)) .pg-terminal {
-			background: var(--color-playground-bg);
-		}
-		:global(:root:not(.light)) .pg-prompt-line {
-			background: color-mix(in srgb, var(--color-playground-bg) 94%, var(--color-terminal-prompt) 6%);
-		}
-	}
-
-	:global(:root.dark) .pg-terminal {
-		background: var(--color-playground-bg);
-	}
-
-	:global(:root.dark) .pg-prompt-line {
-		background: color-mix(in srgb, var(--color-playground-bg) 94%, var(--color-terminal-prompt) 6%);
 	}
 
 	.pg-prompt {
