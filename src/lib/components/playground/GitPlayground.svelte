@@ -1,7 +1,17 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { GitBranch, Terminal, RotateCcw, Lightbulb, ChevronRight, ChevronDown, X, CornerDownLeft } from 'lucide-svelte';
+	import {
+		GitBranch,
+		Terminal,
+		RotateCcw,
+		Lightbulb,
+		ChevronRight,
+		ChevronDown,
+		X,
+		CornerDownLeft
+	} from 'lucide-svelte';
 	import MermaidDiagram from '$lib/components/ui/MermaidDiagram.svelte';
+	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 	import { GitEngine } from '$lib/playground/git-engine';
 	import { runGitCommand } from '$lib/playground/commands';
 	import { buildGitGraph } from '$lib/playground/git-graph';
@@ -73,17 +83,26 @@
 			history = embedded
 				? [
 						{ type: 'system', text: next.description },
-						{ type: 'system', text: 'Type git commands below. Enter "help" for supported commands.' }
+						{
+							type: 'system',
+							text: 'Type git commands below. Enter "help" for supported commands.'
+						}
 					]
 				: panel
 					? [
 							{ type: 'system', text: next.description },
-							{ type: 'system', text: 'Type git commands below. Enter "help" for supported commands.' }
+							{
+								type: 'system',
+								text: 'Type git commands below. Enter "help" for supported commands.'
+							}
 						]
 					: [
 							{ type: 'system', text: `Scenario: ${next.title}` },
 							{ type: 'system', text: next.description },
-							{ type: 'system', text: 'Type git commands below. Enter "help" for supported commands.' }
+							{
+								type: 'system',
+								text: 'Type git commands below. Enter "help" for supported commands.'
+							}
 						];
 			await refreshDiagram();
 		} catch (err) {
@@ -112,7 +131,11 @@
 		if (!engine) {
 			history = [
 				...history,
-				{ type: 'output', text: 'Repository still initializing. Try again in a moment.', error: true }
+				{
+					type: 'output',
+					text: 'Repository still initializing. Try again in a moment.',
+					error: true
+				}
 			];
 			return;
 		}
@@ -123,7 +146,10 @@
 			if (result.output === '__CLEAR__') {
 				history = [];
 			} else if (result.output) {
-				history = [...history, { type: 'output', text: result.output, error: result.error, colored: result.colored }];
+				history = [
+					...history,
+					{ type: 'output', text: result.output, error: result.error, colored: result.colored }
+				];
 			}
 
 			await refreshDiagram();
@@ -196,27 +222,36 @@
 	{/if}
 {/snippet}
 
+{#snippet commandLabel(command: string)}
+	{#each tokenizeGitCommand(command) as token, ti (ti)}<span class="tok tok-{token.type}"
+			>{token.text}</span
+		>{/each}
+{/snippet}
+
 {#snippet terminalHistory()}
 	{#each history as line, i (i)}
 		{#if line.type === 'input'}
 			<div class="mb-1.5 flex gap-2" style="font-family: var(--font-mono); font-size: 12.5px;">
 				<span style="color: var(--color-terminal-prompt);">$</span>
-				<span style="color: var(--color-terminal-command);">{line.text}</span>
+				<span style="color: var(--color-terminal-command);">{@render commandLabel(line.text)}</span>
 			</div>
 		{:else if line.type === 'output'}
 			{#if line.colored}
 				<pre
-					class="mb-2.5 whitespace-pre-wrap pl-5 text-[11.5px] leading-relaxed"
-					style="font-family: var(--font-mono);"
-				>{@html line.text}</pre>
+					class="mb-2.5 pl-5 text-[11.5px] leading-relaxed whitespace-pre-wrap"
+					style="font-family: var(--font-mono);">{@html line.text}</pre>
 			{:else}
 				<pre
-					class="mb-2.5 whitespace-pre-wrap pl-5 text-[11.5px] leading-relaxed"
-					style="color: {line.error ? 'var(--color-warning)' : 'var(--color-terminal-output)'}; font-family: var(--font-mono);"
-				>{line.text}</pre>
+					class="mb-2.5 pl-5 text-[11.5px] leading-relaxed whitespace-pre-wrap"
+					style="color: {line.error
+						? 'var(--color-warning)'
+						: 'var(--color-terminal-output)'}; font-family: var(--font-mono);">{line.text}</pre>
 			{/if}
 		{:else}
-			<p class="mb-1.5 text-[11.5px] italic" style="color: var(--color-text-muted); font-family: var(--font-mono);">
+			<p
+				class="mb-1.5 text-[11.5px] italic"
+				style="color: var(--color-text-muted); font-family: var(--font-mono);"
+			>
 				# {line.text}
 			</p>
 		{/if}
@@ -258,7 +293,7 @@
 	<div class="flex flex-wrap gap-1.5">
 		{#each scenario.suggestedCommands as command, i (i)}
 			<button type="button" onclick={() => runSuggested(command)} class="pg-chip">
-				{command}
+				{@render commandLabel(command)}
 				<ChevronRight size={11} />
 			</button>
 		{/each}
@@ -271,9 +306,9 @@
 			class="flex shrink-0 flex-wrap items-center gap-2 px-3 py-2 sm:gap-2.5 sm:px-5 sm:py-3"
 			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
 		>
-		<Terminal size={14} style="color: var(--color-important);" />
-		<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
-		<span class="pg-badge hidden sm:inline">real git</span>
+			<Terminal size={14} style="color: var(--color-important);" />
+			<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
+			<span class="pg-badge hidden sm:inline">real git</span>
 
 			<div class="ml-auto flex flex-wrap items-center gap-1.5 sm:gap-2">
 				{@render scenarioSelect()}
@@ -302,10 +337,7 @@
 		</p>
 
 		<div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-			<section
-				class="shrink-0"
-				style="border-bottom: 1px solid var(--color-border);"
-			>
+			<section class="shrink-0" style="border-bottom: 1px solid var(--color-border);">
 				<button
 					type="button"
 					class="flex w-full cursor-pointer items-center gap-2 px-5 py-2"
@@ -321,11 +353,16 @@
 					<ChevronDown
 						size={12}
 						class="ml-auto transition-transform duration-150"
-						style="color: var(--color-text-muted); transform: rotate({graphCollapsed ? '-90deg' : '0deg'});"
+						style="color: var(--color-text-muted); transform: rotate({graphCollapsed
+							? '-90deg'
+							: '0deg'});"
 					/>
 				</button>
 				{#if !graphCollapsed}
-					<div class="pg-graph-body flex items-center justify-center px-4 py-1" style="background: var(--color-bg-secondary);">
+					<div
+						class="pg-graph-body flex items-center justify-center px-4 py-1"
+						style="background: var(--color-bg-secondary);"
+					>
 						{#key diagram}
 							<MermaidDiagram definition={diagram} id="{id}-graph" />
 						{/key}
@@ -344,11 +381,7 @@
 					</span>
 				</div>
 
-				<div
-					bind:this={terminalEl}
-					class="min-h-0 flex-1 overflow-y-auto px-4 py-3"
-					style="background: var(--color-playground-bg);"
-				>
+				<div bind:this={terminalEl} class="pg-terminal min-h-0 flex-1 overflow-y-auto px-4 py-3">
 					{@render terminalHistory()}
 				</div>
 
@@ -359,7 +392,10 @@
 				class="pg-suggestions shrink-0 px-4 py-2"
 				style="border-top: 1px solid var(--color-border); background: var(--color-bg-tertiary);"
 			>
-				<p class="mb-1.5 text-[10px] font-semibold uppercase tracking-widest" style="color: var(--color-text-muted);">
+				<p
+					class="mb-1.5 text-[10px] font-semibold tracking-widest uppercase"
+					style="color: var(--color-text-muted);"
+				>
 					Try these
 				</p>
 				{@render suggestedCommands()}
@@ -367,38 +403,38 @@
 		</div>
 	</div>
 {:else}
-	<div
-		class="overflow-hidden rounded-xl"
-		style="background: var(--color-bg-secondary);"
-	>
+	<div class="overflow-hidden rounded-xl" style="background: var(--color-bg-secondary);">
 		{#if !hideHeader}
-		<div
-			class="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
-			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
-		>
-		<div class="flex items-center gap-2">
-			<GitBranch size={16} style="color: var(--color-important);" />
-			<span class="text-sm font-semibold" style="color: var(--color-text);">
-				{embedded ? 'Try it yourself' : 'Git Playground'}
-			</span>
-			<span class="rounded-full px-2 py-0.5 text-[10px] font-medium" style="background: color-mix(in srgb, var(--color-important) 12%, var(--color-bg-tertiary)); color: var(--color-important);">
-				real git
-			</span>
-		</div>
-			<div class="flex flex-wrap items-center gap-2">
-				{@render scenarioSelect()}
-				<button
-					type="button"
-					onclick={resetScenario}
-					disabled={loading}
-					class="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
-					style="color: var(--color-text-muted); border: 1px solid var(--color-border);"
-				>
-					<RotateCcw size={13} />
-					Reset
-				</button>
+			<div
+				class="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
+				style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
+			>
+				<div class="flex items-center gap-2">
+					<GitBranch size={16} style="color: var(--color-important);" />
+					<span class="text-sm font-semibold" style="color: var(--color-text);">
+						{embedded ? 'Try it yourself' : 'Git Playground'}
+					</span>
+					<span
+						class="rounded-full px-2 py-0.5 text-[10px] font-medium"
+						style="background: color-mix(in srgb, var(--color-important) 12%, var(--color-bg-tertiary)); color: var(--color-important);"
+					>
+						real git
+					</span>
+				</div>
+				<div class="flex flex-wrap items-center gap-2">
+					{@render scenarioSelect()}
+					<button
+						type="button"
+						onclick={resetScenario}
+						disabled={loading}
+						class="flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-opacity hover:opacity-80 disabled:opacity-40"
+						style="color: var(--color-text-muted); border: 1px solid var(--color-border);"
+					>
+						<RotateCcw size={13} />
+						Reset
+					</button>
+				</div>
 			</div>
-		</div>
 		{/if}
 
 		<div
@@ -413,16 +449,26 @@
 			class="grid grid-cols-1 lg:grid-cols-2"
 			style="min-height: {embedded ? '340px' : '420px'};"
 		>
-			<div class="order-2 flex flex-col border-t lg:order-1 lg:border-t-0 lg:border-r" style="border-top-color: var(--color-playground-border); border-right-color: var(--color-border);">
-				<div class="flex items-center gap-2 px-4 py-2" style="background: var(--color-playground-bg);">
+			<div
+				class="order-2 flex flex-col border-t lg:order-1 lg:border-t-0 lg:border-r"
+				style="border-top-color: var(--color-playground-border); border-right-color: var(--color-border);"
+			>
+				<div
+					class="flex items-center gap-2 px-4 py-2"
+					style="background: var(--color-playground-bg);"
+				>
 					<Terminal size={13} style="color: var(--color-important);" />
-					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">Terminal</span>
+					<span class="text-xs font-medium" style="color: var(--color-text-secondary);"
+						>Terminal</span
+					>
 				</div>
 
 				<div
 					bind:this={terminalEl}
-					class="flex-1 overflow-y-auto p-4"
-					style="background: var(--color-playground-bg); min-height: {embedded ? '220px' : '280px'}; max-height: {embedded ? '300px' : '360px'};"
+					class="pg-terminal flex-1 overflow-y-auto p-4"
+					style="min-height: {embedded ? '220px' : '280px'}; max-height: {embedded
+						? '300px'
+						: '360px'};"
 				>
 					{@render terminalHistory()}
 				</div>
@@ -430,10 +476,12 @@
 				{@render promptForm()}
 			</div>
 
-		<div class="order-1 flex flex-col lg:order-2">
-			<div class="flex items-center gap-2 px-4 py-2">
-				<GitBranch size={13} style="color: var(--color-important);" />
-				<span class="text-xs font-medium" style="color: var(--color-text-secondary);">Commit Graph</span>
+			<div class="order-1 flex flex-col lg:order-2">
+				<div class="flex items-center gap-2 px-4 py-2">
+					<GitBranch size={13} style="color: var(--color-important);" />
+					<span class="text-xs font-medium" style="color: var(--color-text-secondary);"
+						>Commit Graph</span
+					>
 				</div>
 				<div class="flex flex-1 items-center justify-center px-4 py-1">
 					{#key diagram}
@@ -444,19 +492,21 @@
 		</div>
 
 		<div class="px-5 py-3" style="border-top: 1px solid var(--color-border);">
-			<p class="mb-2 text-xs font-medium" style="color: var(--color-text-muted);">Try these commands</p>
+			<p class="mb-2 text-xs font-medium" style="color: var(--color-text-muted);">
+				Try these commands
+			</p>
 			<div class="flex flex-wrap gap-2">
-		{#each scenario.suggestedCommands as command, i (i)}
-				<button
-					type="button"
-					onclick={() => runSuggested(command)}
-					class="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-opacity hover:opacity-80"
-					style="background: var(--color-surface); color: var(--color-text-secondary); border: 1px solid var(--color-border); font-family: var(--font-mono);"
-				>
-					{command}
-					<ChevronRight size={12} />
-				</button>
-			{/each}
+				{#each scenario.suggestedCommands as command, i (i)}
+					<button
+						type="button"
+						onclick={() => runSuggested(command)}
+						class="flex items-center gap-1 rounded-md px-2.5 py-1 text-xs transition-opacity hover:opacity-80"
+						style="background: var(--color-surface); color: var(--color-text-secondary); border: 1px solid var(--color-border); font-family: var(--font-mono);"
+					>
+						{@render commandLabel(command)}
+						<ChevronRight size={12} />
+					</button>
+				{/each}
 			</div>
 		</div>
 	</div>
@@ -551,12 +601,62 @@
 		cursor: not-allowed;
 	}
 
+	/* The terminal always renders dark-terminal text colors: colored git
+	   output and the global .tok-* syntax classes resolve through these
+	   variables, so re-mapping them here restyles everything inside. In
+	   dark mode these match the theme palette (with brighter muted text);
+	   in light mode they make the dark terminal surface work. */
+	.pg-terminal,
+	.pg-prompt-line {
+		--color-terminal-text: #cdd6f4;
+		--color-terminal-prompt: #a6e3a1;
+		--color-terminal-command: #f5f5f5;
+		--color-terminal-output: #a6adc8;
+		--color-text-muted: #7f7a9e;
+		--color-text-secondary: #cdd6f4;
+		--color-primary-text: #a5b4fc;
+		--color-vibe-text: #c4b5fd;
+		--color-warning: #fab387;
+		--color-diff-add: #a6e3a1;
+		--color-diff-add-bg: rgba(166, 227, 161, 0.1);
+		--color-diff-del: #f38ba8;
+		--color-diff-del-bg: rgba(243, 139, 168, 0.1);
+		--color-diff-hunk: #89b4fa;
+		--color-diff-hash: #f9e2af;
+		--color-diff-meta: #a6e3a1;
+	}
+
+	/* Light mode: a crisp dark terminal against the light playground chrome. */
+	.pg-terminal {
+		background: #0a0813;
+		color: var(--color-terminal-text);
+	}
+
 	.pg-prompt-line {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
 		padding: 0.75rem 1.25rem;
-		border-top: 1px solid var(--color-playground-border);
+		border-top: 1px solid color-mix(in srgb, var(--color-playground-border) 55%, transparent);
+		background: #14101f;
+	}
+
+	/* Dark mode: stay in the theme's rosy playground palette instead of
+	   near-black, matching how layout.css scopes its theme blocks. */
+	@media (prefers-color-scheme: dark) {
+		:global(:root:not(.light)) .pg-terminal {
+			background: var(--color-playground-bg);
+		}
+		:global(:root:not(.light)) .pg-prompt-line {
+			background: color-mix(in srgb, var(--color-playground-bg) 94%, var(--color-terminal-prompt) 6%);
+		}
+	}
+
+	:global(:root.dark) .pg-terminal {
+		background: var(--color-playground-bg);
+	}
+
+	:global(:root.dark) .pg-prompt-line {
 		background: color-mix(in srgb, var(--color-playground-bg) 94%, var(--color-terminal-prompt) 6%);
 	}
 
@@ -618,14 +718,16 @@
 		justify-content: center;
 		padding: 0.25rem 0.45rem;
 		border-radius: 0.3rem;
-		border: 1px solid var(--color-playground-border);
-		background: color-mix(in srgb, var(--color-playground-header) 80%, transparent);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		background: rgba(255, 255, 255, 0.05);
 		color: var(--color-terminal-output);
 		opacity: 0.5;
 		font-size: 10px;
 		user-select: none;
 		cursor: pointer;
-		transition: opacity 0.15s ease, border-color 0.15s ease;
+		transition:
+			opacity 0.15s ease,
+			border-color 0.15s ease;
 	}
 
 	.pg-return-hint:hover:not(:disabled) {
