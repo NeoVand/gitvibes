@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Search, X } from 'lucide-svelte';
 	import { searchEntries, type SearchEntry } from '$lib/data/search-index';
+	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 
 	let {
 		onNavigate
@@ -128,7 +129,11 @@
 				>
 					<div class="result-main">
 						{#if entry.command}
-							<span class="result-command">{entry.command}</span>
+							<span class="result-command"
+								>{#each tokenizeGitCommand(entry.command) as token, ti (ti)}<span
+										class="tok tok-{token.type}">{token.text}</span
+									>{/each}</span
+							>
 						{:else}
 							<span class="result-title">{entry.title}</span>
 						{/if}
@@ -300,7 +305,6 @@
 
 	.result-command,
 	.result-title {
-		font-family: var(--font-mono);
 		font-size: 11px;
 		font-weight: 500;
 		color: var(--color-text);
@@ -316,7 +320,20 @@
 		}
 	}
 
-	.search-result.selected .result-command,
+	.result-command {
+		font-family: var(--font-mono);
+	}
+
+	.result-command::before {
+		content: '$ ';
+		color: var(--color-terminal-prompt);
+		opacity: 0.75;
+	}
+
+	.result-title {
+		font-family: var(--font-sans);
+	}
+
 	.search-result.selected .result-title {
 		color: var(--color-primary-text);
 	}
