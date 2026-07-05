@@ -283,6 +283,49 @@ kbd {
 	color: white;
 }
 
+/* Syntax highlighting tokens for shell commands (see $lib/data/git-syntax.ts).
+   Shared by CodeBlock and the header Search results. */
+.tok-git {
+	color: var(--color-text-muted);
+}
+
+.tok-subcommand,
+.tok-command {
+	color: var(--color-primary-text);
+	font-weight: 600;
+}
+
+.tok-flag {
+	color: var(--color-vibe-text);
+}
+
+.tok-string {
+	color: var(--color-diff-add);
+}
+
+.tok-placeholder {
+	color: var(--color-diff-hash);
+	font-style: italic;
+}
+
+.tok-hash {
+	color: var(--color-diff-hash);
+}
+
+.tok-arg {
+	color: var(--color-text-secondary);
+}
+
+.tok-comment {
+	color: var(--color-terminal-output);
+	font-style: italic;
+}
+
+.tok-conflict {
+	color: var(--color-diff-del);
+	font-weight: 600;
+}
+
 ::-webkit-scrollbar {
 	width: 5px;
 	height: 5px;

@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { Copy, Check, Terminal } from 'lucide-svelte';
+	import { tokenizeCodeBlock } from '$lib/data/git-syntax';
 
 	let {
 		code,
 		lang = 'bash',
 		title = ''
 	}: { code: string; lang?: string; title?: string } = $props();
+
+	const SHELL_LANGS = ['bash', 'sh', 'shell', 'zsh'];
+	const lines = $derived(tokenizeCodeBlock(code, SHELL_LANGS.includes(lang) ? 'shell' : 'plain'));
 
 	let copied = $state(false);
 
@@ -43,5 +47,9 @@
 			{/if}
 		</button>
 	</div>
-	<pre class="overflow-x-auto p-4 text-sm leading-relaxed" style="color: var(--color-terminal-text); font-family: var(--font-mono); margin: 0;"><code>{code}</code></pre>
+	<pre class="overflow-x-auto p-4 text-sm leading-relaxed" style="color: var(--color-terminal-text); font-family: var(--font-mono); margin: 0;"><code
+			>{#each lines as line, li (li)}{#if li > 0}{'\n'}{/if}{#each line as token, ti (ti)}<span
+						class="tok tok-{token.type}">{token.text}</span
+					>{/each}{/each}</code
+		></pre>
 </div>
