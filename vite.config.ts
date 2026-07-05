@@ -5,6 +5,13 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit(), devtoolsJson()],
+	// Preview harness assigns a port via PORT; Vite doesn't read it natively
+	server: {
+		port: Number(process.env.PORT) || 5173
+	},
+	preview: {
+		port: Number(process.env.PORT) || 4173
+	},
 	define: {
 		global: 'globalThis'
 	},

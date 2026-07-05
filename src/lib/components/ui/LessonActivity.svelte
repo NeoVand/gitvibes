@@ -40,11 +40,20 @@
 				</div>
 			{:then { default: GitPlayground }}
 				<div class="[&>div]:rounded-none">
-					<GitPlayground {scenarioId} embedded hideHeader {id} showScenarioPicker={false} onResetReady={(fn) => resetFn = fn} />
+					<GitPlayground
+						{scenarioId}
+						embedded
+						hideHeader
+						{id}
+						showScenarioPicker={false}
+						onResetReady={(fn) => (resetFn = fn)}
+					/>
 				</div>
 			{:catch error}
 				<div class="p-6 text-center">
-					<p class="text-sm" style="color: var(--color-warning);">Failed to load playground: {error?.message ?? 'Unknown error'}</p>
+					<p class="text-sm" style="color: var(--color-warning);">
+						Failed to load playground: {error?.message ?? 'Unknown error'}
+					</p>
 					<button
 						type="button"
 						onclick={() => retryKey++}
@@ -65,7 +74,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 0.625rem 1.25rem;
-		border: 1px solid color-mix(in srgb, var(--color-important) 35%, var(--color-border));
+		border: 1px solid color-mix(in srgb, var(--color-important) 55%, var(--color-border));
 		border-bottom: none;
 		border-radius: 0.75rem 0.75rem 0 0;
 		background: transparent;
@@ -74,7 +83,7 @@
 	.activity-panel {
 		overflow: hidden;
 		border-radius: 0 0 0.75rem 0.75rem;
-		border: 1px solid color-mix(in srgb, var(--color-important) 35%, var(--color-border));
+		border: 1px solid color-mix(in srgb, var(--color-important) 55%, var(--color-border));
 		border-top: none;
 	}
 </style>
