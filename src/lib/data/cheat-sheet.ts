@@ -33,7 +33,16 @@ export const cheatSheet: CheatSheetCategory[] = [
 				command: 'git config --global core.editor "<editor>"',
 				description: 'Set default text editor for Git'
 			},
-			{ command: 'git config --list', description: 'List all current configuration settings' }
+			{ command: 'git config --list', description: 'List all current configuration settings' },
+			{
+				command: 'git config --global credential.helper <helper>',
+				description: 'Store HTTPS credentials (osxkeychain, manager, libsecret)'
+			},
+			{
+				command: 'ssh-keygen -t ed25519 -C "<email>"',
+				description: 'Generate an SSH key pair for authentication'
+			},
+			{ command: 'ssh -T git@github.com', description: 'Test your SSH connection to GitHub' }
 		]
 	},
 	{
