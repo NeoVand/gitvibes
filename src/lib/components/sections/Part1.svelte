@@ -82,10 +82,10 @@ git config --global user.email "your-enterprise-email@company.com"`}
 
 		<!-- 1.2 Authentication -->
 		<div id="section-1-2" class="mb-14">
-			<SectionHeader level="section" icon={KeyRound} title="1.2 Authentication with Personal Access Token" color="var(--color-primary)" />
+			<SectionHeader level="section" icon={KeyRound} title="1.2 Authentication: Tokens & SSH Keys" color="var(--color-primary)" />
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				Your company's code lives in a private repository. To access it, you need to prove you're allowed in — and passwords are no longer enough.
+				Your company's code lives in a private repository. To access it, you need to prove you're allowed in — and GitHub removed password authentication for Git back in 2021. Today there are two ways to authenticate: over <strong>HTTPS</strong> with a token, or over <strong>SSH</strong> with a key pair.
 			</p>
 
 			<div class="my-6">
@@ -98,19 +98,34 @@ git config --global user.email "your-enterprise-email@company.com"`}
 
 			<Callout type="warning">
 				{#snippet children()}
-					<strong>The Problem:</strong> Your company's code is in a private repository. Most enterprises
-					have disabled password authentication for Git operations. You need a Personal Access Token (PAT).
+					<strong>The Problem:</strong> Your company's code is in a private repository, and password
+					authentication for Git operations no longer exists. You need either a Personal Access Token
+					(for HTTPS) or an SSH key — and you should know which one fits your situation.
 				{/snippet}
 			</Callout>
 
+			<h4 class="mb-2 mt-5 text-[14px] font-semibold" style="color: var(--color-text);">Option 1: HTTPS with a Personal Access Token</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				A Personal Access Token (PAT) is a generated secret that acts as your password, but with scoped permissions and an expiration date. GitHub now recommends <strong>fine-grained tokens</strong>, which can be limited to specific repositories:
+			</p>
+
 			<ol class="mb-5 list-inside list-decimal space-y-1.5 text-[13px]" style="color: var(--color-text-secondary);">
-				<li>Go to GitHub <strong>Settings</strong> &rarr; <strong>Developer settings</strong> &rarr; <strong>Personal access tokens</strong></li>
-				<li>Click <strong>Generate new token (classic)</strong></li>
-				<li>Name it descriptively (e.g., "Work Laptop")</li>
+				<li>Go to GitHub <strong>Settings</strong> &rarr; <strong>Developer settings</strong> &rarr; <strong>Personal access tokens</strong> &rarr; <strong>Fine-grained tokens</strong></li>
+				<li>Click <strong>Generate new token</strong> and name it descriptively (e.g., "Work Laptop")</li>
 				<li>Set an expiration (90 days recommended)</li>
-				<li>Select scopes: <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">repo</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">read:org</code></li>
-				<li>Click <strong>Generate token</strong> and copy it immediately</li>
+				<li>Under <strong>Repository access</strong>, choose <strong>Only select repositories</strong> and pick your project</li>
+				<li>Under <strong>Permissions</strong>, set <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">Contents</code> to <strong>Read and write</strong></li>
+				<li>Click <strong>Generate token</strong> and copy it immediately — you won't see it again</li>
 			</ol>
+
+			<Callout type="note">
+				{#snippet children()}
+					Some organizations still use the older <strong>classic tokens</strong> (same page, under
+					"Tokens (classic)" — select the <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">repo</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">read:org</code> scopes).
+					If your team tells you to use one, the rest of the workflow is identical.
+				{/snippet}
+			</Callout>
 
 			<CodeBlock
 				title="Clone using your token"
@@ -140,8 +155,121 @@ git config --global credential.helper libsecret`}
 				{/snippet}
 			</Callout>
 
+			<h4 class="mb-2 mt-7 text-[14px] font-semibold" style="color: var(--color-text);">Option 2: SSH Keys</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				SSH flips the model. Instead of pasting a secret, you generate a <strong>key pair</strong>: a private key that never leaves your machine, and a public key you upload to GitHub. Set it up once and every clone, pull, and push just works — no tokens to renew. It's the classic "set it and forget it" choice for a machine you develop on daily.
+			</p>
+
+			<CodeBlock
+				title="Generate your key"
+				code={`ssh-keygen -t ed25519 -C "your-enterprise-email@company.com"
+# Press Enter to accept the default file location,
+# then choose a passphrase (recommended)`}
+			/>
+
+			<CodeBlock
+				title="Add the key to the ssh-agent"
+				code={`# macOS - store the passphrase in your Keychain
+eval "$(ssh-agent -s)"
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+
+# Windows (Git Bash) & Linux
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519`}
+			/>
+
+			<CodeBlock
+				title="Copy your public key"
+				code={`# macOS
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Windows (Git Bash)
+cat ~/.ssh/id_ed25519.pub | clip
+
+# Linux - print it, then copy the output
+cat ~/.ssh/id_ed25519.pub`}
+			/>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Then go to GitHub <strong>Settings</strong> &rarr; <strong>SSH and GPG keys</strong> &rarr; <strong>New SSH key</strong>, paste the key, and save. Verify the connection works:
+			</p>
+
+			<CodeBlock
+				title="Test the connection"
+				code={`ssh -T git@github.com
+# Hi your-username! You've successfully authenticated...`}
+			/>
+
+			<Callout type="important">
+				{#snippet children()}
+					Only ever share the <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">.pub</code> file.
+					The private key (the one without an extension) must never leave your machine — treat it like
+					the master key to your accounts.
+				{/snippet}
+			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				With SSH, repository URLs look different — use the <strong>SSH</strong> tab of the green <strong>Code</strong> button when copying a clone URL:
+			</p>
+
+			<CodeBlock
+				title="Clone over SSH"
+				code={`git clone git@github.com:Your-Enterprise/your-project.git
+# No username or token prompt - your key authenticates you`}
+			/>
+
+			<h4 class="mb-2 mt-7 text-[14px] font-semibold" style="color: var(--color-text);">Which One Should You Use?</h4>
+
+			<Callout type="tip">
+				{#snippet children()}
+					<strong>SSH</strong> if it's your own machine and you push daily — one-time setup, then it disappears from your life.
+					<strong>A fine-grained token</strong> for scripts, CI pipelines, or short-lived access to a specific repo.
+					<strong>Neither</strong> if a tool can sign you in through the browser — see below.
+				{/snippet}
+			</Callout>
+
+			<h4 class="mb-2 mt-7 text-[14px] font-semibold" style="color: var(--color-text);">The Modern Shortcut: GitHub CLI</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				In practice, many developers today never copy a token at all. The <strong>GitHub CLI</strong> (<code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">gh</code>) is GitHub's official command-line tool. Where <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git</code> talks to the repository, <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">gh</code> talks to GitHub itself — authentication, pull requests, issues, releases — all without leaving your terminal. Download it from <a href="https://cli.github.com" target="_blank" rel="noopener noreferrer" class="font-medium underline underline-offset-2" style="color: var(--color-primary);">cli.github.com</a> or install it with your package manager:
+			</p>
+
+			<CodeBlock
+				title="Install GitHub CLI"
+				code={`# macOS
+brew install gh
+
+# Windows
+winget install --id GitHub.cli
+
+# Linux - see cli.github.com for your distro's instructions`}
+			/>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Then one command handles the entire authentication setup interactively — including generating and uploading an SSH key if you ask it to:
+			</p>
+
+			<CodeBlock
+				title="Authenticate once, interactively"
+				code={`gh auth login
+# Pick HTTPS or SSH, sign in through your browser,
+# and it configures Git for you`}
+			/>
+
+			<Callout type="tip">
+				{#snippet children()}
+					Once <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">gh auth login</code> succeeds,
+					every <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git clone</code>,
+					<code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">pull</code>, and
+					<code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">push</code> just works —
+					and you get bonus commands like <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">gh pr create</code> to
+					open a pull request straight from your terminal.
+				{/snippet}
+			</Callout>
+
 			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
-				That said, if you're using VS Code, you can skip the PAT setup entirely. VS Code handles GitHub authentication for you -- when you clone a private repo or push for the first time, it opens your browser to sign in. No tokens to generate, copy, or store:
+				And if you're using VS Code, it handles GitHub authentication the same way — when you clone a private repo or push for the first time, it opens your browser to sign in. No tokens to generate, copy, or store:
 			</p>
 
 			<VsCodeScreenshot
@@ -151,8 +279,8 @@ git config --global credential.helper libsecret`}
 			/>
 
 			<VibeBox prompts={[
-				"Help me set up SSH authentication for GitHub",
-				"Generate an SSH key and add it to my GitHub account"
+				"Generate an ed25519 SSH key and add it to my GitHub account",
+				"Help me decide between SSH and a personal access token for this machine"
 			]} />
 		</div>
 

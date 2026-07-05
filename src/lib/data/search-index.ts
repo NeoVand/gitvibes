@@ -19,6 +19,7 @@ function resolveSectionId(command: string, category: string): string {
 
 	if (cmd.includes('stash')) return 'section-5-1';
 	if (cmd.includes('rebase') || cmd.includes('cherry-pick')) return 'section-5-2';
+	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth')) return 'section-1-2';
 	if (cmd.includes('config') || cmd.includes('init')) return 'section-1-1';
 	if (cmd.includes('clone')) return 'section-1-3';
 	if (cmd.startsWith('git status')) return 'section-2-1';
@@ -111,6 +112,48 @@ const topicEntries: SearchEntry[] = [
 			'2005',
 			'linux kernel',
 			'junio hamano'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-authentication',
+		sectionId: 'section-1-2',
+		title: 'Authentication: tokens & SSH keys',
+		part: 'Enterprise Onboarding',
+		description: 'Authenticate to GitHub over HTTPS with a personal access token or over SSH with a key pair.',
+		keywords: [
+			'authentication',
+			'auth',
+			'login',
+			'personal access token',
+			'PAT',
+			'fine-grained token',
+			'token',
+			'password',
+			'credentials',
+			'credential helper',
+			'permission denied',
+			'403'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-ssh-keys',
+		sectionId: 'section-1-2',
+		title: 'SSH keys',
+		part: 'Enterprise Onboarding',
+		description: 'Generate an ed25519 SSH key, add it to GitHub, and clone with the SSH URL.',
+		keywords: [
+			'ssh',
+			'ssh key',
+			'ssh-keygen',
+			'ed25519',
+			'ssh-agent',
+			'public key',
+			'private key',
+			'keypair',
+			'git@github.com',
+			'https vs ssh'
 		],
 		kind: 'topic'
 	},

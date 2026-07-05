@@ -45,24 +45,25 @@ git config --global user.email "your-enterprise-email@company.com"
 
 ---
 
-### 1.2. Scenario: Authentication with Personal Access Token
+### 1.2. Scenario: Authentication — Tokens & SSH Keys
 
 > [!WARNING]
-> **The Problem:** Your company's code is stored in a private repository on a platform like GitHub Enterprise or GitLab. You cannot simply download it. You must first prove to the server that you are an authorized employee. For security, most enterprises have disabled simple password authentication for Git operations.
+> **The Problem:** Your company's code is stored in a private repository on a platform like GitHub Enterprise or GitLab. You cannot simply download it. You must first prove to the server that you are an authorized employee. GitHub removed password authentication for Git operations in 2021, so you need either a **Personal Access Token** (for HTTPS) or an **SSH key**.
 
-**GitHub Personal Access Token:**
+#### Option 1: HTTPS with a Personal Access Token
 
-To clone company repositories, you'll need a personal access token (PAT). Here's how to create one:
+A Personal Access Token (PAT) is a generated secret that acts as your password, but with scoped permissions and an expiration date. GitHub now recommends **fine-grained tokens**, which can be limited to specific repositories:
 
-1. Go to your enterprise GitHub account and navigate to **Settings** (click your profile picture) → **Developer settings** → **Personal access tokens** → **Tokens (classic)**.
-2. Click **Generate new token** → **Generate new token (classic)**.
-3. Give your token a descriptive name (e.g., "My Work Laptop - VS Code").
-4. Set an expiration date (recommend 90 days or as needed).
-5. Select the following scopes:
-   - `repo` (Full control of private repositories)
-   - `read:org` (Read organization data)
+1. Go to your GitHub account and navigate to **Settings** (click your profile picture) → **Developer settings** → **Personal access tokens** → **Fine-grained tokens**.
+2. Click **Generate new token** and give it a descriptive name (e.g., "My Work Laptop - VS Code").
+3. Set an expiration date (recommend 90 days or as needed).
+4. Under **Repository access**, choose **Only select repositories** and pick your project(s).
+5. Under **Permissions**, set **Contents** to **Read and write** (Metadata is included automatically).
 6. Click **Generate token** at the bottom.
 7. **IMPORTANT:** Copy the token immediately and save it securely in your password manager (you won't be able to see it again!)
+
+> [!NOTE]
+> Some organizations still use the older **classic tokens** (same page, under "Tokens (classic)" — select the `repo` and `read:org` scopes). If your team tells you to use one, the rest of the workflow is identical.
 
 **Using Your Token:**
 
@@ -94,6 +95,91 @@ git config --global credential.helper store
 
 > [!TIP]
 > After running one of these commands, the next time you `clone`, `pull`, or `push`, Git will prompt you once for your username and token, then save it for future use. On macOS and Windows, credentials are stored securely in the system keychain.
+
+#### Option 2: SSH Keys
+
+SSH flips the model. Instead of pasting a secret, you generate a **key pair**: a private key that never leaves your machine, and a public key you upload to GitHub. Set it up once and every clone, pull, and push just works — no tokens to renew. It's the standard "set it and forget it" choice for a machine you develop on daily.
+
+**Generate your key:**
+
+```bash
+ssh-keygen -t ed25519 -C "your-enterprise-email@company.com"
+# Press Enter to accept the default file location,
+# then choose a passphrase (recommended)
+```
+
+**Add the key to the ssh-agent:**
+
+```bash
+# macOS - store the passphrase in your Keychain
+eval "$(ssh-agent -s)"
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+
+# Windows (Git Bash) & Linux
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+
+**Copy your public key and add it to GitHub:**
+
+```bash
+# macOS
+pbcopy < ~/.ssh/id_ed25519.pub
+
+# Windows (Git Bash)
+cat ~/.ssh/id_ed25519.pub | clip
+
+# Linux - print it, then copy the output
+cat ~/.ssh/id_ed25519.pub
+```
+
+Then go to GitHub **Settings** → **SSH and GPG keys** → **New SSH key**, paste the key, and save. Verify the connection works:
+
+```bash
+ssh -T git@github.com
+# Hi your-username! You've successfully authenticated...
+```
+
+> [!IMPORTANT]
+> Only ever share the `.pub` file. The private key (the one without an extension) must never leave your machine — treat it like the master key to your accounts.
+
+With SSH, repository URLs look different — use the **SSH** tab of the green **Code** button when copying a clone URL:
+
+```bash
+git clone git@github.com:Your-Enterprise/your-project.git
+# No username or token prompt - your key authenticates you
+```
+
+**Which one should you use?**
+
+- **SSH** if it's your own machine and you push daily — one-time setup, then it disappears from your life.
+- **A fine-grained token** for scripts, CI pipelines, or short-lived access to a specific repo.
+- **Neither**, if a tool can sign you in through the browser — the GitHub CLI and VS Code both do this (see below).
+
+#### The Modern Shortcut: GitHub CLI
+
+The [GitHub CLI](https://cli.github.com) (`gh`) is GitHub's official command-line tool. Where `git` talks to the repository, `gh` talks to GitHub itself — authentication, pull requests, issues, releases — all without leaving your terminal. Download it from [cli.github.com](https://cli.github.com) or install it with your package manager:
+
+```bash
+# macOS
+brew install gh
+
+# Windows
+winget install --id GitHub.cli
+
+# Linux - see https://cli.github.com for your distro's instructions
+```
+
+Then one command handles the entire authentication setup interactively — including generating and uploading an SSH key if you ask it to:
+
+```bash
+gh auth login
+# Pick HTTPS or SSH, sign in through your browser,
+# and it configures Git for you
+```
+
+> [!TIP]
+> Once `gh auth login` succeeds, every `git clone`, `pull`, and `push` just works — and you get bonus commands like `gh pr create` to open a pull request straight from your terminal. VS Code offers the same browser sign-in when you clone or push for the first time.
 
 ---
 
