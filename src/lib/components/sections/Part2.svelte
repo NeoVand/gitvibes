@@ -125,7 +125,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/view-changes.webp"
+				src="staging-commits/view-changes.png"
 				alt="VS Code Source Control panel showing changed files with status badges"
 				caption="The Source Control panel is your visual 'git status' — modified (M), untracked (U), and deleted (D) files are listed with clear badges."
 			/>
@@ -140,7 +140,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/gutter-diff-preview.webp"
+				src="staging-commits/gutter-diff-preview.png"
 				alt="VS Code editor gutter showing colored indicators for added, modified, and deleted lines"
 				caption="Colored gutter indicators let you spot changes at a glance — green (added), blue (modified), and red (deleted). Click to preview."
 			/>
@@ -268,7 +268,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/stage-changes.webp"
+				src="staging-commits/stage-changes.png"
 				alt="VS Code Source Control showing stage changes button on hover"
 				caption="Hover over any file and click + to stage it. The file moves from 'Changes' to 'Staged Changes'."
 			/>
@@ -280,7 +280,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/diff-editor.webp"
+				src="staging-commits/diff-editor.png"
 				alt="VS Code Diff Editor showing side-by-side comparison of old and new file versions"
 				caption="The Diff Editor shows your changes side-by-side: red highlights deletions, green highlights additions. Review before you stage."
 			/>
@@ -295,7 +295,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/stage-specific-lines.webp"
+				src="staging-commits/stage-specific-lines.png"
 				alt="VS Code Diff Editor showing stage selected ranges option"
 				caption="In the Diff Editor, select specific lines and use the gutter to stage just those changes -- even more precise than git add -p."
 			/>
@@ -481,7 +481,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/overview.webp"
+				src="overview/overview.png"
 				alt="VS Code Source Control panel showing staged changes, commit message box, and commit button"
 				caption="The full Source Control view: your staged changes, the commit message input, and the Commit button. Click the sparkle icon to auto-generate a message."
 			/>
@@ -492,7 +492,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/generate-commit-message.webp"
+				src="staging-commits/generate-commit-message.png"
 				alt="VS Code showing AI-generated commit message from staged changes"
 				caption="Click the sparkle icon and AI generates a commit message based on your staged changes. Always review it before committing!"
 			/>

@@ -128,7 +128,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/overview.webp"
+				src="overview/overview.png"
 				alt="VS Code Source Control panel showing the full layout with Changes, Staged Changes, commit message input, and Graph"
 				caption="Your command center: the Source Control panel shows everything at a glance -- changed files, staged files, commit input, and the branch graph."
 			/>
@@ -140,7 +140,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/source-control-graph.webp"
+				src="staging-commits/source-control-graph.png"
 				alt="VS Code Source Control Graph showing commit history with branches"
 				caption="The Source Control Graph visualizes your commit history and branch structure -- a powerful way to understand how branches relate."
 			/>
@@ -183,7 +183,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/timeline-view.webp"
+				src="overview/timeline-view.png"
 				alt="VS Code Timeline view in the Explorer sidebar showing file history"
 				caption="The Timeline view (in the Explorer panel) shows the complete commit history for any file. Click any entry to see the diff."
 			/>
@@ -196,7 +196,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/git-blame-status-bar.webp"
+				src="overview/git-blame-status-bar.png"
 				alt="VS Code showing Git blame information in the status bar"
 				caption="Built-in Git blame shows the author and commit message for the current line right in the status bar."
 			/>
@@ -295,7 +295,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/merge-editor-overview.webp"
+				src="overview/merge-editor-overview.png"
 				alt="VS Code 3-way Merge Editor showing Incoming, Current, and Result panes"
 				caption="The 3-way Merge Editor transforms scary merge conflicts into a visual, point-and-click experience. Use the checkboxes to select changes."
 			/>
@@ -308,7 +308,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/ai-merge-conflict-resolution.webp"
+				src="overview/ai-merge-conflict-resolution.png"
 				alt="VS Code AI-powered merge conflict resolution with GitHub Copilot"
 				caption="GitHub Copilot can analyze conflicting changes and suggest an intelligent resolution -- the future of merge conflict handling."
 			/>

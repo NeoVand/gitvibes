@@ -387,7 +387,7 @@ winget install --id GitHub.cli
 			</p>
 
 			<VsCodeScreenshot
-				src="github/auth-prompt.webp"
+				src="github/auth-prompt.png"
 				alt="VS Code showing GitHub authentication prompt in the browser"
 				caption="VS Code automatically opens your browser to sign in to GitHub -- no tokens to manage."
 			/>
@@ -464,7 +464,7 @@ winget install --id GitHub.cli
 			</ol>
 
 			<VsCodeScreenshot
-				src="quickstart/clone-repository-url.webp"
+				src="quickstart/clone-repository-url.png"
 				alt="VS Code Clone Repository dialog showing URL input field"
 				caption="Use Cmd+Shift+P → 'Git: Clone' and paste the repository URL. VS Code handles the rest."
 			/>

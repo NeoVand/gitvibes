@@ -99,7 +99,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="branches-worktrees/current-branch.webp"
+				src="branches-worktrees/current-branch.png"
 				alt="VS Code status bar showing current branch name and the branches dropdown"
 				caption="Click the branch name in the bottom-left corner to switch branches or create a new one."
 			/>
@@ -115,7 +115,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/gitbranches.webp"
+				src="overview/gitbranches.png"
 				alt="VS Code branch Quick Pick showing create new branch option and existing branches"
 				caption="The branch Quick Pick lets you create, switch, or check out branches without touching the terminal."
 			/>
@@ -259,7 +259,7 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/incoming-outgoing-changes.webp"
+				src="overview/incoming-outgoing-changes.png"
 				alt="VS Code Source Control showing incoming and outgoing changes with commit counts"
 				caption="The incoming/outgoing section shows exactly which commits you need to pull and which you'll push."
 			/>
@@ -271,7 +271,7 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="quickstart/sync-changes.webp"
+				src="quickstart/sync-changes.png"
 				alt="VS Code Source Control showing Sync Changes button with incoming and outgoing commit counts"
 				caption="The Sync Changes button combines pull + push in one click. The numbers show incoming (↓) and outgoing (↑) commit counts."
 			/>
@@ -385,7 +385,7 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="github/create-pull-request-view.webp"
+				src="github/create-pull-request-view.png"
 				alt="VS Code GitHub Pull Request creation view with title, description, and reviewer fields"
 				caption="Create Pull Requests directly in VS Code with the GitHub Pull Requests extension. AI can even generate the PR description for you."
 			/>
