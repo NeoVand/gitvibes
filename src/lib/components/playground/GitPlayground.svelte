@@ -12,7 +12,7 @@
 	} from 'lucide-svelte';
 	import MermaidDiagram from '$lib/components/ui/MermaidDiagram.svelte';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
-	import { GitEngine } from '$lib/playground/git-engine';
+	import { git, GitEngine } from '$lib/playground/git-engine';
 	import { runGitCommand } from '$lib/playground/commands';
 	import { buildGitGraph } from '$lib/playground/git-graph';
 	import {
@@ -189,7 +189,74 @@
 			historyIndex -= 1;
 			const inputs = history.filter((h) => h.type === 'input').map((h) => h.text);
 			input = inputs[inputs.length - 1 - historyIndex] ?? '';
+		} else if (e.key === 'Tab') {
+			e.preventDefault();
+			void completeInput();
 		}
+	}
+
+	const SHELL_COMMANDS = ['git', 'ls', 'cat', 'echo', 'clear', 'help'];
+	const GIT_SUBCOMMANDS = [
+		'status',
+		'add',
+		'commit',
+		'diff',
+		'log',
+		'show',
+		'reflog',
+		'branch',
+		'switch',
+		'checkout',
+		'restore',
+		'reset',
+		'merge',
+		'rebase',
+		'cherry-pick',
+		'tag',
+		'stash',
+		'fetch',
+		'pull',
+		'push',
+		'remote',
+		'revert',
+		'rm',
+		'clean'
+	];
+
+	function longestCommonPrefix(values: string[]): string {
+		let prefix = values[0] ?? '';
+		for (const value of values.slice(1)) {
+			while (!value.startsWith(prefix)) prefix = prefix.slice(0, -1);
+		}
+		return prefix;
+	}
+
+	async function completeInput() {
+		if (!engine || loading) return;
+		const tokens = input.split(/(\s+)/);
+		const last = tokens[tokens.length - 1] ?? '';
+		if (!last || /\s/.test(last)) return;
+
+		const words = input.trim().split(/\s+/);
+		let candidates: string[];
+		if (words.length === 1) {
+			candidates = SHELL_COMMANDS;
+		} else if (words[0] === 'git' && words.length === 2) {
+			candidates = GIT_SUBCOMMANDS;
+		} else {
+			const branches = await git
+				.listBranches({ fs: engine.fs, dir: engine.dir })
+				.catch(() => [] as string[]);
+			const files = await engine.listWorkingFiles().catch(() => [] as string[]);
+			candidates = [...branches, ...files];
+		}
+
+		const matches = candidates.filter((c) => c.startsWith(last));
+		if (matches.length === 0) return;
+		const completion = matches.length === 1 ? matches[0] : longestCommonPrefix(matches);
+		if (completion.length <= last.length) return;
+		tokens[tokens.length - 1] = completion + (matches.length === 1 ? ' ' : '');
+		input = tokens.join('');
 	}
 
 	async function resetScenario() {

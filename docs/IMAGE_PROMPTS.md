@@ -538,3 +538,131 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > Dark navy background (#0f1117) with soft film grain and paper texture. The terminal lines carry selective color glow. The branch nodes glow in emerald and indigo. The browser frame is desaturated and worn. Everything else remains dark.
 >
 > Avoid split-screen layouts, multiple tab icons, subtitle text, or product branding. One abstracted window shape with luminous activity inside, one invitation to enter. 16:9 aspect ratio.
+
+---
+
+## Part 1 additions (July 2026)
+
+### section-1-4 — What NOT to Commit (.gitignore) → `gitignore.png`
+
+> Create a cinematic editorial poster about **.gitignore** — the guardrail that decides what never enters history.
+>
+> CONCEPT: Asymmetrical composition. Left third: large weathered monospace title `.gitignore` with aged print texture, and beneath it in muted monospace: **"What NOT to commit."** Right two-thirds: a luminous gate or checkpoint arch over a conveyor path of file cards flowing toward a distant vault-like repository. Clean source files (small glowing cards labeled `app.py`, `README.md`) pass through the gate. Junk and secrets are deflected into the dark: a card labeled `.env` with a tiny key icon, a heavy crate labeled `node_modules`, a dusty `.DS_Store` speck. The deflected items fall out of the light, desaturated.
+>
+> A small annotation panel bottom-left: **"Ignored files never reach history"**. Two quiet chips along the bottom: **Secrets stay local** · **git add . becomes safe**
+>
+> MOOD: Protective, calm confidence — a bouncer that never sleeps, not a scary firewall. Premium developer-tooling campaign poster.
+>
+> STYLE: Dark navy-to-indigo background (#0f1117) with soft film grain and worn edges. The gate glows selective emerald; the `.env` key card glints amber as it is turned away; 90% of the frame dark and desaturated.
+>
+> AVOID: padlock clichés, red X marks everywhere, shield logos, busy infographic panels, more than two bottom chips. 16:9 aspect ratio.
+
+### section-1-5 — Automating Quality with Git Hooks → `git-hooks.png`
+
+> Create a cinematic editorial poster about **git hooks** — scripts that inspect every commit before it lands.
+>
+> CONCEPT: Asymmetrical. Upper left: large distressed monospace title `git hooks`, subtitle in muted monospace: **"Quality checks that run themselves."** Right: a commit — a glowing orb of code — traveling along a rail through an automated inspection gantry, like a spacecraft passing through a scanner ring. Inside the ring, faint readouts: a tiny green check labeled `tests`, another labeled `lint`, a third labeled `message format`. Ahead on the rail, a previous commit glows healthy green; behind, one rejected commit is gently bounced back off the rail, dimming, with a faint readout `tests failed`.
+>
+> Small flow list on the lower right in monospace: `pre-commit → commit-msg → pre-push`, each with a tiny dot. One quiet annotation bottom-left: **"Hooks run on agent commits too."**
+>
+> MOOD: Mechanical reliability — an assembly-line quality station, precise and unbothered. Not dystopian, not busy.
+>
+> STYLE: Dark background (#0f1117), film grain, worn typography. Scanner ring glows cool indigo with emerald pass-lights; the rejected commit's readout in muted rose. Selective glow only.
+>
+> AVOID: fishing-hook puns, literal robots, terminal screenshots, dense checklists. 16:9 aspect ratio.
+
+---
+
+## Part 4 additions (July 2026)
+
+### section-4-8 — Detached HEAD → `detached-head.png`
+
+> Create a cinematic editorial poster about **detached HEAD** — visiting an old commit without a branch under your feet.
+>
+> CONCEPT: Left third: large weathered monospace title `detached HEAD`, subtitle: **"Time travel safely."** Right: a luminous commit timeline receding into the past like stepping stones over dark water. A lone explorer figure (small, abstract silhouette with a soft headlamp beam) stands on an OLDER stone, away from the glowing branch-tip stone where a small flag labeled `main` flies. The stone under the explorer glows amber — temporary footing. A faint dotted lifeline arcs from the explorer back to the flagged tip. Optional: the ghost of a new stepping stone forming beside the explorer with a tiny flag sprouting, labeled `switch -c` — the escape hatch.
+>
+> Two quiet chips bottom: **Look around freely** · **Branch before you build**
+>
+> MOOD: Exploratory wonder with a safety rope — not danger, but awareness. Museum-after-dark energy.
+>
+> STYLE: Dark navy (#0f1117), film grain, selective glows: past stones cool indigo, the explorer's stone amber, the `main` flag emerald. Vast negative space above the water.
+>
+> AVOID: horror imagery, severed-head visuals of any kind, skulls, warning triangles. 16:9 aspect ratio.
+
+### section-4-9 — The Reflog → `git-reflog.png`
+
+> Create a cinematic editorial poster about **git reflog** — the journal that remembers every place HEAD has ever been.
+>
+> CONCEPT: Left: large distressed monospace title `git reflog`, subtitle: **"Your time machine."** Right two-thirds: an ancient brass-and-glass logbook or seismograph device, open, with a long paper strip spooling out. On the strip, faint monospace entries glow: `a4b0549 reset: moving to HEAD~2`, `fea19bf commit: add caching`, `3703dea checkout: main` — each line a breadcrumb. One older entry glows warm amber and a delicate beam of light lifts a small commit-orb OUT of the strip, restoring it to a timeline above — the lost commit coming back.
+>
+> Small annotation panel bottom-left: **"Nothing reachable is ever lost."** One chip: **`git reset --hard HEAD@{1}`** in a small command box with a green `$`.
+>
+> MOOD: Archival magic — a librarian's instrument that can resurrect the past. Quiet awe.
+>
+> STYLE: Dark background (#0f1117), heavy film grain, brass warm tones against cool indigo strip-glow, selective emerald on the restored commit. Aged print texture on the title.
+>
+> AVOID: clock faces, DeLorean references, hourglasses, busy dashboards. 16:9 aspect ratio.
+
+---
+
+## Part 5 additions (July 2026)
+
+### section-5-4 — Cherry-Pick → `cherry-pick.png`
+
+> Create a cinematic editorial poster about **git cherry-pick** — lifting one perfect commit off a messy branch.
+>
+> CONCEPT: Left: large weathered monospace title `git cherry-pick`, subtitle: **"Take only the gems."** Right: two parallel commit timelines in the dark. The lower, messier branch (`experiment`) holds a row of dull, rough commit-stones — except ONE that glows like a cut gem (faceted, ruby-emerald light). A fine luminous thread of light lifts a perfect copy of that gem up onto the clean upper branch (`main`), where it settles at the tip with a fresh short hash shimmering beside it. The original gem stays where it was — this is a copy, not a move.
+>
+> Quiet annotation bottom-left: **"Same change, new commit."** Two chips: **Rescue fixes from failed experiments** · **Reject the PR, keep the gem**
+>
+> MOOD: Jeweler's precision. Selective, unhurried, exact.
+>
+> STYLE: Dark (#0f1117), film grain, the gem's ruby-emerald glow is the only saturated element; branch lines faint indigo. Generous negative space.
+>
+> AVOID: literal cherries or fruit, cranes/claw machines, more than one glowing gem. 16:9 aspect ratio.
+
+### section-5-5 — Rebase Conflicts → `rebase-conflict.png`
+
+> Create a cinematic editorial poster about **a rebase paused on a conflict** — and the three ways out.
+>
+> CONCEPT: Left: large distressed monospace title `rebase --continue`, subtitle: **"When rebase goes wrong."** Right: a train of commit-orbs being replayed one-by-one onto a new track (the rebased base glows below). Mid-air, ONE commit is frozen in place, crackling with a thin red fissure of conflict energy — the replay paused. The commits behind it wait calmly in queue. Beside the frozen commit, two faint ghost-paths: an emerald path forward labeled `--continue` and an amber path arcing all the way back to the original track labeled `--abort`, where a ghost image of the untouched branch waits safely.
+>
+> Small flow list lower right in monospace: `fix file → git add → git rebase --continue`. Quiet annotation bottom-left: **"--abort always brings you home."**
+>
+> MOOD: A paused machine, not a crash — tension with a clearly lit exit. Controlled drama.
+>
+> STYLE: Dark (#0f1117), film grain; the conflict fissure is the only red element (like the merge-conflict poster's lightning); paths in emerald/amber; everything else desaturated indigo.
+>
+> AVOID: explosions, train wrecks, error dialogs, skulls. Echo the red-fissure motif of the existing merge-conflict banner so they read as siblings. 16:9 aspect ratio.
+
+### section-5-6 — Tags & Releases → `git-tags.png`
+
+> Create a cinematic editorial poster about **git tag** — naming the moments that matter.
+>
+> CONCEPT: Left: large weathered monospace title `git tag`, subtitle: **"Naming your milestones."** Right: a long commit timeline crossing the frame like a mountain ridge at night. Two commits along the ridge carry elegant brass expedition markers driven into them, like summit plaques: one engraved `v1.0.0` (older, patinated), one being placed NOW, still bright: `v1.1.0`, with a faint annotation ribbon `Release: import support`. The tagged commits glow slightly warmer than the rest. Distant untagged commits fade into the dark ridge line.
+>
+> Quiet annotation bottom-left: **"Annotated tags carry a message and an author."** One chip: **Tag before the agent's big refactor**
+>
+> MOOD: Summit ceremony — quiet pride, permanence, named history.
+>
+> STYLE: Dark (#0f1117), film grain, brass-and-amber markers against cool indigo ridge; selective glow, vast dark sky as negative space.
+>
+> AVOID: price tags, gift tags, barcodes, party imagery, version-number confetti. 16:9 aspect ratio.
+
+---
+
+## Part 7 additions (July 2026)
+
+### section-7-4 — Parallel Agents with Worktrees → `git-worktrees.png`
+
+> Create a cinematic editorial poster about **git worktree** — one repository, many working directories, an agent in each.
+>
+> CONCEPT: Centered-asymmetric. Bottom center: a single luminous vault or crystalline core labeled `.git` — the one shared object database, glowing steady indigo. From it, three transparent conduits of light rise and fan out to three separate floating workbenches, each a small isolated desk-island with its own branch flag: `main`, `feature/auth`, `feature/payments`. At each bench, an abstract worker silhouette (subtle, geometric — not a cartoon robot) works independently under its own lamp; each bench's hologram screen shows different faint code. Above, two of the branches arc gently toward a distant merge point of light.
+>
+> Title upper left in large distressed monospace: `git worktree`, subtitle: **"Parallel agents, one repo."** Quiet annotation bottom: **"Each branch checked out once — no interference."**
+>
+> MOOD: A calm orchestra of parallel work — the payoff image of the whole guide. Spacious, confident, a little awe-inspiring.
+>
+> STYLE: Dark navy (#0f1117), film grain, the `.git` core is the brightest element (indigo-white), benches lit with distinct accent temperatures (emerald, amber, rose) but 90% of frame dark and desaturated.
+>
+> AVOID: humanoid robots, matrix rain, crowded UI panels, more than three benches. 16:9 aspect ratio.
