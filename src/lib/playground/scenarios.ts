@@ -238,13 +238,13 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		id: 'rebase-conflict',
 		title: 'Rebase hits a conflict — resolve or abort',
 		description:
-			'Your feature branch tuned src/config.py, but main changed the same lines. Rebasing onto main stops at a conflict. Resolve it and continue — or abort and return to safety.',
-		hint: 'Run git rebase main and read the conflict message. Fix the file with echo, git add it, then git rebase --continue. If you get lost, git rebase --abort restores the branch exactly as it was.',
+			'Your feature branch raised TIMEOUT in src/config.py, but main lowered it. Rebasing onto main stops at a conflict. Read the markers, resolve, and continue — or abort and return to safety.',
+		hint: 'Run git rebase main, then cat src/config.py to read the <<<<<<< markers. Overwrite the file with the value you want using echo, git add it, then git rebase --continue. Lost? git rebase --abort restores everything.',
 		suggestedCommands: [
 			'git log --oneline --all',
 			'git rebase main',
 			'cat src/config.py',
-			"echo 'TIMEOUT = 120\\nRETRIES = 5' > src/config.py",
+			"echo 'TIMEOUT = 120' > src/config.py",
 			'git add src/config.py',
 			'git rebase --continue'
 		],

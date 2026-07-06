@@ -614,7 +614,7 @@ git cherry-pick --abort`}
 			<CodeBlock
 				title="The three-step ritual"
 				code={`# 1. Fix the file — remove the markers, keep the right code
-echo 'TIMEOUT = 120\\nRETRIES = 5' > src/config.py
+echo 'TIMEOUT = 120' > src/config.py
 
 # 2. Tell Git the conflict is resolved
 git add src/config.py
@@ -654,10 +654,10 @@ git rebase --continue`}
 			</h4>
 			<PlaygroundNote>
 				Your <code>feature/tuning</code> branch raised the timeout in <code>src/config.py</code>,
-				but <code>main</code> changed the same lines. Run <code>git rebase main</code>, read the
-				conflict, fix the file with <code>echo</code>, then <code>git add</code> and
-				<code>git rebase --continue</code>. Try <code>git rebase --abort</code> too — watch everything
-				snap back.
+				but <code>main</code> lowered the same line. Run <code>git rebase main</code>, then
+				<code>cat src/config.py</code> to read the conflict markers. Fix the file with
+				<code>echo</code>, then <code>git add</code> and <code>git rebase --continue</code>. Try
+				<code>git rebase --abort</code> too — watch everything snap back.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Try it: Survive a rebase conflict"

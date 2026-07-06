@@ -362,7 +362,9 @@ async function replayCommits(
 	for (let i = 0; i < queue.length; i++) {
 		const entry = queue[i];
 		try {
-			await git.cherryPick({ fs, dir, oid: entry.oid, committer: AUTHOR });
+			// abortOnConflict: false leaves real conflict markers in the
+			// working tree and index — the learner needs something to read.
+			await git.cherryPick({ fs, dir, oid: entry.oid, committer: AUTHOR, abortOnConflict: false });
 			const newTip = await git.resolveRef({ fs, dir, ref: 'HEAD' });
 			engine.recordReflog(newTip, `${kind}: ${entry.message.split('\n')[0]}`);
 		} catch (err) {
@@ -522,7 +524,14 @@ async function runMerge(engine: GitEngine, branch: string): Promise<CommandResul
 
 	engine.mergeOrigHead = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
 	try {
-		const result = await git.merge({ fs, dir, ours: current, theirs, author: AUTHOR });
+		const result = await git.merge({
+			fs,
+			dir,
+			ours: current,
+			theirs,
+			author: AUTHOR,
+			abortOnConflict: false
+		});
 		if (result.oid) {
 			engine.recordReflog(
 				result.oid,

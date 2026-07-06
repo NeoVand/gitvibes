@@ -207,20 +207,25 @@ export async function buildReflogRescueRepo(engine: GitEngine): Promise<void> {
 	engine.recordReflog(target, 'reset: moving to HEAD~2 (--hard)');
 }
 
-/** feature branch diverged from main, both editing src/config.py */
+/**
+ * feature branch diverged from main, both editing the same single line of
+ * src/config.py — the conflict wraps the whole file and the resolution is
+ * a clean one-line echo.
+ */
 export async function buildRebaseConflictRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [
-		{ path: 'src/config.py', content: 'TIMEOUT = 30\nRETRIES = 3\n' }
+		{ path: 'src/config.py', content: 'TIMEOUT = 30\n' },
+		{ path: 'README.md', content: '# Inference Service\n' }
 	]);
 
 	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/tuning', checkout: true });
-	await engine.commitFiles('feat: increase timeout for slow APIs', [
-		{ path: 'src/config.py', content: 'TIMEOUT = 120\nRETRIES = 3\n' }
+	await engine.commitFiles('feat: raise timeout for slow model APIs', [
+		{ path: 'src/config.py', content: 'TIMEOUT = 120\n' }
 	]);
 
 	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main' });
 	await engine.commitFiles('fix: lower timeout after load test', [
-		{ path: 'src/config.py', content: 'TIMEOUT = 10\nRETRIES = 5\n' }
+		{ path: 'src/config.py', content: 'TIMEOUT = 10\n' }
 	]);
 
 	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'feature/tuning' });

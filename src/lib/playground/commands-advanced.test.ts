@@ -169,6 +169,9 @@ describe('rebase with conflicts', () => {
 		expect(result.output).toContain('CONFLICT');
 		expect(engine.replayState?.kind).toBe('rebase');
 
+		// The learner must have real conflict markers to read
+		expect(await engine.readFile('README.md')).toContain('<<<<<<<');
+
 		await engine.writeFile('README.md', '# Merged version\n');
 		await run('git add README.md');
 		const cont = await run('git rebase --continue');
@@ -181,7 +184,7 @@ describe('rebase with conflicts', () => {
 		expect(log[0].commit.message.trim()).toBe('feature readme');
 	});
 
-	it('--abort restores the original branch tip', async () => {
+	it('--abort restores the original branch tip and cleans the markers', async () => {
 		await divergedRepos();
 		const before = await engine.resolveRevision('feature');
 		await run('git rebase main');
@@ -310,6 +313,8 @@ describe('misc new commands', () => {
 		const merge = await run('git merge feature');
 		expect(merge.error).toBe(true);
 		expect(merge.output).toContain('Merge conflict in README.md');
+		// A real merge conflict leaves real markers to read
+		expect(await engine.readFile('README.md')).toContain('<<<<<<<');
 		const abort = await run('git merge --abort');
 		expect(abort.error).toBeFalsy();
 		expect(await engine.readFile('README.md')).toBe('# Main\n');
@@ -348,16 +353,26 @@ describe('new scenarios seed and play correctly', () => {
 		expect(logAfter.map((e) => e.commit.message.trim())).toContain('feat: add caching layer');
 	});
 
-	it('rebase-conflict: conflict, resolve, continue', async () => {
+	it('rebase-conflict: markers appear, one-line echo resolves, continue succeeds', async () => {
 		const { getScenario, loadScenarioSeed } = await import('./scenarios');
 		await loadScenarioSeed(engine, getScenario('rebase-conflict'));
 		const rebase = await run('git rebase main');
 		expect(rebase.error).toBe(true);
 		expect(rebase.output).toContain('config.py');
-		await engine.writeFile('src/config.py', 'TIMEOUT = 120\nRETRIES = 5\n');
+
+		// The suggested flow: cat shows markers with both versions...
+		const cat = await run('cat src/config.py');
+		expect(cat.output).toContain('<<<<<<<');
+		expect(cat.output).toContain('TIMEOUT = 10');
+		expect(cat.output).toContain('TIMEOUT = 120');
+
+		// ...and the suggested one-line echo resolves it
+		const echo = await run("echo 'TIMEOUT = 120' > src/config.py");
+		expect(echo.error).toBeFalsy();
 		await run('git add src/config.py');
 		const cont = await run('git rebase --continue');
 		expect(cont.output).toContain('Successfully rebased');
+		expect(await engine.readFile('src/config.py')).toBe('TIMEOUT = 120\n');
 	});
 
 	it('cherry-pick scenario: the gem lands on main without the junk', async () => {
