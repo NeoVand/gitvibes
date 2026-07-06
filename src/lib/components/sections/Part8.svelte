@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BookOpen, Workflow, Table } from 'lucide-svelte';
+	import { BookOpen, Library, Workflow, Table } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import Callout from '../ui/Callout.svelte';
@@ -314,6 +314,121 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+		</div>
+
+		<!-- 8.3 Keep Learning -->
+		<div id="section-8-3" class="mb-14">
+			<SectionHeader
+				level="section"
+				icon={Library}
+				title="8.3 Keep Learning — The References That Matter"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You've practiced everything here in a real repository — but Git is deep, and the best
+				references are worth knowing by name. These five will cover you from quick lookups to true
+				mastery:
+			</p>
+
+			<div class="mb-4 space-y-3">
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://git-scm.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">git-scm.com</a
+						>
+						<span style="color: var(--color-text);"> — the official Git site</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Downloads, release notes, and the authoritative
+						<a
+							href="https://git-scm.com/docs"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">command reference</a
+						>
+						— the same pages
+						<code
+							class="rounded px-1 py-0.5 text-xs"
+							style="background: var(--color-code-bg); font-family: var(--font-mono);"
+							>git help &lt;command&gt;</code
+						> shows you locally.
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://git-scm.com/book"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">Pro Git</a
+						>
+						<span style="color: var(--color-text);"> — the book, free forever</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						The definitive deep dive, from first commit to Git internals. When you want to know
+						<em>why</em> Git works the way it does, this is the answer.
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://learngitbranching.js.org"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">Learn Git Branching</a
+						>
+						<span style="color: var(--color-text);"> — branching puzzles</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Thirty minutes of visual rebase-and-merge puzzles. A great gym for the branch topology
+						instincts you started building in Parts 3 and 5 — the muscle memory will save you hours.
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://docs.github.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">GitHub Docs</a
+						>
+						<span style="color: var(--color-text);"> — the collaboration layer</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Pull requests, protected branches, Actions, and everything else that lives above Git
+						itself at most workplaces.
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://ohshitgit.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">Oh Shit, Git!?!</a
+						>
+						<span style="color: var(--color-text);"> — panic-mode recipes</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Blunt, funny, and correct recovery recipes for the moments Part 4 trained you for. Keep
+						it bookmarked next to your reflog.
+					</p>
+				</div>
 			</div>
 		</div>
 

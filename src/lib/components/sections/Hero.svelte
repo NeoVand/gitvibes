@@ -77,24 +77,6 @@
 
 			<div
 				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
-				style="background: var(--color-tip-bg);"
-			>
-				<Gamepad2 size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-tip);" />
-				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
-					<strong style="color: var(--color-text);">Learn by doing:</strong> Spend 30 minutes with
-					<a
-						href="https://learngitbranching.js.org/"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="font-medium underline underline-offset-2"
-						style="color: var(--color-tip);">Learn Git Branching</a
-					>
-					— a visual tutorial for branching puzzles. The muscle memory will save you hours later.
-				</p>
-			</div>
-
-			<div
-				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
 				style="background: var(--color-surface);"
 			>
 				<ScrollText size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-primary);" />

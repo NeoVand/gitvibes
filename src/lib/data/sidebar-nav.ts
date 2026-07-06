@@ -2,6 +2,7 @@ import {
 	AlertTriangle,
 	Archive,
 	BookOpen,
+	Library,
 	Bot,
 	Cherry,
 	Clock,
@@ -167,7 +168,8 @@ export const sidebarNav: NavSection[] = [
 		icon: BookOpen,
 		children: [
 			{ id: 'section-8-1', label: 'AI-First Workflow', icon: Workflow },
-			{ id: 'section-8-2', label: 'Quick Reference', icon: Table }
+			{ id: 'section-8-2', label: 'Quick Reference', icon: Table },
+			{ id: 'section-8-3', label: 'Keep Learning', icon: Library }
 		]
 	}
 ];
