@@ -37,25 +37,28 @@
 		</button>
 	</div>
 
-	<span class="hidden text-[15px] font-bold tracking-tight sm:inline" style="color: var(--color-text); font-family: var(--font-heading); letter-spacing: -0.02em;">
+	<span
+		class="hidden text-[15px] font-bold tracking-tight sm:inline"
+		style="color: var(--color-text); font-family: var(--font-heading); letter-spacing: -0.02em;"
+	>
 		GitVibes
 	</span>
 
 	<div class="flex-1"></div>
 
-	<!-- Desktop: show all icons -->
-	<div class="hidden flex-shrink-0 items-center gap-1 pr-2 sm:flex">
-		<div class="mr-1">
+	<!-- One control set for all breakpoints: label/link visibility adapts via CSS -->
+	<div class="flex flex-shrink-0 items-center gap-0.5 pr-2 sm:gap-1">
+		<div class="sm:mr-1">
 			<Search {onNavigate} />
 		</div>
 
 		<button
 			onclick={onTogglePlayground}
-			class="playground-btn flex h-8 cursor-pointer items-center gap-1.5 rounded-lg px-2.5 transition-all"
+			class="playground-btn flex h-8 w-8 cursor-pointer items-center justify-center gap-1.5 rounded-lg transition-all sm:w-auto sm:px-2.5"
 			aria-label="Open Git Playground"
 		>
 			<Gamepad2 size={16} />
-			<span class="text-xs font-semibold">Playground</span>
+			<span class="hidden text-xs font-semibold sm:inline">Playground</span>
 		</button>
 
 		<button
@@ -71,7 +74,7 @@
 			href="https://github.com/NeoVand/gitvibes"
 			target="_blank"
 			rel="noopener noreferrer"
-			class="flex h-8 w-8 items-center justify-center rounded-lg transition-opacity hover:opacity-70"
+			class="hidden h-8 w-8 items-center justify-center rounded-lg transition-opacity hover:opacity-70 sm:flex"
 			style="color: var(--color-text-muted);"
 			aria-label="View on GitHub"
 		>
@@ -90,42 +93,6 @@
 				<Moon size={16} />
 			{/if}
 		</button>
-	</div>
-
-	<!-- Mobile: all actions inline -->
-	<div class="flex flex-shrink-0 items-center gap-0.5 pr-2 sm:hidden">
-		<Search {onNavigate} />
-
-		<button
-			onclick={onTogglePlayground}
-			class="playground-btn flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all"
-			aria-label="Open Git Playground"
-		>
-			<Gamepad2 size={16} />
-		</button>
-
-		<button
-			onclick={onToggleCheatSheet}
-			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
-			style="color: var(--color-text-muted);"
-			aria-label="Git Cheat Sheet"
-		>
-			<ScrollText size={16} />
-		</button>
-
-		<button
-			onclick={onToggleTheme}
-			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
-			style="color: var(--color-text-muted);"
-			aria-label="Toggle theme"
-		>
-			{#if theme === 'dark'}
-				<Sun size={16} />
-			{:else}
-				<Moon size={16} />
-			{/if}
-		</button>
-
 	</div>
 </header>
 
@@ -157,13 +124,19 @@
 					<GitBranch size={22} strokeWidth={2.5} />
 				</div>
 				<div>
-					<h2 class="text-lg font-bold" style="color: var(--color-text); font-family: var(--font-heading); letter-spacing: -0.02em;">GitVibes</h2>
+					<h2
+						class="text-lg font-bold"
+						style="color: var(--color-text); font-family: var(--font-heading); letter-spacing: -0.02em;"
+					>
+						GitVibes
+					</h2>
 					<p class="text-xs" style="color: var(--color-text-muted);">Git for Vibe Coders</p>
 				</div>
 			</div>
 
 			<p class="mb-5 text-sm leading-relaxed" style="color: var(--color-text-secondary);">
-				An interactive educational app built to teach Git to developers working with AI tools. For educational purposes only.
+				An interactive educational app built to teach Git to developers working with AI tools. For
+				educational purposes only.
 			</p>
 
 			<div class="mb-4 text-sm" style="color: var(--color-text-secondary);">

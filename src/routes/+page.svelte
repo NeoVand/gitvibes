@@ -40,17 +40,51 @@
 		applyTheme(theme);
 	}
 
-	function scrollToSection(id: string) {
+	function sectionScrollTop(el: HTMLElement): number {
+		const headerHeight =
+			parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) ||
+			48;
+		return el.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
+	}
+
+	function scrollToSection(id: string, behavior: ScrollBehavior = 'smooth') {
 		const el = document.getElementById(id);
 		if (el) {
-			const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 48;
-			const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
-			window.scrollTo({ top, behavior: 'smooth' });
+			window.scrollTo({ top: sectionScrollTop(el), behavior });
 		}
 		if (typeof window !== 'undefined') {
 			const url = `${window.location.pathname}${window.location.search}#${id}`;
 			history.replaceState(null, '', url);
 		}
+	}
+
+	// Images above a deep-linked section load lazily and shift the layout after
+	// the initial scroll lands, so keep re-aligning until things settle. A
+	// layout shift moves the section's desired position; any other viewport
+	// movement (scrollbar drag, keyboard, script) means someone else is
+	// scrolling — they win and the loop stops.
+	function keepSectionAligned(id: string, duration = 1500) {
+		const started = performance.now();
+		let lastDesired = -1;
+		function tick() {
+			if (!navClickActive) return;
+			const el = document.getElementById(id);
+			if (el) {
+				const desired = sectionScrollTop(el);
+				const layoutShifted = lastDesired === -1 || Math.abs(desired - lastDesired) > 2;
+				if (!layoutShifted && Math.abs(window.scrollY - desired) > 2) {
+					return;
+				}
+				if (Math.abs(window.scrollY - desired) > 2) {
+					window.scrollTo({ top: desired, behavior: 'instant' });
+				}
+				lastDesired = desired;
+			}
+			if (performance.now() - started < duration) {
+				requestAnimationFrame(tick);
+			}
+		}
+		requestAnimationFrame(tick);
 	}
 
 	onMount(() => {
@@ -61,7 +95,10 @@
 		if (hash && sectionIds.includes(hash as (typeof sectionIds)[number])) {
 			activeSection = hash;
 			navClickActive = true;
-			requestAnimationFrame(() => scrollToSection(hash));
+			requestAnimationFrame(() => {
+				scrollToSection(hash, 'instant');
+				keepSectionAligned(hash);
+			});
 		}
 
 		const sectionEls = sectionIds
@@ -167,7 +204,9 @@
 
 <main
 	class="main-content transition-[margin-left] duration-200 ease-out"
-	style="padding-top: var(--header-height); margin-left: {sidebarOpen ? 'var(--sidebar-width)' : 'var(--sidebar-collapsed-width)'};"
+	style="padding-top: var(--header-height); margin-left: {sidebarOpen
+		? 'var(--sidebar-width)'
+		: 'var(--sidebar-collapsed-width)'};"
 >
 	<Hero onOpenPlayground={openPlayground} />
 	<Part1 />
@@ -178,10 +217,7 @@
 	<Part6 />
 	<Part7 onOpenPlayground={openPlayground} />
 
-	<footer
-		class="py-10 text-center"
-		style="border-top: 1px solid var(--color-border);"
-	>
+	<footer class="py-10 text-center" style="border-top: 1px solid var(--color-border);">
 		<p class="text-xs" style="color: var(--color-text-muted);">
 			Built for the vibe coding generation.
 		</p>

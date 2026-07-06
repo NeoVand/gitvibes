@@ -38,7 +38,7 @@ test.describe('Git Playground', () => {
 		await expect(select).toBeEnabled({ timeout: 15000 });
 
 		await select.selectOption('stash');
-		await expect(page.getByText('Uncommitted work on feature/A')).toBeVisible();
+		await expect(panel.getByText(/mid-refactor on feature\/A/)).toBeVisible({ timeout: 15000 });
 	});
 
 	test('supports stash commands', async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe('Git Playground', () => {
 
 		const input = panel.locator('input[placeholder="git status"]');
 		await runCommand(page, input, 'git stash push -m "WIP test"');
-		await expect(page.getByText('Saved working directory')).toBeVisible();
+		await expect(panel.getByText('Saved working directory')).toBeVisible();
 	});
 
 	test('supports git add -p patch mode', async ({ page }) => {
@@ -60,10 +60,10 @@ test.describe('Git Playground', () => {
 		await expect(input).toBeEnabled({ timeout: 15000 });
 
 		await runCommand(page, input, 'git add -p');
-		await expect(page.getByText('Stage changes in')).toBeVisible();
+		await expect(panel.getByText('Stage changes in')).toBeVisible();
 
 		await runCommand(page, input, 'y');
-		await expect(page.getByText(/Done staging|Stage changes in/)).toBeVisible();
+		await expect(panel.getByText(/Done staging|Stage changes in/)).toBeVisible();
 	});
 
 	test('supports fetch and remote on sync scenario', async ({ page }) => {
@@ -72,15 +72,19 @@ test.describe('Git Playground', () => {
 		const select = panel.locator('select');
 		await expect(select).toBeEnabled({ timeout: 15000 });
 		await select.selectOption('sync-remote');
-		await expect(page.getByText('# Your feature branch is ready')).toBeVisible({ timeout: 15000 });
+		await expect(panel.getByText(/teammates have pushed new commits/)).toBeVisible({
+			timeout: 15000
+		});
 
 		const input = panel.locator('input[placeholder="git status"]');
 		await expect(input).toBeEnabled();
 		await runCommand(page, input, 'git fetch origin');
-		await expect(page.getByText('From https://github.com/your-org/project.git')).toBeVisible();
+		await expect(panel.getByText('From https://github.com/your-org/project.git')).toBeVisible();
 
 		await runCommand(page, input, 'git remote -v');
-		await expect(page.getByText(/origin\s+https:\/\/github.com\/your-org\/project.git/)).toBeVisible();
+		await expect(
+			panel.getByText(/origin\s+https:\/\/github.com\/your-org\/project.git/)
+		).toBeVisible();
 	});
 
 	test('supports push on branching scenario', async ({ page }) => {
@@ -95,7 +99,7 @@ test.describe('Git Playground', () => {
 		await runCommand(page, input, 'git add .');
 		await runCommand(page, input, 'git commit -m "feat: AI refactor"');
 		await runCommand(page, input, 'git push -u origin feature/ai-experiment');
-		await expect(page.getByText('set up to track')).toBeVisible();
+		await expect(panel.getByText('set up to track')).toBeVisible();
 	});
 
 	test('help lists new commands', async ({ page }) => {
@@ -132,23 +136,36 @@ test.describe('Tutorial', () => {
 		await expect(page.locator('#part-2')).toBeInViewport({ timeout: 5000 });
 	});
 
-	test('lesson activity try-it-yourself tab loads playground', async ({ page }) => {
-		await page.goto('/#section-2-3');
-		const activity = page.locator('#core-loop');
-		await activity.getByRole('tab', { name: 'Try it yourself' }).click();
-		await expect(activity.getByText('real git')).toBeVisible({ timeout: 15000 });
+	// Lesson playgrounds initialize when scrolled into view, and the page's own
+	// deep-link scroll can race a programmatic scroll during hydration — so
+	// keep re-scrolling until the playground materializes.
+	async function scrollActivityIntoView(
+		activity: import('@playwright/test').Locator,
+		input: import('@playwright/test').Locator
+	) {
+		await expect(async () => {
+			await activity.scrollIntoViewIfNeeded();
+			await expect(input).toBeEnabled({ timeout: 2000 });
+		}).toPass({ timeout: 20000 });
+	}
 
+	test('lesson activity loads embedded playground', async ({ page }) => {
+		await page.goto('/#section-2-3');
+		const activity = page.locator('[data-lesson-activity="core-loop"]');
 		const input = activity.locator('input[placeholder="git status"]');
-		await expect(input).toBeEnabled({ timeout: 15000 });
+		await scrollActivityIntoView(activity, input);
+
+		await runCommand(page, input, 'git status');
+		await expect(activity.getByText('On branch')).toBeVisible();
 	});
 
 	test('sync-remote lesson activity loads in part 3', async ({ page }) => {
 		await page.goto('/#section-3-2');
-		const activity = page.locator('#sync-remote');
-		await expect(activity.getByText('# Your feature branch is ready')).toBeVisible({ timeout: 15000 });
-
+		const activity = page.locator('[data-lesson-activity="sync-remote"]');
 		const input = activity.locator('input[placeholder="git status"]');
-		await expect(input).toBeEnabled();
+		await scrollActivityIntoView(activity, input);
+
+		await expect(activity.getByText(/teammates have pushed new commits/)).toBeVisible();
 		await runCommand(page, input, 'git fetch origin');
 		await expect(activity.getByText('From https://github.com/your-org/project.git')).toBeVisible();
 	});

@@ -110,7 +110,9 @@
 			history = [{ type: 'output', text: `Failed to initialize repo: ${message}`, error: true }];
 		} finally {
 			loading = false;
-			inputEl?.focus();
+			// Embedded playgrounds load as the reader scrolls; autofocusing them
+			// would steal focus and yank the page scroll to the input.
+			if (!embedded) inputEl?.focus();
 		}
 	}
 

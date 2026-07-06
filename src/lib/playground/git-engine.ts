@@ -32,6 +32,56 @@ export interface RepoSeed {
 
 const AUTHOR = { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' };
 
+// LightningFS eagerly takes a per-name Web Locks mutex in its constructor,
+// so two instances sharing a name (e.g. the panel playground re-created on
+// scenario switch) can deadlock. Every instance gets a unique backing name;
+// the counter disambiguates same-millisecond creations.
+let fsInstanceCounter = 0;
+
+function uniqueFsName(base: string): string {
+	return `${base}-${Date.now()}-${++fsInstanceCounter}`;
+}
+
+// In-memory stand-in for LightningFS's IndexedDB layer. Every scenario is
+// reseeded from scratch, so persistence is pure overhead — and IndexedDB
+// traffic serializes across the playground instances on the page, making
+// scenario loads take many seconds.
+class MemoryIdb {
+	private files = new Map<number, Uint8Array>();
+	private superblock: unknown = null;
+
+	saveSuperblock(superblock: unknown): void {
+		this.superblock = superblock;
+	}
+	loadSuperblock(): unknown {
+		return this.superblock;
+	}
+	readFile(inode: number): Uint8Array | undefined {
+		return this.files.get(inode);
+	}
+	writeFile(inode: number, data: Uint8Array): void {
+		this.files.set(inode, data);
+	}
+	unlink(inode: number): void {
+		this.files.delete(inode);
+	}
+	wipe(): void {
+		this.files.clear();
+		this.superblock = null;
+	}
+	close(): void {}
+}
+
+type LightningFSOptions = NonNullable<ConstructorParameters<typeof LightningFS>[1]>;
+
+function createMemoryFs(base: string): LightningFS {
+	// The published FS.IDB type is out of sync with what the runtime calls
+	// (readFile/unlink vs loadFile), hence the cast.
+	return new LightningFS(uniqueFsName(base), {
+		db: new MemoryIdb()
+	} as unknown as LightningFSOptions);
+}
+
 export class GitEngine {
 	fs: LightningFS;
 	dir = '/repo';
@@ -40,11 +90,11 @@ export class GitEngine {
 	private initPromise: Promise<void> | null = null;
 
 	constructor(private fsName = 'gitvibes-playground') {
-		this.fs = new LightningFS(this.fsName);
+		this.fs = createMemoryFs(this.fsName);
 	}
 
 	async reset(seed?: RepoSeed): Promise<void> {
-		this.fs = new LightningFS(`${this.fsName}-${Date.now()}`);
+		this.fs = createMemoryFs(this.fsName);
 		this.initPromise = null;
 		this.remote.clear();
 		this.patchSession = null;
@@ -87,7 +137,7 @@ export class GitEngine {
 	}
 
 	async resetWith(fn: (engine: GitEngine) => Promise<void>): Promise<void> {
-		this.fs = new LightningFS(`${this.fsName}-${Date.now()}`);
+		this.fs = createMemoryFs(this.fsName);
 		this.initPromise = null;
 		this.remote.clear();
 		this.patchSession = null;
@@ -140,7 +190,12 @@ export class GitEngine {
 				await this.fs.promises.mkdir(this.dir);
 				await git.init({ fs: this.fs, dir: this.dir, defaultBranch });
 				await git.setConfig({ fs: this.fs, dir: this.dir, path: 'user.name', value: AUTHOR.name });
-				await git.setConfig({ fs: this.fs, dir: this.dir, path: 'user.email', value: AUTHOR.email });
+				await git.setConfig({
+					fs: this.fs,
+					dir: this.dir,
+					path: 'user.email',
+					value: AUTHOR.email
+				});
 			})();
 		}
 		await this.initPromise;
