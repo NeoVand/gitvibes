@@ -23,17 +23,35 @@
 	} = $props();
 
 	let open = $state(false);
+	let failed = $state(false);
 </script>
 
 <figure class={caption ? 'my-0' : ''}>
-	<button
-		type="button"
-		class="block w-full cursor-zoom-in border-none bg-transparent p-0 text-left transition-opacity hover:opacity-95"
-		onclick={() => (open = true)}
-		aria-label={`Expand image: ${alt}`}
-	>
-		<img {src} {alt} class="h-auto {className}" {loading} {width} {height} />
-	</button>
+	{#if failed}
+		<div
+			class="flex w-full items-center justify-center rounded-xl border border-dashed px-6 text-center"
+			style="aspect-ratio: {width} / {height}; border-color: var(--color-border); color: var(--color-text-muted);"
+		>
+			<p class="text-xs italic">{alt}</p>
+		</div>
+	{:else}
+		<button
+			type="button"
+			class="block w-full cursor-zoom-in border-none bg-transparent p-0 text-left transition-opacity hover:opacity-95"
+			onclick={() => (open = true)}
+			aria-label={`Expand image: ${alt}`}
+		>
+			<img
+				{src}
+				{alt}
+				class="h-auto {className}"
+				{loading}
+				{width}
+				{height}
+				onerror={() => (failed = true)}
+			/>
+		</button>
+	{/if}
 	{#if caption}
 		<figcaption
 			class="mt-2.5 text-center text-[13px] italic"

@@ -46,7 +46,7 @@
 
 		<div class="my-6">
 			<ExpandableImage
-				src="{base}/images/undo.png"
+				src="{base}/images/undo.webp"
 				alt="Undo — choose the least destructive tool that solves the problem"
 				caption="Choose the least destructive tool that solves the problem"
 			/>
@@ -75,7 +75,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-restore.png"
+					src="{base}/images/git-restore.webp"
 					alt="git restore . — discard local changes and return to a clean working directory"
 					caption="Discard local edits and return to the last committed state"
 				/>
@@ -136,7 +136,7 @@ git restore src/bad_file.py  # Discard a single file`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-restore-staged.png"
+					src="{base}/images/git-restore-staged.webp"
 					alt="git restore --staged — move files out of the staging area without losing your edits"
 					caption="Unstage files without losing your edits — a gentle undo"
 				/>
@@ -170,7 +170,7 @@ git restore src/bad_file.py  # Discard a single file`}
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/unstage-changes.png"
+				src="staging-commits/unstage-changes.webp"
 				alt="VS Code Source Control panel showing the unstage button (minus icon) on a staged file"
 				caption="Click the − button next to any staged file to unstage it. It moves back to the 'Changes' section."
 			/>
@@ -270,7 +270,7 @@ git commit --amend`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-reset.png"
+					src="{base}/images/git-reset.webp"
 					alt="git reset — soft, mixed, and hard modes for rolling back local commits"
 					caption="Three reset modes from gentle (soft) to nuclear (hard)"
 				/>
@@ -360,7 +360,7 @@ git commit --amend`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-revert.png"
+					src="{base}/images/git-revert.webp"
 					alt="git revert — undo a pushed commit safely with a new commit"
 					caption="Revert creates a new commit that undoes the damage — safe for shared branches"
 				/>
@@ -425,7 +425,7 @@ git push                   # Push the revert`}
 			</p>
 
 			<VsCodeScreenshot
-				src="quickstart/pull-push-commands.png"
+				src="quickstart/pull-push-commands.webp"
 				alt="VS Code Source Control ellipsis menu showing Pull, Push, Commit, Stash, Branch, and other Git commands"
 				caption="The ... menu is your Git command center. Look under Commit for Undo Last Commit, Commit (Amend), and other recovery options."
 			/>
@@ -460,7 +460,7 @@ git push                   # Push the revert`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/force-with-lease.png"
+					src="{base}/images/force-with-lease.webp"
 					alt="git push --force-with-lease — force push with a safety check against overwriting teammates' work"
 					caption="Force push with --force-with-lease protects teammates' work"
 				/>
@@ -554,7 +554,7 @@ git push                   # Push the revert`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/recovery-matrix.png"
+					src="{base}/images/recovery-matrix.webp"
 					alt="Recovery Matrix — match what went wrong to the least destructive Git undo command"
 					caption="The recovery matrix — match your mistake to the right undo tool"
 				/>

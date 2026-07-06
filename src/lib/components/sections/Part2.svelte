@@ -75,7 +75,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-status.png"
+					src="{base}/images/git-status.webp"
 					alt="git status — situational awareness for every change in your working tree"
 					caption="Always check your status before staging — know exactly what the AI changed"
 				/>
@@ -125,7 +125,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/view-changes.png"
+				src="staging-commits/view-changes.webp"
 				alt="VS Code Source Control panel showing changed files with status badges"
 				caption="The Source Control panel is your visual 'git status' — modified (M), untracked (U), and deleted (D) files are listed with clear badges."
 			/>
@@ -140,7 +140,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/gutter-diff-preview.png"
+				src="staging-commits/gutter-diff-preview.webp"
 				alt="VS Code editor gutter showing colored indicators for added, modified, and deleted lines"
 				caption="Colored gutter indicators let you spot changes at a glance — green (added), blue (modified), and red (deleted). Click to preview."
 			/>
@@ -169,7 +169,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-add-p.png"
+					src="{base}/images/git-add-p.webp"
 					alt="git add -p — interactively stage only the hunks you approve"
 					caption="Selective staging lets you approve AI changes hunk by hunk"
 				/>
@@ -268,7 +268,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/stage-changes.png"
+				src="staging-commits/stage-changes.webp"
 				alt="VS Code Source Control showing stage changes button on hover"
 				caption="Hover over any file and click + to stage it. The file moves from 'Changes' to 'Staged Changes'."
 			/>
@@ -280,7 +280,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/diff-editor.png"
+				src="staging-commits/diff-editor.webp"
 				alt="VS Code Diff Editor showing side-by-side comparison of old and new file versions"
 				caption="The Diff Editor shows your changes side-by-side: red highlights deletions, green highlights additions. Review before you stage."
 			/>
@@ -295,7 +295,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/stage-specific-lines.png"
+				src="staging-commits/stage-specific-lines.webp"
 				alt="VS Code Diff Editor showing stage selected ranges option"
 				caption="In the Diff Editor, select specific lines and use the gutter to stage just those changes -- even more precise than git add -p."
 			/>
@@ -346,7 +346,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-commit.png"
+					src="{base}/images/git-commit.webp"
 					alt="git commit — each save point frozen as a checkpoint on the timeline"
 					caption="Each commit is a checkpoint you can always travel back to"
 				/>
@@ -481,7 +481,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/overview.png"
+				src="overview/overview.webp"
 				alt="VS Code Source Control panel showing staged changes, commit message box, and commit button"
 				caption="The full Source Control view: your staged changes, the commit message input, and the Commit button. Click the sparkle icon to auto-generate a message."
 			/>
@@ -492,7 +492,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/generate-commit-message.png"
+				src="staging-commits/generate-commit-message.webp"
 				alt="VS Code showing AI-generated commit message from staged changes"
 				caption="Click the sparkle icon and AI generates a commit message based on your staged changes. Always review it before committing!"
 			/>

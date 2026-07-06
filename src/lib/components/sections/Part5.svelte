@@ -57,7 +57,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-stash.png"
+					src="{base}/images/git-stash.webp"
 					alt="git stash — shelve uncommitted work and switch branches without losing progress"
 					caption="Stash your work-in-progress to switch context without losing anything"
 				/>
@@ -111,7 +111,7 @@ git stash pop`}
 			</p>
 
 			<VsCodeScreenshot
-				src="quickstart/pull-push-commands.png"
+				src="quickstart/pull-push-commands.webp"
 				alt="VS Code Source Control ellipsis menu showing Stash, Branch, and other Git commands"
 				caption="The ... menu includes a Stash submenu with 'Stash (Include Untracked)' and 'Pop Latest Stash' -- everything you need for context-switching."
 			/>
@@ -159,7 +159,7 @@ git stash pop`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/merge-rebase.png"
+					src="{base}/images/merge-rebase.webp"
 					alt="merge vs rebase — two ways to update a stale feature branch with main"
 					caption="Merge preserves history, rebase rewrites it — choose based on your team's convention"
 				/>
@@ -270,7 +270,7 @@ git stash pop`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/merge-conflict.png"
+					src="{base}/images/merge-conflict.webp"
 					alt="merge conflict — two edits collide and Git needs you to choose the resolution"
 					caption="When two edits collide, Git asks you to choose — this is a merge conflict"
 				/>
@@ -355,7 +355,7 @@ x = 5
 			</Callout>
 
 			<VsCodeScreenshot
-				src="overview/merge-conflict.png"
+				src="overview/merge-conflict.webp"
 				alt="VS Code inline merge conflict view showing Accept Current, Accept Incoming, and Accept Both options"
 				caption="VS Code highlights conflicts inline with clickable actions: Accept Current Change, Accept Incoming Change, or Accept Both Changes."
 			/>
@@ -367,7 +367,7 @@ x = 5
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/merge-editor-overview.png"
+				src="overview/merge-editor-overview.webp"
 				alt="VS Code 3-way Merge Editor with Incoming, Current, and Result panes"
 				caption="The 3-way Merge Editor: Incoming changes (left), your changes (right), and the final result (bottom). Use checkboxes to select which changes to keep."
 			/>

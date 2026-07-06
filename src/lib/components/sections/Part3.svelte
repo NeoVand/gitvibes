@@ -66,7 +66,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-branch.png"
+					src="{base}/images/git-branch.webp"
 					alt="git branch — a parallel path diverging from main for safe experimentation"
 					caption="Branches let you experiment without risking the stable codebase"
 				/>
@@ -99,7 +99,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="branches-worktrees/current-branch.png"
+				src="branches-worktrees/current-branch.webp"
 				alt="VS Code status bar showing current branch name and the branches dropdown"
 				caption="Click the branch name in the bottom-left corner to switch branches or create a new one."
 			/>
@@ -115,7 +115,7 @@
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/gitbranches.png"
+				src="overview/gitbranches.webp"
 				alt="VS Code branch Quick Pick showing create new branch option and existing branches"
 				caption="The branch Quick Pick lets you create, switch, or check out branches without touching the terminal."
 			/>
@@ -181,7 +181,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/fetch-pull-push.png"
+					src="{base}/images/fetch-pull-push.webp"
 					alt="fetch · pull · push — syncing local and remote repositories"
 					caption="Fetch checks for updates, pull downloads them, push shares your work"
 				/>
@@ -259,7 +259,7 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="overview/incoming-outgoing-changes.png"
+				src="overview/incoming-outgoing-changes.webp"
 				alt="VS Code Source Control showing incoming and outgoing changes with commit counts"
 				caption="The incoming/outgoing section shows exactly which commits you need to pull and which you'll push."
 			/>
@@ -271,7 +271,7 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="quickstart/sync-changes.png"
+				src="quickstart/sync-changes.webp"
 				alt="VS Code Source Control showing Sync Changes button with incoming and outgoing commit counts"
 				caption="The Sync Changes button combines pull + push in one click. The numbers show incoming (↓) and outgoing (↑) commit counts."
 			/>
@@ -327,7 +327,7 @@ git merge origin/main   # Merge the updates into your branch`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/pull-request.png"
+					src="{base}/images/pull-request.webp"
 					alt="Pull request — the quality gate before code merges into main"
 					caption="Pull requests are the quality gate between your branch and production"
 				/>
@@ -385,7 +385,7 @@ git merge origin/main   # Merge the updates into your branch`}
 			</p>
 
 			<VsCodeScreenshot
-				src="github/create-pull-request-view.png"
+				src="github/create-pull-request-view.webp"
 				alt="VS Code GitHub Pull Request creation view with title, description, and reviewer fields"
 				caption="Create Pull Requests directly in VS Code with the GitHub Pull Requests extension. AI can even generate the PR description for you."
 			/>

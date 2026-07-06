@@ -48,7 +48,7 @@
 	<!-- Hero image -->
 	<div class="mx-auto mb-12 max-w-4xl">
 		<ExpandableImage
-			src="{base}/images/Hero.png"
+			src="{base}/images/Hero.webp"
 			alt="Git for Vibe Coders — your safety net for AI-assisted coding"
 			class="w-full rounded-xl shadow-2xl"
 			loading="eager"
@@ -127,7 +127,7 @@
 
 		<div class="my-6">
 			<ExpandableImage
-				src="{base}/images/what-is-git.png"
+				src="{base}/images/what-is-git.webp"
 				alt="What Is Git? — version control as unlimited undo for your whole project"
 				caption="Branch the risky experiments, contain the failures, merge the wins — every save becomes a recoverable moment"
 			/>

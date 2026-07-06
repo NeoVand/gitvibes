@@ -7,6 +7,7 @@
 	const baseUrl = 'https://code.visualstudio.com/assets/docs/sourcecontrol';
 
 	let open = $state(false);
+	let failed = $state(false);
 
 	const imageUrl = $derived(src.startsWith('http') ? src : `${baseUrl}/${src}`);
 </script>
@@ -31,20 +32,30 @@
 		</button>
 	</div>
 	<div class="flex items-center justify-center px-2 pb-2">
-		<button
-			type="button"
-			onclick={() => (open = true)}
-			class="w-full cursor-zoom-in border-none bg-transparent p-0"
-			aria-label={`Expand: ${alt}`}
-		>
-			<img
-				src={imageUrl}
-				{alt}
-				class="w-full rounded"
-				loading="lazy"
-				style="max-height: 500px; object-fit: contain;"
-			/>
-		</button>
+		{#if failed}
+			<div
+				class="flex w-full items-center justify-center rounded border border-dashed px-6 py-16 text-center"
+				style="border-color: var(--color-border); color: var(--color-text-muted);"
+			>
+				<p class="text-xs italic">{alt}</p>
+			</div>
+		{:else}
+			<button
+				type="button"
+				onclick={() => (open = true)}
+				class="w-full cursor-zoom-in border-none bg-transparent p-0"
+				aria-label={`Expand: ${alt}`}
+			>
+				<img
+					src={imageUrl}
+					{alt}
+					class="w-full rounded"
+					loading="lazy"
+					style="max-height: 500px; object-fit: contain;"
+					onerror={() => (failed = true)}
+				/>
+			</button>
+		{/if}
 	</div>
 	{#if caption}
 		<figcaption class="px-4 py-2.5 text-xs" style="color: var(--color-text-muted);">
