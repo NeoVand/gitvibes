@@ -549,3 +549,25 @@ h4:hover .heading-anchor,
 		background: white;
 	}
 }
+
+/* The root page scrollbar auto-hides too: visible only while scrolling
+   (the .is-scrolling class is toggled from the page's scroll listener). */
+html {
+	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+	transition: scrollbar-color 0.3s ease;
+}
+
+html.is-scrolling {
+	scrollbar-color: color-mix(in srgb, var(--color-text-muted) 45%, transparent) transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+	background: transparent;
+	border-radius: 999px;
+	transition: background 0.3s ease;
+}
+
+html.is-scrolling::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--color-text-muted) 45%, transparent);
+}

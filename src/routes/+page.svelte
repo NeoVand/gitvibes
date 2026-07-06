@@ -120,9 +120,17 @@
 		}
 
 		let rafId = 0;
+		let scrollbarTimer: ReturnType<typeof setTimeout> | undefined;
 		function onScroll() {
 			cancelAnimationFrame(rafId);
 			rafId = requestAnimationFrame(updateActiveSection);
+			// Reveal the root scrollbar while scrolling; hide it after idle
+			document.documentElement.classList.add('is-scrolling');
+			clearTimeout(scrollbarTimer);
+			scrollbarTimer = setTimeout(
+				() => document.documentElement.classList.remove('is-scrolling'),
+				800
+			);
 		}
 
 		window.addEventListener('scroll', onScroll, { passive: true });
@@ -166,6 +174,7 @@
 		return () => {
 			window.removeEventListener('scroll', onScroll);
 			cancelAnimationFrame(rafId);
+			clearTimeout(scrollbarTimer);
 			window.removeEventListener('wheel', clearNavClick);
 			window.removeEventListener('touchmove', clearNavClick);
 		};
