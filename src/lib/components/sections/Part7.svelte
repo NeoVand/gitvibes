@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { BookOpen, Workflow, Table, Sparkles } from 'lucide-svelte';
+	import { BookOpen, Workflow, Table, Sparkles, FolderGit2 } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import Callout from '../ui/Callout.svelte';
+	import CodeBlock from '../ui/CodeBlock.svelte';
+	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 
@@ -46,7 +48,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/save-game-loop.png"
+					src="{base}/images/save-game-loop.webp"
 					alt="The Save Game Loop — 8-step AI-first Git workflow from branch to recover"
 					caption="The complete 8-step AI-first Git workflow — your daily rhythm"
 				/>
@@ -201,7 +203,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/quick-reference.png"
+					src="{base}/images/quick-reference.webp"
 					alt="Quick Reference Card — Git tasks with terminal commands and VS Code equivalents"
 					caption="Keep this cheat sheet handy — terminal commands and their VS Code equivalents"
 				/>
@@ -328,7 +330,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/configure-once.png"
+					src="{base}/images/configure-once.webp"
 					alt="Configure Once — AGENTS.md, skills, VS Code agents, and CI automations for Git conventions"
 					caption="Encode your conventions once and let AI agents follow them automatically"
 				/>
@@ -462,11 +464,248 @@
 				</div>
 			</div>
 
+			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				A complete AGENTS.md you can steal
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Theory is nice, but what does a Git constitution actually look like? Here's a complete,
+				copy-pastable example. Drop it in your repo root, adjust the branch prefixes and test
+				command to match your project, and every agent that opens the repo inherits your rules.
+			</p>
+
+			<CodeBlock
+				title="AGENTS.md"
+				lang="markdown"
+				code={`# Git Rules for AI Agents
+
+## Branches
+- Never commit directly to main. Always work on a branch.
+- Branch names: feature/<topic> for features, fix/<topic> for
+  bug fixes, agent/<topic> for autonomous or experimental work.
+- One branch per task. Do not reuse branches across tasks.
+
+## Before staging anything
+- Run \`git status\` and \`git diff\` first. Read the diff.
+- Stage only files you intentionally changed. Never \`git add .\`
+  when the diff contains files you don't recognize.
+
+## Commits
+- Use Conventional Commits with a scope:
+  feat(auth): ..., fix(api): ..., refactor(parser): ...,
+  docs(readme): ..., test(payments): ..., chore(deps): ...
+- Keep commits small and focused: one logical change per commit.
+- Run the test suite (\`npm test\`) before every commit.
+  If tests fail, fix them or ask — do not commit broken code.
+
+## Pushing and history
+- Never use \`git push --force\`. If a push is rejected after a
+  rebase, use \`git push --force-with-lease\` — and only on your
+  own feature branches, never on main or shared branches.
+- Never rewrite history that has been pushed and shared
+  (no rebase/reset/amend on public commits — use \`git revert\`).
+
+## When unsure
+- Stop and ask before any destructive command
+  (reset --hard, clean, filter-repo, branch -D).`}
+			/>
+
+			<p class="mt-6 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				For multi-step procedures, a skill keeps the detail out of your always-on instructions.
+				Here's a small worked example: a "save-game checkpoint" skill that encodes the
+				status-review-stage-commit ritual from Part 2 so the agent runs it the same way every time.
+			</p>
+
+			<CodeBlock
+				title=".agents/skills/save-game-checkpoint/SKILL.md"
+				lang="markdown"
+				code={`---
+name: save-game-checkpoint
+description: Create a clean Git checkpoint after a working change.
+---
+
+# Save-game checkpoint
+
+1. Run \`git status\` — list every modified and untracked file.
+2. Run \`git diff\` and summarize the changes for the user.
+3. Flag anything unexpected (unrelated files, debug prints,
+   secrets, lockfile churn) before proceeding.
+4. Stage only the files that belong to this change:
+   \`git add <file> <file>\` — never \`git add .\`
+5. Commit with a Conventional Commit message and scope, e.g.
+   \`git commit -m "feat(payments): add refund endpoint"\`
+6. Confirm with \`git log --oneline -1\` and report the hash.`}
+			/>
+
+			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Reviewing large AI diffs
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Even well-instructed agents produce big diffs, and a 40-file diff read top-to-bottom is
+				where review discipline goes to die. Triage instead: run <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git diff --stat</code
+				>
+				first to see which files changed and by how much — that one screen tells you whether the change
+				matches the task you assigned. Then review file by file with
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git diff &lt;file&gt;</code
+				>, starting with the files you'd least expect to change. When only part of the work is good,
+				use
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
+				> to stage the keepers hunk by hunk and discard the rest.
+			</p>
+
+			<Callout type="tip">
+				<strong>Reject, don't salvage.</strong> When a huge AI pull request is mostly wrong, resist
+				the urge to edit it into shape — salvage-editing someone else's sprawling diff takes longer
+				than redoing it and hides mistakes you didn't notice. Close the PR,
+				<code style="font-family: var(--font-mono);">git cherry-pick</code> the few good commits onto
+				a fresh branch, and re-prompt for the rest with tighter scope. Cheap branches (Part 3) exist precisely
+				so throwing work away costs nothing.
+			</Callout>
+
 			<VibeBox
 				prompts={[
-					'Draft an AGENTS.md with our Git branch naming and Conventional Commits rules',
-					'Create a git-save-game SKILL.md that walks through our 8-step workflow before every PR',
-					'Set up a VS Code custom agent (.agent.md) that reviews staged changes before commit'
+					'Read AGENTS.md and follow its Git rules for every change in this session',
+					'Draft an AGENTS.md with our Git branch naming and Conventional Commits rules, then create a save-game-checkpoint SKILL.md to match'
+				]}
+			/>
+		</div>
+
+		<!-- 7.4 Parallel Agents with Git Worktrees -->
+		<div id="section-7-4" class="mb-14">
+			<SectionHeader
+				level="section"
+				icon={FolderGit2}
+				title="7.4 Parallel Agents with Git Worktrees"
+				color="var(--color-primary)"
+			/>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-worktrees.webp"
+					alt="Git worktrees — one repository powering multiple working directories, each with its own branch and AI agent"
+					caption="One .git, many working directories — run an agent per worktree with zero interference"
+				/>
+			</div>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Here's the endgame scenario: you want Agent A refactoring the auth module while Agent B
+				builds the payments feature — in the same repository, at the same time. If both agents share
+				one working directory, they'll trample each other's files, and every <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git switch</code
+				> by one agent yanks the floor out from under the other. Worktrees solve this.
+			</p>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				A <strong style="color: var(--color-text);">worktree</strong> is an extra working directory
+				attached to the same repository. All worktrees share one
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
+				> database — same commits, same branches, same remotes — but each directory has its own checked-out
+				branch, its own files on disk, and its own staging area. Creating one takes a second, because
+				nothing is copied except the files of the branch you check out.
+			</p>
+
+			<CodeBlock
+				title="One agent per worktree"
+				code={`# From your main checkout (~/repos/proj on main)
+git worktree add ../proj-auth feature/auth-refactor
+git worktree add ../proj-payments feature/payments
+
+# See every working directory attached to this repo
+git worktree list
+# /Users/you/repos/proj           abc1234 [main]
+# /Users/you/repos/proj-auth      def5678 [feature/auth-refactor]
+# /Users/you/repos/proj-payments  9ab0cde [feature/payments]
+
+# Open a terminal in each directory and start one agent per worktree:
+#   Terminal 1: cd ../proj-auth      -> Agent A refactors auth
+#   Terminal 2: cd ../proj-payments  -> Agent B builds payments`}
+			/>
+
+			<p class="mt-2 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				If the branch doesn't exist yet, <code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git worktree add -b feature/payments ../proj-payments</code
+				> creates it in one step. Note that a branch can only be checked out in one worktree at a time
+				— Git enforces this, which is exactly the isolation guarantee you want: two agents can never be
+				editing the same branch's files.
+			</p>
+
+			<MermaidDiagram
+				definition={`graph TD
+  G[("one shared .git database")] --> W1(["~/repos/proj<br/>main — you"])
+  G --> W2(["~/repos/proj-auth<br/>feature/auth-refactor — Agent A"])
+  G --> W3(["~/repos/proj-payments<br/>feature/payments — Agent B"])
+  W2 --> M(["PR review → merge to main"])
+  W3 --> M`}
+				id="worktrees-parallel-agents"
+			/>
+			<p class="mt-2 px-1 text-xs" style="color: var(--color-text-muted);">
+				Every worktree commits into the same repository — the branches just live in different
+				folders until they're merged.
+			</p>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Why not just clone the repo twice? Clones work, but worktrees are better on every axis: the
+				object database is shared (no duplicated gigabytes), creation is instant, remotes and config
+				come along for free, and a commit made in one worktree is immediately visible from all the
+				others — no pushing and pulling between your own directories. When both agents are done,
+				merging their branches is the normal PR flow from Part 3: push each branch, open a pull
+				request, review the diff, merge. Nothing about worktrees changes how integration works.
+			</p>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				A few habits keep this tidy: name each worktree directory after its branch (<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">proj-auth</code
+				>
+				for
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>feature/auth-refactor</code
+				>) so you always know which terminal belongs to which agent, and clean up when a branch
+				merges.
+			</p>
+
+			<CodeBlock
+				title="Cleanup after the merge"
+				code={`# Remove a worktree you're done with (its branch survives)
+git worktree remove ../proj-auth
+
+# If you deleted a worktree folder manually, clear the stale record
+git worktree prune`}
+			/>
+
+			<Callout type="warning">
+				<strong>Two sharp edges.</strong> First, worktrees share the repository — local config (<code
+					style="font-family: var(--font-mono);">.git/config</code
+				>) and the stash list are per-repo, not per-worktree, so a
+				<code style="font-family: var(--font-mono);">git stash</code>
+				made in one worktree is visible (and poppable) from all of them. Second, always create worktrees
+				<em>outside</em> the main repo folder (<code style="font-family: var(--font-mono);"
+					>../proj-auth</code
+				>, not <code style="font-family: var(--font-mono);">./proj-auth</code>) — a worktree nested
+				inside the repo shows up as an untracked directory, and an agent running
+				<code style="font-family: var(--font-mono);">git add .</code> might happily commit it.
+			</Callout>
+
+			<VibeBox
+				prompts={[
+					'Create a worktree for branch feature/payments at ../proj-payments and start working there',
+					'List all worktrees in this repo, and remove any whose branches are already merged into main'
 				]}
 			/>
 		</div>

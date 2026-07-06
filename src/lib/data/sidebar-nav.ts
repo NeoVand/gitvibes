@@ -6,6 +6,7 @@ import {
 	Columns,
 	Download,
 	Eye,
+	EyeOff,
 	FileWarning,
 	FolderGit2,
 	FolderPlus,
@@ -32,6 +33,7 @@ import {
 	Trash2,
 	Undo2,
 	UserCheck,
+	Webhook,
 	Workflow
 } from 'lucide-svelte';
 
@@ -66,7 +68,9 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-1-1', label: 'Git Configuration', icon: UserCheck },
 			{ id: 'section-1-2', label: 'Authentication', icon: KeyRound },
-			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download }
+			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download },
+			{ id: 'section-1-4', label: 'What NOT to Commit', icon: EyeOff },
+			{ id: 'section-1-5', label: 'Automating with Hooks', icon: Webhook }
 		]
 	},
 	{
@@ -140,7 +144,8 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-7-1', label: 'AI-First Workflow', icon: Workflow },
 			{ id: 'section-7-2', label: 'Quick Reference', icon: Table },
-			{ id: 'section-7-3', label: 'Teaching AI Git', icon: Sparkles }
+			{ id: 'section-7-3', label: 'Teaching AI Git', icon: Sparkles },
+			{ id: 'section-7-4', label: 'Parallel Agents: Worktrees', icon: FolderGit2 }
 		]
 	}
 ];

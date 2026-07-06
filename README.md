@@ -4,7 +4,7 @@ An interactive, visual guide to Git for developers who use AI-assisted coding to
 
 **[Live Site →](https://neovand.github.io/gitvibes/)**
 
-![GitVibes — Git for Vibe Coders](static/images/Hero.png)
+![GitVibes — Git for Vibe Coders](static/images/Hero.webp)
 
 ## What is this?
 
@@ -12,16 +12,16 @@ GitVibes teaches Git through the lens of AI-assisted development. Instead of dry
 
 ### Curriculum
 
-| Part                         | Topics                                                                                            |
-| ---------------------------- | ------------------------------------------------------------------------------------------------- |
-| **Introduction**             | What Git is, installing Git, what a repository is                                                 |
-| **1. Enterprise Onboarding** | Git config, authentication, cloning                                                               |
-| **2. Core Safety Loop**      | `git status` → stage → commit, reviewing AI changes                                               |
-| **3. Branching & PRs**       | Branches, fetch/pull/push, pull requests                                                          |
-| **4. Undo Toolkit**          | Restore, unstage, amend, reset, revert, force-with-lease, recovery matrix                         |
-| **5. Advanced Workflows**    | Stash, rebase vs merge, merge conflicts                                                           |
-| **6. VS Code Cockpit**       | Source Control, Timeline & GitLens, 3-way merge editor                                            |
-| **7. Conclusion**            | AI-first workflow, quick reference card, teaching agents Git (`AGENTS.md`, skills, custom agents) |
+| Part                         | Topics                                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Introduction**             | What Git is, installing Git, what a repository is                                                                  |
+| **1. Enterprise Onboarding** | Git config, authentication, cloning, `.gitignore` & secrets hygiene, Git hooks                                     |
+| **2. Core Safety Loop**      | `git status` → stage → commit, reviewing AI changes                                                                |
+| **3. Branching & PRs**       | Branches, fetch/pull/push, pull requests                                                                           |
+| **4. Undo Toolkit**          | Restore, unstage, amend, reset, revert, force-with-lease, recovery matrix                                          |
+| **5. Advanced Workflows**    | Stash, rebase vs merge, merge conflicts                                                                            |
+| **6. VS Code Cockpit**       | Source Control, Timeline & GitLens, 3-way merge editor                                                             |
+| **7. Conclusion**            | AI-first workflow, quick reference card, teaching agents Git (`AGENTS.md`, skills), parallel agents with worktrees |
 
 ### Features
 
@@ -111,7 +111,7 @@ Open [http://localhost:5173](http://localhost:5173).
 | `npm run preview` | Preview production build    |
 | `npm run check`   | Type-check                  |
 | `npm run lint`    | Prettier + ESLint           |
-| `npm run test`    | Playwright e2e tests        |
+| `npm run test`    | Vitest unit + Playwright e2e tests |
 
 ## Assets
 

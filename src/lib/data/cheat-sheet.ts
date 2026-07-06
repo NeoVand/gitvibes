@@ -45,7 +45,15 @@ export const cheatSheet: CheatSheetCategory[] = [
 				command: 'ssh-keygen -t ed25519 -C "<email>"',
 				description: 'Generate an SSH key pair for authentication'
 			},
-			{ command: 'ssh -T git@github.com', description: 'Test your SSH connection to GitHub' }
+			{ command: 'ssh -T git@github.com', description: 'Test your SSH connection to GitHub' },
+			{
+				command: 'git config --global core.excludesFile ~/.gitignore_global',
+				description: 'Global ignore file for OS and editor junk'
+			},
+			{
+				command: 'git config core.hooksPath .githooks',
+				description: 'Use a versioned, shareable hooks directory'
+			}
 		]
 	},
 	{
@@ -63,7 +71,15 @@ export const cheatSheet: CheatSheetCategory[] = [
 			},
 			{ command: 'git commit --amend', description: 'Modify the most recent commit' },
 			{ command: 'git diff', description: 'Show unstaged changes in the working directory' },
-			{ command: 'git diff --staged', description: 'Show changes staged for the next commit' }
+			{ command: 'git diff --staged', description: 'Show changes staged for the next commit' },
+			{
+				command: 'git rm --cached <file>',
+				description: 'Stop tracking a file without deleting it (pair with .gitignore)'
+			},
+			{
+				command: 'git commit --no-verify',
+				description: 'Skip pre-commit and commit-msg hooks (use sparingly)'
+			}
 		]
 	},
 	{
@@ -275,6 +291,19 @@ export const cheatSheet: CheatSheetCategory[] = [
 			{
 				command: 'git worktree add <path> <branch>',
 				description: 'Create a linked working tree for a branch'
+			},
+			{
+				command: 'git worktree add -b <branch> <path>',
+				description: 'Create a new branch in its own working tree'
+			},
+			{ command: 'git worktree list', description: 'List all working trees for this repo' },
+			{
+				command: 'git worktree remove <path>',
+				description: 'Remove a working tree (branch survives)'
+			},
+			{
+				command: 'git worktree prune',
+				description: 'Clean up records of deleted working trees'
 			}
 		]
 	}

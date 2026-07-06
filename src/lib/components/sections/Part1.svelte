@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Laptop, UserCheck, KeyRound, Download } from 'lucide-svelte';
+	import { Laptop, UserCheck, KeyRound, Download, EyeOff, Webhook } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
@@ -50,7 +50,7 @@
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/P1.Section1-git-config.png"
+					src="{base}/images/P1.Section1-git-config.webp"
 					alt="Git config — configured once, carried by every commit"
 					caption="Your identity is baked into every commit — configure it once and forget about it"
 				/>
@@ -121,7 +121,7 @@ git config --global user.email "your-enterprise-email@company.com"`}
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/personal-access-token.png"
+					src="{base}/images/personal-access-token.webp"
 					alt="Personal Access Token — a token proves identity and carries permission"
 					caption="A personal access token proves your identity to GitHub without a password"
 				/>
@@ -387,7 +387,7 @@ winget install --id GitHub.cli
 			</p>
 
 			<VsCodeScreenshot
-				src="github/auth-prompt.png"
+				src="github/auth-prompt.webp"
 				alt="VS Code showing GitHub authentication prompt in the browser"
 				caption="VS Code automatically opens your browser to sign in to GitHub -- no tokens to manage."
 			/>
@@ -401,7 +401,7 @@ winget install --id GitHub.cli
 		</div>
 
 		<!-- 1.3 Cloning -->
-		<div id="section-1-3">
+		<div id="section-1-3" class="mb-14">
 			<SectionHeader
 				level="section"
 				icon={Download}
@@ -416,7 +416,7 @@ winget install --id GitHub.cli
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/git-clone.png"
+					src="{base}/images/git-clone.webp"
 					alt="git clone — remote repository copied to your local machine"
 					caption="Cloning creates a complete copy of the remote repository on your machine"
 				/>
@@ -464,7 +464,7 @@ winget install --id GitHub.cli
 			</ol>
 
 			<VsCodeScreenshot
-				src="quickstart/clone-repository-url.png"
+				src="quickstart/clone-repository-url.webp"
 				alt="VS Code Clone Repository dialog showing URL input field"
 				caption="Use Cmd+Shift+P → 'Git: Clone' and paste the repository URL. VS Code handles the rest."
 			/>
@@ -485,6 +485,420 @@ winget install --id GitHub.cli
 				prompts={[
 					'Clone the repo at github.com/our-team/project into my projects folder',
 					'Clone this repository and set up the development environment'
+				]}
+			/>
+		</div>
+
+		<!-- 1.4 .gitignore -->
+		<div id="section-1-4" class="mb-14">
+			<SectionHeader
+				level="section"
+				icon={EyeOff}
+				title="1.4 What NOT to Commit (.gitignore)"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You asked the AI to scaffold your project, and it delivered: dependencies installed, an
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
+				>
+				file holding your API keys, and a working app. Then it helpfully runs
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				>
+				— and now your secrets, your
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>node_modules</code
+				>
+				folder, and a stray
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
+				> are all staged for your first commit. Before that happens, you need to teach Git what to ignore.
+			</p>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/gitignore.webp"
+					alt=".gitignore — a gatekeeper filtering secrets and junk files out of the repository"
+					caption="A .gitignore file is the guardrail that makes 'git add .' safe — secrets and junk never enter history"
+				/>
+			</div>
+
+			<Callout type="note">
+				<strong>The Problem:</strong> AI agents move fast and stage everything. Without a guardrail,
+				one
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				> can commit API keys, gigabytes of dependencies, and OS junk into a history that everyone on
+				your team will clone.
+			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				A <strong style="color: var(--color-text);">.gitignore</strong> file is a plain text file at
+				the root of your repository that lists patterns of files Git should pretend don't exist.
+				Ignored files never show up as "untracked" in
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
+				>, and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				> silently skips them. The file itself gets committed, so the whole team — and every AI agent
+				working in the repo — shares the same guardrail.
+			</p>
+
+			<CodeBlock
+				title=".gitignore — a realistic starter for a JS/Python project"
+				code={`# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets & local config
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+coverage/
+
+# Logs & caches
+*.log
+.cache/
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+.idea/`}
+			/>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Pattern Syntax Essentials
+			</h4>
+
+			<ul
+				class="mb-5 list-inside list-disc space-y-1.5 text-[13px]"
+				style="color: var(--color-text-secondary);"
+			>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">*.log</code
+					>
+					— a glob: matches any file ending in <strong>.log</strong>, in any directory
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">dist/</code
+					> — a trailing slash matches only directories (and everything inside them)
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>/config.json</code
+					> — a leading slash anchors the pattern to the repository root
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>docs/**/*.tmp</code
+					>
+					—
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">**</code
+					> matches any depth of nested directories
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>!.env.example</code
+					>
+					— a leading
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">!</code
+					> negates a pattern, re-including a file an earlier rule excluded (it can't re-include anything
+					inside an excluded directory, though)
+				</li>
+			</ul>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				The Gotcha: Already-Tracked Files Stay Tracked
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				<strong style="color: var(--color-text);">.gitignore only affects untracked files.</strong> If
+				a file was already committed before you added it to .gitignore, Git keeps tracking it — and keeps
+				committing your changes to it. To stop tracking a file without deleting it from your disk, remove
+				it from the index:
+			</p>
+
+			<CodeBlock
+				title="Untrack a file that's already committed"
+				code={`git rm --cached .env
+# For a whole directory:
+git rm -r --cached node_modules
+
+# Then commit the removal
+git commit -m "chore: stop tracking ignored files"`}
+			/>
+
+			<Callout type="warning">
+				<strong>If a secret was ever committed, removing it in a new commit is not enough.</strong>
+				The key still exists in every older commit, and anyone who clones the repository can read it.
+				Treat a pushed secret as compromised: <strong>rotate the credential immediately</strong>
+				(revoke the key and issue a new one), then scrub it from history with a rewriting tool like
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git filter-repo</code
+				> — a topic we'll return to when we cover rewriting history. Rotation comes first; no amount of
+				history surgery un-leaks a key that's already been seen.
+			</Callout>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				A Global Ignore File for OS and Editor Junk
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Files like <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
+				>
+				(macOS) or
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">Thumbs.db</code
+				>
+				(Windows) are about <em>your machine</em>, not the project. Instead of asking every
+				repository to ignore them, configure a
+				<strong style="color: var(--color-text);">global ignore file</strong> that applies to all your
+				repositories:
+			</p>
+
+			<CodeBlock
+				title="Set up a global ignore file (once per machine)"
+				code={`git config --global core.excludesFile ~/.gitignore_global
+
+echo ".DS_Store" >> ~/.gitignore_global
+echo "Thumbs.db" >> ~/.gitignore_global`}
+			/>
+
+			<Callout type="tip">
+				Rule of thumb: project artifacts (builds, dependencies, secrets) go in the repository's <strong
+					>.gitignore</strong
+				> so the whole team is protected; personal noise (your OS, your editor) goes in your global ignore
+				file.
+			</Callout>
+
+			<VibeBox
+				prompts={[
+					'Write a .gitignore for this project — look at my stack and include editor and OS artifacts',
+					"Check my repo for tracked files that look like secrets or build artifacts that shouldn't be committed"
+				]}
+			/>
+		</div>
+
+		<!-- 1.5 Git Hooks -->
+		<div id="section-1-5">
+			<SectionHeader
+				level="section"
+				icon={Webhook}
+				title="1.5 Automating Quality with Git Hooks"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You told your agent: "always run the tests before committing." It did — for the first three
+				commits. Then, deep in a refactor, it forgot, and a broken commit landed in history. Rules
+				that live in a prompt are suggestions. Rules that live in Git are law. That's what
+				<strong style="color: var(--color-text);">hooks</strong> are for.
+			</p>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-hooks.webp"
+					alt="Git hooks — an automated checkpoint that inspects every commit before it's allowed through"
+					caption="A hook is a script Git runs at key moments — a mechanical gate no commit can skip"
+				/>
+			</div>
+
+			<Callout type="note">
+				<strong>The Problem:</strong> You can't rely on yourself — or an AI agent — to remember to lint,
+				test, and format before every commit. You need the check to happen automatically, every time,
+				with no memory required.
+			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				A <strong style="color: var(--color-text);">Git hook</strong> is a script that Git runs
+				automatically at a specific moment — before a commit is created, after a merge, before a
+				push. Hooks live in the
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git/hooks/</code
+				>
+				directory of your repository, where Git puts a set of
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.sample</code
+				>
+				files to get you started. One crucial detail:
+				<strong style="color: var(--color-text);">
+					the .git directory is never committed, so hooks are not versioned</strong
+				> — they don't travel with a clone. We'll fix that in a moment.
+			</p>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				A Minimal pre-commit Hook
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				The <strong style="color: var(--color-text);">pre-commit</strong> hook runs before Git
+				creates a commit. If the script exits with a non-zero status, the commit is blocked. Create
+				a file named
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>.git/hooks/pre-commit</code
+				> (no file extension) and make it executable:
+			</p>
+
+			<CodeBlock
+				title=".git/hooks/pre-commit"
+				code={`#!/bin/sh
+echo "Running checks before commit..."
+
+npm run lint || { echo "Lint failed - commit blocked." >&2; exit 1; }
+npm test || { echo "Tests failed - commit blocked." >&2; exit 1; }`}
+			/>
+
+			<CodeBlock title="Make it executable (once)" code="chmod +x .git/hooks/pre-commit" />
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				From now on, every <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
+				> in this repository runs your lint and test suite first. If either fails, nothing gets committed
+				— no exceptions, no forgetting.
+			</p>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Enforcing Commit Message Standards
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				The <strong style="color: var(--color-text);">commit-msg</strong> hook receives the path to
+				a file containing the proposed commit message. Here's a compact one that enforces
+				<strong style="color: var(--color-text);">Conventional Commits</strong>
+				(messages like
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>feat: add login form</code
+				>):
+			</p>
+
+			<CodeBlock
+				title=".git/hooks/commit-msg"
+				code={`#!/bin/sh
+if ! grep -qE '^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?!?: .+' "$1"; then
+  echo "Commit message must follow Conventional Commits, e.g. 'feat: add login form'" >&2
+  exit 1
+fi`}
+			/>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Making Hooks Shareable
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Since <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git/hooks/</code
+				>
+				isn't versioned, your teammates (and their agents) won't get your hooks automatically. The lightweight
+				fix is a committed hooks folder plus
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>core.hooksPath</code
+				>:
+			</p>
+
+			<CodeBlock
+				title="Option 1: a versioned hooks folder"
+				code={`mkdir .githooks
+# move your hook scripts into .githooks/, then:
+git config core.hooksPath .githooks
+
+# commit the folder - each teammate runs the config command once`}
+			/>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				In the JavaScript world, <strong style="color: var(--color-text);">Husky</strong> is the
+				popular tool that automates exactly this — it wires up the hooks path when anyone runs
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">npm install</code
+				>:
+			</p>
+
+			<CodeBlock
+				title="Option 2: Husky"
+				code={`npm install --save-dev husky
+npx husky init
+
+# your hooks now live in the committed .husky/ folder
+echo "npm test" > .husky/pre-commit`}
+			/>
+
+			<Callout type="important">
+				<strong>Hooks fire on agent commits too.</strong> When Claude Code, Cursor, or any AI agent
+				runs
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
+				>, your pre-commit and commit-msg hooks run exactly as if you'd typed the command yourself.
+				This is how you enforce standards on AI-authored code
+				<em>without trusting the AI to remember</em> — the agent literally cannot commit failing code
+				or a sloppy message. Better yet, agents read the error output and usually fix the problem and
+				retry on their own.
+			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				One escape hatch to know about: <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git commit --no-verify</code
+				>
+				skips the pre-commit and commit-msg hooks entirely. It exists for genuine emergencies — a broken
+				hook blocking a critical hotfix — but use it sparingly. Every
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-verify</code
+				> is a hole in your safety net, and it's a habit you especially don't want your agents learning.
+			</p>
+
+			<VibeBox
+				prompts={[
+					'Set up a pre-commit hook that runs our lint and test scripts and blocks the commit if either fails',
+					'Add a commit-msg hook enforcing Conventional Commits, and make the hooks shareable with the team via Husky'
 				]}
 			/>
 		</div>

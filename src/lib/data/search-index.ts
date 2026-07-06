@@ -21,6 +21,9 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('rebase') || cmd.includes('cherry-pick')) return 'section-5-2';
 	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth'))
 		return 'section-1-2';
+	if (cmd.includes('rm --cached') || cmd.includes('excludesfile')) return 'section-1-4';
+	if (cmd.includes('hookspath') || cmd.includes('--no-verify')) return 'section-1-5';
+	if (cmd.includes('worktree')) return 'section-7-4';
 	if (cmd.includes('config') || cmd.includes('init')) return 'section-1-1';
 	if (cmd.includes('clone')) return 'section-1-3';
 	if (cmd.startsWith('git status')) return 'section-2-1';
@@ -38,12 +41,7 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('force')) return 'section-4-6';
 	if (cmd.includes('merge')) return 'section-5-2';
 	if (cmd.includes('log') || cmd.includes('show') || cmd.includes('blame')) return 'section-6-2';
-	if (
-		cmd.includes('bisect') ||
-		cmd.includes('reflog') ||
-		cmd.includes('submodule') ||
-		cmd.includes('worktree')
-	) {
+	if (cmd.includes('bisect') || cmd.includes('reflog') || cmd.includes('submodule')) {
 		return 'section-7-2';
 	}
 	if (cmd.includes('tag')) return 'section-7-2';
@@ -208,6 +206,77 @@ const topicEntries: SearchEntry[] = [
 		part: 'Try it yourself',
 		description: 'Practice Git commands in a real in-browser repo.',
 		keywords: ['playground', 'practice', 'try it yourself', 'terminal', 'interactive'],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-gitignore',
+		sectionId: 'section-1-4',
+		title: 'What NOT to Commit (.gitignore)',
+		part: 'Enterprise Onboarding',
+		description: 'Keep secrets, dependencies, and OS junk out of the repository.',
+		keywords: [
+			'gitignore',
+			'ignore files',
+			'secrets',
+			'.env',
+			'node_modules',
+			'untrack',
+			'api keys',
+			'exclude'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-git-hooks',
+		sectionId: 'section-1-5',
+		title: 'Automating Quality with Git Hooks',
+		part: 'Enterprise Onboarding',
+		description: 'Pre-commit and commit-msg hooks that enforce standards on human and AI commits.',
+		keywords: [
+			'hooks',
+			'pre-commit',
+			'commit-msg',
+			'husky',
+			'automation',
+			'enforce',
+			'conventional commits',
+			'block commit'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-agents-md',
+		sectionId: 'section-7-3',
+		title: 'Teaching Your AI to Use Git (AGENTS.md)',
+		part: 'Conclusion',
+		description: 'Encode Git rules for coding agents with AGENTS.md and skills.',
+		keywords: [
+			'agents.md',
+			'claude.md',
+			'skill',
+			'agent rules',
+			'copilot instructions',
+			'teach ai',
+			'review ai diff',
+			'large pr'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-worktrees',
+		sectionId: 'section-7-4',
+		title: 'Parallel Agents with Git Worktrees',
+		part: 'Conclusion',
+		description: 'Run multiple AI agents on one repo with a working directory per branch.',
+		keywords: [
+			'worktree',
+			'worktrees',
+			'parallel agents',
+			'multiple agents',
+			'two branches at once',
+			'agent per branch',
+			'simultaneous'
+		],
 		kind: 'topic'
 	}
 ];
