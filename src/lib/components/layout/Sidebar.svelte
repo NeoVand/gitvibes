@@ -7,8 +7,12 @@
 		activeSection = '',
 		onToggle,
 		onNavigate
-	}: { open: boolean; activeSection: string; onToggle: () => void; onNavigate: (id: string) => void } =
-		$props();
+	}: {
+		open: boolean;
+		activeSection: string;
+		onToggle: () => void;
+		onNavigate: (id: string) => void;
+	} = $props();
 
 	const sections = sidebarNav;
 
@@ -41,7 +45,8 @@
 
 	function isActive(sectionId: string): boolean {
 		if (activeSection === sectionId) return true;
-		if (sectionId === 'hero') return activeSection === 'hero' || activeSection.startsWith('section-intro-');
+		if (sectionId === 'hero')
+			return activeSection === 'hero' || activeSection.startsWith('section-intro-');
 		const partNum = sectionId.replace('part-', '');
 		return activeSection.startsWith(`section-${partNum}-`);
 	}
@@ -81,7 +86,7 @@
 
 {#snippet navIcon(item: NavItem, active: boolean, size: number)}
 	{@const Icon = item.icon}
-	<Icon size={size} strokeWidth={active ? 2.5 : 2} />
+	<Icon {size} strokeWidth={active ? 2.5 : 2} />
 {/snippet}
 
 <!-- Backdrop on mobile when expanded -->
@@ -95,11 +100,7 @@
 
 <!-- Flyout backdrop (click outside to close) -->
 {#if flyoutSection && !open}
-	<button
-		class="fixed inset-0 z-40"
-		onclick={closeFlyout}
-		aria-label="Close flyout"
-	></button>
+	<button class="fixed inset-0 z-40" onclick={closeFlyout} aria-label="Close flyout"></button>
 {/if}
 
 <!-- ───── EXPANDED SIDEBAR ───── -->
@@ -135,7 +136,10 @@
 					style="color: {active ? 'var(--color-primary)' : 'var(--color-text)'};"
 				>
 					{#if active}
-						<span class="absolute top-1.5 bottom-1.5 left-0 w-[3px] rounded-r-full" style="background: var(--color-primary);"></span>
+						<span
+							class="absolute top-1.5 bottom-1.5 left-0 w-[3px] rounded-r-full"
+							style="background: var(--color-primary);"
+						></span>
 					{/if}
 					<button
 						onclick={() => {
@@ -150,7 +154,12 @@
 						style="color: inherit;"
 					>
 						{@render navIcon(section, active, 17)}
-						<span class="flex-1" style="font-family: var(--font-heading); font-weight: {active ? '700' : '500'}; font-size: 14.5px; letter-spacing: -0.01em;">
+						<span
+							class="flex-1"
+							style="font-family: var(--font-heading); font-weight: {active
+								? '700'
+								: '500'}; font-size: 14.5px; letter-spacing: -0.01em;"
+						>
 							{section.label}
 						</span>
 					</button>
@@ -163,7 +172,9 @@
 							<ChevronRight
 								size={13}
 								class="transition-transform duration-150"
-								style="transform: rotate({expandedSections.has(section.id) ? '90deg' : '0deg'}); opacity: 0.5;"
+								style="transform: rotate({expandedSections.has(section.id)
+									? '90deg'
+									: '0deg'}); opacity: 0.5;"
 							/>
 						</button>
 					{/if}
@@ -182,7 +193,14 @@
 								class="nav-child-item relative flex w-full cursor-pointer items-center gap-2 py-1.5 text-left text-[13px] transition-all"
 								class:pl-5={child.isPlayground}
 								class:px-2.5={!child.isPlayground}
-								style="color: {playgroundColor ?? (childActive ? 'var(--color-primary)' : 'var(--color-text-muted)')}; font-weight: {childActive ? '600' : '400'}; opacity: {child.isPlayground && !childActive ? '0.7' : '1'}; font-size: {child.isPlayground ? '12px' : '13px'};"
+								style="color: {playgroundColor ??
+									(childActive
+										? 'var(--color-primary)'
+										: 'var(--color-text-muted)')}; font-weight: {childActive
+									? '600'
+									: '400'}; opacity: {child.isPlayground && !childActive
+									? '0.7'
+									: '1'}; font-size: {child.isPlayground ? '12px' : '13px'};"
 							>
 								{@render navIcon(child, childActive, child.isPlayground ? 11 : 13)}
 								<span>{child.label}</span>
@@ -235,7 +253,7 @@
 				{@render navIcon(section, active, 17)}
 				{#if !flyoutSection}
 					<span
-						class="pointer-events-none absolute left-14 z-50 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs font-medium opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
+						class="pointer-events-none absolute left-14 z-50 rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap opacity-0 shadow-lg transition-opacity group-hover:opacity-100"
 						style="background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border);"
 					>
 						{section.label}
@@ -251,6 +269,8 @@
 			<div
 				class="fixed z-50 rounded-xl border shadow-xl"
 				style="left: calc(var(--sidebar-collapsed-width) + 6px); top: {flyoutY}px; width: 210px; background: var(--color-surface); border-color: var(--color-border);"
+				role="group"
+				aria-label={section.label}
 				onmouseleave={closeFlyout}
 			>
 				<button
@@ -274,7 +294,14 @@
 								class="flyout-child flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 text-left transition-all"
 								class:pl-5={child.isPlayground}
 								class:px-2.5={!child.isPlayground}
-								style="color: {playgroundColor ?? (childActive ? 'var(--color-primary)' : 'var(--color-text-secondary)')}; font-weight: {childActive ? '600' : '400'}; opacity: {child.isPlayground && !childActive ? '0.7' : '1'}; font-size: {child.isPlayground ? '11px' : '12px'};"
+								style="color: {playgroundColor ??
+									(childActive
+										? 'var(--color-primary)'
+										: 'var(--color-text-secondary)')}; font-weight: {childActive
+									? '600'
+									: '400'}; opacity: {child.isPlayground && !childActive
+									? '0.7'
+									: '1'}; font-size: {child.isPlayground ? '11px' : '12px'};"
 							>
 								{@render navIcon(child, childActive, child.isPlayground ? 10 : 12)}
 								<span>{child.label}</span>

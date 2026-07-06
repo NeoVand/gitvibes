@@ -51,6 +51,10 @@
 
 	let graphCollapsed = $state(false);
 
+	// Capturing the initial value is intentional: the picker owns the state
+	// afterwards, and the $effect below syncs later prop changes for embedded
+	// playgrounds.
+	// svelte-ignore state_referenced_locally
 	let activeScenarioId = $state(scenarioId);
 	let engine = $state<GitEngine | null>(null);
 	let history = $state<HistoryLine[]>([]);

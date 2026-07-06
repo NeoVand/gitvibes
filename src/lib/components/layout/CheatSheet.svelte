@@ -19,10 +19,7 @@
 	import { cheatSheet, type CheatSheetCategory } from '$lib/data/cheat-sheet';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 
-	let {
-		open = false,
-		onToggle
-	}: { open: boolean; onToggle: () => void } = $props();
+	let { open = false, onToggle }: { open: boolean; onToggle: () => void } = $props();
 
 	let searchQuery = $state('');
 	let expandedCategories = $state<Set<string>>(new Set(cheatSheet.map((c) => c.label)));
@@ -50,8 +47,7 @@
 		for (const category of cheatSheet) {
 			const matchingCommands = category.commands.filter(
 				(cmd) =>
-					cmd.command.toLowerCase().includes(query) ||
-					cmd.description.toLowerCase().includes(query)
+					cmd.command.toLowerCase().includes(query) || cmd.description.toLowerCase().includes(query)
 			);
 			if (matchingCommands.length > 0) {
 				result.push({ ...category, commands: matchingCommands });
@@ -131,7 +127,7 @@
 			type="text"
 			placeholder="Filter commands..."
 			bind:value={searchQuery}
-			class="w-full border-none bg-transparent text-xs outline-none shadow-none focus:outline-none focus:ring-0 focus:shadow-none focus:border-none"
+			class="w-full border-none bg-transparent text-xs shadow-none outline-none focus:border-none focus:shadow-none focus:ring-0 focus:outline-none"
 			style="color: var(--color-text); font-family: var(--font-sans);"
 		/>
 	</div>
@@ -149,13 +145,10 @@
 					style="color: var(--color-text-secondary);"
 				>
 					{#if IconComponent}
-						<svelte:component this={IconComponent} size={14} strokeWidth={2} />
+						<IconComponent size={14} strokeWidth={2} />
 					{/if}
 					<span class="flex-1">{category.label}</span>
-					<span
-						class="text-[10px] font-normal"
-						style="color: var(--color-text-muted);"
-					>
+					<span class="text-[10px] font-normal" style="color: var(--color-text-muted);">
 						{category.commands.length}
 					</span>
 					<ChevronRight
@@ -181,7 +174,7 @@
 							>
 								<div class="flex items-start gap-1.5">
 									<code
-										class="inline-block break-all rounded px-1 py-0.5 text-[11px] leading-relaxed"
+										class="inline-block rounded px-1 py-0.5 text-[11px] leading-relaxed break-all"
 										style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
 										>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span
 												class="tok tok-{token.type}">{token.text}</span
@@ -198,10 +191,7 @@
 										{/if}
 									</span>
 								</div>
-								<p
-									class="mt-0.5 text-[11px] leading-snug"
-									style="color: var(--color-text-muted);"
-								>
+								<p class="mt-0.5 text-[11px] leading-snug" style="color: var(--color-text-muted);">
 									{cmd.description}
 								</p>
 								{#if isCopied}
