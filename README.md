@@ -104,13 +104,13 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Scripts
 
-| Command           | Description                 |
-| ----------------- | --------------------------- |
-| `npm run dev`     | Start dev server            |
-| `npm run build`   | Production build → `build/` |
-| `npm run preview` | Preview production build    |
-| `npm run check`   | Type-check                  |
-| `npm run lint`    | Prettier + ESLint           |
+| Command           | Description                        |
+| ----------------- | ---------------------------------- |
+| `npm run dev`     | Start dev server                   |
+| `npm run build`   | Production build → `build/`        |
+| `npm run preview` | Preview production build           |
+| `npm run check`   | Type-check                         |
+| `npm run lint`    | Prettier + ESLint                  |
 | `npm run test`    | Vitest unit + Playwright e2e tests |
 
 ## Assets

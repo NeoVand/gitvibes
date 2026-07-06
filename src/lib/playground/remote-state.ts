@@ -14,6 +14,12 @@ export class RemoteState {
 	readonly url = DEFAULT_REMOTE_URL;
 	branches = new Map<string, string>();
 	upstream: string | null = null;
+	/**
+	 * What the local repo believes each remote branch points at, as of the
+	 * last fetch/push. --force-with-lease compares against this, not against
+	 * the real remote tip — that's the whole point of the lease.
+	 */
+	lastFetched = new Map<string, string>();
 
 	setBranch(branch: string, oid: string) {
 		this.branches.set(branch, oid);
@@ -23,8 +29,17 @@ export class RemoteState {
 		return this.branches.get(branch);
 	}
 
+	recordFetched(branch: string, oid: string) {
+		this.lastFetched.set(branch, oid);
+	}
+
+	getFetched(branch: string): string | undefined {
+		return this.lastFetched.get(branch);
+	}
+
 	clear() {
 		this.branches.clear();
+		this.lastFetched.clear();
 		this.upstream = null;
 	}
 }

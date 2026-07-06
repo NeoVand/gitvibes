@@ -60,10 +60,12 @@ test.describe('Git Playground', () => {
 		await expect(input).toBeEnabled({ timeout: 15000 });
 
 		await runCommand(page, input, 'git add -p');
-		await expect(panel.getByText('Stage changes in')).toBeVisible();
+		await expect(panel.getByText(/Stage this hunk/).first()).toBeVisible();
 
 		await runCommand(page, input, 'y');
-		await expect(panel.getByText(/Done staging|Stage changes in/)).toBeVisible();
+		await expect(
+			panel.getByText(/Done staging|Stage this hunk|Staged \d+ hunk/).first()
+		).toBeVisible();
 	});
 
 	test('supports fetch and remote on sync scenario', async ({ page }) => {

@@ -54,6 +54,27 @@ export async function readFileAtCommit(
 	return found;
 }
 
+/** Read a file's content as staged in the index, or null if absent. */
+export async function readIndexFile(engine: GitEngine, filepath: string): Promise<string | null> {
+	const { fs, dir } = engine;
+	// The STAGE walker exposes oids but not content, so collect the oid
+	// first and read the blob separately.
+	const results = (await git.walk({
+		fs,
+		dir,
+		trees: [git.STAGE()],
+		map: async (path, [entry]) => {
+			if (path !== filepath || !entry) return undefined;
+			if ((await entry.type()) !== 'blob') return undefined;
+			return entry.oid();
+		}
+	})) as (string | undefined)[];
+	const oid = results.find((value) => value !== undefined);
+	if (!oid) return null;
+	const { blob } = await git.readBlob({ fs, dir, oid });
+	return new TextDecoder().decode(blob);
+}
+
 export async function listFilesAtCommit(engine: GitEngine, commitOid: string): Promise<string[]> {
 	const { fs, dir } = engine;
 

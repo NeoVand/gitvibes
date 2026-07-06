@@ -274,19 +274,22 @@ export function isLessonScenario(id: string): id is LessonScenarioId {
 }
 
 export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
-  git status | git diff [--staged] | git log [--oneline] [--all]
-  git add <file> | git add . | git add -p [--patch]
-  git commit -m "msg" | git commit --amend [--no-edit] [-m "msg"]
-  git branch [-d] | git switch [-c] <branch> | git checkout [-b] <branch>
-  git restore <file> | git restore --staged <file>
-  git reset --soft|--mixed|--hard HEAD~N
-  git merge <branch> | git rebase <branch>
-  git stash push -m "msg" | git stash pop | git stash list
-  git fetch origin | git pull origin <branch> | git push [-u] origin [branch]
-  git remote -v | git revert <commit>
-  echo "content" > file  (edit files / resolve conflicts)
-  cat <file>  (view file contents)
-  ls  (list all files in working directory)
-  y | n | q | a  (responses during git add -p)
+  git status | git diff [--staged] | git log [--oneline] [--all] [-n <k>]
+  git show [<commit>] | git reflog
+  git add <file|glob> | git add . | git add -p  (hunk-by-hunk staging)
+  git commit -m "msg" | git commit --amend [-m "msg"]
+  git branch [-d|-m|-v|-a] | git switch [-c] <branch>
+  git checkout [-b] <branch> | git checkout <commit>  (detached HEAD)
+  git checkout <commit> -- <file> | git restore [--staged|--source <rev>] <file>
+  git reset --soft|--mixed|--hard <rev>   (rev: HEAD~N, HEAD^, HEAD@{n}, hash)
+  git merge <branch> [--abort] | git rebase <branch> [--abort|--continue]
+  git cherry-pick <commit> [--abort|--continue]
+  git tag [-a <name> -m "msg"] [<name>] [-d <name>]
+  git stash push -m "msg" | pop | apply | list | drop | clear
+  git fetch origin | git pull [--rebase] origin <branch>
+  git push [-u|--force-with-lease|--force] origin [branch]
+  git remote -v | git revert <commit> | git rm [--cached] <file> | git clean -f
+  echo "content" > file | cat <file> | ls
+  y | n | a | d | q  (responses during git add -p)
 
 Other: clear, help`;

@@ -82,15 +82,45 @@ function createMemoryFs(base: string): LightningFS {
 	} as unknown as LightningFSOptions);
 }
 
+export interface ReflogEntry {
+	oid: string;
+	message: string;
+}
+
+export interface ReplayState {
+	/** 'rebase' pauses/resumes a whole replay; 'cherry-pick' a single commit */
+	kind: 'rebase' | 'cherry-pick';
+	branch: string;
+	/** Where the branch pointed before the operation started */
+	originalOid: string;
+	/** The commit currently paused on a conflict */
+	current: { oid: string; message: string };
+	/** Commits still to replay after the current one */
+	remaining: { oid: string; message: string }[];
+}
+
 export class GitEngine {
 	fs: LightningFS;
 	dir = '/repo';
 	remote = new RemoteState();
 	patchSession: PatchSession | null = null;
+	/**
+	 * isomorphic-git doesn't maintain reflogs, so the engine records HEAD
+	 * movements itself. Newest entry first (index 0 == HEAD@{0}).
+	 */
+	reflog: ReflogEntry[] = [];
+	replayState: ReplayState | null = null;
+	/** HEAD before the last merge attempt — what merge --abort returns to */
+	mergeOrigHead: string | null = null;
 	private initPromise: Promise<void> | null = null;
 
 	constructor(private fsName = 'gitvibes-playground') {
 		this.fs = createMemoryFs(this.fsName);
+	}
+
+	recordReflog(oid: string, message: string): void {
+		this.reflog.unshift({ oid, message });
+		if (this.reflog.length > 100) this.reflog.pop();
 	}
 
 	async reset(seed?: RepoSeed): Promise<void> {
@@ -98,6 +128,8 @@ export class GitEngine {
 		this.initPromise = null;
 		this.remote.clear();
 		this.patchSession = null;
+		this.reflog = [];
+		this.replayState = null;
 		await this.ensureInit();
 
 		if (!seed) return;
@@ -131,6 +163,7 @@ export class GitEngine {
 		if (seed.remote) {
 			for (const ref of seed.remote) {
 				this.remote.setBranch(ref.branch, ref.oid);
+				this.remote.recordFetched(ref.branch, ref.oid);
 				await writeRemoteTrackingRef(this, 'origin', ref.branch, ref.oid);
 			}
 		}
@@ -141,6 +174,8 @@ export class GitEngine {
 		this.initPromise = null;
 		this.remote.clear();
 		this.patchSession = null;
+		this.reflog = [];
+		this.replayState = null;
 		await this.ensureInit();
 		await fn(this);
 	}
@@ -150,12 +185,14 @@ export class GitEngine {
 			await this.writeFile(file.path, file.content);
 			await git.add({ fs: this.fs, dir: this.dir, filepath: file.path });
 		}
-		return git.commit({
+		const oid = await git.commit({
 			fs: this.fs,
 			dir: this.dir,
 			message,
 			author: AUTHOR
 		});
+		this.recordReflog(oid, `commit: ${message.split('\n')[0]}`);
+		return oid;
 	}
 
 	async getCommitOid(branch: string, depthFromTip = 0): Promise<string> {
@@ -207,7 +244,19 @@ export class GitEngine {
 		if (dirPath.length > this.dir.length) {
 			await this.ensureDir(dirPath);
 		}
+		const before = await this.fs.promises.stat(fullPath).catch(() => null);
 		await this.fs.promises.writeFile(fullPath, content, 'utf8');
+		if (before) {
+			// "Racy git": change detection compares size+mtime against the
+			// index, and LightningFS stamps millisecond mtimes — a rewrite in
+			// the same millisecond with same-length content looks unchanged.
+			// Rewrite after a tick so the mtime always moves.
+			const after = await this.fs.promises.stat(fullPath).catch(() => null);
+			if (after && after.mtimeMs === before.mtimeMs) {
+				await new Promise((resolve) => setTimeout(resolve, 2));
+				await this.fs.promises.writeFile(fullPath, content, 'utf8');
+			}
+		}
 	}
 
 	private async ensureDir(dirPath: string): Promise<void> {
@@ -255,19 +304,61 @@ export class GitEngine {
 		return results.sort();
 	}
 
+	/**
+	 * Resolve git revision syntax: HEAD, branch names, full/short oids,
+	 * ~n / ^ / ^2 suffix chains, and HEAD@{n} via the engine reflog.
+	 */
+	async resolveRevision(rev: string): Promise<string> {
+		const reflogMatch = rev.match(/^HEAD@\{(\d+)\}$/);
+		if (reflogMatch) {
+			const entry = this.reflog[Number(reflogMatch[1])];
+			if (!entry) throw new Error(`ambiguous argument '${rev}': unknown revision`);
+			return entry.oid;
+		}
+
+		const match = rev.match(/^(.*?)((?:[~^]\d*)*)$/);
+		const baseName = match?.[1] ?? rev;
+		const suffixes = match?.[2] ?? '';
+
+		let oid: string;
+		if (baseName === 'HEAD' || baseName === '') {
+			oid = await git.resolveRef({ fs: this.fs, dir: this.dir, ref: 'HEAD' });
+		} else {
+			try {
+				oid = await git.resolveRef({ fs: this.fs, dir: this.dir, ref: baseName });
+			} catch {
+				try {
+					oid = await git.expandOid({ fs: this.fs, dir: this.dir, oid: baseName });
+				} catch {
+					throw new Error(`ambiguous argument '${rev}': unknown revision`);
+				}
+			}
+		}
+
+		for (const step of suffixes.match(/[~^]\d*/g) ?? []) {
+			const op = step[0];
+			const count = step.length > 1 ? Number(step.slice(1)) : 1;
+			if (op === '~') {
+				for (let i = 0; i < count; i++) {
+					oid = await this.parentOf(oid, 1, rev);
+				}
+			} else {
+				oid = await this.parentOf(oid, count, rev);
+			}
+		}
+		return oid;
+	}
+
+	/** @deprecated kept as the historical name — same as resolveRevision */
 	async resolveHead(rev: string): Promise<string> {
-		if (rev === 'HEAD') {
-			const log = await git.log({ fs: this.fs, dir: this.dir, depth: 1 });
-			return log[0]?.oid ?? '';
-		}
-		const match = rev.match(/^HEAD~(\d+)$/);
-		if (match) {
-			const n = Number(match[1]);
-			const log = await git.log({ fs: this.fs, dir: this.dir, depth: n + 1 });
-			if (log.length <= n) throw new Error(`ambiguous argument ${rev}: unknown revision`);
-			return log[n].oid;
-		}
-		return rev;
+		return this.resolveRevision(rev);
+	}
+
+	private async parentOf(oid: string, n: number, rev: string): Promise<string> {
+		const { commit } = await git.readCommit({ fs: this.fs, dir: this.dir, oid });
+		const parent = commit.parent[n - 1];
+		if (!parent) throw new Error(`ambiguous argument '${rev}': unknown revision`);
+		return parent;
 	}
 }
 
