@@ -1,15 +1,19 @@
 <script lang="ts">
 	import { Monitor, Maximize2 } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import ImageLightbox from './ImageLightbox.svelte';
 
 	let { src, alt, caption = '' }: { src: string; alt: string; caption?: string } = $props();
 
-	const baseUrl = 'https://code.visualstudio.com/assets/docs/sourcecontrol';
-
 	let open = $state(false);
 	let failed = $state(false);
 
-	const imageUrl = $derived(src.startsWith('http') ? src : `${baseUrl}/${src}`);
+	// Screenshots from the VS Code documentation are vendored under
+	// static/images/vscode (as WebP) so the site has no runtime dependency
+	// on the docs CDN.
+	const imageUrl = $derived(
+		src.startsWith('http') ? src : `${base}/images/vscode/${src.replace(/\.png$/, '.webp')}`
+	);
 </script>
 
 <figure class="my-5 overflow-hidden rounded-lg" style="background: var(--color-bg-tertiary);">

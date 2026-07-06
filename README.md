@@ -115,7 +115,9 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Assets
 
-Section banner images live in `static/images/` (kebab-case filenames). Image generation prompts for creating or updating posters are in [`docs/IMAGE_PROMPTS.md`](docs/IMAGE_PROMPTS.md).
+Section banner images live in `static/images/` (kebab-case filenames). Image generation prompts for creating or updating posters are in [`docs/IMAGE_PROMPTS.md`](docs/IMAGE_PROMPTS.md). Drop new art in as PNG and run `node scripts/optimize-images.mjs` to convert it to WebP.
+
+VS Code screenshots under `static/images/vscode/` are from the [Visual Studio Code documentation](https://code.visualstudio.com/docs/sourcecontrol/overview) (© Microsoft, [CC BY 3.0](https://github.com/microsoft/vscode-docs/blob/main/License.md)), vendored so the site has no runtime dependency on the docs CDN.
 
 ## Deployment
 

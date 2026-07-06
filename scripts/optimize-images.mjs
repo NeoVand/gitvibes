@@ -1,5 +1,5 @@
-// Convert static/images/*.png to WebP and remove the PNG originals.
-// Run after adding new banner images: node scripts/optimize-images.mjs
+// Convert static/images/**/*.png to WebP and remove the PNG originals.
+// Run after adding new images: node scripts/optimize-images.mjs
 import { readdir, stat, unlink } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -7,7 +7,17 @@ import sharp from 'sharp';
 const dir = 'static/images';
 const QUALITY = 84;
 
-const files = (await readdir(dir)).filter((f) => f.endsWith('.png'));
+async function walk(current) {
+	const out = [];
+	for (const entry of await readdir(current, { withFileTypes: true })) {
+		const full = path.join(current, entry.name);
+		if (entry.isDirectory()) out.push(...(await walk(full)));
+		else if (entry.name.endsWith('.png')) out.push(path.relative(dir, full));
+	}
+	return out;
+}
+
+const files = await walk(dir);
 if (files.length === 0) {
 	console.log('No PNGs to convert.');
 	process.exit(0);
