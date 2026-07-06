@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="static/images/logo.webp" width="112" alt="GitVibes logo" />
+</p>
+
 # GitVibes — Git for Vibe Coders
 
 An interactive, visual guide to Git for developers who use AI-assisted coding tools like GitHub Copilot, Cursor, and Claude Code.

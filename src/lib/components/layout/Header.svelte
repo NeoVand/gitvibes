@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { GitBranch, Sun, Moon, ScrollText, Github, Gamepad2, X, Linkedin } from 'lucide-svelte';
+	import { Sun, Moon, ScrollText, Github, Gamepad2, X, Linkedin } from 'lucide-svelte';
+	import { base } from '$app/paths';
 	import Search from './Search.svelte';
 
 	let {
@@ -29,11 +30,10 @@
 	>
 		<button
 			onclick={() => (aboutOpen = true)}
-			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-opacity hover:opacity-80"
-			style="background: var(--color-primary); color: white;"
+			class="flex h-7 w-7 cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
 			aria-label="About GitVibes"
 		>
-			<GitBranch size={15} strokeWidth={2.5} />
+			<img src="{base}/images/logo.webp" alt="" class="h-7 w-7" width="28" height="28" />
 		</button>
 	</div>
 
@@ -117,12 +117,13 @@
 			</button>
 
 			<div class="mb-4 flex items-center gap-3">
-				<div
-					class="flex h-10 w-10 items-center justify-center rounded-lg"
-					style="background: var(--color-primary); color: white;"
-				>
-					<GitBranch size={22} strokeWidth={2.5} />
-				</div>
+				<img
+					src="{base}/images/logo.webp"
+					alt="GitVibes logo"
+					class="h-10 w-10"
+					width="40"
+					height="40"
+				/>
 				<div>
 					<h2
 						class="text-lg font-bold"
