@@ -2,8 +2,10 @@ import {
 	AlertTriangle,
 	Archive,
 	BookOpen,
+	Cherry,
 	Clock,
 	Columns,
+	Compass,
 	Download,
 	Eye,
 	EyeOff,
@@ -28,8 +30,10 @@ import {
 	Rocket,
 	RotateCcw,
 	Save,
+	ShieldAlert,
 	Sparkles,
 	Table,
+	Tag,
 	Trash2,
 	Undo2,
 	UserCheck,
@@ -111,7 +115,11 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-4-6', label: 'Force Push', icon: AlertTriangle },
 			{ id: 'force-push', label: 'Reset & Force Push', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-4-7', label: 'Recovery Matrix', icon: Table },
-			{ id: 'undo', label: 'Undo Operations', icon: Gamepad2, isPlayground: true }
+			{ id: 'undo', label: 'Undo Operations', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-4-8', label: 'Detached HEAD', icon: Compass },
+			{ id: 'detached-head', label: 'Time Travel', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-4-9', label: 'Reflog Rescue', icon: History },
+			{ id: 'reflog-rescue', label: 'Rescue Lost Commits', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{
@@ -124,7 +132,13 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-5-2', label: 'Rebase vs Merge', icon: GitMerge },
 			{ id: 'rebase-merge', label: 'Merge vs. Rebase', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-5-3', label: 'Merge Conflicts', icon: FileWarning },
-			{ id: 'conflicts', label: 'Conflict Resolution', icon: Gamepad2, isPlayground: true }
+			{ id: 'conflicts', label: 'Conflict Resolution', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-5-4', label: 'Cherry-Pick', icon: Cherry },
+			{ id: 'cherry-pick', label: 'Pick the Gem', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-5-5', label: 'Rebase Conflicts', icon: ShieldAlert },
+			{ id: 'rebase-conflict', label: 'Rebase Rescue', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-5-6', label: 'Tags & Releases', icon: Tag },
+			{ id: 'release-tags', label: 'Cut a Release', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{

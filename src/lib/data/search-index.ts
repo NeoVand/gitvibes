@@ -18,7 +18,10 @@ function resolveSectionId(command: string, category: string): string {
 	const cmd = command.toLowerCase();
 
 	if (cmd.includes('stash')) return 'section-5-1';
-	if (cmd.includes('rebase') || cmd.includes('cherry-pick')) return 'section-5-2';
+	if (cmd.includes('reflog') || cmd.includes('head@{')) return 'section-4-9';
+	if (cmd.includes('cherry-pick')) return 'section-5-4';
+	if (cmd.includes('rebase --continue') || cmd.includes('rebase --abort')) return 'section-5-5';
+	if (cmd.includes('rebase')) return 'section-5-2';
 	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth'))
 		return 'section-1-2';
 	if (cmd.includes('rm --cached') || cmd.includes('excludesfile')) return 'section-1-4';
@@ -41,10 +44,10 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('force')) return 'section-4-6';
 	if (cmd.includes('merge')) return 'section-5-2';
 	if (cmd.includes('log') || cmd.includes('show') || cmd.includes('blame')) return 'section-6-2';
-	if (cmd.includes('bisect') || cmd.includes('reflog') || cmd.includes('submodule')) {
+	if (cmd.includes('bisect') || cmd.includes('submodule')) {
 		return 'section-7-2';
 	}
-	if (cmd.includes('tag')) return 'section-7-2';
+	if (cmd.includes('tag')) return 'section-5-6';
 
 	const categoryFallback: Record<string, string> = {
 		'Setup & Config': 'section-1-1',
@@ -55,7 +58,7 @@ function resolveSectionId(command: string, category: string): string {
 		Undoing: 'section-4-1',
 		'History & Inspection': 'section-6-2',
 		'Rebase & Cherry-pick': 'section-5-2',
-		Tags: 'section-7-2',
+		Tags: 'section-5-6',
 		Advanced: 'section-7-2'
 	};
 
@@ -259,6 +262,89 @@ const topicEntries: SearchEntry[] = [
 			'teach ai',
 			'review ai diff',
 			'large pr'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-detached-head',
+		sectionId: 'section-4-8',
+		title: 'Detached HEAD — Time Travel Safely',
+		part: 'Undo Toolkit',
+		description: 'Visit an old commit, look around, and escape with your work intact.',
+		keywords: [
+			'detached head',
+			'checkout commit',
+			'time travel',
+			'old commit',
+			'orphaned commits',
+			'switch -c',
+			'escape detached'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-reflog',
+		sectionId: 'section-4-9',
+		title: 'The Reflog — Your Time Machine',
+		part: 'Undo Toolkit',
+		description: 'Recover commits that vanished after a hard reset or a botched rebase.',
+		keywords: [
+			'reflog',
+			'recover lost commits',
+			'undo reset --hard',
+			'rescue',
+			'lost work',
+			'HEAD@{1}',
+			'time machine'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-cherry-pick',
+		sectionId: 'section-5-4',
+		title: 'Cherry-Pick — Take Only the Gems',
+		part: 'Advanced Workflows',
+		description: 'Copy a single commit from a messy branch onto your current branch.',
+		keywords: [
+			'cherry-pick',
+			'copy commit',
+			'single commit',
+			'selective merge',
+			'pick commit',
+			'experiment branch'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-rebase-conflict',
+		sectionId: 'section-5-5',
+		title: 'When Rebase Goes Wrong',
+		part: 'Advanced Workflows',
+		description: 'Resolve a paused rebase with --continue, or bail out safely with --abort.',
+		keywords: [
+			'rebase conflict',
+			'rebase --continue',
+			'rebase --abort',
+			'unmerged paths',
+			'paused rebase',
+			'stuck rebase'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-tags',
+		sectionId: 'section-5-6',
+		title: 'Tags & Releases',
+		part: 'Advanced Workflows',
+		description: 'Mark release commits with annotated tags and semantic versions.',
+		keywords: [
+			'tag',
+			'annotated tag',
+			'release',
+			'semantic versioning',
+			'semver',
+			'version',
+			'milestone'
 		],
 		kind: 'topic'
 	},

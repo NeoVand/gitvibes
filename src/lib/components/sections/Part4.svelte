@@ -6,7 +6,9 @@
 		PenLine,
 		RotateCcw,
 		AlertTriangle,
-		Table
+		Table,
+		Compass,
+		History
 	} from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
@@ -170,7 +172,7 @@ git restore src/bad_file.py  # Discard a single file`}
 			</p>
 
 			<VsCodeScreenshot
-				src="staging-commits/unstage-changes.webp"
+				src="staging-commits/unstage-changes.png"
 				alt="VS Code Source Control panel showing the unstage button (minus icon) on a staged file"
 				caption="Click the − button next to any staged file to unstage it. It moves back to the 'Changes' section."
 			/>
@@ -241,8 +243,16 @@ git commit --amend`}
 			</p>
 
 			<Callout type="warning">
-				This rewrites your last commit. This is 100% safe <strong>if and only if</strong> you have not
-				pushed that commit to the remote server yet.
+				This rewrites your last commit. Amending is safe when <strong
+					>nobody else could have based work on that commit</strong
+				>
+				— either it was never pushed, or it lives on your own personal branch and you follow up with a
+				careful
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>--force-with-lease</code
+				> push (see section 4.6). If teammates may have pulled the commit, don't amend — revert instead.
 			</Callout>
 
 			<VibeBox
@@ -425,7 +435,7 @@ git push                   # Push the revert`}
 			</p>
 
 			<VsCodeScreenshot
-				src="quickstart/pull-push-commands.webp"
+				src="quickstart/pull-push-commands.png"
 				alt="VS Code Source Control ellipsis menu showing Pull, Push, Commit, Stash, Branch, and other Git commands"
 				caption="The ... menu is your Git command center. Look under Commit for Undo Last Commit, Commit (Amend), and other recovery options."
 			/>
@@ -507,6 +517,17 @@ git push                   # Push the revert`}
 					</p>
 				</div>
 			</div>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				One subtlety: the lease compares the remote against <strong
+					style="color: var(--color-text);">what you last fetched</strong
+				>
+				— so run
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git fetch</code
+				> first, review what changed on the remote, and only then push.
+			</p>
 			<Callout type="caution">
 				<strong>What does the error look like?</strong> When you try to push after rewriting
 				history, Git will reject it with:
@@ -544,7 +565,7 @@ git push                   # Push the revert`}
 		</div>
 
 		<!-- 4.7 Recovery Matrix -->
-		<div id="section-4-7" class="mb-8">
+		<div id="section-4-7" class="mb-14">
 			<SectionHeader
 				level="section"
 				icon={Table}
@@ -640,6 +661,19 @@ git push                   # Push the revert`}
 							<td class="px-3 py-2">GitLens → Right-click commit → Reset</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-3 py-2">Commits "vanished" after a hard reset</td>
+							<td class="px-3 py-2"
+								><code style="font-family: var(--font-mono);">git reflog</code><br /><code
+									style="font-family: var(--font-mono);">git reset --hard HEAD@&#123;1&#125;</code
+								></td
+							>
+							<td class="px-3 py-2"
+								>Finds the lost commit in the reflog and moves the branch back</td
+							>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">Terminal only (see section 4.9)</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Pushed a bug to the team</td>
 							<td class="px-3 py-2"
 								><code style="font-family: var(--font-mono);">git revert &lt;hash&gt;</code></td
@@ -686,6 +720,270 @@ git push                   # Push the revert`}
 				>. Try reverting the pushed bad commit, then amending after staging a fix.
 			</PlaygroundNote>
 			<LessonActivity title="Undo Operations" scenarioId="undo" id="undo" />
+		</div>
+
+		<!-- 4.8 Detached HEAD -->
+		<div id="section-4-8" class="mb-14">
+			<SectionHeader
+				level="section"
+				icon={Compass}
+				title="4.8 Detached HEAD — Time Travel Safely"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You (or the agent) checked out an old commit hash to see how the code looked before a
+				refactor — and the terminal barks back: <strong style="color: var(--color-text);"
+					>"You are in 'detached HEAD' state."</strong
+				> It sounds like an injury. It isn't. It's Git telling you exactly where you are: in the past.
+			</p>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/detached-head.webp"
+					alt="Detached HEAD — HEAD pointing directly at an old commit instead of a branch"
+					caption="Detached HEAD: you're standing on a commit, not riding a branch"
+				/>
+			</div>
+
+			<Callout type="note">
+				<strong>The Problem:</strong> You ran
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git checkout a1b2c3d</code
+				>
+				(or
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git checkout HEAD~2</code
+				>) to inspect an old version. Git warns about a "detached HEAD" and you're not sure if you
+				broke something.
+			</Callout>
+
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Normally, <strong style="color: var(--color-text);">HEAD points at a branch</strong>, and
+				the branch moves forward with every commit. When you check out a commit hash directly, HEAD
+				points at that <strong style="color: var(--color-text);">commit</strong> instead — no branch is
+				along for the ride. Looking around is completely safe:
+			</p>
+
+			<CodeBlock
+				title="Time-travel to inspect an old commit"
+				code={`git log --oneline        # Find the commit you want to visit
+git checkout HEAD~2      # Detach HEAD two commits back
+cat src/app.py           # Look around — reading is 100% safe`}
+			/>
+
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				The catch is <strong style="color: var(--color-text);">committing</strong> while detached.
+				Any commits you make there belong to no branch — the moment you switch away, nothing points
+				at them anymore and they become <strong style="color: var(--color-text);">orphaned</strong>.
+				They don't disappear instantly (the reflog still remembers them — see section 4.9), but they
+				vanish from
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git log</code
+				> and real Git will eventually garbage-collect them.
+			</p>
+
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				There are exactly two escape hatches, and choosing is easy:
+			</p>
+
+			<CodeBlock
+				title="The two ways out"
+				code={`# Made something worth keeping? Put a branch under your feet:
+git switch -c inspect-v02
+
+# Just sightseeing? Go back to the present:
+git switch main`}
+			/>
+
+			<Callout type="tip">
+				Think of detached HEAD as a <strong>read-only visit to the past</strong>. Inspect freely,
+				run things, compare files. The instant you want to keep new work, run
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git switch -c &lt;branch&gt;</code
+				> — and even if you forget, the reflog is your safety net.
+			</Callout>
+
+			<h4
+				id="detached-head-activity"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Time-Travel and Escape
+			</h4>
+			<PlaygroundNote>
+				Version 0.4 is misbehaving. Use <code>git checkout HEAD~2</code> to visit version 0.2,
+				inspect <code>src/app.py</code>, then escape — <code>git switch -c inspect-v02</code> to
+				keep a foothold, or <code>git switch main</code> to return to the present.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Try it: Time-travel and escape"
+				scenarioId="detached-head"
+				id="detached-head"
+			/>
+
+			<VibeBox
+				prompts={[
+					"Check out the commit from before yesterday's refactor so I can see how auth.py looked",
+					"I'm in detached HEAD state and I made a commit here — save it to a new branch and take me back to main"
+				]}
+			/>
+		</div>
+
+		<!-- 4.9 Reflog -->
+		<div id="section-4-9" class="mb-8">
+			<SectionHeader
+				level="section"
+				icon={History}
+				title="4.9 The Reflog — Your Time Machine"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				The agent ran <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git reset --hard</code
+				>
+				and the log now looks like two days of work never happened. Before you panic: those commits are
+				<strong style="color: var(--color-text);">not gone</strong>. Git keeps a private journal of
+				every place HEAD has ever been — the
+				<strong style="color: var(--color-text);">reflog</strong> — and it's about to save your week.
+			</p>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-reflog.webp"
+					alt="git reflog — a journal of every HEAD movement that lets you recover lost commits"
+					caption="The reflog records every HEAD movement — commits, resets, checkouts, merges"
+				/>
+			</div>
+
+			<Callout type="note">
+				<strong>The Problem:</strong> A hard reset (or a botched rebase, or an agent gone rogue)
+				erased commits from
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git log</code
+				>. You need them back.
+			</Callout>
+
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git log</code
+				>
+				only shows commits <strong style="color: var(--color-text);">reachable</strong> from your
+				branches. The reflog shows
+				<strong style="color: var(--color-text);">everywhere HEAD has moved</strong>, reachable or
+				not. Here's how to read it:
+			</p>
+
+			<CodeBlock
+				title="Anatomy of git reflog output"
+				code={`git reflog
+
+a9f8e21 HEAD@{0}: reset: moving to HEAD~2         <- where you are NOW
+4c7d3b9 HEAD@{1}: commit: feat: add caching layer <- one move ago (the "lost" work!)
+8e2f1a0 HEAD@{2}: commit: feat: add ranking algorithm
+1d0c5f4 HEAD@{3}: commit (initial): Initial commit`}
+			/>
+
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>{'HEAD@{n}'}</code
+				>
+				means "where HEAD was <em>n</em> moves ago" —
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>{'HEAD@{0}'}</code
+				>
+				is now,
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>{'HEAD@{1}'}</code
+				> is one move back. Each line also shows the short hash, so you have two ways to name any point
+				in time. Pick your recovery recipe:
+			</p>
+
+			<CodeBlock
+				title="Three recovery recipes"
+				code={`# 1. Undo the reset entirely — move the branch back:
+git reset --hard HEAD@{1}
+
+# 2. Rescue a single lost commit onto your current branch:
+git cherry-pick 4c7d3b9
+
+# 3. Inspect first — park a rescue branch on the lost commit:
+git switch -c rescue 4c7d3b9`}
+			/>
+
+			<Callout type="warning">
+				<strong>The reflog's limits:</strong> it is <strong>local-only</strong> — it's never pushed,
+				and your teammates' machines each have their own. In real Git, entries expire (unreachable
+				ones after about 30 days, the rest after about 90). And crucially:
+				<strong>uncommitted work is NOT in the reflog</strong> — Git can only time-travel to states you
+				committed. The real lesson of this whole part: commit early, commit often.
+			</Callout>
+
+			<Callout type="tip">
+				This completes the undo toolkit from the recovery matrix in section 4.7: <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">restore</code
+				>
+				for the working directory,
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">revert</code
+				>
+				for public history,
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">reset</code
+				>
+				for local history — and
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">reflog</code
+				> when a reset itself was the mistake.
+			</Callout>
+
+			<h4
+				id="reflog-rescue-activity"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Rescue Lost Commits
+			</h4>
+			<PlaygroundNote>
+				An agent ran <code>git reset --hard HEAD~2</code> and two commits vanished. Run
+				<code>git reflog</code>
+				to find where HEAD was before the reset, then <code>{'git reset --hard HEAD@{1}'}</code> to bring
+				everything back.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Try it: Rescue lost commits"
+				scenarioId="reflog-rescue"
+				id="reflog-rescue"
+			/>
+
+			<VibeBox
+				prompts={[
+					'The last reset deleted commits I still need — check the reflog and restore them',
+					'Find the commit where tests still passed in the reflog and create a rescue branch on it'
+				]}
+			/>
 		</div>
 	</div>
 </section>

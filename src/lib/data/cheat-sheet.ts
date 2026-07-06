@@ -243,6 +243,14 @@ export const cheatSheet: CheatSheetCategory[] = [
 			{
 				command: 'git cherry-pick <start>..<end>',
 				description: 'Apply a range of commits to the current branch'
+			},
+			{
+				command: 'git cherry-pick --continue',
+				description: 'Resume a cherry-pick after resolving conflicts'
+			},
+			{
+				command: 'git cherry-pick --abort',
+				description: 'Cancel a conflicted cherry-pick and restore the branch'
 			}
 		]
 	},
@@ -279,6 +287,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 			{
 				command: 'git reflog',
 				description: 'Show a log of all reference updates (recovery tool)'
+			},
+			{
+				command: 'git reset --hard HEAD@{1}',
+				description: 'Move the branch back to where HEAD was one move ago'
 			},
 			{
 				command: 'git submodule add <url> <path>',
