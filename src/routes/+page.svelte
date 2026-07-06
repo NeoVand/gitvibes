@@ -12,6 +12,7 @@
 	import Part5 from '$lib/components/sections/Part5.svelte';
 	import Part6 from '$lib/components/sections/Part6.svelte';
 	import Part7 from '$lib/components/sections/Part7.svelte';
+	import PartNav from '$lib/components/ui/PartNav.svelte';
 	import { sectionIds } from '$lib/data/sections';
 	import {
 		loadThemePreference,
@@ -144,6 +145,24 @@
 		window.addEventListener('wheel', clearNavClick, { passive: true });
 		window.addEventListener('touchmove', clearNavClick, { passive: true });
 
+		// Decorate every section anchor's heading with a copy-permalink button.
+		for (const el of sectionEls) {
+			const heading = el.querySelector('h2, h3, h4') ?? (/^H[2-4]$/.test(el.tagName) ? el : null);
+			if (!heading || heading.querySelector('.heading-anchor')) continue;
+			const anchor = document.createElement('a');
+			anchor.className = 'heading-anchor';
+			anchor.href = `#${el.id}`;
+			anchor.textContent = '#';
+			anchor.setAttribute('aria-label', 'Copy link to this section');
+			anchor.addEventListener('click', (event) => {
+				event.preventDefault();
+				const url = `${location.origin}${location.pathname}#${el.id}`;
+				history.replaceState(null, '', `#${el.id}`);
+				navigator.clipboard?.writeText(url).catch(() => {});
+			});
+			heading.appendChild(anchor);
+		}
+
 		return () => {
 			window.removeEventListener('scroll', onScroll);
 			cancelAnimationFrame(rafId);
@@ -194,6 +213,8 @@
 	/>
 </svelte:head>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
+
 <Header
 	theme={getEffectiveThemeLocal()}
 	onToggleTheme={toggleTheme}
@@ -206,6 +227,7 @@
 <PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} />
 
 <main
+	id="main-content"
 	class="main-content transition-[margin-left] duration-200 ease-out"
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen
 		? 'var(--sidebar-width)'
@@ -213,11 +235,41 @@
 >
 	<Hero onOpenPlayground={openPlayground} />
 	<Part1 />
+	<PartNav
+		prev={{ id: 'hero', label: 'Introduction' }}
+		next={{ id: 'part-2', label: 'Core Safety Loop' }}
+		onNavigate={handleNavigate}
+	/>
 	<Part2 />
+	<PartNav
+		prev={{ id: 'part-1', label: 'Enterprise Onboarding' }}
+		next={{ id: 'part-3', label: 'Branching & PRs' }}
+		onNavigate={handleNavigate}
+	/>
 	<Part3 />
+	<PartNav
+		prev={{ id: 'part-2', label: 'Core Safety Loop' }}
+		next={{ id: 'part-4', label: 'Undo Toolkit' }}
+		onNavigate={handleNavigate}
+	/>
 	<Part4 />
+	<PartNav
+		prev={{ id: 'part-3', label: 'Branching & PRs' }}
+		next={{ id: 'part-5', label: 'Advanced Workflows' }}
+		onNavigate={handleNavigate}
+	/>
 	<Part5 />
+	<PartNav
+		prev={{ id: 'part-4', label: 'Undo Toolkit' }}
+		next={{ id: 'part-6', label: 'VS Code Cockpit' }}
+		onNavigate={handleNavigate}
+	/>
 	<Part6 />
+	<PartNav
+		prev={{ id: 'part-5', label: 'Advanced Workflows' }}
+		next={{ id: 'part-7', label: 'Conclusion' }}
+		onNavigate={handleNavigate}
+	/>
 	<Part7 onOpenPlayground={openPlayground} />
 
 	<footer class="py-10 text-center" style="border-top: 1px solid var(--color-border);">

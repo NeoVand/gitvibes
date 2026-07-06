@@ -442,3 +442,77 @@ kbd {
 .mermaid-container .arrow {
 	stroke-width: 1.5px !important;
 }
+
+/* ───── Accessibility ───── */
+
+/* Respect users who prefer reduced motion: no smooth scrolling, no
+   decorative transitions or animations. */
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* Skip-to-content link: invisible until focused via keyboard */
+.skip-link {
+	position: fixed;
+	top: -100px;
+	left: 16px;
+	z-index: 200;
+	padding: 10px 16px;
+	border-radius: 8px;
+	background: var(--color-primary);
+	color: white;
+	font-size: 14px;
+	font-weight: 600;
+	transition: top 0.15s ease;
+}
+
+.skip-link:focus {
+	top: 12px;
+}
+
+/* Heading permalink anchors */
+.heading-anchor {
+	margin-left: 0.4em;
+	opacity: 0;
+	color: var(--color-text-muted);
+	font-weight: 400;
+	text-decoration: none;
+	transition: opacity 0.15s ease;
+}
+
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor,
+.heading-anchor:focus {
+	opacity: 1;
+}
+
+/* ───── Print styles ───── */
+@media print {
+	header,
+	aside,
+	nav,
+	.skip-link,
+	.heading-anchor {
+		display: none !important;
+	}
+
+	main.main-content {
+		margin-left: 0 !important;
+		padding-top: 0 !important;
+	}
+
+	body {
+		background: white;
+	}
+}

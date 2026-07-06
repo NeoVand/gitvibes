@@ -30,6 +30,18 @@
 			name="twitter:image:alt"
 			content="Git for Vibe Coders — your safety net for AI-assisted coding"
 		/>
+		<script>
+			// Apply the stored theme before first paint to avoid a flash of the
+			// wrong theme. Mirrors $lib/theme.ts applyTheme.
+			try {
+				const theme = localStorage.getItem('gitvibes-theme');
+				if (theme === 'light' || theme === 'dark') {
+					document.documentElement.classList.add(theme);
+				}
+			} catch {
+				/* storage unavailable — system theme applies */
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
