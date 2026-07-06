@@ -380,7 +380,7 @@
 	<div class="pg-shell flex min-h-0 flex-1 flex-col overflow-hidden">
 		<header
 			class="flex shrink-0 flex-wrap items-center gap-2 px-3 py-2 sm:gap-2.5 sm:px-5 sm:py-3"
-			style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
+			style="background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent); border-bottom: 1px solid var(--color-border);"
 		>
 			<Terminal size={14} style="color: var(--color-important);" />
 			<span class="text-sm font-semibold" style="color: var(--color-text);">Playground</span>
@@ -407,7 +407,7 @@
 
 		<p
 			class="shrink-0 px-3 py-2 text-[11px] leading-snug sm:px-5 sm:py-2.5 sm:text-xs sm:leading-relaxed"
-			style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); background: var(--color-bg-secondary);"
+			style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-bg-secondary) 45%, transparent);"
 		>
 			{scenario.hint}
 		</p>
@@ -417,7 +417,7 @@
 				<button
 					type="button"
 					class="flex w-full cursor-pointer items-center gap-2 px-5 py-2"
-					style="background: var(--color-bg-tertiary);"
+					style="background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);"
 					onclick={() => (graphCollapsed = !graphCollapsed)}
 					aria-expanded={!graphCollapsed}
 					aria-label="Toggle commit graph"
@@ -437,7 +437,7 @@
 				{#if !graphCollapsed}
 					<div
 						class="pg-graph-body flex items-center justify-center px-4 py-1"
-						style="background: var(--color-bg-secondary);"
+						style="background: color-mix(in srgb, var(--color-bg-secondary) 45%, transparent);"
 					>
 						{#key diagram}
 							<MermaidDiagram definition={diagram} id="{id}-graph" />
@@ -449,7 +449,7 @@
 			<section class="flex min-h-0 flex-1 flex-col overflow-hidden">
 				<div
 					class="flex items-center gap-2 px-5 py-2"
-					style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border);"
+					style="background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent); border-bottom: 1px solid var(--color-border);"
 				>
 					<Terminal size={13} style="color: var(--color-text-muted);" />
 					<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
@@ -470,7 +470,7 @@
 
 			<section
 				class="pg-suggestions shrink-0 px-4 py-2"
-				style="border-top: 1px solid var(--color-border); background: var(--color-bg-tertiary);"
+				style="border-top: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);"
 			>
 				<p
 					class="mb-1.5 text-[10px] font-semibold tracking-widest uppercase"

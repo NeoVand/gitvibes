@@ -95,8 +95,8 @@
 
 <!-- Right-side sliding panel -->
 <aside
-	class="fixed top-0 right-0 bottom-0 z-40 flex w-80 flex-col border-l transition-transform duration-200 ease-out"
-	style="padding-top: var(--header-height); border-color: var(--color-border); background: var(--color-bg-secondary);"
+	class="cheat-panel fixed top-0 right-0 bottom-0 z-40 flex w-80 flex-col border-l transition-transform duration-200 ease-out"
+	style="padding-top: var(--header-height); border-color: var(--color-border);"
 	class:translate-x-0={open}
 	class:translate-x-full={!open}
 >
@@ -122,7 +122,10 @@
 	</div>
 
 	<!-- Search -->
-	<div class="flex items-center gap-2 px-4 py-2.5" style="background: var(--color-bg-tertiary);">
+	<div
+		class="flex items-center gap-2 px-4 py-2.5"
+		style="background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);"
+	>
 		<Search size={13} style="color: var(--color-text-muted); flex-shrink: 0;" />
 		<input
 			type="text"
@@ -219,3 +222,12 @@
 		{/if}
 	</div>
 </aside>
+
+<style>
+	/* Frosted glass, matching the header and sidebar */
+	.cheat-panel {
+		background: color-mix(in srgb, var(--color-bg-secondary) 62%, transparent);
+		backdrop-filter: blur(24px) saturate(1.4);
+		-webkit-backdrop-filter: blur(24px) saturate(1.4);
+	}
+</style>
