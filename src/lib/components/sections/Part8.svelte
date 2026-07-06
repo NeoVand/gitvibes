@@ -72,7 +72,7 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Branch</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							Create an isolated branch — or practice every step in the
+							Create an isolated branch. Practice any step of this loop in the
 							<button
 								type="button"
 								onclick={onOpenPlayground}

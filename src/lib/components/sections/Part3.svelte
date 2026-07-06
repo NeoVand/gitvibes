@@ -136,7 +136,12 @@
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>git reset --hard HEAD~1</code
-				> to remove the commit from main. Try it yourself below:
+				>
+				to remove the commit from main (you'll master
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
+				> in Part 4). Try it yourself below:
 			</Callout>
 
 			<h4

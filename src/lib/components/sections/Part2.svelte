@@ -32,7 +32,8 @@
 		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
 			This is the heartbeat of your entire Git workflow. Every time the AI generates code, you'll
 			follow this three-step rhythm: check what changed, approve what you trust, and freeze it in
-			time. Master this loop and you'll never lose work again.
+			time. Master this loop and you'll never lose work again. We'll close the part with the flip
+			side of saving: the files that should never enter history at all.
 		</p>
 
 		<MermaidDiagram
@@ -549,7 +550,8 @@
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
-				> are all staged for your first commit. Before that happens, you need to teach Git what to ignore.
+				> are all staged for your next commit. You just learned how permanent a commit is — before you
+				freeze that mistake into history, you need to teach Git what to ignore.
 			</p>
 
 			<div class="my-6">
@@ -699,8 +701,8 @@ git commit -m "chore: stop tracking ignored files"`}
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>git filter-repo</code
-				> — a topic we'll return to when we cover rewriting history. Rotation comes first; no amount of
-				history surgery un-leaks a key that's already been seen.
+				> — specialized surgery beyond this guide, but worth knowing the name. Rotation comes first; no
+				amount of history surgery un-leaks a key that's already been seen.
 			</Callout>
 
 			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">

@@ -541,9 +541,9 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 ---
 
-## Part 1 additions (July 2026)
+## Core Safety Loop / AI Agents additions (July 2026)
 
-### section-1-4 — What NOT to Commit (.gitignore) → `gitignore.png`
+### section-2-4 — What NOT to Commit (.gitignore) → `gitignore.png`
 
 > Create a cinematic editorial poster about **.gitignore** — the guardrail that decides what never enters history.
 >
@@ -557,7 +557,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 >
 > AVOID: padlock clichés, red X marks everywhere, shield logos, busy infographic panels, more than two bottom chips. 16:9 aspect ratio.
 
-### section-1-5 — Automating Quality with Git Hooks → `git-hooks.png`
+### section-6-2 — Automating Quality with Git Hooks → `git-hooks.png`
 
 > Create a cinematic editorial poster about **git hooks** — scripts that inspect every commit before it lands.
 >
@@ -653,7 +653,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 ## Part 7 additions (July 2026)
 
-### section-7-4 — Parallel Agents with Worktrees → `git-worktrees.png`
+### section-6-3 — Parallel Agents with Worktrees → `git-worktrees.png`
 
 > Create a cinematic editorial poster about **git worktree** — one repository, many working directories, an agent in each.
 >

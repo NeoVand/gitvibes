@@ -922,7 +922,8 @@ a9f8e21 HEAD@{0}: reset: moving to HEAD~2         <- where you are NOW
 				code={`# 1. Undo the reset entirely — move the branch back:
 git reset --hard HEAD@{1}
 
-# 2. Rescue a single lost commit onto your current branch:
+# 2. Rescue a single lost commit onto your current branch
+#    (cherry-pick gets its own section in 5.4):
 git cherry-pick 4c7d3b9
 
 # 3. Inspect first — park a rescue branch on the lost commit:

@@ -60,6 +60,13 @@
 				when relevant.
 			</p>
 
+			<Callout type="note">
+				<strong>The Problem:</strong> Your agent commits straight to main, invents its own branch names,
+				and writes messages like "fixed stuff" — and re-explaining your team's rules at the start of every
+				session doesn't scale. The rules need to live in the repository, where every agent reads them
+				automatically.
+			</Callout>
+
 			<div class="mb-6 space-y-3">
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -120,7 +127,8 @@
 							class="rounded px-1 py-0.5 text-xs"
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
 							>git-save-game/</code
-						> skill that walks through the 8-step loop before every PR.
+						> skill that walks through the full save-game ritual — branch, review, stage, commit — before
+						every PR.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">

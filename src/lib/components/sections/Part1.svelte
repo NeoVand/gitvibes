@@ -207,7 +207,7 @@ git config --global credential.helper osxkeychain
 # Windows - Use Windows Credential Manager
 git config --global credential.helper manager
 
-# Linux - Store in encrypted file
+# Linux - Store in the system keyring
 git config --global credential.helper libsecret`}
 			/>
 
