@@ -13,7 +13,6 @@
 	import Part6 from '$lib/components/sections/Part6.svelte';
 	import Part7 from '$lib/components/sections/Part7.svelte';
 	import Part8 from '$lib/components/sections/Part8.svelte';
-	import PartNav from '$lib/components/ui/PartNav.svelte';
 	import { sectionIds } from '$lib/data/sections';
 	import {
 		loadThemePreference,
@@ -236,47 +235,12 @@
 >
 	<Hero onOpenPlayground={openPlayground} />
 	<Part1 />
-	<PartNav
-		prev={{ id: 'hero', label: 'Introduction' }}
-		next={{ id: 'part-2', label: 'Core Safety Loop' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part2 />
-	<PartNav
-		prev={{ id: 'part-1', label: 'Enterprise Onboarding' }}
-		next={{ id: 'part-3', label: 'Branching & PRs' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part3 />
-	<PartNav
-		prev={{ id: 'part-2', label: 'Core Safety Loop' }}
-		next={{ id: 'part-4', label: 'Undo Toolkit' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part4 />
-	<PartNav
-		prev={{ id: 'part-3', label: 'Branching & PRs' }}
-		next={{ id: 'part-5', label: 'Advanced Workflows' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part5 />
-	<PartNav
-		prev={{ id: 'part-4', label: 'Undo Toolkit' }}
-		next={{ id: 'part-6', label: 'Git for AI Agents' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part6 />
-	<PartNav
-		prev={{ id: 'part-5', label: 'Advanced Workflows' }}
-		next={{ id: 'part-7', label: 'VS Code Cockpit' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part7 />
-	<PartNav
-		prev={{ id: 'part-6', label: 'Git for AI Agents' }}
-		next={{ id: 'part-8', label: 'Conclusion' }}
-		onNavigate={handleNavigate}
-	/>
 	<Part8 onOpenPlayground={openPlayground} />
 
 	<footer class="py-10 text-center" style="border-top: 1px solid var(--color-border);">
