@@ -212,6 +212,8 @@
 					src="{base}/images/linus-torvalds.jpg"
 					alt="Linus Torvalds, creator of Linux and Git, speaking at LinuxCon Europe 2014"
 					caption="Linus Torvalds, creator of Linux and Git. Photo: Krd / Wikimedia Commons, CC BY-SA 4.0"
+					width={720}
+					height={1080}
 				/>
 			</div>
 		</div>

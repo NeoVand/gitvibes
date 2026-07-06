@@ -155,7 +155,11 @@
 	function handleNavigate(id: string) {
 		activeSection = id;
 		navClickActive = true;
-		scrollToSection(id);
+		// Jump instantly: a smooth scroll across a page this tall takes long
+		// enough that lazy content materializes mid-flight and the target
+		// drifts. The alignment loop absorbs any shifts that land afterwards.
+		scrollToSection(id, 'instant');
+		keepSectionAligned(id, 2500);
 	}
 
 	function toggleSidebar() {

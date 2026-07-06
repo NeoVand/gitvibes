@@ -59,13 +59,19 @@
 
 	<div class="activity-panel">
 		{#if !visible}
-			<div class="flex items-center justify-center p-8" style="color: var(--color-text-muted);">
+			<div
+				class="placeholder flex items-center justify-center p-8"
+				style="color: var(--color-text-muted);"
+			>
 				<p class="text-sm">Loading playground...</p>
 			</div>
 		{:else}
 			{#key retryKey}
 				{#await import('$lib/components/playground/GitPlayground.svelte')}
-					<div class="flex items-center justify-center p-8" style="color: var(--color-text-muted);">
+					<div
+						class="placeholder flex items-center justify-center p-8"
+						style="color: var(--color-text-muted);"
+					>
 						<p class="text-sm">Loading playground...</p>
 					</div>
 				{:then { default: GitPlayground }}
@@ -116,5 +122,11 @@
 		border-radius: 0 0 0.75rem 0.75rem;
 		border: 1px solid color-mix(in srgb, var(--color-important) 55%, var(--color-border));
 		border-top: none;
+	}
+
+	/* Match the loaded playground's height so materializing it doesn't
+	   shift everything below (which breaks in-flight scrolls). */
+	.placeholder {
+		min-height: 500px;
 	}
 </style>

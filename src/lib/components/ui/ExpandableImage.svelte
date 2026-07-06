@@ -6,13 +6,20 @@
 		alt,
 		caption = '',
 		class: className = 'w-full rounded-xl',
-		loading = 'lazy'
+		loading = 'lazy',
+		// Every banner is generated at 1672x941; explicit dimensions let the
+		// browser reserve the box before the image loads, so lazy loading
+		// doesn't shift the layout under the reader (or under a scroll).
+		width = 1672,
+		height = 941
 	}: {
 		src: string;
 		alt: string;
 		caption?: string;
 		class?: string;
 		loading?: 'lazy' | 'eager';
+		width?: number;
+		height?: number;
 	} = $props();
 
 	let open = $state(false);
@@ -25,7 +32,7 @@
 		onclick={() => (open = true)}
 		aria-label={`Expand image: ${alt}`}
 	>
-		<img {src} {alt} class={className} {loading} />
+		<img {src} {alt} class="h-auto {className}" {loading} {width} {height} />
 	</button>
 	{#if caption}
 		<figcaption

@@ -257,6 +257,12 @@
 ></div>
 
 <style>
+	/* Reserve space before the diagram renders so lazy materialization
+	   doesn't shift the content below. */
+	.mermaid-container:empty {
+		min-height: 180px;
+	}
+
 	.mermaid-container :global(svg) {
 		width: 100%;
 		height: auto;
