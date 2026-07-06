@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import {
 		X,
 		Search,
@@ -133,7 +134,7 @@
 	</div>
 
 	<!-- Scrollable command list -->
-	<div class="flex-1 overflow-y-auto px-3 py-3">
+	<div class="flex-1 overflow-y-auto px-3 py-3" use:autohideScroll>
 		{#each filteredCategories as category (category.label)}
 			{@const IconComponent = iconMap[category.icon]}
 			{@const isExpanded = expandedCategories.has(category.label)}

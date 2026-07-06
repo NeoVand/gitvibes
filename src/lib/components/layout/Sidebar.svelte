@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { SvelteSet } from 'svelte/reactivity';
 	import { ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-svelte';
+	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
 
 	let {
@@ -127,7 +128,7 @@
 		</button>
 	</div>
 
-	<nav class="flex-1 overflow-y-auto px-3 py-2">
+	<nav class="flex-1 overflow-y-auto px-3 py-2" use:autohideScroll>
 		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
 			<div class="mb-0.5">

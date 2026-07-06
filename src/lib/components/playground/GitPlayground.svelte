@@ -12,6 +12,7 @@
 	} from 'lucide-svelte';
 	import MermaidDiagram from '$lib/components/ui/MermaidDiagram.svelte';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
+	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import { git, GitEngine } from '$lib/playground/git-engine';
 	import { runGitCommand } from '$lib/playground/commands';
 	import { buildGitGraph } from '$lib/playground/git-graph';
@@ -456,7 +457,11 @@
 					</span>
 				</div>
 
-				<div bind:this={terminalEl} class="pg-terminal min-h-0 flex-1 overflow-y-auto px-4 py-3">
+				<div
+					bind:this={terminalEl}
+					use:autohideScroll
+					class="pg-terminal min-h-0 flex-1 overflow-y-auto px-4 py-3"
+				>
 					{@render terminalHistory()}
 				</div>
 
@@ -540,6 +545,7 @@
 
 				<div
 					bind:this={terminalEl}
+					use:autohideScroll
 					class="pg-terminal flex-1 overflow-y-auto p-4"
 					style="min-height: {embedded ? '220px' : '280px'}; max-height: {embedded
 						? '300px'

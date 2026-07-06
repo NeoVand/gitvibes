@@ -343,12 +343,45 @@ kbd {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: var(--color-text-muted);
+	background: color-mix(in srgb, var(--color-text-muted) 45%, transparent);
 	border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: var(--color-text-secondary);
+	background: color-mix(in srgb, var(--color-text-muted) 75%, transparent);
+}
+
+/* Auto-hiding scrollbars for panel scroll areas (sidebar TOC, cheat sheet,
+   playground terminal): invisible at rest, a slim theme-tinted thumb while
+   hovering or scrolling. Applied via the autohideScroll action. */
+.autohide-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: transparent transparent;
+	transition: scrollbar-color 0.3s ease;
+}
+
+.autohide-scrollbar:hover,
+.autohide-scrollbar.is-scrolling {
+	scrollbar-color: color-mix(in srgb, var(--color-text-muted) 45%, transparent) transparent;
+}
+
+.autohide-scrollbar::-webkit-scrollbar {
+	width: 6px;
+}
+
+.autohide-scrollbar::-webkit-scrollbar-thumb {
+	background: transparent;
+	border-radius: 999px;
+	transition: background 0.3s ease;
+}
+
+.autohide-scrollbar:hover::-webkit-scrollbar-thumb,
+.autohide-scrollbar.is-scrolling::-webkit-scrollbar-thumb {
+	background: color-mix(in srgb, var(--color-text-muted) 45%, transparent);
+}
+
+.autohide-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: color-mix(in srgb, var(--color-text-muted) 75%, transparent);
 }
 
 /* Mermaid overrides for professional look */
