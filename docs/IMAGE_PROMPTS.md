@@ -623,17 +623,17 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 ### section-5-5 — Rebase Conflicts → `rebase-conflict.png`
 
-> Create a cinematic editorial poster about **a rebase paused on a conflict** — and the three ways out.
+> Create a cinematic editorial poster about **a rebase paused on a conflict**. Upper left: large distressed monospace title `rebase --continue`, subtitle in muted monospace: **"When rebase goes wrong."**
 >
-> CONCEPT: Left: large distressed monospace title `rebase --continue`, subtitle: **"When rebase goes wrong."** Right: a train of commit-orbs being replayed one-by-one onto a new track (the rebased base glows below). Mid-air, ONE commit is frozen in place, crackling with a thin red fissure of conflict energy — the replay paused. The commits behind it wait calmly in queue. Beside the frozen commit, two faint ghost-paths: an emerald path forward labeled `--continue` and an amber path arcing all the way back to the original track labeled `--abort`, where a ghost image of the untouched branch waits safely.
+> CONCEPT: The entire right side is one single metaphor: a giant luminous **zipper** running diagonally across the dark frame, joining two bands of fabric — the lower band a cool indigo weave (main's history), the upper band a warm dark weave (your feature commits). Below the zipper slider, the teeth are already interlocked and glow calm emerald — commits successfully replayed. At the slider, the zip is **paused on a snag**: one pair of teeth misaligned, lit by a single thin fissure of red light (the only red in the image). The slider itself glows steady amber — holding, not broken. Above the slider, the remaining teeth wait in shadow. The slider can clearly travel both ways along its track: a faint emerald glint on the track ahead, a faint safe shimmer on the track behind.
 >
-> Small flow list lower right in monospace: `fix file → git add → git rebase --continue`. Quiet annotation bottom-left: **"--abort always brings you home."**
+> One quiet annotation, bottom left, small monospace: **"Fix the snag and keep zipping — or slide back, no harm done."**
 >
-> MOOD: A paused machine, not a crash — tension with a clearly lit exit. Controlled drama.
+> MOOD: A paused machine with a patient operator — tension with an obvious way forward and an obvious way back; zero panic.
 >
-> STYLE: Dark (#0f1117), film grain; the conflict fissure is the only red element (like the merge-conflict poster's lightning); paths in emerald/amber; everything else desaturated indigo.
+> STYLE: Near-black navy background (#0f1117), heavy film grain, aged print texture on the title, selective glow only (emerald done-teeth, amber slider, one red snag), 90% of the frame dark and desaturated. Premium developer-tooling campaign poster.
 >
-> AVOID: explosions, train wrecks, error dialogs, skulls. Echo the red-fissure motif of the existing merge-conflict banner so they read as siblings. 16:9 aspect ratio.
+> AVOID: trains, roads, forked paths, arrows with text labels, flowcharts, error dialogs, broken/torn fabric, more than one red element. 16:9 aspect ratio.
 
 ### section-5-6 — Tags & Releases → `git-tags.png`
 
