@@ -9,7 +9,12 @@
 	}: { code: string; lang?: string; title?: string } = $props();
 
 	const SHELL_LANGS = ['bash', 'sh', 'shell', 'zsh'];
-	const lines = $derived(tokenizeCodeBlock(code, SHELL_LANGS.includes(lang) ? 'shell' : 'plain'));
+	const lines = $derived(
+		tokenizeCodeBlock(
+			code,
+			lang === 'gitignore' ? 'gitignore' : SHELL_LANGS.includes(lang) ? 'shell' : 'plain'
+		)
+	);
 
 	// A raw newline in the <pre> template would render its indentation too
 	const NEWLINE = '\n';

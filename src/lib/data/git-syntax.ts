@@ -178,11 +178,48 @@ export function tokenizeGitCommand(command: string): GitToken[] {
 }
 
 /**
- * Tokenize one line of a code block. In `shell` mode the code portion is
- * highlighted as a command; in `plain` mode only conflict markers and
- * `#` comments are highlighted and the rest is left as-is.
+ * Tokenize one line of a .gitignore file. Unlike shell, `#` only starts a
+ * comment at the beginning of the line (mid-pattern it is literal), lines
+ * are patterns rather than commands, and a leading `!` re-includes.
  */
-function tokenizeLine(line: string, mode: 'shell' | 'plain'): GitToken[] {
+function tokenizeGitignoreLine(line: string): GitToken[] {
+	if (!line) return [];
+	const trimmed = line.trimStart();
+	if (trimmed.startsWith('#')) {
+		return [{ text: line, type: 'comment' }];
+	}
+
+	const tokens: GitToken[] = [];
+	const leading = line.length - trimmed.length;
+	if (leading > 0) tokens.push({ text: line.slice(0, leading), type: 'space' });
+
+	let pattern = trimmed;
+	if (pattern.startsWith('!')) {
+		tokens.push({ text: '!', type: 'flag' });
+		pattern = pattern.slice(1);
+	}
+	// Wildcards and character classes stand out; literal path text stays plain.
+	for (const segment of pattern.split(/(\*+|\?|\[[^\]]*\])/)) {
+		if (!segment) continue;
+		const isWildcard = /^(\*+|\?|\[[^\]]*\])$/.test(segment);
+		tokens.push({ text: segment, type: isWildcard ? 'hash' : 'text' });
+	}
+	return tokens;
+}
+
+export type CodeBlockMode = 'shell' | 'plain' | 'gitignore';
+
+/**
+ * Tokenize one line of a code block. In `shell` mode the code portion is
+ * highlighted as a command; in `gitignore` mode lines are ignore patterns;
+ * in `plain` mode only conflict markers and `#` comments are highlighted
+ * and the rest is left as-is.
+ */
+function tokenizeLine(line: string, mode: CodeBlockMode): GitToken[] {
+	if (mode === 'gitignore') {
+		return tokenizeGitignoreLine(line);
+	}
+
 	if (CONFLICT_MARKER.test(line)) {
 		return [{ text: line, type: 'conflict' }];
 	}
@@ -209,6 +246,6 @@ function tokenizeLine(line: string, mode: 'shell' | 'plain'): GitToken[] {
  * not include their trailing `\n`). Joining each line's concatenated token
  * text with `\n` reproduces the original block exactly.
  */
-export function tokenizeCodeBlock(code: string, mode: 'shell' | 'plain' = 'shell'): GitToken[][] {
+export function tokenizeCodeBlock(code: string, mode: CodeBlockMode = 'shell'): GitToken[][] {
 	return code.split('\n').map((line) => tokenizeLine(line, mode));
 }

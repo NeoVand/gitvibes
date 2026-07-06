@@ -557,6 +557,7 @@ winget install --id GitHub.cli
 
 			<CodeBlock
 				title=".gitignore — a realistic starter for a JS/Python project"
+				lang="gitignore"
 				code={`# Dependencies
 node_modules/
 .venv/
