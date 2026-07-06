@@ -442,6 +442,14 @@ async function runRevert(engine: GitEngine, ref: string): Promise<CommandResult>
 		if (parentContent !== null) {
 			await engine.writeFile(file, parentContent);
 			await git.add({ fs, dir, filepath: file });
+		} else {
+			// The reverted commit introduced this file, so reverting removes it
+			try {
+				await fs.promises.unlink(`${dir}/${file}`);
+			} catch {
+				// already absent from the working tree
+			}
+			await git.remove({ fs, dir, filepath: file });
 		}
 	}
 
@@ -710,15 +718,24 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				const mixed = rest.includes('--mixed') || (!hard && !soft);
 				const rev = rest.find((r) => !r.startsWith('-')) ?? 'HEAD~1';
 				const oid = await engine.resolveHead(rev);
+				// Move the current branch ref, not HEAD itself — writing an oid
+				// into HEAD would silently detach it and later commits would no
+				// longer advance the branch.
+				const branch = await git.currentBranch({ fs: engine.fs, dir: engine.dir });
 				await git.writeRef({
 					fs: engine.fs,
 					dir: engine.dir,
-					ref: 'HEAD',
+					ref: branch ? `refs/heads/${branch}` : 'HEAD',
 					value: oid,
 					force: true
 				});
 				if (hard) {
-					await git.checkout({ fs: engine.fs, dir: engine.dir, ref: oid, force: true });
+					await git.checkout({
+						fs: engine.fs,
+						dir: engine.dir,
+						ref: branch ?? oid,
+						force: true
+					});
 				} else if (mixed) {
 					const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
 					for (const [filepath, , , stage] of matrix) {
