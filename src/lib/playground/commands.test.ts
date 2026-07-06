@@ -186,6 +186,17 @@ describe('stash', () => {
 	});
 });
 
+describe('colorized output', () => {
+	it('colors oneline log without leaking markup into the text', async () => {
+		const result = await run('git log --oneline');
+		expect(result.colored).toBe(true);
+		expect(result.output).toContain('color:var(--color-diff-hash)');
+		// The ref decoration must be wrapped, not the span's own style attribute
+		expect(result.output).toContain('font-weight:500"> (HEAD');
+		expect(result.output).not.toContain('font-weight:500">(--color');
+	});
+});
+
 describe('shell conveniences', () => {
 	it('chains commands with &&', async () => {
 		await engine.writeFile('a.txt', 'a');

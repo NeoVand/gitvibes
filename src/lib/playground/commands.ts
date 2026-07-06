@@ -88,12 +88,17 @@ function colorizeLog(raw: string): string {
 		.map((line) => {
 			const e = esc(line);
 			if (/^[0-9a-f]{7}\s/.test(line)) {
-				return e
-					.replace(/^([0-9a-f]{7})/, '<span style="color:var(--color-diff-hash)">$1</span>')
-					.replace(
-						/(\(.*?\))/,
-						'<span style="color:var(--color-diff-meta);font-weight:500">$1</span>'
-					);
+				// One combined replace: wrapping the hash first would inject a
+				// style attribute whose parentheses the ref-decoration regex
+				// then matches instead of "(HEAD -> main)".
+				return e.replace(
+					/^([0-9a-f]{7})( \([^)]*\))?/,
+					(_, hash: string, deco: string | undefined) =>
+						`<span style="color:var(--color-diff-hash)">${hash}</span>` +
+						(deco
+							? `<span style="color:var(--color-diff-meta);font-weight:500">${deco}</span>`
+							: '')
+				);
 			}
 			if (line.startsWith('commit '))
 				return `<span style="color:var(--color-diff-hash)">${e}</span>`;

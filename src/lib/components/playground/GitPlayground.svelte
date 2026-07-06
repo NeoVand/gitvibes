@@ -609,35 +609,11 @@
 		cursor: not-allowed;
 	}
 
-	/* The terminal always renders dark-terminal text colors: colored git
-	   output and the global .tok-* syntax classes resolve through these
-	   variables, so re-mapping them here restyles everything inside. In
-	   dark mode these match the theme palette (with brighter muted text);
-	   in light mode they make the dark terminal surface work. */
-	.pg-terminal,
-	.pg-prompt-line {
-		--color-terminal-text: #cdd6f4;
-		--color-terminal-prompt: #a6e3a1;
-		--color-terminal-command: #f5f5f5;
-		--color-terminal-output: #a6adc8;
-		--color-text-muted: #7f7a9e;
-		--color-text-secondary: #cdd6f4;
-		--color-primary-text: #a5b4fc;
-		--color-vibe-text: #c4b5fd;
-		--color-warning: #fab387;
-		--color-diff-add: #a6e3a1;
-		--color-diff-add-bg: rgba(166, 227, 161, 0.1);
-		--color-diff-del: #f38ba8;
-		--color-diff-del-bg: rgba(243, 139, 168, 0.1);
-		--color-diff-hunk: #89b4fa;
-		--color-diff-hash: #f9e2af;
-		--color-diff-meta: #a6e3a1;
-	}
-
-	/* The terminal surface is always a crisp near-black, in both themes,
-	   so it reads as a real terminal against the playground chrome. */
+	/* The terminal follows the theme: a light lavender surface in light mode
+	   (matching CodeBlock) and a crisp near-black in dark mode. All text and
+	   token colors resolve through the theme's terminal/diff variables. */
 	.pg-terminal {
-		background: #0a0813;
+		background: var(--color-terminal-bg);
 		color: var(--color-terminal-text);
 	}
 
@@ -647,7 +623,25 @@
 		gap: 0.5rem;
 		padding: 0.75rem 1.25rem;
 		border-top: 1px solid color-mix(in srgb, var(--color-playground-border) 55%, transparent);
+		background: var(--color-terminal-header);
+	}
+
+	:global(:root.dark) .pg-terminal {
+		background: #0a0813;
+	}
+
+	:global(:root.dark) .pg-prompt-line {
 		background: #14101f;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(:root:not(.light)) .pg-terminal {
+			background: #0a0813;
+		}
+
+		:global(:root:not(.light)) .pg-prompt-line {
+			background: #14101f;
+		}
 	}
 
 	.pg-prompt {
@@ -708,8 +702,8 @@
 		justify-content: center;
 		padding: 0.25rem 0.45rem;
 		border-radius: 0.3rem;
-		border: 1px solid rgba(255, 255, 255, 0.14);
-		background: rgba(255, 255, 255, 0.05);
+		border: 1px solid color-mix(in srgb, var(--color-terminal-text) 18%, transparent);
+		background: color-mix(in srgb, var(--color-terminal-text) 6%, transparent);
 		color: var(--color-terminal-output);
 		opacity: 0.5;
 		font-size: 10px;
