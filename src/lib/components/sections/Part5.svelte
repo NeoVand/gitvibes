@@ -519,7 +519,7 @@ git cherry-pick --abort`}
 				<strong>The AI reviewing strategy — "reject the PR, cherry-pick the gems":</strong> when an agent's
 				branch is 80% noise, don't agonize over salvaging it. Close the PR, cherry-pick the one or two
 				commits that earned their place, and delete the branch. This pairs perfectly with the guidance
-				in section 7.3 on teaching your AI to work in small, single-purpose commits — small commits are
+				in section 6.1 on teaching your AI to work in small, single-purpose commits — small commits are
 				what make cherry-picking possible.
 			</Callout>
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { RefreshCw, Eye, FolderPlus, Save } from 'lucide-svelte';
+	import { RefreshCw, Eye, EyeOff, FolderPlus, Save } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
@@ -331,7 +331,7 @@
 		</div>
 
 		<!-- 2.3 Committing -->
-		<div id="section-2-3" class="mb-8">
+		<div id="section-2-3" class="mb-14">
 			<SectionHeader
 				level="section"
 				icon={Save}
@@ -516,6 +516,232 @@
 				prompts={[
 					'Commit the staged changes with a good conventional commit message',
 					'Write a descriptive commit message for these changes and commit them'
+				]}
+			/>
+		</div>
+		<!-- 2.4 .gitignore -->
+		<div id="section-2-4" class="mb-8">
+			<SectionHeader
+				level="section"
+				icon={EyeOff}
+				title="2.4 What NOT to Commit (.gitignore)"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				You asked the AI to scaffold your project, and it delivered: dependencies installed, an
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
+				>
+				file holding your API keys, and a working app. Then it helpfully runs
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				>
+				— and now your secrets, your
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>node_modules</code
+				>
+				folder, and a stray
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
+				> are all staged for your first commit. Before that happens, you need to teach Git what to ignore.
+			</p>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/gitignore.webp"
+					alt=".gitignore — a gatekeeper filtering secrets and junk files out of the repository"
+					caption="A .gitignore file is the guardrail that makes 'git add .' safe — secrets and junk never enter history"
+				/>
+			</div>
+
+			<Callout type="note">
+				<strong>The Problem:</strong> AI agents move fast and stage everything. Without a guardrail,
+				one
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				> can commit API keys, gigabytes of dependencies, and OS junk into a history that everyone on
+				your team will clone.
+			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				A <strong style="color: var(--color-text);">.gitignore</strong> file is a plain text file at
+				the root of your repository that lists patterns of files Git should pretend don't exist.
+				Ignored files never show up as "untracked" in
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
+				>, and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				> silently skips them. The file itself gets committed, so the whole team — and every AI agent
+				working in the repo — shares the same guardrail.
+			</p>
+
+			<CodeBlock
+				title=".gitignore — a realistic starter for a JS/Python project"
+				lang="gitignore"
+				code={`# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# Secrets & local config
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+coverage/
+
+# Logs & caches
+*.log
+.cache/
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+.idea/`}
+			/>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Pattern Syntax Essentials
+			</h4>
+
+			<ul
+				class="mb-5 list-inside list-disc space-y-1.5 text-[13px]"
+				style="color: var(--color-text-secondary);"
+			>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">*.log</code
+					>
+					— a glob: matches any file ending in <strong>.log</strong>, in any directory
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">dist/</code
+					> — a trailing slash matches only directories (and everything inside them)
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>/config.json</code
+					> — a leading slash anchors the pattern to the repository root
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>docs/**/*.tmp</code
+					>
+					—
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">**</code
+					> matches any depth of nested directories
+				</li>
+				<li>
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>!.env.example</code
+					>
+					— a leading
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">!</code
+					> negates a pattern, re-including a file an earlier rule excluded (it can't re-include anything
+					inside an excluded directory, though)
+				</li>
+			</ul>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				The Gotcha: Already-Tracked Files Stay Tracked
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				<strong style="color: var(--color-text);">.gitignore only affects untracked files.</strong> If
+				a file was already committed before you added it to .gitignore, Git keeps tracking it — and keeps
+				committing your changes to it. To stop tracking a file without deleting it from your disk, remove
+				it from the index:
+			</p>
+
+			<CodeBlock
+				title="Untrack a file that's already committed"
+				code={`git rm --cached .env
+# For a whole directory:
+git rm -r --cached node_modules
+
+# Then commit the removal
+git commit -m "chore: stop tracking ignored files"`}
+			/>
+
+			<Callout type="warning">
+				<strong>If a secret was ever committed, removing it in a new commit is not enough.</strong>
+				The key still exists in every older commit, and anyone who clones the repository can read it.
+				Treat a pushed secret as compromised: <strong>rotate the credential immediately</strong>
+				(revoke the key and issue a new one), then scrub it from history with a rewriting tool like
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git filter-repo</code
+				> — a topic we'll return to when we cover rewriting history. Rotation comes first; no amount of
+				history surgery un-leaks a key that's already been seen.
+			</Callout>
+
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				A Global Ignore File for OS and Editor Junk
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Files like <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
+				>
+				(macOS) or
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">Thumbs.db</code
+				>
+				(Windows) are about <em>your machine</em>, not the project. Instead of asking every
+				repository to ignore them, configure a
+				<strong style="color: var(--color-text);">global ignore file</strong> that applies to all your
+				repositories:
+			</p>
+
+			<CodeBlock
+				title="Set up a global ignore file (once per machine)"
+				code={`git config --global core.excludesFile ~/.gitignore_global
+
+echo ".DS_Store" >> ~/.gitignore_global
+echo "Thumbs.db" >> ~/.gitignore_global`}
+			/>
+
+			<Callout type="tip">
+				Rule of thumb: project artifacts (builds, dependencies, secrets) go in the repository's <strong
+					>.gitignore</strong
+				> so the whole team is protected; personal noise (your OS, your editor) goes in your global ignore
+				file.
+			</Callout>
+
+			<VibeBox
+				prompts={[
+					'Write a .gitignore for this project — look at my stack and include editor and OS artifacts',
+					"Check my repo for tracked files that look like secrets or build artifacts that shouldn't be committed"
 				]}
 			/>
 		</div>

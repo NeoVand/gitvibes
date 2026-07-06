@@ -2,6 +2,7 @@ import {
 	AlertTriangle,
 	Archive,
 	BookOpen,
+	Bot,
 	Cherry,
 	Clock,
 	Columns,
@@ -72,9 +73,7 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-1-1', label: 'Git Configuration', icon: UserCheck },
 			{ id: 'section-1-2', label: 'Authentication', icon: KeyRound },
-			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download },
-			{ id: 'section-1-4', label: 'What NOT to Commit', icon: EyeOff },
-			{ id: 'section-1-5', label: 'Automating with Hooks', icon: Webhook }
+			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download }
 		]
 	},
 	{
@@ -85,7 +84,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-2-1', label: 'git status', icon: Eye },
 			{ id: 'section-2-2', label: 'Staging Changes', icon: FolderPlus },
 			{ id: 'section-2-3', label: 'Committing', icon: Save },
-			{ id: 'core-loop', label: 'Core Safety Loop', icon: Gamepad2, isPlayground: true }
+			{ id: 'core-loop', label: 'Core Safety Loop', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-2-4', label: 'What NOT to Commit', icon: EyeOff }
 		]
 	},
 	{
@@ -143,23 +143,31 @@ export const sidebarNav: NavSection[] = [
 	},
 	{
 		id: 'part-6',
-		label: 'VS Code Cockpit',
-		icon: Monitor,
+		label: 'Git for AI Agents',
+		icon: Bot,
 		children: [
-			{ id: 'section-6-1', label: 'Source Control View', icon: Layout },
-			{ id: 'section-6-2', label: 'Timeline & GitLens', icon: Clock },
-			{ id: 'section-6-3', label: 'Merge Editor', icon: Columns }
+			{ id: 'section-6-1', label: 'Teaching AI Git', icon: Sparkles },
+			{ id: 'section-6-2', label: 'Automating with Hooks', icon: Webhook },
+			{ id: 'section-6-3', label: 'Parallel Agents: Worktrees', icon: FolderGit2 }
 		]
 	},
 	{
 		id: 'part-7',
+		label: 'VS Code Cockpit',
+		icon: Monitor,
+		children: [
+			{ id: 'section-7-1', label: 'Source Control View', icon: Layout },
+			{ id: 'section-7-2', label: 'Timeline & GitLens', icon: Clock },
+			{ id: 'section-7-3', label: 'Merge Editor', icon: Columns }
+		]
+	},
+	{
+		id: 'part-8',
 		label: 'Conclusion',
 		icon: BookOpen,
 		children: [
-			{ id: 'section-7-1', label: 'AI-First Workflow', icon: Workflow },
-			{ id: 'section-7-2', label: 'Quick Reference', icon: Table },
-			{ id: 'section-7-3', label: 'Teaching AI Git', icon: Sparkles },
-			{ id: 'section-7-4', label: 'Parallel Agents: Worktrees', icon: FolderGit2 }
+			{ id: 'section-8-1', label: 'AI-First Workflow', icon: Workflow },
+			{ id: 'section-8-2', label: 'Quick Reference', icon: Table }
 		]
 	}
 ];

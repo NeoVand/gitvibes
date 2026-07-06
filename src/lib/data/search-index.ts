@@ -24,9 +24,9 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('rebase')) return 'section-5-2';
 	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth'))
 		return 'section-1-2';
-	if (cmd.includes('rm --cached') || cmd.includes('excludesfile')) return 'section-1-4';
-	if (cmd.includes('hookspath') || cmd.includes('--no-verify')) return 'section-1-5';
-	if (cmd.includes('worktree')) return 'section-7-4';
+	if (cmd.includes('rm --cached') || cmd.includes('excludesfile')) return 'section-2-4';
+	if (cmd.includes('hookspath') || cmd.includes('--no-verify')) return 'section-6-2';
+	if (cmd.includes('worktree')) return 'section-6-3';
 	if (cmd.includes('config') || cmd.includes('init')) return 'section-1-1';
 	if (cmd.includes('clone')) return 'section-1-3';
 	if (cmd.startsWith('git status')) return 'section-2-1';
@@ -43,9 +43,9 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('revert')) return 'section-4-5';
 	if (cmd.includes('force')) return 'section-4-6';
 	if (cmd.includes('merge')) return 'section-5-2';
-	if (cmd.includes('log') || cmd.includes('show') || cmd.includes('blame')) return 'section-6-2';
+	if (cmd.includes('log') || cmd.includes('show') || cmd.includes('blame')) return 'section-7-2';
 	if (cmd.includes('bisect') || cmd.includes('submodule')) {
-		return 'section-7-2';
+		return 'section-8-2';
 	}
 	if (cmd.includes('tag')) return 'section-5-6';
 
@@ -56,13 +56,13 @@ function resolveSectionId(command: string, category: string): string {
 		Remote: 'section-3-2',
 		Stashing: 'section-5-1',
 		Undoing: 'section-4-1',
-		'History & Inspection': 'section-6-2',
+		'History & Inspection': 'section-7-2',
 		'Rebase & Cherry-pick': 'section-5-2',
 		Tags: 'section-5-6',
-		Advanced: 'section-7-2'
+		Advanced: 'section-8-2'
 	};
 
-	return categoryFallback[category] ?? 'section-7-2';
+	return categoryFallback[category] ?? 'section-8-2';
 }
 
 function slugify(value: string): string {
@@ -213,9 +213,9 @@ const topicEntries: SearchEntry[] = [
 	},
 	{
 		id: 'topic-gitignore',
-		sectionId: 'section-1-4',
+		sectionId: 'section-2-4',
 		title: 'What NOT to Commit (.gitignore)',
-		part: 'Enterprise Onboarding',
+		part: 'Core Safety Loop',
 		description: 'Keep secrets, dependencies, and OS junk out of the repository.',
 		keywords: [
 			'gitignore',
@@ -231,9 +231,9 @@ const topicEntries: SearchEntry[] = [
 	},
 	{
 		id: 'topic-git-hooks',
-		sectionId: 'section-1-5',
+		sectionId: 'section-6-2',
 		title: 'Automating Quality with Git Hooks',
-		part: 'Enterprise Onboarding',
+		part: 'Git for AI Agents',
 		description: 'Pre-commit and commit-msg hooks that enforce standards on human and AI commits.',
 		keywords: [
 			'hooks',
@@ -249,9 +249,9 @@ const topicEntries: SearchEntry[] = [
 	},
 	{
 		id: 'topic-agents-md',
-		sectionId: 'section-7-3',
+		sectionId: 'section-6-1',
 		title: 'Teaching Your AI to Use Git (AGENTS.md)',
-		part: 'Conclusion',
+		part: 'Git for AI Agents',
 		description: 'Encode Git rules for coding agents with AGENTS.md and skills.',
 		keywords: [
 			'agents.md',
@@ -350,9 +350,9 @@ const topicEntries: SearchEntry[] = [
 	},
 	{
 		id: 'topic-worktrees',
-		sectionId: 'section-7-4',
+		sectionId: 'section-6-3',
 		title: 'Parallel Agents with Git Worktrees',
-		part: 'Conclusion',
+		part: 'Git for AI Agents',
 		description: 'Run multiple AI agents on one repo with a working directory per branch.',
 		keywords: [
 			'worktree',

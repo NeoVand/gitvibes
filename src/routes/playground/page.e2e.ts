@@ -125,7 +125,9 @@ test.describe('Git Playground', () => {
 test.describe('Tutorial', () => {
 	test('homepage loads with hero', async ({ page }) => {
 		await page.goto('/');
-		await expect(page.getByRole('heading', { name: /Git for/ })).toBeVisible();
+		await expect(
+			page.getByRole('heading', { name: 'Git for Vibe Coders', level: 1 })
+		).toBeVisible();
 	});
 
 	test('playground link in header', async ({ page }) => {
