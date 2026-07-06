@@ -236,13 +236,11 @@
 		</div>
 
 		<Callout type="note" title="Why 'Git'?">
-			{#snippet children()}
-				In British slang, a <em>git</em> is an unpleasant person. Linus joked:
-				<em
-					>"I'm an egotistical bastard, and I name all my projects after myself. First Linux, now
-					Git."</em
-				> The manual page keeps the joke going — it describes Git as "the stupid content tracker."
-			{/snippet}
+			In British slang, a <em>git</em> is an unpleasant person. Linus joked:
+			<em
+				>"I'm an egotistical bastard, and I name all my projects after myself. First Linux, now
+				Git."</em
+			> The manual page keeps the joke going — it describes Git as "the stupid content tracker."
 		</Callout>
 
 		<p class="text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">

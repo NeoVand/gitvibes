@@ -15,7 +15,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 		icon: 'settings',
 		commands: [
 			{ command: 'git init', description: 'Initialize a new local repository' },
-			{ command: 'git init <directory>', description: 'Create a new repo in the specified directory' },
+			{
+				command: 'git init <directory>',
+				description: 'Create a new repo in the specified directory'
+			},
 			{ command: 'git clone <url>', description: 'Clone a remote repository to your machine' },
 			{
 				command: 'git clone --depth 1 <url>',
@@ -54,7 +57,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 			{ command: 'git add .', description: 'Stage all changes in the current directory' },
 			{ command: 'git add -p', description: 'Interactively stage hunks of changes' },
 			{ command: 'git commit -m "<message>"', description: 'Commit staged changes with a message' },
-			{ command: 'git commit -am "<message>"', description: 'Stage and commit tracked files in one step' },
+			{
+				command: 'git commit -am "<message>"',
+				description: 'Stage and commit tracked files in one step'
+			},
 			{ command: 'git commit --amend', description: 'Modify the most recent commit' },
 			{ command: 'git diff', description: 'Show unstaged changes in the working directory' },
 			{ command: 'git diff --staged', description: 'Show changes staged for the next commit' }
@@ -68,7 +74,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 			{ command: 'git branch -a', description: 'List all branches including remote' },
 			{ command: 'git branch <name>', description: 'Create a new branch' },
 			{ command: 'git branch -d <name>', description: 'Delete a fully merged branch' },
-			{ command: 'git branch -D <name>', description: 'Force delete a branch regardless of merge status' },
+			{
+				command: 'git branch -D <name>',
+				description: 'Force delete a branch regardless of merge status'
+			},
 			{ command: 'git switch <branch>', description: 'Switch to an existing branch' },
 			{ command: 'git switch -c <branch>', description: 'Create and switch to a new branch' },
 			{
@@ -89,12 +98,18 @@ export const cheatSheet: CheatSheetCategory[] = [
 				description: 'Rename an existing remote'
 			},
 			{ command: 'git fetch <remote>', description: 'Download objects and refs from a remote' },
-			{ command: 'git fetch --prune', description: 'Fetch and remove stale remote-tracking branches' },
+			{
+				command: 'git fetch --prune',
+				description: 'Fetch and remove stale remote-tracking branches'
+			},
 			{
 				command: 'git pull <remote> <branch>',
 				description: 'Fetch and merge changes from a remote branch'
 			},
-			{ command: 'git push <remote> <branch>', description: 'Push local commits to a remote branch' },
+			{
+				command: 'git push <remote> <branch>',
+				description: 'Push local commits to a remote branch'
+			},
 			{
 				command: 'git push -u <remote> <branch>',
 				description: 'Push and set the upstream tracking branch'
@@ -111,7 +126,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 				description: 'Stash changes with a descriptive message'
 			},
 			{ command: 'git stash list', description: 'List all stashed changesets' },
-			{ command: 'git stash pop', description: 'Apply the latest stash and remove it from the list' },
+			{
+				command: 'git stash pop',
+				description: 'Apply the latest stash and remove it from the list'
+			},
 			{
 				command: 'git stash apply',
 				description: 'Apply the latest stash but keep it in the list'
@@ -194,8 +212,14 @@ export const cheatSheet: CheatSheetCategory[] = [
 				command: 'git rebase -i HEAD~n',
 				description: 'Interactively rebase the last n commits'
 			},
-			{ command: 'git rebase --continue', description: 'Continue after resolving rebase conflicts' },
-			{ command: 'git rebase --abort', description: 'Cancel the rebase and return to original state' },
+			{
+				command: 'git rebase --continue',
+				description: 'Continue after resolving rebase conflicts'
+			},
+			{
+				command: 'git rebase --abort',
+				description: 'Cancel the rebase and return to original state'
+			},
 			{
 				command: 'git cherry-pick <commit>',
 				description: 'Apply a specific commit to the current branch'
@@ -232,7 +256,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 			},
 			{ command: 'git bisect good <commit>', description: 'Mark a commit as good during bisect' },
 			{ command: 'git bisect bad <commit>', description: 'Mark a commit as bad during bisect' },
-			{ command: 'git bisect reset', description: 'End the bisect session and return to original HEAD' },
+			{
+				command: 'git bisect reset',
+				description: 'End the bisect session and return to original HEAD'
+			},
 			{
 				command: 'git reflog',
 				description: 'Show a log of all reference updates (recovery tool)'

@@ -16,13 +16,14 @@
 		Check,
 		Copy
 	} from 'lucide-svelte';
+	import { SvelteSet } from 'svelte/reactivity';
 	import { cheatSheet, type CheatSheetCategory } from '$lib/data/cheat-sheet';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 
 	let { open = false, onToggle }: { open: boolean; onToggle: () => void } = $props();
 
 	let searchQuery = $state('');
-	let expandedCategories = $state<Set<string>>(new Set(cheatSheet.map((c) => c.label)));
+	let expandedCategories = new SvelteSet<string>(cheatSheet.map((c) => c.label));
 	let copiedCommand = $state<string | null>(null);
 
 	// Map icon string names to lucide components
@@ -57,10 +58,8 @@
 	});
 
 	function toggleCategory(label: string) {
-		const next = new Set(expandedCategories);
-		if (next.has(label)) next.delete(label);
-		else next.add(label);
-		expandedCategories = next;
+		if (expandedCategories.has(label)) expandedCategories.delete(label);
+		else expandedCategories.add(label);
 	}
 
 	async function copyCommand(command: string) {
@@ -78,7 +77,8 @@
 	// When searching, expand all categories that have results
 	$effect(() => {
 		if (searchQuery.trim()) {
-			expandedCategories = new Set(filteredCategories.map((c) => c.label));
+			expandedCategories.clear();
+			for (const category of filteredCategories) expandedCategories.add(category.label);
 		}
 	});
 </script>
@@ -134,7 +134,7 @@
 
 	<!-- Scrollable command list -->
 	<div class="flex-1 overflow-y-auto px-3 py-3">
-		{#each filteredCategories as category}
+		{#each filteredCategories as category (category.label)}
 			{@const IconComponent = iconMap[category.icon]}
 			{@const isExpanded = expandedCategories.has(category.label)}
 			<div class="mb-1">
@@ -164,7 +164,7 @@
 						class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5"
 						style="border-color: var(--color-border);"
 					>
-						{#each category.commands as cmd}
+						{#each category.commands as cmd (cmd.command)}
 							{@const isCopied = copiedCommand === cmd.command}
 							<button
 								onclick={() => copyCommand(cmd.command)}

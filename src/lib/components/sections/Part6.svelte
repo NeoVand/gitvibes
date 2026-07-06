@@ -26,7 +26,9 @@
 		</blockquote>
 
 		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
-			Everything you've learned so far in the terminal works beautifully from VS Code's built-in Git UI. Staging, committing, branching, merging, resolving conflicts — all with rich visual feedback and just a few clicks. Let's explore the cockpit.
+			Everything you've learned so far in the terminal works beautifully from VS Code's built-in Git
+			UI. Staging, committing, branching, merging, resolving conflicts — all with rich visual
+			feedback and just a few clicks. Let's explore the cockpit.
 		</p>
 
 		<MermaidDiagram
@@ -42,23 +44,28 @@
 			id="vscode-overview"
 		/>
 
-		<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-			VS Code bundles a rich set of Git tools right into the editor, so you can do almost everything without opening a terminal.
+		<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+			VS Code bundles a rich set of Git tools right into the editor, so you can do almost everything
+			without opening a terminal.
 		</p>
 
 		<Callout type="note">
-			{#snippet children()}
-				While the command line is powerful, the VS Code UI is your "cockpit." It provides rich,
-				visual feedback that makes abstract Git concepts concrete.
-			{/snippet}
+			While the command line is powerful, the VS Code UI is your "cockpit." It provides rich, visual
+			feedback that makes abstract Git concepts concrete.
 		</Callout>
 
 		<!-- 6.1 Source Control View -->
 		<div id="section-6-1" class="mb-14">
-			<SectionHeader level="section" icon={Layout} title="6.1 The Source Control View" color="var(--color-primary)" />
+			<SectionHeader
+				level="section"
+				icon={Layout}
+				title="6.1 The Source Control View"
+				color="var(--color-primary)"
+			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				This single panel replaces a dozen terminal commands. Status, staging, committing, branching — it's all here in one visual interface that makes Git feel approachable.
+				This single panel replaces a dozen terminal commands. Status, staging, committing, branching
+				— it's all here in one visual interface that makes Git feel approachable.
 			</p>
 
 			<div class="my-6">
@@ -77,12 +84,15 @@
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Changes</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
-						Your working directory (<code class="text-xs" style="font-family: var(--font-mono);">git status</code>).
-						Modified and untracked files appear here.
+						Your working directory (<code class="text-xs" style="font-family: var(--font-mono);"
+							>git status</code
+						>). Modified and untracked files appear here.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
-					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Staged Changes</p>
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">
+						Staged Changes
+					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Your staging area. Files you've approved for the next commit.
 					</p>
@@ -90,8 +100,9 @@
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Commit Box</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
-						Your <code class="text-xs" style="font-family: var(--font-mono);">git commit -m "..."</code>. Type the message
-						and click the checkmark.
+						Your <code class="text-xs" style="font-family: var(--font-mono);"
+							>git commit -m "..."</code
+						>. Type the message and click the checkmark.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
@@ -103,7 +114,17 @@
 			</div>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Here's what it looks like in action. Press <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+G</kbd> (or <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+G</kbd> on Mac) to open the Source Control panel from anywhere:
+				Here's what it looks like in action. Press <kbd
+					class="rounded border px-1 py-0.5 text-[11px]"
+					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+					>Ctrl+Shift+G</kbd
+				>
+				(or
+				<kbd
+					class="rounded border px-1 py-0.5 text-[11px]"
+					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+					>Cmd+Shift+G</kbd
+				> on Mac) to open the Source Control panel from anywhere:
 			</p>
 
 			<VsCodeScreenshot
@@ -112,8 +133,10 @@
 				caption="Your command center: the Source Control panel shows everything at a glance -- changed files, staged files, commit input, and the branch graph."
 			/>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				Below the commit area, you'll find the <strong>Source Control Graph</strong> -- a visual representation of your commit history and branch structure. This is incredibly helpful for understanding how branches relate to each other:
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Below the commit area, you'll find the <strong>Source Control Graph</strong> -- a visual representation
+				of your commit history and branch structure. This is incredibly helpful for understanding how
+				branches relate to each other:
 			</p>
 
 			<VsCodeScreenshot
@@ -122,34 +145,41 @@
 				caption="The Source Control Graph visualizes your commit history and branch structure -- a powerful way to understand how branches relate."
 			/>
 
-			<VibeBox prompts={[
-				"Show me how to stage and commit changes using the VS Code Source Control panel",
-				"Walk me through the VS Code Git workflow without using the terminal"
-			]} />
+			<VibeBox
+				prompts={[
+					'Show me how to stage and commit changes using the VS Code Source Control panel',
+					'Walk me through the VS Code Git workflow without using the terminal'
+				]}
+			/>
 		</div>
 
 		<!-- 6.2 Timeline & GitLens -->
 		<div id="section-6-2" class="mb-14">
-			<SectionHeader level="section" icon={Clock} title="6.2 The Timeline View & GitLens" color="var(--color-primary)" />
+			<SectionHeader
+				level="section"
+				icon={Clock}
+				title="6.2 The Timeline View & GitLens"
+				color="var(--color-primary)"
+			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				When you're staring at a line of code and wondering "who changed this, and why?" — VS Code has the answer built right in. Timeline and GitLens turn your editor into a time machine.
+				When you're staring at a line of code and wondering "who changed this, and why?" — VS Code
+				has the answer built right in. Timeline and GitLens turn your editor into a time machine.
 			</p>
 
 			<Callout type="note">
-				{#snippet children()}
-					<strong>The Problem:</strong> An AI changed a line of code, and you have no idea why or when.
-				{/snippet}
+				<strong>The Problem:</strong> An AI changed a line of code, and you have no idea why or when.
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				Open any file, then look in the Explorer panel for the <strong>"Timeline"</strong> pane
-				at the bottom. This shows the complete commit history for that specific file. Click
-				any commit to see a diff, or right-click and select "Restore."
+				Open any file, then look in the Explorer panel for the <strong>"Timeline"</strong> pane at the
+				bottom. This shows the complete commit history for that specific file. Click any commit to see
+				a diff, or right-click and select "Restore."
 			</p>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Here's the Timeline in action. Each entry represents a commit that touched this file -- click any entry to see exactly what changed in that commit:
+				Here's the Timeline in action. Each entry represents a commit that touched this file --
+				click any entry to see exactly what changed in that commit:
 			</p>
 
 			<VsCodeScreenshot
@@ -158,8 +188,11 @@
 				caption="The Timeline view (in the Explorer panel) shows the complete commit history for any file. Click any entry to see the diff."
 			/>
 
-			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
-				VS Code also has <strong>built-in Git Blame</strong>. Hover over any line of code and you'll see who changed it and when, right in the status bar. For even richer inline annotations on every single line, install the <strong>GitLens</strong> extension from the VS Code Marketplace -- it's practically essential for professional work:
+			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				VS Code also has <strong>built-in Git Blame</strong>. Hover over any line of code and you'll
+				see who changed it and when, right in the status bar. For even richer inline annotations on
+				every single line, install the <strong>GitLens</strong> extension from the VS Code Marketplace
+				-- it's practically essential for professional work:
 			</p>
 
 			<VsCodeScreenshot
@@ -168,59 +201,97 @@
 				caption="Built-in Git blame shows the author and commit message for the current line right in the status bar."
 			/>
 
-			<VibeBox prompts={[
-				"Show me the history of changes to this file — who changed what and when",
-				"Who last modified this function and what was the commit message?"
-			]} />
+			<VibeBox
+				prompts={[
+					'Show me the history of changes to this file — who changed what and when',
+					'Who last modified this function and what was the commit message?'
+				]}
+			/>
 		</div>
 
 		<!-- 6.3 3-Way Merge Editor -->
 		<div id="section-6-3" class="mb-8">
-			<SectionHeader level="section" icon={Columns} title="6.3 The 3-Way Merge Editor" color="var(--color-primary)" />
+			<SectionHeader
+				level="section"
+				icon={Columns}
+				title="6.3 The 3-Way Merge Editor"
+				color="var(--color-primary)"
+			/>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				We touched on merge conflicts earlier -- now let's look at the tool that makes resolving them almost enjoyable.
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				We touched on merge conflicts earlier -- now let's look at the tool that makes resolving
+				them almost enjoyable.
 			</p>
 
 			<Callout type="important">
-				{#snippet children()}
-					This tool transforms merge conflicts from a terrifying, marker-filled text-editing
-					nightmare into a visual, point-and-click process. This alone is a reason to use
-					VS Code for Git integration.
-				{/snippet}
+				This tool transforms merge conflicts from a terrifying, marker-filled text-editing nightmare
+				into a visual, point-and-click process. This alone is a reason to use VS Code for Git
+				integration.
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				When a conflict occurs, VS Code highlights the conflicting files. Clicking one opens
-				the 3-way editor with three panes:
+				When a conflict occurs, VS Code highlights the conflicting files. Clicking one opens the
+				3-way editor with three panes:
 			</p>
 
 			<div class="mb-6 space-y-2">
-				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-note);"></div>
+				<div
+					class="flex items-center gap-3 rounded-lg p-3"
+					style="background: var(--color-bg-secondary);"
+				>
+					<div
+						class="h-3 w-3 flex-shrink-0 rounded-full"
+						style="background: var(--color-note);"
+					></div>
 					<div>
-						<span class="text-[13px] font-medium" style="color: var(--color-text);">Left Pane: "Incoming"</span>
-						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">Your teammate's changes</span>
+						<span class="text-[13px] font-medium" style="color: var(--color-text);"
+							>Left Pane: "Incoming"</span
+						>
+						<span class="ml-2 text-xs" style="color: var(--color-text-muted);"
+							>Your teammate's changes</span
+						>
 					</div>
 				</div>
-				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-tip);"></div>
+				<div
+					class="flex items-center gap-3 rounded-lg p-3"
+					style="background: var(--color-bg-secondary);"
+				>
+					<div
+						class="h-3 w-3 flex-shrink-0 rounded-full"
+						style="background: var(--color-tip);"
+					></div>
 					<div>
-						<span class="text-[13px] font-medium" style="color: var(--color-text);">Right Pane: "Current"</span>
-						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">Your local changes</span>
+						<span class="text-[13px] font-medium" style="color: var(--color-text);"
+							>Right Pane: "Current"</span
+						>
+						<span class="ml-2 text-xs" style="color: var(--color-text-muted);"
+							>Your local changes</span
+						>
 					</div>
 				</div>
-				<div class="flex items-center gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<div class="h-3 w-3 rounded-full flex-shrink-0" style="background: var(--color-important);"></div>
+				<div
+					class="flex items-center gap-3 rounded-lg p-3"
+					style="background: var(--color-bg-secondary);"
+				>
+					<div
+						class="h-3 w-3 flex-shrink-0 rounded-full"
+						style="background: var(--color-important);"
+					></div>
 					<div>
-						<span class="text-[13px] font-medium" style="color: var(--color-text);">Bottom Pane: "Result"</span>
-						<span class="ml-2 text-xs" style="color: var(--color-text-muted);">The final merged output</span>
+						<span class="text-[13px] font-medium" style="color: var(--color-text);"
+							>Bottom Pane: "Result"</span
+						>
+						<span class="ml-2 text-xs" style="color: var(--color-text-muted);"
+							>The final merged output</span
+						>
 					</div>
 				</div>
 			</div>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Here's the merge editor in action. Use the checkboxes next to each change to select which version you want to keep -- or manually edit the Result pane at the bottom for a custom resolution:
+				Here's the merge editor in action. Use the checkboxes next to each change to select which
+				version you want to keep -- or manually edit the Result pane at the bottom for a custom
+				resolution:
 			</p>
 
 			<VsCodeScreenshot
@@ -229,8 +300,11 @@
 				caption="The 3-way Merge Editor transforms scary merge conflicts into a visual, point-and-click experience. Use the checkboxes to select changes."
 			/>
 
-			<p class="mb-3 mt-5 text-[14px]" style="color: var(--color-text-secondary);">
-				And if you have GitHub Copilot installed, there's an even easier option. VS Code can use AI to analyze both sides of a conflict and suggest an intelligent resolution. Look for the <strong>"Resolve with AI"</strong> option in the merge editor:
+			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				And if you have GitHub Copilot installed, there's an even easier option. VS Code can use AI
+				to analyze both sides of a conflict and suggest an intelligent resolution. Look for the <strong
+					>"Resolve with AI"</strong
+				> option in the merge editor:
 			</p>
 
 			<VsCodeScreenshot
@@ -239,10 +313,12 @@
 				caption="GitHub Copilot can analyze conflicting changes and suggest an intelligent resolution -- the future of merge conflict handling."
 			/>
 
-			<VibeBox prompts={[
-				"I have a merge conflict — open the VS Code merge editor and help me resolve it",
-				"Accept the incoming changes for all conflicts in this file"
-			]} />
+			<VibeBox
+				prompts={[
+					'I have a merge conflict — open the VS Code merge editor and help me resolve it',
+					'Accept the incoming changes for all conflicts in this file'
+				]}
+			/>
 		</div>
 	</div>
 </section>

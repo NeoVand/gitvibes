@@ -1,13 +1,11 @@
 <script lang="ts">
 	let {
-		partNumber = '',
 		partLabel = '',
 		title,
 		icon: Icon,
 		color = 'var(--color-primary)',
 		level = 'part'
 	}: {
-		partNumber?: string;
 		partLabel?: string;
 		title: string;
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any

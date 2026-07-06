@@ -13,21 +13,51 @@
 	} = $props();
 
 	const config = {
-		note: { icon: Info, label: 'Note', color: 'var(--color-note)', bg: 'var(--color-note-bg)', border: 'var(--color-note-border)' },
-		tip: { icon: Lightbulb, label: 'Tip', color: 'var(--color-tip)', bg: 'var(--color-tip-bg)', border: 'var(--color-tip-border)' },
-		important: { icon: Star, label: 'Important', color: 'var(--color-important)', bg: 'var(--color-important-bg)', border: 'var(--color-important-border)' },
-		warning: { icon: AlertTriangle, label: 'Warning', color: 'var(--color-warning)', bg: 'var(--color-warning-bg)', border: 'var(--color-warning-border)' },
-		caution: { icon: AlertOctagon, label: 'Caution', color: 'var(--color-caution)', bg: 'var(--color-caution-bg)', border: 'var(--color-caution-border)' }
+		note: {
+			icon: Info,
+			label: 'Note',
+			color: 'var(--color-note)',
+			bg: 'var(--color-note-bg)',
+			border: 'var(--color-note-border)'
+		},
+		tip: {
+			icon: Lightbulb,
+			label: 'Tip',
+			color: 'var(--color-tip)',
+			bg: 'var(--color-tip-bg)',
+			border: 'var(--color-tip-border)'
+		},
+		important: {
+			icon: Star,
+			label: 'Important',
+			color: 'var(--color-important)',
+			bg: 'var(--color-important-bg)',
+			border: 'var(--color-important-border)'
+		},
+		warning: {
+			icon: AlertTriangle,
+			label: 'Warning',
+			color: 'var(--color-warning)',
+			bg: 'var(--color-warning-bg)',
+			border: 'var(--color-warning-border)'
+		},
+		caution: {
+			icon: AlertOctagon,
+			label: 'Caution',
+			color: 'var(--color-caution)',
+			bg: 'var(--color-caution-bg)',
+			border: 'var(--color-caution-border)'
+		}
 	};
 
 	const c = $derived(config[type]);
 </script>
 
-<div
-	class="my-5 rounded-lg px-5 py-4"
-	style="background: {c.bg};"
->
-	<div class="mb-2.5 flex items-center gap-2 text-sm font-bold uppercase tracking-wide" style="color: {c.color}; font-family: var(--font-heading); letter-spacing: 0.08em;">
+<div class="my-5 rounded-lg px-5 py-4" style="background: {c.bg};">
+	<div
+		class="mb-2.5 flex items-center gap-2 text-sm font-bold tracking-wide uppercase"
+		style="color: {c.color}; font-family: var(--font-heading); letter-spacing: 0.08em;"
+	>
 		<c.icon size={16} strokeWidth={2.5} />
 		<span>{title || c.label}</span>
 	</div>

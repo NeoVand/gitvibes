@@ -1,10 +1,7 @@
 <script lang="ts">
 	import GitPlayground from '$lib/components/playground/GitPlayground.svelte';
 
-	let {
-		open = false,
-		onToggle
-	}: { open: boolean; onToggle: () => void } = $props();
+	let { open = false, onToggle }: { open: boolean; onToggle: () => void } = $props();
 
 	let hasOpened = $state(false);
 

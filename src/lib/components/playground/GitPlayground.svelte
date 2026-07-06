@@ -243,9 +243,11 @@
 			</div>
 		{:else if line.type === 'output'}
 			{#if line.colored}
+				<!-- eslint-disable svelte/no-at-html-tags -- our formatters HTML-escape all command output before colorizing -->
 				<pre
 					class="mb-2.5 pl-5 text-[11.5px] leading-relaxed whitespace-pre-wrap"
 					style="font-family: var(--font-mono);">{@html line.text}</pre>
+				<!-- eslint-enable svelte/no-at-html-tags -->
 			{:else}
 				<pre
 					class="mb-2.5 pl-5 text-[11.5px] leading-relaxed whitespace-pre-wrap"

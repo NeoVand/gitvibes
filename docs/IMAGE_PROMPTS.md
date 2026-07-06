@@ -33,6 +33,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > Right two-thirds: a vertical **timeline of snapshots** — five or six minimal commit nodes stacked along a thin luminous spine, like frames on a film strip or save points in a game. Each node is a small worn card with a faint timestamp glow. The bottom node glows brightest (present); older nodes fade upward into the past. A single graceful rewind arc curves from the present node back toward an earlier one — implying time travel, not a labeled arrow.
 >
 > Four quiet annotation chips along the bottom edge (small, legible, not crowded):
+>
 > - **Review** — inspect before it sticks
 > - **Undo** — recover from any mistake
 > - **Branch** — experiment safely
@@ -371,6 +372,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > CONCEPT: A stylized dark editor sidebar (abstracted, not a literal screenshot) shown at a subtle angle on the right two-thirds of the frame. It should read as the **Source Control view**, not a generic IDE or "command center." The panel maps the core Git loop from the tutorial: status → stage → commit.
 >
 > Inside the sidebar, show four clearly separated zones stacked vertically (faint borders, minimal UI shapes — not a detailed mockup):
+>
 > 1. **Changes** — muted zone at top; small M/U badges suggested; label "Changes" in tiny sans-serif. Represents `git status` (modified & untracked files in the working directory).
 > 2. **Staged Changes** — zone below with selective indigo glow; label "Staged Changes". Represents the staging area after `git add`.
 > 3. **Commit message box** — a thin input field shape with a small checkmark button beside it; faint placeholder text `feat: ...`; label "Commit". Represents `git commit -m`.
@@ -436,6 +438,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > 8. **Recover** — `git revert` · never reset a public branch
 >
 > LAYOUT:
+>
 > - Upper left: large weathered serif **"The Save Game Loop"** with aged print texture.
 > - Subtitle in muted blue sans-serif: **"8 steps for every piece of work"**
 > - The arc and nodes occupy the central band; each node gets a distinct restrained accent color (purple, pink, amber, green, cyan, blue, indigo, emerald) with localized glow.
@@ -469,6 +472,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > | Practice all commands | Git Playground | Try it yourself tabs |
 >
 > LAYOUT:
+>
 > - Left of card: large weathered serif **"Quick Reference"** with editorial print treatment.
 > - Subtitle: **"Terminal or VS Code — pick your path"**
 > - Alternate rows on the card have barely-there background tint for scanability.
@@ -505,6 +509,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > Examples: auto-review PRs · flag risky Git ops · update docs on merge
 >
 > LAYOUT:
+>
 > - Left side: large weathered serif **"Configure Once"** with aged print texture.
 > - Subtitle in muted monospace: **"Instructions always on · Skills on demand · Git manages accountability"**
 > - Bottom footer (small): **"AGENTS.md for conventions · SKILL.md for workflows · Humans stay in the loop"**

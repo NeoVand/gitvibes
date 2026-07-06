@@ -2,11 +2,7 @@ import git from 'isomorphic-git';
 import type { GitEngine } from './git-engine';
 
 function sanitizeLabel(message: string): string {
-	return message
-		.split('\n')[0]
-		.replace(/"/g, "'")
-		.slice(0, 28)
-		.trim() || 'commit';
+	return message.split('\n')[0].replace(/"/g, "'").slice(0, 28).trim() || 'commit';
 }
 
 export async function buildGitGraph(engine: GitEngine): Promise<string> {

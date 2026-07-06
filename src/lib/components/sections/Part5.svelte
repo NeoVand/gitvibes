@@ -29,23 +29,30 @@
 		</blockquote>
 
 		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
-			By now you know the fundamentals. But real-world development is rarely linear — you'll be mid-feature when a critical bug drops, your branch will diverge from a teammate's, and two files will clash during a merge. These advanced tools handle the chaos.
+			By now you know the fundamentals. But real-world development is rarely linear — you'll be
+			mid-feature when a critical bug drops, your branch will diverge from a teammate's, and two
+			files will clash during a merge. These advanced tools handle the chaos.
 		</p>
 
 		<Callout type="note">
-			{#snippet children()}
-				As you grow, you'll often work on multiple tasks at once. Your AI-driven workflow will
-				be interrupted by urgent bugs or questions. Git provides the tools to manage this
-				context-switching seamlessly.
-			{/snippet}
+			As you grow, you'll often work on multiple tasks at once. Your AI-driven workflow will be
+			interrupted by urgent bugs or questions. Git provides the tools to manage this
+			context-switching seamlessly.
 		</Callout>
 
 		<!-- 5.1 Stash -->
 		<div id="section-5-1" class="mb-14">
-			<SectionHeader level="section" icon={Archive} title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;" color="var(--color-primary)" />
+			<SectionHeader
+				level="section"
+				icon={Archive}
+				title="5.1 &quot;I Need to Switch Branches, but My Work Isn't Ready&quot;"
+				color="var(--color-primary)"
+			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				You're deep in a feature branch with ten modified files when your manager says "urgent bug on main." You can't commit half-finished work, and you can't lose it either. The stash is your escape hatch.
+				You're deep in a feature branch with ten modified files when your manager says "urgent bug
+				on main." You can't commit half-finished work, and you can't lose it either. The stash is
+				your escape hatch.
 			</p>
 
 			<div class="my-6">
@@ -57,11 +64,9 @@
 			</div>
 
 			<Callout type="note">
-				{#snippet children()}
-					<strong>The Problem:</strong> You're in the middle of a complex AI refactor with 10 modified
-					files. Your manager says: "Urgent bug on main!" You can't commit half-baked work, and Git
-					may block you from switching branches if your uncommitted changes conflict with the target branch.
-				{/snippet}
+				<strong>The Problem:</strong> You're in the middle of a complex AI refactor with 10 modified files.
+				Your manager says: "Urgent bug on main!" You can't commit half-baked work, and Git may block you
+				from switching branches if your uncommitted changes conflict with the target branch.
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
@@ -85,14 +90,24 @@ git stash pop`}
 			/>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
-				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git stash pop</code> re-applies
-				your changes and removes them from the stash. Use
-				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git stash apply</code> to keep
-				the stash entry for reuse.
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git stash pop</code
+				>
+				re-applies your changes and removes them from the stash. Use
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git stash apply</code
+				> to keep the stash entry for reuse.
 			</p>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				In VS Code, you can do all of this without memorizing commands. Open the <strong>...</strong> menu in the Source Control panel -- you'll see a <strong>Stash</strong> submenu with all the options you need:
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				In VS Code, you can do all of this without memorizing commands. Open the <strong>...</strong
+				>
+				menu in the Source Control panel -- you'll see a <strong>Stash</strong> submenu with all the options
+				you need:
 			</p>
 
 			<VsCodeScreenshot
@@ -101,30 +116,45 @@ git stash pop`}
 				caption="The ... menu includes a Stash submenu with 'Stash (Include Untracked)' and 'Pop Latest Stash' -- everything you need for context-switching."
 			/>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				Choose <strong>"Stash (Include Untracked)"</strong> to save all your work. When you're ready to come back, go to <strong>...</strong> → Stash → <strong>"Pop Latest Stash"</strong> to restore everything exactly where you left off.
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Choose <strong>"Stash (Include Untracked)"</strong> to save all your work. When you're ready
+				to come back, go to <strong>...</strong> → Stash → <strong>"Pop Latest Stash"</strong> to restore
+				everything exactly where you left off.
 			</p>
 
-			<h4 id="stash" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
+			<h4
+				id="stash"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
 				Try It: The Stash Workflow
 			</h4>
 			<PlaygroundNote>
-				You're mid-refactor on <code>feature/A</code> when a critical bug comes in. Stash your work, fix the bug on a hotfix branch, then come back and pop the stash.
+				You're mid-refactor on <code>feature/A</code> when a critical bug comes in. Stash your work, fix
+				the bug on a hotfix branch, then come back and pop the stash.
 			</PlaygroundNote>
 			<LessonActivity title="Stash: Context-Switch Safely" scenarioId="stash" id="stash" />
 
-			<VibeBox prompts={[
-				"I need to switch branches but I'm not done here — save my work temporarily",
-				"Stash my current changes, switch to main to fix a bug, then come back and restore them"
-			]} />
+			<VibeBox
+				prompts={[
+					"I need to switch branches but I'm not done here — save my work temporarily",
+					'Stash my current changes, switch to main to fix a bug, then come back and restore them'
+				]}
+			/>
 		</div>
 
 		<!-- 5.2 Rebase vs Merge -->
 		<div id="section-5-2" class="mb-14">
-			<SectionHeader level="section" icon={GitMerge} title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)" color="var(--color-primary)" />
+			<SectionHeader
+				level="section"
+				icon={GitMerge}
+				title="5.2 &quot;My Branch is Out of Date&quot; (Rebase vs. Merge)"
+				color="var(--color-primary)"
+			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				Your feature branch has been alive for a few days and main has moved on without you. Now you need to catch up — and Git offers two philosophies with very different trade-offs.
+				Your feature branch has been alive for a few days and main has moved on without you. Now you
+				need to catch up — and Git offers two philosophies with very different trade-offs.
 			</p>
 
 			<div class="my-6">
@@ -136,14 +166,17 @@ git stash pop`}
 			</div>
 
 			<Callout type="note">
-				{#snippet children()}
-					<strong>The Problem:</strong> Your feature branch is "stale." <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code>
-					has moved on. There are two philosophies for updating it.
-				{/snippet}
+				<strong>The Problem:</strong> Your feature branch is "stale."
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
+				>
+				has moved on. There are two philosophies for updating it.
 			</Callout>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				You have two options for catching up with main, and each tells a different story in your commit history.
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				You have two options for catching up with main, and each tells a different story in your
+				commit history.
 			</p>
 
 			<div class="mb-6 grid gap-4 sm:grid-cols-2">
@@ -164,8 +197,8 @@ git stash pop`}
 						git rebase main
 					</h4>
 					<p class="mb-2 text-[13px]" style="color: var(--color-text-secondary);">
-						"Replays" your commits on top of the latest main. Creates a clean, linear history
-						as if you started today.
+						"Replays" your commits on top of the latest main. Creates a clean, linear history as if
+						you started today.
 					</p>
 					<p class="text-xs" style="color: var(--color-text-muted);">
 						History: "A, B, E, F, C', D'" -- all in a straight line.
@@ -174,44 +207,65 @@ git stash pop`}
 			</div>
 
 			<Callout type="caution">
-				{#snippet children()}
-					<strong>The Golden Rule of Rebasing:</strong> Never rebase a public branch (one your team
-					is also using), as it rewrites history.
-				{/snippet}
+				<strong>The Golden Rule of Rebasing:</strong> Never rebase a public branch (one your team is also
+				using), as it rewrites history.
 			</Callout>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				VS Code supports both approaches. Use the <strong>...</strong> menu in Source Control → <strong>"Pull (Rebase)"</strong> to rebase instead of merge when pulling. For merging, use the Command Palette (<kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Cmd+Shift+P</kbd> / <kbd class="rounded border px-1 py-0.5 text-[11px]" style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl+Shift+P</kbd>) → <strong>"Git: Merge Branch..."</strong> and select the branch to merge.
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				VS Code supports both approaches. Use the <strong>...</strong> menu in Source Control →
+				<strong>"Pull (Rebase)"</strong>
+				to rebase instead of merge when pulling. For merging, use the Command Palette (<kbd
+					class="rounded border px-1 py-0.5 text-[11px]"
+					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+					>Cmd+Shift+P</kbd
+				>
+				/
+				<kbd
+					class="rounded border px-1 py-0.5 text-[11px]"
+					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+					>Ctrl+Shift+P</kbd
+				>) → <strong>"Git: Merge Branch..."</strong> and select the branch to merge.
 			</p>
 
 			<Callout type="tip">
-				{#snippet children()}
-					<strong>The AI-First Developer's Choice:</strong> Since your experiment branch is your
-					private playground, <strong>rebase</strong> is preferred to keep it clean before creating a PR.
-					It avoids cluttering the PR with "I merged main" commits.
-				{/snippet}
+				<strong>The AI-First Developer's Choice:</strong> Since your experiment branch is your
+				private playground, <strong>rebase</strong> is preferred to keep it clean before creating a PR.
+				It avoids cluttering the PR with "I merged main" commits.
 			</Callout>
 
-			<h4 id="rebase-merge" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
+			<h4
+				id="rebase-merge"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
 				Try It: Merge vs. Rebase
 			</h4>
 			<PlaygroundNote>
-				Your feature branch and <code>main</code> have diverged. Try <code>git merge main</code> first, then reset and try <code>git rebase main</code> to compare the resulting history.
+				Your feature branch and <code>main</code> have diverged. Try <code>git merge main</code>
+				first, then reset and try <code>git rebase main</code> to compare the resulting history.
 			</PlaygroundNote>
 			<LessonActivity title="Merge vs. Rebase" scenarioId="rebase-merge" id="rebase-merge" />
 
-			<VibeBox prompts={[
-				"My branch is behind main — rebase my changes on top of the latest main",
-				"Update my feature branch with the latest changes from main using rebase"
-			]} />
+			<VibeBox
+				prompts={[
+					'My branch is behind main — rebase my changes on top of the latest main',
+					'Update my feature branch with the latest changes from main using rebase'
+				]}
+			/>
 		</div>
 
 		<!-- 5.3 Merge Conflicts -->
 		<div id="section-5-3" class="mb-8">
-			<SectionHeader level="section" icon={FileWarning} title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)" color="var(--color-primary)" />
+			<SectionHeader
+				level="section"
+				icon={FileWarning}
+				title="5.3 &quot;We Both Edited the Same File&quot; (Merge Conflicts)"
+				color="var(--color-primary)"
+			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				This is the moment every developer dreads the first time — and handles calmly by the tenth. Two people changed the same lines, and Git needs a human to decide which version wins.
+				This is the moment every developer dreads the first time — and handles calmly by the tenth.
+				Two people changed the same lines, and Git needs a human to decide which version wins.
 			</p>
 
 			<div class="my-6">
@@ -223,15 +277,21 @@ git stash pop`}
 			</div>
 
 			<Callout type="warning">
-				{#snippet children()}
-					<strong>The Problem:</strong> You run <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code>
-					and Git halts with <code class="rounded px-1.5 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">CONFLICT</code>.
-					You and a teammate edited the same lines. Git needs you, the human, to resolve it.
-				{/snippet}
+				<strong>The Problem:</strong> You run
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
+				>
+				and Git halts with
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">CONFLICT</code
+				>. You and a teammate edited the same lines. Git needs you, the human, to resolve it.
 			</Callout>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				Don't panic -- conflicts look intimidating at first, but they follow a simple pattern. Git inserts special markers into your file to show you exactly where the disagreement is.
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Don't panic -- conflicts look intimidating at first, but they follow a simple pattern. Git
+				inserts special markers into your file to show you exactly where the disagreement is.
 			</p>
 
 			<h4 class="mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -250,31 +310,48 @@ x = 5
 			/>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
-				Delete all the markers (<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">&lt;&lt;&lt;</code>,
-				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">===</code>,
-				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">&gt;&gt;&gt;</code>) and edit the code to
-				be the correct final version, then stage and commit. In the playground, you can write the resolved file with
-				<code class="rounded px-1 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">echo 'x = 10' &gt; src/model.py</code>.
+				Delete all the markers (<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>&lt;&lt;&lt;</code
+				>,
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">===</code
+				>,
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>&gt;&gt;&gt;</code
+				>) and edit the code to be the correct final version, then stage and commit. In the
+				playground, you can write the resolved file with
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>echo 'x = 10' &gt; src/model.py</code
+				>.
 			</p>
 
-			<h4 class="mb-3 mt-6 text-[14px] font-semibold" style="color: var(--color-text);">
+			<h4 class="mt-6 mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
 				The VS Code Way (The Superior Way)
 			</h4>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				Editing conflict markers by hand works, but VS Code makes the whole process much more visual and less error-prone.
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Editing conflict markers by hand works, but VS Code makes the whole process much more visual
+				and less error-prone.
 			</p>
 
 			<Callout type="tip">
-				{#snippet children()}
-					This is one of the best features of the IDE. VS Code opens a <strong>3-way Merge Editor</strong>:
-					<br /><br />
-					<strong>Left Pane:</strong> "Incoming" (teammate's changes)<br />
-					<strong>Right Pane:</strong> "Current" (your changes)<br />
-					<strong>Bottom Pane:</strong> "Result" (what will be saved)<br /><br />
-					Above each conflict block, VS Code shows clickable links: <strong>"Accept Current"</strong> |
-					<strong>"Accept Incoming"</strong> | <strong>"Accept Both"</strong>.
-				{/snippet}
+				This is one of the best features of the IDE. VS Code opens a <strong
+					>3-way Merge Editor</strong
+				>:
+				<br /><br />
+				<strong>Left Pane:</strong> "Incoming" (teammate's changes)<br />
+				<strong>Right Pane:</strong> "Current" (your changes)<br />
+				<strong>Bottom Pane:</strong> "Result" (what will be saved)<br /><br />
+				Above each conflict block, VS Code shows clickable links: <strong>"Accept Current"</strong>
+				|
+				<strong>"Accept Incoming"</strong> | <strong>"Accept Both"</strong>.
 			</Callout>
 
 			<VsCodeScreenshot
@@ -283,8 +360,10 @@ x = 5
 				caption="VS Code highlights conflicts inline with clickable actions: Accept Current Change, Accept Incoming Change, or Accept Both Changes."
 			/>
 
-			<p class="mb-3 mt-4 text-[14px]" style="color: var(--color-text-secondary);">
-				For complex conflicts with multiple overlapping changes, click <strong>"Resolve in Merge Editor"</strong> to open the full 3-way view. This gives you the most control over the final result:
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				For complex conflicts with multiple overlapping changes, click <strong
+					>"Resolve in Merge Editor"</strong
+				> to open the full 3-way view. This gives you the most control over the final result:
 			</p>
 
 			<VsCodeScreenshot
@@ -293,18 +372,42 @@ x = 5
 				caption="The 3-way Merge Editor: Incoming changes (left), your changes (right), and the final result (bottom). Use checkboxes to select which changes to keep."
 			/>
 
-			<h4 id="conflicts" class="mb-3 mt-6 text-lg font-semibold scroll-mt-20" style="color: var(--color-text);">
+			<h4
+				id="conflicts"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
 				Try It: Resolving a Merge Conflict
 			</h4>
 			<PlaygroundNote>
-				The scenario starts mid-merge with conflict markers in <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">src/model.py</code>. Use <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">echo</code> to overwrite the file, then <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git add</code> and <code class="rounded px-1 py-0.5 text-xs" style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code> to finish.
+				The scenario starts mid-merge with conflict markers in <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>src/model.py</code
+				>. Use
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">echo</code
+				>
+				to overwrite the file, then
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add</code
+				>
+				and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
+				> to finish.
 			</PlaygroundNote>
 			<LessonActivity title="Merge Conflict Resolution" scenarioId="conflicts" id="conflicts" />
 
-			<VibeBox prompts={[
-				"I have a merge conflict in model.py — help me resolve it, keeping both changes",
-				"Show me the conflicts and suggest the best resolution for each one"
-			]} />
+			<VibeBox
+				prompts={[
+					'I have a merge conflict in model.py — help me resolve it, keeping both changes',
+					'Show me the conflicts and suggest the best resolution for each one'
+				]}
+			/>
 		</div>
 	</div>
 </section>

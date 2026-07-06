@@ -22,11 +22,20 @@ export async function buildMergeRebaseRepo(engine: GitEngine): Promise<void> {
 export async function buildMergeConflictRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [{ path: 'src/model.py', content: 'x = 1\n' }]);
 
-	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/ai-experiment', checkout: true });
-	await engine.commitFiles('AI change', [{ path: 'src/model.py', content: 'x = 10\n# AI refactor\n' }]);
+	await git.branch({
+		fs: engine.fs,
+		dir: engine.dir,
+		ref: 'feature/ai-experiment',
+		checkout: true
+	});
+	await engine.commitFiles('AI change', [
+		{ path: 'src/model.py', content: 'x = 10\n# AI refactor\n' }
+	]);
 
 	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main' });
-	await engine.commitFiles('Teammate change', [{ path: 'src/model.py', content: 'x = 5\n# teammate fix\n' }]);
+	await engine.commitFiles('Teammate change', [
+		{ path: 'src/model.py', content: 'x = 5\n# teammate fix\n' }
+	]);
 
 	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'feature/ai-experiment' });
 
@@ -41,7 +50,10 @@ export async function buildMergeConflictRepo(engine: GitEngine): Promise<void> {
 	} catch {
 		const content = await engine.readFile('src/model.py');
 		if (!content?.includes('<<<<<<<')) {
-			await engine.writeFile('src/model.py', '<<<<<<< HEAD\nx = 10\n# AI refactor\n=======\nx = 5\n# teammate fix\n>>>>>>> main\n');
+			await engine.writeFile(
+				'src/model.py',
+				'<<<<<<< HEAD\nx = 10\n# AI refactor\n=======\nx = 5\n# teammate fix\n>>>>>>> main\n'
+			);
 		}
 	}
 }
@@ -69,7 +81,12 @@ export async function buildSyncRemoteRepo(engine: GitEngine): Promise<void> {
 	engine.remote.setBranch('main', remoteMainOid);
 	await writeRemoteTrackingRef(engine, 'origin', 'main', localMainOid);
 
-	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/sync-practice', checkout: true });
+	await git.branch({
+		fs: engine.fs,
+		dir: engine.dir,
+		ref: 'feature/sync-practice',
+		checkout: true
+	});
 	await engine.commitFiles('My feature commit', [{ path: 'src/feature.py', content: 'my work\n' }]);
 }
 
@@ -79,7 +96,9 @@ export async function buildUndoRepo(engine: GitEngine): Promise<void> {
 
 	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/experiment', checkout: true });
 	await engine.commitFiles('feat: experiment', [{ path: 'src/model.py', content: 'v2\n' }]);
-	await engine.commitFiles('bad: broken AI refactor', [{ path: 'src/model.py', content: 'broken ai\n' }]);
+	await engine.commitFiles('bad: broken AI refactor', [
+		{ path: 'src/model.py', content: 'broken ai\n' }
+	]);
 
 	const pushedOid = await engine.getCommitOid('feature/experiment', 0);
 	engine.remote.setBranch('feature/experiment', pushedOid);
@@ -93,8 +112,12 @@ export async function buildUndoRepo(engine: GitEngine): Promise<void> {
 
 /** Branch ready to commit and push */
 export async function buildBranchingRepo(engine: GitEngine): Promise<void> {
-	await engine.commitFiles('Initial commit', [{ path: 'src/main.py', content: 'def main():\n    pass\n' }]);
-	await engine.commitFiles('Stable feature A', [{ path: 'src/main.py', content: 'def main():\n    run()\n' }]);
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/main.py', content: 'def main():\n    pass\n' }
+	]);
+	await engine.commitFiles('Stable feature A', [
+		{ path: 'src/main.py', content: 'def main():\n    run()\n' }
+	]);
 
 	const mainOid = await engine.getCommitOid('main', 0);
 	engine.remote.setBranch('main', mainOid);
@@ -107,7 +130,9 @@ export async function buildBranchingRepo(engine: GitEngine): Promise<void> {
 /** Committed to wrong branch — need to move commit to a feature branch */
 export async function buildWrongBranchRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# App\n' }]);
-	await engine.commitFiles('feat: Add user model', [{ path: 'src/models.py', content: 'class User:\n    pass\n' }]);
+	await engine.commitFiles('feat: Add user model', [
+		{ path: 'src/models.py', content: 'class User:\n    pass\n' }
+	]);
 
 	const mainOid = await engine.getCommitOid('main', 0);
 	engine.remote.setBranch('main', mainOid);
@@ -144,8 +169,12 @@ export async function buildForcePushRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('feat: Add core logic', [{ path: 'src/core.py', content: 'v1\n' }]);
 
 	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/cleanup', checkout: true });
-	await engine.commitFiles('bad: AI broke everything', [{ path: 'src/core.py', content: 'broken\n' }]);
-	await engine.commitFiles('wip: trying to fix', [{ path: 'src/core.py', content: 'still broken\n' }]);
+	await engine.commitFiles('bad: AI broke everything', [
+		{ path: 'src/core.py', content: 'broken\n' }
+	]);
+	await engine.commitFiles('wip: trying to fix', [
+		{ path: 'src/core.py', content: 'still broken\n' }
+	]);
 
 	const pushedOid = await engine.getCommitOid('feature/cleanup', 0);
 	engine.remote.setBranch('feature/cleanup', pushedOid);

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { SvelteSet } from 'svelte/reactivity';
 	import { ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-svelte';
 	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
 
@@ -16,23 +17,19 @@
 
 	const sections = sidebarNav;
 
-	let expandedSections = $state<Set<string>>(new Set());
-	let manuallyExpanded = $state<Set<string>>(new Set());
+	const expandedSections = new SvelteSet<string>();
+	const manuallyExpanded = new SvelteSet<string>();
 	let flyoutSection = $state<string | null>(null);
 	let flyoutY = $state(0);
 
 	function toggleSection(id: string) {
-		const next = new Set(expandedSections);
-		const nextManual = new Set(manuallyExpanded);
-		if (next.has(id)) {
-			next.delete(id);
-			nextManual.delete(id);
+		if (expandedSections.has(id)) {
+			expandedSections.delete(id);
+			manuallyExpanded.delete(id);
 		} else {
-			next.add(id);
-			nextManual.add(id);
+			expandedSections.add(id);
+			manuallyExpanded.add(id);
 		}
-		expandedSections = next;
-		manuallyExpanded = nextManual;
 	}
 
 	function scrollTo(id: string, closeSidebarOnMobile = true) {
@@ -77,9 +74,12 @@
 			}
 		}
 		if (activeSectionParent && isActive(activeSectionParent)) {
-			const next = new Set(manuallyExpanded);
-			next.add(activeSectionParent);
-			expandedSections = next;
+			for (const id of [...expandedSections]) {
+				if (!manuallyExpanded.has(id) && id !== activeSectionParent) {
+					expandedSections.delete(id);
+				}
+			}
+			expandedSections.add(activeSectionParent);
 		}
 	});
 </script>

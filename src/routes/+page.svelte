@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { base } from '$app/paths';
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';

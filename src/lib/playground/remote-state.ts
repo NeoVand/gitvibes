@@ -65,7 +65,10 @@ export async function resolveRemoteBranch(
 	}
 }
 
-export function parseRemoteBranch(spec: string, defaultRemote = DEFAULT_REMOTE): { remote: string; branch: string } {
+export function parseRemoteBranch(
+	spec: string,
+	defaultRemote = DEFAULT_REMOTE
+): { remote: string; branch: string } {
 	if (spec.includes('/')) {
 		const [remote, ...rest] = spec.split('/');
 		return { remote, branch: rest.join('/') };

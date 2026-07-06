@@ -18,7 +18,10 @@ test.describe('Command search', () => {
 
 		const search = page.getByPlaceholder('Search commands...');
 		await search.fill('git stash pop');
-		await page.getByRole('option', { name: /git stash pop/i }).first().click();
+		await page
+			.getByRole('option', { name: /git stash pop/i })
+			.first()
+			.click();
 
 		await expect(page).toHaveURL(/#section-5-1/, { timeout: 5000 });
 	});

@@ -23,50 +23,85 @@ function esc(s: string): string {
 }
 
 function colorizeStatus(raw: string): string {
-	return raw.split('\n').map(line => {
-		const e = esc(line);
-		if (line.startsWith('On branch ')) return `<span style="font-weight:600">${e}</span>`;
-		if (line.startsWith('Your branch')) return `<span style="color:var(--color-terminal-output);font-style:italic">${e}</span>`;
-		if (line.startsWith('\t') && (line.includes('modified:') || line.includes('both modified:'))) {
-			if (raw.includes('Changes to be committed') && !raw.split('Changes not staged')[0]?.includes(line)) {
-				return `<span style="color:var(--color-diff-add)">\t${esc(line.trim())}</span>`;
+	return raw
+		.split('\n')
+		.map((line) => {
+			const e = esc(line);
+			if (line.startsWith('On branch ')) return `<span style="font-weight:600">${e}</span>`;
+			if (line.startsWith('Your branch'))
+				return `<span style="color:var(--color-terminal-output);font-style:italic">${e}</span>`;
+			if (
+				line.startsWith('\t') &&
+				(line.includes('modified:') || line.includes('both modified:'))
+			) {
+				if (
+					raw.includes('Changes to be committed') &&
+					!raw.split('Changes not staged')[0]?.includes(line)
+				) {
+					return `<span style="color:var(--color-diff-add)">\t${esc(line.trim())}</span>`;
+				}
+				return `<span style="color:var(--color-diff-del)">\t${esc(line.trim())}</span>`;
 			}
-			return `<span style="color:var(--color-diff-del)">\t${esc(line.trim())}</span>`;
-		}
-		if (line.startsWith('\t')) return `<span style="color:var(--color-diff-del)">\t${esc(line.trim())}</span>`;
-		if (line.startsWith('Changes to be committed')) return `<span style="color:var(--color-diff-add);font-weight:500">${e}</span>`;
-		if (line.startsWith('Changes not staged') || line.startsWith('Untracked files') || line.startsWith('Unmerged paths')) return `<span style="color:var(--color-diff-del);font-weight:500">${e}</span>`;
-		if (line.startsWith('nothing to commit')) return `<span style="color:var(--color-terminal-prompt)">${e}</span>`;
-		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
-	}).join('\n');
+			if (line.startsWith('\t'))
+				return `<span style="color:var(--color-diff-del)">\t${esc(line.trim())}</span>`;
+			if (line.startsWith('Changes to be committed'))
+				return `<span style="color:var(--color-diff-add);font-weight:500">${e}</span>`;
+			if (
+				line.startsWith('Changes not staged') ||
+				line.startsWith('Untracked files') ||
+				line.startsWith('Unmerged paths')
+			)
+				return `<span style="color:var(--color-diff-del);font-weight:500">${e}</span>`;
+			if (line.startsWith('nothing to commit'))
+				return `<span style="color:var(--color-terminal-prompt)">${e}</span>`;
+			return `<span style="color:var(--color-terminal-output)">${e}</span>`;
+		})
+		.join('\n');
 }
 
 function colorizeDiff(raw: string): string {
-	return raw.split('\n').map(line => {
-		const e = esc(line);
-		if (line.startsWith('diff --git')) return `<span style="font-weight:600;color:var(--color-terminal-command)">${e}</span>`;
-		if (line.startsWith('---')) return `<span style="font-weight:600;color:var(--color-diff-del)">${e}</span>`;
-		if (line.startsWith('+++')) return `<span style="font-weight:600;color:var(--color-diff-add)">${e}</span>`;
-		if (line.startsWith('new file')) return `<span style="color:var(--color-diff-add)">${e}</span>`;
-		if (line.startsWith('+')) return `<span style="color:var(--color-diff-add);background:var(--color-diff-add-bg)">${e}</span>`;
-		if (line.startsWith('-')) return `<span style="color:var(--color-diff-del);background:var(--color-diff-del-bg)">${e}</span>`;
-		if (line.startsWith('@@')) return `<span style="color:var(--color-diff-hunk)">${e}</span>`;
-		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
-	}).join('\n');
+	return raw
+		.split('\n')
+		.map((line) => {
+			const e = esc(line);
+			if (line.startsWith('diff --git'))
+				return `<span style="font-weight:600;color:var(--color-terminal-command)">${e}</span>`;
+			if (line.startsWith('---'))
+				return `<span style="font-weight:600;color:var(--color-diff-del)">${e}</span>`;
+			if (line.startsWith('+++'))
+				return `<span style="font-weight:600;color:var(--color-diff-add)">${e}</span>`;
+			if (line.startsWith('new file'))
+				return `<span style="color:var(--color-diff-add)">${e}</span>`;
+			if (line.startsWith('+'))
+				return `<span style="color:var(--color-diff-add);background:var(--color-diff-add-bg)">${e}</span>`;
+			if (line.startsWith('-'))
+				return `<span style="color:var(--color-diff-del);background:var(--color-diff-del-bg)">${e}</span>`;
+			if (line.startsWith('@@')) return `<span style="color:var(--color-diff-hunk)">${e}</span>`;
+			return `<span style="color:var(--color-terminal-output)">${e}</span>`;
+		})
+		.join('\n');
 }
 
 function colorizeLog(raw: string): string {
-	return raw.split('\n').map(line => {
-		const e = esc(line);
-		if (/^[0-9a-f]{7}\s/.test(line)) {
-			return e
-				.replace(/^([0-9a-f]{7})/, '<span style="color:var(--color-diff-hash)">$1</span>')
-				.replace(/(\(.*?\))/, '<span style="color:var(--color-diff-meta);font-weight:500">$1</span>');
-		}
-		if (line.startsWith('commit ')) return `<span style="color:var(--color-diff-hash)">${e}</span>`;
-		if (line.startsWith('Author:')) return `<span style="color:var(--color-diff-meta)">${e}</span>`;
-		return `<span style="color:var(--color-terminal-output)">${e}</span>`;
-	}).join('\n');
+	return raw
+		.split('\n')
+		.map((line) => {
+			const e = esc(line);
+			if (/^[0-9a-f]{7}\s/.test(line)) {
+				return e
+					.replace(/^([0-9a-f]{7})/, '<span style="color:var(--color-diff-hash)">$1</span>')
+					.replace(
+						/(\(.*?\))/,
+						'<span style="color:var(--color-diff-meta);font-weight:500">$1</span>'
+					);
+			}
+			if (line.startsWith('commit '))
+				return `<span style="color:var(--color-diff-hash)">${e}</span>`;
+			if (line.startsWith('Author:'))
+				return `<span style="color:var(--color-diff-meta)">${e}</span>`;
+			return `<span style="color:var(--color-terminal-output)">${e}</span>`;
+		})
+		.join('\n');
 }
 
 function parseQuotedMessage(input: string): string | null {
@@ -103,7 +138,8 @@ async function formatStatus(engine: GitEngine): Promise<string> {
 		const localOid = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
 		const remoteOid = engine.remote.getBranch(engine.remote.upstream);
 		if (localOid && remoteOid) {
-			if (localOid === remoteOid) lines.push(`Your branch is up to date with 'origin/${engine.remote.upstream}'.`);
+			if (localOid === remoteOid)
+				lines.push(`Your branch is up to date with 'origin/${engine.remote.upstream}'.`);
 			else lines.push(`Your branch and 'origin/${engine.remote.upstream}' have diverged.`);
 		}
 	}
@@ -137,14 +173,25 @@ async function formatStatus(engine: GitEngine): Promise<string> {
 		for (const f of staged) lines.push(`\tmodified:   ${f}`);
 	}
 	if (unstaged.length > 0) {
-		lines.push('Changes not staged for commit:', '  (use "git add <file>..." to update what will be committed)');
+		lines.push(
+			'Changes not staged for commit:',
+			'  (use "git add <file>..." to update what will be committed)'
+		);
 		for (const f of unstaged) lines.push(`\tmodified:   ${f}`);
 	}
 	if (untracked.length > 0) {
-		lines.push('Untracked files:', '  (use "git add <file>..." to include in what will be committed)');
+		lines.push(
+			'Untracked files:',
+			'  (use "git add <file>..." to include in what will be committed)'
+		);
 		for (const f of untracked) lines.push(`\t${f}`);
 	}
-	if (staged.length === 0 && unstaged.length === 0 && untracked.length === 0 && unmerged.length === 0) {
+	if (
+		staged.length === 0 &&
+		unstaged.length === 0 &&
+		untracked.length === 0 &&
+		unmerged.length === 0
+	) {
 		lines.push('nothing to commit, working tree clean');
 	}
 
@@ -176,11 +223,20 @@ async function formatLog(engine: GitEngine, oneline: boolean, all: boolean): Pro
 		for (const entry of log) {
 			if (seen.has(entry.oid)) continue;
 			seen.add(entry.oid);
-			const headMarker = branch === current || branch === `origin/${current}` ? `(HEAD -> ${branch})` : `(${branch})`;
+			const headMarker =
+				branch === current || branch === `origin/${current}`
+					? `(HEAD -> ${branch})`
+					: `(${branch})`;
 			if (oneline) {
 				lines.push(`${shortOid(entry.oid)} ${headMarker} ${entry.commit.message.split('\n')[0]}`);
 			} else {
-				lines.push(`commit ${entry.oid}`, `Author: ${entry.commit.author.name}`, '', `    ${entry.commit.message}`, '');
+				lines.push(
+					`commit ${entry.oid}`,
+					`Author: ${entry.commit.author.name}`,
+					'',
+					`    ${entry.commit.message}`,
+					''
+				);
 			}
 		}
 	}
@@ -201,8 +257,8 @@ async function runRebase(engine: GitEngine, ontoBranch: string): Promise<Command
 
 	const currentOid = await git.resolveRef({ fs, dir, ref: `refs/heads/${current}` });
 	const ontoOid = ontoBranch.startsWith('origin/')
-		? engine.remote.getBranch(ontoBranch.slice('origin/'.length)) ??
-			(await resolveRemoteBranch(engine, DEFAULT_REMOTE, ontoBranch.slice('origin/'.length)))
+		? (engine.remote.getBranch(ontoBranch.slice('origin/'.length)) ??
+			(await resolveRemoteBranch(engine, DEFAULT_REMOTE, ontoBranch.slice('origin/'.length))))
 		: await git.resolveRef({ fs, dir, ref: `refs/heads/${ontoBranch}` }).catch(() => null);
 
 	if (!ontoOid) return { output: `fatal: invalid upstream '${ontoBranch}'`, error: true };
@@ -227,7 +283,10 @@ async function runRebase(engine: GitEngine, ontoBranch: string): Promise<Command
 			await git.cherryPick({ fs, dir, oid: entry.oid, committer: AUTHOR });
 		} catch (err) {
 			const message = err instanceof Error ? err.message : String(err);
-			return { output: `error: could not apply ${shortOid(entry.oid)}...\n${message}`, error: true };
+			return {
+				output: `error: could not apply ${shortOid(entry.oid)}...\n${message}`,
+				error: true
+			};
 		}
 	}
 
@@ -273,7 +332,9 @@ async function runStash(engine: GitEngine, args: string): Promise<CommandResult>
 		if (!list || (Array.isArray(list) && list.length === 0)) return { output: '' };
 		if (typeof list === 'string') return { output: list };
 		const lines = (list as Array<{ message?: string } | string>).map((entry, i) =>
-			typeof entry === 'string' ? `stash@{${i}}: ${entry}` : `stash@{${i}}: ${entry.message ?? 'WIP'}`
+			typeof entry === 'string'
+				? `stash@{${i}}: ${entry}`
+				: `stash@{${i}}: ${entry.message ?? 'WIP'}`
 		);
 		return { output: lines.join('\n') };
 	}
@@ -326,7 +387,7 @@ async function runPush(engine: GitEngine, args: string): Promise<CommandResult> 
 	const isForceWithLease = args.includes('--force-with-lease');
 	const parts = args.split(/\s+/).filter((p) => !p.startsWith('-'));
 	const remote = parts[0] ?? DEFAULT_REMOTE;
-	let branch = parts[1] ?? (await git.currentBranch({ fs, dir }));
+	const branch = parts[1] ?? (await git.currentBranch({ fs, dir }));
 
 	if (!branch) return { output: 'fatal: no branch checked out', error: true };
 
@@ -399,7 +460,8 @@ async function runRevert(engine: GitEngine, ref: string): Promise<CommandResult>
 
 async function runCat(engine: GitEngine, filepath: string): Promise<CommandResult> {
 	const content = await engine.readFile(filepath);
-	if (content === null) return { output: `cat: ${filepath}: No such file or directory`, error: true };
+	if (content === null)
+		return { output: `cat: ${filepath}: No such file or directory`, error: true };
 	return { output: content };
 }
 
@@ -425,7 +487,11 @@ async function formatDiff(engine: GitEngine, staged: boolean): Promise<string> {
 		let previousContent: string | null = null;
 
 		if (headNum === 1) {
-			previousContent = await readFileAtCommit(engine, await git.resolveRef({ fs, dir, ref: 'HEAD' }), filepath);
+			previousContent = await readFileAtCommit(
+				engine,
+				await git.resolveRef({ fs, dir, ref: 'HEAD' }),
+				filepath
+			);
 		}
 
 		if (currentContent === null) continue;
@@ -555,7 +621,12 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				}
 
 				if (merging && !message) {
-					const oid = await git.commit({ fs: engine.fs, dir: engine.dir, message: 'Merge commit', author: AUTHOR });
+					const oid = await git.commit({
+						fs: engine.fs,
+						dir: engine.dir,
+						message: 'Merge commit',
+						author: AUTHOR
+					});
 					const branch = (await git.currentBranch({ fs: engine.fs, dir: engine.dir })) ?? 'main';
 					return { output: `[${branch} ${shortOid(oid)}] Merge commit` };
 				}
@@ -582,7 +653,10 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 					const branchName = rest.filter((a) => !a.startsWith('-')).pop();
 					if (!branchName) return { output: 'fatal: branch name required', error: true };
 					if (branchName === current) {
-						return { output: `error: Cannot delete branch '${branchName}' checked out at '${engine.dir}'`, error: true };
+						return {
+							output: `error: Cannot delete branch '${branchName}' checked out at '${engine.dir}'`,
+							error: true
+						};
 					}
 					if (!branches.includes(branchName)) {
 						return { output: `error: branch '${branchName}' not found.`, error: true };
@@ -592,12 +666,14 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				}
 
 				if (rest.length === 0 || rest.includes('-a')) {
-					const remoteLines = [...engine.remote.branches.keys()].map((b) => `  remotes/origin/${b}`);
+					const remoteLines = [...engine.remote.branches.keys()].map(
+						(b) => `  remotes/origin/${b}`
+					);
 					return {
-						output: [
-							...branches.map((b) => `${b === current ? '* ' : '  '}${b}`),
-							...remoteLines
-						].join('\n') || 'No branches yet'
+						output:
+							[...branches.map((b) => `${b === current ? '* ' : '  '}${b}`), ...remoteLines].join(
+								'\n'
+							) || 'No branches yet'
 					};
 				}
 				await git.branch({ fs: engine.fs, dir: engine.dir, ref: rest[rest.length - 1] });
@@ -611,7 +687,9 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				if (!name) return { output: 'fatal: missing branch name', error: true };
 				if (create) await git.branch({ fs: engine.fs, dir: engine.dir, ref: name });
 				await git.checkout({ fs: engine.fs, dir: engine.dir, ref: name });
-				return { output: create ? `Switched to a new branch '${name}'` : `Switched to branch '${name}'` };
+				return {
+					output: create ? `Switched to a new branch '${name}'` : `Switched to branch '${name}'`
+				};
 			}
 
 			case 'restore': {
@@ -632,7 +710,13 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				const mixed = rest.includes('--mixed') || (!hard && !soft);
 				const rev = rest.find((r) => !r.startsWith('-')) ?? 'HEAD~1';
 				const oid = await engine.resolveHead(rev);
-				await git.writeRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD', value: oid, force: true });
+				await git.writeRef({
+					fs: engine.fs,
+					dir: engine.dir,
+					ref: 'HEAD',
+					value: oid,
+					force: true
+				});
 				if (hard) {
 					await git.checkout({ fs: engine.fs, dir: engine.dir, ref: oid, force: true });
 				} else if (mixed) {
@@ -666,7 +750,9 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 
 			case 'remote':
 				if (rest.includes('-v')) {
-					return { output: `origin\t${DEFAULT_REMOTE_URL} (fetch)\norigin\t${DEFAULT_REMOTE_URL} (push)` };
+					return {
+						output: `origin\t${DEFAULT_REMOTE_URL} (fetch)\norigin\t${DEFAULT_REMOTE_URL} (push)`
+					};
 				}
 				return { output: '' };
 

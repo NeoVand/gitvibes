@@ -1,12 +1,10 @@
-
-
 > [!TIP]
 > **Learn Git by Doing!**
-> 
+>
 > Reading about Git is valuable, but nothing beats hands-on practice. Before you dive into the rest of this guide, we highly recommend spending 30-60 minutes with [Learn Git Branching](https://learngitbranching.js.org/)—an interactive, visual Git tutorial that runs right in your browser.
-> 
+>
 > This gamified environment lets you experiment with branching, merging, rebasing, and all the "undo" commands in a safe playground where mistakes are not just okay—they're encouraged. You'll build muscle memory for the exact workflows described in this guide, and when you encounter your first real merge conflict or need to rebase a branch, you'll have the confidence to do it correctly.
-> 
+>
 > **Trust me**: 30 minutes of interactive practice now will save you hours of panic later.
 
 <p align="center">
@@ -197,6 +195,7 @@ git clone https://github.com/Your-Enterprise/your-project.git
 ```
 
 If you haven't stored your credentials yet, Git will prompt you:
+
 - **Username:** Enter your GitHub username (not your full name or email)
 - **Password:** Paste your personal access token
 
@@ -459,10 +458,10 @@ graph TD
     B -->|Staged, Not Committed| D([git restore --staged])
     B -->|Committed, Not Pushed| E{Keep Changes?}
     B -->|Pushed to Team| F([git revert])
-    
+
     E -->|Yes| G([git reset --soft])
     E -->|No| H([git reset --hard])
-    
+
     C --> I([Changes Discarded])
     D --> J([Unstaged])
     G --> K([Changes Back to Staging])
@@ -618,15 +617,15 @@ This will create the revert commit for you. All you have to do is push.
 
 ### 4.7. Table: The Git "Undo" Recovery Matrix
 
-| Scenario (What Went Wrong?) | Command | What It Does (Impact on History) | Safe? (Local/Public) | VS Code UI Equivalent |
-|------------------------------|---------|-----------------------------------|----------------------|------------------------|
-| "AI's change is bad, not committed." | `git restore .` | Discards all local changes in the working directory. | Safe (Local Only) | Right-click file → "Discard Changes" |
-| "AI's change was staged by accident." | `git restore --staged <file>` | Unstages a file, moving it from Staging back to Changes. | Safe (Local Only) | Right-click staged file → "Unstage Changes" |
-| "I made a typo in my last commit message." | `git commit --amend` | Edits the message of the most recent commit. | Safe (Local Only) | ... Menu → Commit → Commit (Amend) |
-| "I forgot a file in my last (local) commit." | `git add <file>`<br>`git commit --amend --no-edit` | Adds new files to the most recent commit. | Safe (Local Only) | Stage files → ... Menu → Commit → Commit Staged (Amend) |
-| "My last 3 local commits are all bad." | `git reset --hard HEAD~3` | Destroys the last 3 commits and all their code changes. | Local Only! (Rewrites history) | (Use GitLens) Right-click commit → Reset current branch to commit |
-| "I pushed a bug to the team (public)." | `git revert <commit-hash>` | Creates a new commit that is the inverse of the bad one. | 100% Safe (Public) | (Use GitLens) Right-click commit → "Revert Commit..." |
-| "I reset a public branch and need to push." | `git push --force-with-lease` | Forcefully overwrites the remote branch, only if no one else has pushed. | Enterprise "Break Glass" | (None) Must be done in the terminal. |
+| Scenario (What Went Wrong?)                  | Command                                            | What It Does (Impact on History)                                         | Safe? (Local/Public)           | VS Code UI Equivalent                                             |
+| -------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------ | ----------------------------------------------------------------- |
+| "AI's change is bad, not committed."         | `git restore .`                                    | Discards all local changes in the working directory.                     | Safe (Local Only)              | Right-click file → "Discard Changes"                              |
+| "AI's change was staged by accident."        | `git restore --staged <file>`                      | Unstages a file, moving it from Staging back to Changes.                 | Safe (Local Only)              | Right-click staged file → "Unstage Changes"                       |
+| "I made a typo in my last commit message."   | `git commit --amend`                               | Edits the message of the most recent commit.                             | Safe (Local Only)              | ... Menu → Commit → Commit (Amend)                                |
+| "I forgot a file in my last (local) commit." | `git add <file>`<br>`git commit --amend --no-edit` | Adds new files to the most recent commit.                                | Safe (Local Only)              | Stage files → ... Menu → Commit → Commit Staged (Amend)           |
+| "My last 3 local commits are all bad."       | `git reset --hard HEAD~3`                          | Destroys the last 3 commits and all their code changes.                  | Local Only! (Rewrites history) | (Use GitLens) Right-click commit → Reset current branch to commit |
+| "I pushed a bug to the team (public)."       | `git revert <commit-hash>`                         | Creates a new commit that is the inverse of the bad one.                 | 100% Safe (Public)             | (Use GitLens) Right-click commit → "Revert Commit..."             |
+| "I reset a public branch and need to push."  | `git push --force-with-lease`                      | Forcefully overwrites the remote branch, only if no one else has pushed. | Enterprise "Break Glass"       | (None) Must be done in the terminal.                              |
 
 ---
 
@@ -804,6 +803,7 @@ const x = 5;
 2. Clicking one opens the **3-way Merge Editor**.
 
 **What you see:**
+
 - **Left Pane**: "Incoming" (your teammate's changes)
 - **Right Pane**: "Current" (your local changes)
 - **Bottom Pane**: "Result" (what will be saved)
@@ -826,7 +826,7 @@ graph TD
     A --> C([Timeline & GitLens])
     A --> D([3-Way Merge Editor])
     A --> E([Command Palette])
-    
+
     B --> F([Status, Stage, Commit])
     C --> G([File History & Blame])
     D --> H([Conflict Resolution])

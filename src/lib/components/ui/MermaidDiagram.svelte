@@ -53,31 +53,31 @@
 						activationBkgColor: '#1e2030',
 						activationBorderColor: '#475569',
 						sequenceNumberColor: '#94a3b8',
-				// gitGraph
-				git0: '#db2777',
-				git1: '#059669',
-				git2: '#818cf8',
-				git3: '#d97706',
-				git4: '#a78bfa',
-				git5: '#0891b2',
-				git6: '#65a30d',
-				git7: '#fb923c',
-					gitBranchLabel0: '#e2e8f0',
-					gitBranchLabel1: '#e2e8f0',
-					gitBranchLabel2: '#e2e8f0',
-					gitBranchLabel3: '#e2e8f0',
-					gitBranchLabel4: '#e2e8f0',
-					gitBranchLabel5: '#e2e8f0',
-					gitBranchLabel6: '#e2e8f0',
-					gitBranchLabel7: '#e2e8f0',
-					gitInv0: '#db2777',
-					commitLabelColor: '#94a3b8',
-					commitLabelBackground: '#1e2030',
-					commitLabelFontSize: '12px',
-					tagLabelColor: '#e2e8f0',
-					tagLabelBackground: '#db2777',
-					tagLabelBorder: '#f472b6',
-					tagLabelFontSize: '12px'
+						// gitGraph
+						git0: '#db2777',
+						git1: '#059669',
+						git2: '#818cf8',
+						git3: '#d97706',
+						git4: '#a78bfa',
+						git5: '#0891b2',
+						git6: '#65a30d',
+						git7: '#fb923c',
+						gitBranchLabel0: '#e2e8f0',
+						gitBranchLabel1: '#e2e8f0',
+						gitBranchLabel2: '#e2e8f0',
+						gitBranchLabel3: '#e2e8f0',
+						gitBranchLabel4: '#e2e8f0',
+						gitBranchLabel5: '#e2e8f0',
+						gitBranchLabel6: '#e2e8f0',
+						gitBranchLabel7: '#e2e8f0',
+						gitInv0: '#db2777',
+						commitLabelColor: '#94a3b8',
+						commitLabelBackground: '#1e2030',
+						commitLabelFontSize: '12px',
+						tagLabelColor: '#e2e8f0',
+						tagLabelBackground: '#db2777',
+						tagLabelBorder: '#f472b6',
+						tagLabelFontSize: '12px'
 					}
 				: {
 						// Light mode — flowcharts
@@ -112,31 +112,31 @@
 						activationBkgColor: '#f1f5f9',
 						activationBorderColor: '#94a3b8',
 						sequenceNumberColor: '#64748b',
-					// gitGraph
-					git0: '#db2777',
-					git1: '#059669',
-					git2: '#6366f1',
-					git3: '#d97706',
-					git4: '#8b5cf6',
-					git5: '#06b6d4',
-					git6: '#84cc16',
-					git7: '#ea580c',
-					gitBranchLabel0: '#ffffff',
-					gitBranchLabel1: '#ffffff',
-					gitBranchLabel2: '#ffffff',
-					gitBranchLabel3: '#ffffff',
-					gitBranchLabel4: '#ffffff',
-					gitBranchLabel5: '#ffffff',
-					gitBranchLabel6: '#ffffff',
-					gitBranchLabel7: '#ffffff',
-					gitInv0: '#be185d',
-					commitLabelColor: '#64748b',
-					commitLabelBackground: '#f1f5f9',
-					commitLabelFontSize: '12px',
-					tagLabelColor: '#ffffff',
-					tagLabelBackground: '#db2777',
-					tagLabelBorder: '#be185d',
-					tagLabelFontSize: '12px'
+						// gitGraph
+						git0: '#db2777',
+						git1: '#059669',
+						git2: '#6366f1',
+						git3: '#d97706',
+						git4: '#8b5cf6',
+						git5: '#06b6d4',
+						git6: '#84cc16',
+						git7: '#ea580c',
+						gitBranchLabel0: '#ffffff',
+						gitBranchLabel1: '#ffffff',
+						gitBranchLabel2: '#ffffff',
+						gitBranchLabel3: '#ffffff',
+						gitBranchLabel4: '#ffffff',
+						gitBranchLabel5: '#ffffff',
+						gitBranchLabel6: '#ffffff',
+						gitBranchLabel7: '#ffffff',
+						gitInv0: '#be185d',
+						commitLabelColor: '#64748b',
+						commitLabelBackground: '#f1f5f9',
+						commitLabelFontSize: '12px',
+						tagLabelColor: '#ffffff',
+						tagLabelBackground: '#db2777',
+						tagLabelBorder: '#be185d',
+						tagLabelFontSize: '12px'
 					},
 			gitGraph: {
 				mainBranchName: 'main',
@@ -205,7 +205,10 @@
 					m.default.initialize(getMermaidConfig(isDark()));
 					renderCount++;
 				});
-				themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+				themeObs.observe(document.documentElement, {
+					attributes: true,
+					attributeFilter: ['class']
+				});
 			});
 			return;
 		}
@@ -218,6 +221,7 @@
 		mermaidModule.default
 			.render(uniqueId, definition)
 			.then(({ svg }) => {
+				// eslint-disable-next-line svelte/no-dom-manipulating -- dedicated mount point
 				container.innerHTML = svg;
 
 				const svgEl = container.querySelector('svg');
@@ -241,6 +245,7 @@
 			})
 			.catch((err) => {
 				console.warn('Mermaid render error:', err);
+				// eslint-disable-next-line svelte/no-dom-manipulating -- dedicated mount point
 				container.innerHTML = `<p style="color: var(--color-text-muted); font-size: 12px;">Diagram loading...</p>`;
 			});
 	});
@@ -261,5 +266,4 @@
 	.mermaid-container :global(.commit-msg) {
 		font-size: 11px !important;
 	}
-
 </style>

@@ -2,11 +2,7 @@
 	import { Monitor, Maximize2 } from 'lucide-svelte';
 	import ImageLightbox from './ImageLightbox.svelte';
 
-	let {
-		src,
-		alt,
-		caption = ''
-	}: { src: string; alt: string; caption?: string } = $props();
+	let { src, alt, caption = '' }: { src: string; alt: string; caption?: string } = $props();
 
 	const baseUrl = 'https://code.visualstudio.com/assets/docs/sourcecontrol';
 
@@ -15,21 +11,18 @@
 	const imageUrl = $derived(src.startsWith('http') ? src : `${baseUrl}/${src}`);
 </script>
 
-<figure
-	class="my-5 overflow-hidden rounded-lg"
-	style="background: var(--color-bg-tertiary);"
->
+<figure class="my-5 overflow-hidden rounded-lg" style="background: var(--color-bg-tertiary);">
 	<div class="group flex items-center justify-between px-4 py-2">
 		<span class="flex items-center gap-2">
 			<Monitor size={14} style="color: var(--color-primary);" />
-			<span class="text-xs font-medium" style="color: var(--color-text-secondary);">
-				VS Code
-			</span>
+			<span class="text-xs font-medium" style="color: var(--color-text-secondary);"> VS Code </span>
 		</span>
 		<button
 			type="button"
 			onclick={() => (open = true)}
-			class="flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity {open ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}"
+			class="flex cursor-pointer items-center gap-1.5 rounded px-2 py-0.5 text-xs transition-opacity {open
+				? 'opacity-100'
+				: 'opacity-0 group-hover:opacity-100'}"
 			style="color: var(--color-text-muted);"
 			aria-label="Expand screenshot"
 		>
@@ -54,10 +47,7 @@
 		</button>
 	</div>
 	{#if caption}
-		<figcaption
-			class="px-4 py-2.5 text-xs"
-			style="color: var(--color-text-muted);"
-		>
+		<figcaption class="px-4 py-2.5 text-xs" style="color: var(--color-text-muted);">
 			{caption}
 		</figcaption>
 	{/if}

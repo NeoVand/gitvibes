@@ -19,13 +19,15 @@ function resolveSectionId(command: string, category: string): string {
 
 	if (cmd.includes('stash')) return 'section-5-1';
 	if (cmd.includes('rebase') || cmd.includes('cherry-pick')) return 'section-5-2';
-	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth')) return 'section-1-2';
+	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth'))
+		return 'section-1-2';
 	if (cmd.includes('config') || cmd.includes('init')) return 'section-1-1';
 	if (cmd.includes('clone')) return 'section-1-3';
 	if (cmd.startsWith('git status')) return 'section-2-1';
 	if (cmd.includes('git add') || cmd.includes('git diff')) return 'section-2-2';
 	if (cmd.includes('commit')) return 'section-2-3';
-	if (cmd.includes('switch') || (cmd.includes('branch') && !cmd.includes('remote'))) return 'section-3-1';
+	if (cmd.includes('switch') || (cmd.includes('branch') && !cmd.includes('remote')))
+		return 'section-3-1';
 	if (cmd.includes('fetch') || cmd.includes('pull')) return 'section-3-2';
 	if (cmd.includes('push') || cmd.includes('remote')) return 'section-3-3';
 	if (cmd.includes('restore --staged') || cmd === 'git reset <file>') return 'section-4-2';
@@ -36,7 +38,12 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('force')) return 'section-4-6';
 	if (cmd.includes('merge')) return 'section-5-2';
 	if (cmd.includes('log') || cmd.includes('show') || cmd.includes('blame')) return 'section-6-2';
-	if (cmd.includes('bisect') || cmd.includes('reflog') || cmd.includes('submodule') || cmd.includes('worktree')) {
+	if (
+		cmd.includes('bisect') ||
+		cmd.includes('reflog') ||
+		cmd.includes('submodule') ||
+		cmd.includes('worktree')
+	) {
 		return 'section-7-2';
 	}
 	if (cmd.includes('tag')) return 'section-7-2';
@@ -120,7 +127,8 @@ const topicEntries: SearchEntry[] = [
 		sectionId: 'section-1-2',
 		title: 'Authentication: tokens & SSH keys',
 		part: 'Enterprise Onboarding',
-		description: 'Authenticate to GitHub over HTTPS with a personal access token or over SSH with a key pair.',
+		description:
+			'Authenticate to GitHub over HTTPS with a personal access token or over SSH with a key pair.',
 		keywords: [
 			'authentication',
 			'auth',

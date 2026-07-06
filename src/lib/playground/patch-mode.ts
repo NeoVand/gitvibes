@@ -18,7 +18,9 @@ export async function startPatchSession(engine: GitEngine, targetFile?: string):
 	}
 
 	if (unstaged.length === 0) {
-		return targetFile ? `No unstaged changes in ${targetFile}` : 'No unstaged changes to stage interactively.';
+		return targetFile
+			? `No unstaged changes in ${targetFile}`
+			: 'No unstaged changes to stage interactively.';
 	}
 
 	engine.patchSession = { files: unstaged, index: 0 };
