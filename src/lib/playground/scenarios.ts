@@ -1,8 +1,13 @@
 import type { RepoSeed, GitEngine } from './git-engine';
 import {
 	buildBranchingRepo,
+	buildCherryPickRepo,
+	buildDetachedHeadRepo,
 	buildMergeConflictRepo,
 	buildMergeRebaseRepo,
+	buildRebaseConflictRepo,
+	buildReflogRescueRepo,
+	buildReleaseRepo,
 	buildSyncRemoteRepo,
 	buildUndoRepo,
 	buildWrongBranchRepo,
@@ -216,6 +221,80 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		seedFn: buildForcePushRepo
 	},
 	{
+		id: 'reflog-rescue',
+		title: 'The agent reset --hard — rescue lost commits',
+		description:
+			'An agent ran git reset --hard HEAD~2 and two commits vanished from the log. Nothing is truly lost: the reflog remembers every place HEAD has been. Find the lost commit and bring it back.',
+		hint: 'git log shows only what is reachable — git reflog shows everything HEAD touched. Find the hash from before the reset, then git reset --hard <hash> to restore it (or cherry-pick individual commits).',
+		suggestedCommands: [
+			'git log --oneline',
+			'git reflog',
+			'git reset --hard HEAD@{1}',
+			'git log --oneline'
+		],
+		seedFn: buildReflogRescueRepo
+	},
+	{
+		id: 'rebase-conflict',
+		title: 'Rebase hits a conflict — resolve or abort',
+		description:
+			'Your feature branch tuned src/config.py, but main changed the same lines. Rebasing onto main stops at a conflict. Resolve it and continue — or abort and return to safety.',
+		hint: 'Run git rebase main and read the conflict message. Fix the file with echo, git add it, then git rebase --continue. If you get lost, git rebase --abort restores the branch exactly as it was.',
+		suggestedCommands: [
+			'git log --oneline --all',
+			'git rebase main',
+			'cat src/config.py',
+			"echo 'TIMEOUT = 120\\nRETRIES = 5' > src/config.py",
+			'git add src/config.py',
+			'git rebase --continue'
+		],
+		seedFn: buildRebaseConflictRepo
+	},
+	{
+		id: 'cherry-pick',
+		title: 'Grab the one good commit from a messy branch',
+		description:
+			'The experiment branch is mostly half-finished work, but it contains one gem: a currency rounding fix. Bring exactly that commit to main and leave the rest behind.',
+		hint: 'git log --oneline --all shows the experiment commits. git cherry-pick <hash> (or cherry-pick experiment for the branch tip) copies a single commit onto your current branch.',
+		suggestedCommands: [
+			'git log --oneline --all',
+			'git cherry-pick experiment',
+			'git log --oneline',
+			'cat src/billing.py'
+		],
+		seedFn: buildCherryPickRepo
+	},
+	{
+		id: 'detached-head',
+		title: 'Time-travel to an old commit — and escape safely',
+		description:
+			"Version 0.4 is misbehaving and you want to inspect how 0.2 looked. Checking out an old commit puts you in 'detached HEAD' state — look around, then escape with your work intact.",
+		hint: 'git checkout HEAD~2 detaches HEAD at the old commit — cat files to inspect. To keep any work made there, git switch -c <branch>. To just leave, git switch main.',
+		suggestedCommands: [
+			'git log --oneline',
+			'git checkout HEAD~2',
+			'cat src/app.py',
+			'git switch -c inspect-v02',
+			'git switch main'
+		],
+		seedFn: buildDetachedHeadRepo
+	},
+	{
+		id: 'release-tags',
+		title: 'Cut a release — tag and inspect it',
+		description:
+			'v1.0.0 shipped two commits ago and the import feature is ready. Mark the current commit as v1.1.0 with an annotated tag, then inspect what each release points at.',
+		hint: 'git tag -a v1.1.0 -m "message" creates an annotated tag at HEAD. Plain git tag lists tags, git show v1.1.0 inspects one, and git log --oneline shows tag decorations.',
+		suggestedCommands: [
+			'git log --oneline',
+			'git tag -a v1.1.0 -m "Release: import support"',
+			'git tag',
+			'git log --oneline',
+			'git show v1.1.0'
+		],
+		seedFn: buildReleaseRepo
+	},
+	{
 		id: 'clean-slate',
 		title: 'Playground — start from scratch',
 		description:
@@ -264,7 +343,12 @@ export const lessonScenarioIds = [
 	'conflicts',
 	'wrong-branch',
 	'accidental-stage',
-	'force-push'
+	'force-push',
+	'reflog-rescue',
+	'rebase-conflict',
+	'cherry-pick',
+	'detached-head',
+	'release-tags'
 ] as const;
 
 export type LessonScenarioId = (typeof lessonScenarioIds)[number];

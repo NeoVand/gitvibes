@@ -181,3 +181,96 @@ export async function buildForcePushRepo(engine: GitEngine): Promise<void> {
 	engine.remote.upstream = 'feature/cleanup';
 	await writeRemoteTrackingRef(engine, 'origin', 'feature/cleanup', pushedOid);
 }
+
+/** Three commits, then a disastrous reset --hard that "lost" two of them */
+export async function buildReflogRescueRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'README.md', content: '# Search Service\n' }
+	]);
+	await engine.commitFiles('feat: add ranking algorithm', [
+		{ path: 'src/ranking.py', content: 'def rank(results):\n    return sorted(results)\n' }
+	]);
+	await engine.commitFiles('feat: add caching layer', [
+		{ path: 'src/cache.py', content: 'cache = {}\n' }
+	]);
+
+	// The "agent disaster": a hard reset two commits back
+	const target = await engine.getCommitOid('main', 2);
+	await git.writeRef({
+		fs: engine.fs,
+		dir: engine.dir,
+		ref: 'refs/heads/main',
+		value: target,
+		force: true
+	});
+	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main', force: true });
+	engine.recordReflog(target, 'reset: moving to HEAD~2 (--hard)');
+}
+
+/** feature branch diverged from main, both editing src/config.py */
+export async function buildRebaseConflictRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/config.py', content: 'TIMEOUT = 30\nRETRIES = 3\n' }
+	]);
+
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/tuning', checkout: true });
+	await engine.commitFiles('feat: increase timeout for slow APIs', [
+		{ path: 'src/config.py', content: 'TIMEOUT = 120\nRETRIES = 3\n' }
+	]);
+
+	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main' });
+	await engine.commitFiles('fix: lower timeout after load test', [
+		{ path: 'src/config.py', content: 'TIMEOUT = 10\nRETRIES = 5\n' }
+	]);
+
+	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'feature/tuning' });
+}
+
+/** experiment branch with one gem commit worth cherry-picking to main */
+export async function buildCherryPickRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/billing.py', content: 'def total(items):\n    return sum(items)\n' }
+	]);
+
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'experiment', checkout: true });
+	await engine.commitFiles('wip: half-finished dashboard rewrite', [
+		{ path: 'src/dashboard.py', content: '# TODO: everything\n' }
+	]);
+	await engine.commitFiles('fix: round currency to 2 decimal places', [
+		{ path: 'src/billing.py', content: 'def total(items):\n    return round(sum(items), 2)\n' }
+	]);
+
+	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main' });
+}
+
+/** Linear history with a known-good older commit to explore */
+export async function buildDetachedHeadRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/app.py', content: 'VERSION = "0.1"\n' }
+	]);
+	await engine.commitFiles('feat: version 0.2 — stable', [
+		{ path: 'src/app.py', content: 'VERSION = "0.2"\n' }
+	]);
+	await engine.commitFiles('feat: version 0.3 — big refactor', [
+		{ path: 'src/app.py', content: 'VERSION = "0.3"  # refactored\n' }
+	]);
+	await engine.commitFiles('feat: version 0.4 — experimental', [
+		{ path: 'src/app.py', content: 'VERSION = "0.4"  # experimental\n' }
+	]);
+}
+
+/** History ready for a release tag, with one previous release tagged */
+export async function buildReleaseRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# CLI Tool\n' }]);
+	await engine.commitFiles('feat: add export command', [
+		{ path: 'src/export.py', content: 'def export():\n    pass\n' }
+	]);
+	const v1 = await engine.getCommitOid('main', 0);
+	await git.tag({ fs: engine.fs, dir: engine.dir, ref: 'v1.0.0', object: v1 });
+	await engine.commitFiles('feat: add import command', [
+		{ path: 'src/import.py', content: 'def import_data():\n    pass\n' }
+	]);
+	await engine.commitFiles('fix: handle empty exports', [
+		{ path: 'src/export.py', content: 'def export():\n    return []\n' }
+	]);
+}

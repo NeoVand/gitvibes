@@ -334,3 +334,47 @@ describe('misc new commands', () => {
 		expect(messages).toContain('teammate work');
 	});
 });
+
+describe('new scenarios seed and play correctly', () => {
+	it('reflog-rescue: the lost commit is recoverable', async () => {
+		const { getScenario, loadScenarioSeed } = await import('./scenarios');
+		await loadScenarioSeed(engine, getScenario('reflog-rescue'));
+		const logBefore = await git.log({ fs: engine.fs, dir: engine.dir });
+		expect(logBefore).toHaveLength(1);
+
+		const result = await run('git reset --hard HEAD@{1}');
+		expect(result.error).toBeFalsy();
+		const logAfter = await git.log({ fs: engine.fs, dir: engine.dir });
+		expect(logAfter.map((e) => e.commit.message.trim())).toContain('feat: add caching layer');
+	});
+
+	it('rebase-conflict: conflict, resolve, continue', async () => {
+		const { getScenario, loadScenarioSeed } = await import('./scenarios');
+		await loadScenarioSeed(engine, getScenario('rebase-conflict'));
+		const rebase = await run('git rebase main');
+		expect(rebase.error).toBe(true);
+		expect(rebase.output).toContain('config.py');
+		await engine.writeFile('src/config.py', 'TIMEOUT = 120\nRETRIES = 5\n');
+		await run('git add src/config.py');
+		const cont = await run('git rebase --continue');
+		expect(cont.output).toContain('Successfully rebased');
+	});
+
+	it('cherry-pick scenario: the gem lands on main without the junk', async () => {
+		const { getScenario, loadScenarioSeed } = await import('./scenarios');
+		await loadScenarioSeed(engine, getScenario('cherry-pick'));
+		const result = await run('git cherry-pick experiment');
+		expect(result.error).toBeFalsy();
+		expect(await engine.readFile('src/billing.py')).toContain('round(sum(items), 2)');
+		expect(await engine.readFile('src/dashboard.py')).toBeNull();
+	});
+
+	it('release-tags: v1.0.0 pre-seeded, annotated v1.1.0 works', async () => {
+		const { getScenario, loadScenarioSeed } = await import('./scenarios');
+		await loadScenarioSeed(engine, getScenario('release-tags'));
+		expect((await run('git tag')).output).toContain('v1.0.0');
+		await run('git tag -a v1.1.0 -m "Release: import support"');
+		const show = await run('git show v1.1.0');
+		expect(show.error).toBeFalsy();
+	});
+});
