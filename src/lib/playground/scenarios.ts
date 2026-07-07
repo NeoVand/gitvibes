@@ -499,6 +499,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git bisect good v1.0',
 			'run-tests',
 			'git bisect bad',
+			'git bisect good',
 			'git bisect reset'
 		],
 		seedFn: buildBisectRepo,
@@ -566,7 +567,14 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		description:
 			'Everything at once: a payment feature was committed straight to main, a live Stripe key is sitting STAGED, and the cleaned-up main still needs its v1.0.0 release tag. Fix all three.',
 		hint: 'Three tasks, any order: (1) unstage .env so the secret never gets committed; (2) move the payment commit to a feature branch (create the branch, then reset main back one commit); (3) put an annotated v1.0.0 tag on the cleaned-up main. Everything you need is in Parts 2-5.',
-		suggestedCommands: ['git status', 'git log --oneline', 'git restore --staged .env'],
+		suggestedCommands: [
+			'git status',
+			'git log --oneline',
+			'git restore --staged .env',
+			'git branch feature/payments',
+			'git reset --hard HEAD~1',
+			'git tag -a v1.0.0 -m "First stable release"'
+		],
 		seedFn: buildCapstoneRepo,
 		goal: 'Secret unstaged, payment commit on its own branch, main tagged v1.0.0',
 		check: async (engine) => {
