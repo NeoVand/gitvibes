@@ -87,8 +87,8 @@
 
 			<CodeBlock
 				title="Create and switch to a new branch"
-				code={`git switch -c "feature/my-new-idea"
-# Older equivalent: git checkout -b "feature/my-new-idea"`}
+				code={`git switch -c feature/my-new-idea
+# Older equivalent: git checkout -b feature/my-new-idea`}
 			/>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -121,11 +121,15 @@
 			/>
 
 			<Callout type="tip">
-				You are now in a perfect, safe copy of <code
+				Your new branch starts exactly where <code
 					class="rounded px-1.5 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>. If the AI destroys everything, it does not matter. Simply discard this branch and switch
-				back. <strong>This workflow enables fearless experimentation.</strong>
+				>
+				is — but it isn't a copy of anything. A branch is just a <em>label</em> pointing at a commit
+				(which is why creating one is instant, and why you can have hundreds). From here on, new
+				commits move <em>your</em> label while main's stays put. If the AI destroys everything, it
+				does not matter: discard the branch and switch back.
+				<strong>This workflow enables fearless experimentation.</strong>
 			</Callout>
 
 			<Callout type="warning">
@@ -141,7 +145,17 @@
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
-				> in Part 4). Try it yourself below:
+				>
+				in Part 4). One precondition: make sure
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
+				>
+				is clean first —
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--hard</code
+				> also wipes any uncommitted edits, and those have no undo. Try it yourself below:
 			</Callout>
 
 			<h4
@@ -254,6 +268,41 @@ git merge origin/main   # Merge the updates into your branch`}
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
 				>
 				is just a "black box" shortcut.
+			</Callout>
+
+			<Callout type="important">
+				<strong
+					>When plain <code
+						class="rounded px-1.5 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
+					> refuses to run:</strong
+				>
+				if your branch and the remote have <em>both</em> moved (you committed locally, a teammate
+				pushed), modern Git stops with
+				<code
+					class="mt-1 mb-1 block rounded px-2 py-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>fatal: Need to specify how to reconcile divergent branches.</code
+				>
+				It's asking which strategy you want:
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git pull --no-rebase</code
+				>
+				(merge, like this section) or
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git pull --rebase</code
+				>
+				(replay your commits on top — the cleaner habit you'll learn in section 5.2). Pick a default once
+				with
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git config --global pull.rebase true</code
+				> and you'll never see the error again.
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -384,7 +433,7 @@ git merge origin/main   # Merge the updates into your branch`}
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				You don't even need to leave VS Code to create a PR. Install the <strong
-					>GitHub Pull Requests and Issues</strong
+					>GitHub Pull Requests</strong
 				> extension and you can create PRs, review diffs, add comments, approve, and merge -- all without
 				opening your browser:
 			</p>
