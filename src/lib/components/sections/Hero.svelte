@@ -55,11 +55,17 @@
 		/>
 	</div>
 
-	<!-- Quick links -->
+	<!-- Welcome + quick links -->
 	<div class="mx-auto mb-16 max-w-4xl">
+		<p class="mb-5 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+			<strong style="color: var(--color-text);">Welcome!</strong> This guide takes you from your first
+			commit to running AI coding agents with confidence — every concept explained visually, then practiced
+			hands-on. Two companions will follow you through all eight parts:
+		</p>
+
 		<div class="space-y-3">
 			<div
-				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
+				class="flex items-start gap-3 rounded-lg px-5 py-4 text-left"
 				style="background: var(--color-important-bg);"
 			>
 				<Gamepad2 size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-important);" />
@@ -76,7 +82,7 @@
 			</div>
 
 			<div
-				class="inline-flex items-start gap-3 rounded-lg px-5 py-4 text-left"
+				class="flex items-start gap-3 rounded-lg px-5 py-4 text-left"
 				style="background: var(--color-surface);"
 			>
 				<ScrollText size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-primary);" />

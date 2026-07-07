@@ -63,8 +63,7 @@
 
 		<button
 			onclick={onToggleCheatSheet}
-			class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-opacity hover:opacity-70"
-			style="color: var(--color-text-muted);"
+			class="cheatsheet-btn flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all"
 			aria-label="Git Cheat Sheet"
 		>
 			<ScrollText size={16} />
@@ -186,5 +185,15 @@
 
 	.playground-btn:hover {
 		background: color-mix(in srgb, var(--color-important) 10%, transparent);
+	}
+
+	/* Same inviting treatment as the playground button, in the cheat
+	   sheet's accent — matching its "Quick reference" callout on the page */
+	.cheatsheet-btn {
+		color: var(--color-primary);
+	}
+
+	.cheatsheet-btn:hover {
+		background: color-mix(in srgb, var(--color-primary) 10%, transparent);
 	}
 </style>

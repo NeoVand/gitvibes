@@ -108,31 +108,34 @@
 
 {#snippet commandRow(cmd: { command: string; description: string })}
 	{@const isCopied = copiedCommand === cmd.command}
+	<!-- The copy affordance overlays on hover instead of reserving a column —
+	     in the 336px panel that width is the difference between commands
+	     fitting on one line and wrapping -->
 	<button
 		onclick={() => copyCommand(cmd.command)}
-		class="group block w-full cursor-pointer rounded-md px-2 py-[6px] text-left transition-colors"
+		class="group relative block w-full cursor-pointer rounded-md px-1.5 py-[6px] text-left transition-colors"
 		style="background: transparent;"
 		title="Click to copy"
 	>
-		<div class="flex items-start gap-1.5">
-			<code
-				class="inline-block rounded px-1 py-0.5 text-[11px] leading-relaxed break-all"
-				style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
-				>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span class="tok tok-{token.type}"
-						>{token.text}</span
-					>{/each}</code
-			>
-			<span
-				class="mt-0.5 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-				style="color: {isCopied ? 'var(--color-tip)' : 'var(--color-text-muted)'};"
-			>
-				{#if isCopied}
-					<Check size={11} />
-				{:else}
-					<Copy size={11} />
-				{/if}
-			</span>
-		</div>
+		<code
+			class="block w-fit max-w-full rounded px-1 py-0.5 text-[11px] leading-relaxed break-all"
+			style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
+			>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span class="tok tok-{token.type}"
+					>{token.text}</span
+				>{/each}</code
+		>
+		<span
+			class="absolute top-[7px] right-1 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+			style="color: {isCopied
+				? 'var(--color-tip)'
+				: 'var(--color-text-muted)'}; background: var(--color-bg-secondary);"
+		>
+			{#if isCopied}
+				<Check size={11} />
+			{:else}
+				<Copy size={11} />
+			{/if}
+		</span>
 		<p class="mt-0.5 text-[11px] leading-snug" style="color: var(--color-text-muted);">
 			{cmd.description}
 		</p>
@@ -155,7 +158,7 @@
 
 <!-- Right-side sliding panel -->
 <aside
-	class="cheat-panel fixed top-0 right-0 bottom-0 z-40 flex w-80 flex-col border-l transition-transform duration-200 ease-out"
+	class="cheat-panel fixed top-0 right-0 bottom-0 z-40 flex w-84 flex-col border-l transition-transform duration-200 ease-out"
 	style="padding-top: var(--header-height); border-color: var(--color-border);"
 	class:translate-x-0={open}
 	class:translate-x-full={!open}
@@ -218,7 +221,7 @@
 	</div>
 
 	<!-- Scrollable command list -->
-	<div class="flex-1 overflow-y-auto px-3 py-3" use:autohideScroll>
+	<div class="flex-1 overflow-y-auto px-2 py-2.5" use:autohideScroll>
 		{#each filteredCategories as category (category.label)}
 			{@const IconComponent = iconMap[category.icon]}
 			{@const isExpanded = expandedCategories.has(category.label)}
@@ -243,12 +246,10 @@
 					/>
 				</button>
 
-				<!-- Commands -->
+				<!-- Commands: no guide line, minimal indent — the 320px panel
+				     needs every pixel to keep commands on one line -->
 				{#if isExpanded}
-					<div
-						class="mt-0.5 ml-[22px] space-y-px border-l pl-2.5"
-						style="border-color: var(--color-border);"
-					>
+					<div class="mt-0.5 ml-1 space-y-px">
 						{#each category.commands as cmd (cmd.command)}
 							{@render commandRow(cmd)}
 						{/each}
@@ -335,8 +336,8 @@
 						{@const IconComponent = iconMap[category.icon]}
 						<section class="cheat-modal-category mb-4">
 							<h3
-								class="mb-1 flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[13px] font-semibold"
-								style="color: var(--color-text-secondary); background: color-mix(in srgb, var(--color-primary) 8%, transparent); border-left: 3px solid var(--color-primary);"
+								class="mb-1.5 flex items-center gap-2 px-1 pb-1.5 text-[13px] font-semibold"
+								style="color: var(--color-text); border-bottom: 1px solid var(--color-border);"
 							>
 								{#if IconComponent}
 									<IconComponent size={14} strokeWidth={2} />
