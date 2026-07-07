@@ -141,12 +141,32 @@
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>git reset --hard HEAD~1</code
 				>
-				to remove the commit from main (you'll master
+				to remove the commit from main. (Reading that address:
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">HEAD</code
+				>
+				is the commit you're standing on, and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">~1</code
+				>
+				means "one step back" — so
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">HEAD~1</code
+				>
+				is the previous commit,
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">HEAD~3</code
+				>
+				three commits back.) You'll master
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
 				>
-				in Part 4). One precondition: make sure
+				in Part 4. One precondition: make sure
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
@@ -422,6 +442,49 @@ git merge origin/main   # Merge the updates into your branch`}
 				>.
 			</Callout>
 
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				The Modern PR Arc: Draft → Ready → Review → Merge
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Open work-in-progress as a <strong>draft PR</strong> — visible to the team, CI running, but explicitly
+				not asking for review yet. Click "Ready for review" when it is. Drafts stopped being a nicety
+				in the agent era: every cloud coding agent (GitHub Copilot's coding agent, Claude, Codex, Devin)
+				delivers its work as a draft PR for you to review — so this arc is the one you'll live in daily.
+			</p>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Two more things you'll meet on your first real PR:
+			</p>
+
+			<ul
+				class="mb-4 list-inside list-disc space-y-1.5 text-[13px]"
+				style="color: var(--color-text-secondary);"
+			>
+				<li>
+					<strong>The merge button is a menu.</strong> "Merge commit" preserves your branch's
+					commits; <strong>"Squash and merge"</strong> (the most common team default) collapses the whole
+					PR into one clean commit on main; "Rebase and merge" replays them individually. Squash is why
+					messy WIP commits on your branch are fine — they vanish at the gate.
+				</li>
+				<li>
+					<strong>An AI reviewer may get there first.</strong> Many repos auto-request a review from GitHub
+					Copilot (or a similar bot). Read it like a helpful-but-junior teammate: it only ever leaves
+					comments — it never counts toward the required human approval, and it's sometimes wrong. Push
+					back when it is.
+				</li>
+			</ul>
+
+			<Callout type="note">
+				Teams enforce all of this with <strong>rulesets</strong> (repo Settings → Rules) — require a
+				PR, require passing checks, require an approval before anything reaches
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
+				>. If your push to main is rejected at work, that's not an error — that's the process
+				working.
+			</Callout>
+
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				Writing a good PR description can feel tedious, but AI tools can help with that too:
 			</p>
@@ -430,6 +493,24 @@ git merge origin/main   # Merge the updates into your branch`}
 				<strong>AI Integration:</strong> GitHub Copilot can write your PR descriptions by summarizing
 				your commits. Claude Code can even automate the PR creation process.
 			</Callout>
+
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				After the Merge: Leave the Campsite Clean
+			</h4>
+
+			<CodeBlock
+				title="Post-merge hygiene"
+				code={`git switch main
+git pull                  # Bring the merged work home
+git branch -d feature/my-new-idea   # Delete the merged branch (-d is safe:
+                                    # it refuses if work isn't merged)
+git fetch --prune         # Drop tracking refs for branches deleted on GitHub`}
+			/>
+
+			<p class="mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				(GitHub can auto-delete the remote branch on merge — repo Settings → General →
+				"Automatically delete head branches." Turn it on; nobody misses stale branches.)
+			</p>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				You don't even need to leave VS Code to create a PR. Install the <strong
