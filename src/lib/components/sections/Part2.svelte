@@ -212,6 +212,47 @@ Untracked files:
 			</Callout>
 
 			<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Step Zero: Actually Read the Diff
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
+				>
+				tells you <em>which</em> files changed;
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git diff</code
+				>
+				shows you <em>what</em> changed inside them — removed lines in red with a
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">-</code
+				>, added lines in green with a
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">+</code
+				>. It's the terminal twin of the VS Code Diff Editor you'll meet below, and it's the command
+				every AI agent runs before staging (Part 6 makes it a rule).
+			</p>
+
+			<CodeBlock
+				title="The two diffs you'll run constantly"
+				code={`git diff            # Unstaged changes: working directory vs staging area
+git diff --staged   # Staged changes: what the next commit will contain`}
+			/>
+
+			<Callout type="tip">
+				Make <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git diff --staged</code
+				> your ritual final check: it shows exactly — and only — what's about to be frozen into the commit.
+				If a secret or debug print shows up there, you just caught it in time.
+			</Callout>
+
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				Option 1: Stage All (the "trusting" add)
 			</h4>
 			<CodeBlock code="git add ." title="Stage everything" />
@@ -501,10 +542,61 @@ Untracked files:
 				</table>
 			</div>
 
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Where the "Why" Actually Goes: the Body
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				The subject line above says <em>what</em> changed. The "why" lives in the commit
+				<strong>body</strong> — a blank line after the subject, then as many lines of context as the
+				change deserves. Run
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
+				>
+				with <em>no</em>
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">-m</code
+				>
+				and Git opens your editor (VS Code, if you set
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">core.editor</code
+				> in Part 1) for exactly this:
+			</p>
+
+			<CodeBlock
+				title="A commit message with a body"
+				code={`fix(auth): reject expired tokens before the DB lookup
+
+The AI's first fix checked expiry after loading the user, which
+let expired tokens trigger a full query. Checking first avoids
+the load and matches how the session middleware already behaves.`}
+			/>
+
+			<p class="mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				Save and close the editor tab, and the commit completes. (Changed your mind? Close it with
+				an
+				<em>empty</em> message and Git aborts the commit.)
+			</p>
+
 			<Callout type="tip">
-				<strong>AI Integration:</strong> GitHub Copilot and Cursor can analyze your staged changes and
-				suggest a commit message. Always verify it follows your team's standards.
+				<strong>AI Integration:</strong> GitHub Copilot and Cursor can analyze your staged changes
+				and suggest a commit message. Always verify it follows your team's standards — and remember
+				the bar: six months from now, does this message explain <em>why</em>?
 			</Callout>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				One last habit: prove to yourself the save point exists. Right after committing, run
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git log --oneline -1</code
+				>
+				— one line, your hash and message. (That's also the final step Part 6 teaches agents: commit,
+				then report the hash.)
+			</p>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				In VS Code, committing is just as simple: type your message in the input box at the top of
