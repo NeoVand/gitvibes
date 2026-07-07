@@ -35,7 +35,12 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('switch') || (cmd.includes('branch') && !cmd.includes('remote')))
 		return 'section-3-1';
 	if (cmd.includes('fetch') || cmd.includes('pull')) return 'section-3-2';
-	if (cmd.includes('push') || cmd.includes('remote')) return 'section-3-3';
+	// Tag pushes must win over the generic push rule below. Written precisely
+	// so '--staged' (which contains 'tag') never matches.
+	if (cmd.startsWith('git tag') || cmd.includes('--tags') || cmd.includes('<tag>'))
+		return 'section-5-6';
+	if (cmd.includes('push')) return 'section-3-3';
+	if (cmd.includes('remote')) return 'section-3-2';
 	if (cmd.includes('restore --staged') || cmd === 'git reset <file>') return 'section-4-2';
 	if (cmd.includes('restore') || cmd.includes('clean')) return 'section-4-1';
 	if (cmd.includes('amend')) return 'section-4-3';
@@ -180,6 +185,8 @@ const topicEntries: SearchEntry[] = [
 			'conflict markers',
 			'<<<<<<',
 			'resolve conflict',
+			'fix conflict',
+			'fix conflicts',
 			'both modified'
 		],
 		kind: 'topic'
@@ -199,7 +206,88 @@ const topicEntries: SearchEntry[] = [
 		title: 'Undo decision guide',
 		part: 'Undo Toolkit',
 		description: 'Pick the right undo command for local, staged, committed, or pushed mistakes.',
-		keywords: ['undo', 'undo matrix', 'recovery matrix', 'which command', 'mistake', 'recover'],
+		keywords: [
+			'undo',
+			'undo matrix',
+			'recovery matrix',
+			'which command',
+			'mistake',
+			'recover',
+			'oops',
+			'accidentally',
+			'panic',
+			'i messed up',
+			'help'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-undo-last-commit',
+		sectionId: 'section-4-4',
+		title: 'Undo the last commit',
+		part: 'Undo Toolkit',
+		description: 'Use git reset to un-commit — soft keeps changes staged, mixed keeps them unstaged.',
+		keywords: [
+			'uncommit',
+			'undo commit',
+			'undo last commit',
+			'delete last commit',
+			'remove last commit',
+			'take back commit',
+			'reset commit'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-wrong-branch',
+		sectionId: 'section-3-1',
+		title: 'Committed on the wrong branch',
+		part: 'Branching & PRs',
+		description: 'Move an accidental commit off main and onto a proper feature branch.',
+		keywords: [
+			'wrong branch',
+			'committed to main',
+			'committed on main',
+			'move commit',
+			'move commit to branch',
+			'accidental commit'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-force-push',
+		sectionId: 'section-4-6',
+		title: 'Force push, safely',
+		part: 'Undo Toolkit',
+		description:
+			'Rewrite pushed history with --force-with-lease, the force that aborts if a teammate pushed first.',
+		keywords: [
+			'force push',
+			'force-with-lease',
+			'force with lease',
+			'push rejected',
+			'non-fast-forward',
+			'rejected push',
+			'break glass',
+			'rewrite pushed history'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-checkout-modern',
+		sectionId: 'section-3-1',
+		title: 'checkout → switch & restore',
+		part: 'Branching & PRs',
+		description:
+			'Older tutorials say git checkout — this course teaches its modern replacements: switch (branches) and restore (files).',
+		keywords: [
+			'checkout',
+			'git checkout',
+			'checkout -b',
+			'checkout branch',
+			'checkout file',
+			'checkout --'
+		],
 		kind: 'topic'
 	},
 	{

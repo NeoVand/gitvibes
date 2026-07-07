@@ -47,6 +47,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 			},
 			{ command: 'ssh -T git@github.com', description: 'Test your SSH connection to GitHub' },
 			{
+				command: 'gh auth login',
+				description: 'Sign in to GitHub from the terminal (browser flow, no tokens to manage)'
+			},
+			{
 				command: 'git config --global core.excludesFile ~/.gitignore_global',
 				description: 'Global ignore file for OS and editor junk'
 			},
