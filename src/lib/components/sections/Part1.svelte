@@ -31,7 +31,11 @@
 		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
 			Before you write your first line of code — or prompt your first AI — you need Git set up and
 			talking to your team's repository. This is a one-time ritual: configure your identity,
-			authenticate, and clone. Once it's done, it's done forever.
+			authenticate, and clone. Do it once and it mostly stays done (expiring tokens are the one
+			exception — SSH keys and <code
+				class="rounded px-1.5 py-0.5 text-sm"
+				style="background: var(--color-code-bg); font-family: var(--font-mono);">gh</code
+			> sign-in are the true set-and-forget paths).
 		</p>
 
 		<!-- 1.1 Git Config -->
@@ -81,23 +85,24 @@ git config --global user.email "your-enterprise-email@company.com"`}
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Don't want to use the terminal? No problem. VS Code will actually prompt you to configure
-				your identity the first time you try to use Git. You can also open the Command Palette (<kbd
-					class="rounded border px-1 py-0.5 text-[11px]"
-					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
-					>Cmd+Shift+P</kbd
-				>
-				/
-				<kbd
-					class="rounded border px-1 py-0.5 text-[11px]"
-					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
-					>Ctrl+Shift+P</kbd
-				>) and search for <strong>"Git: Config"</strong> to set these values without touching the terminal.
+				Don't want to use the terminal? No problem. VS Code will prompt you to configure your
+				identity the first time you commit — answer the prompt and it runs those two commands for
+				you. (There's no palette command for this; the prompt or the terminal are the two paths.)
 			</p>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				To see what's already configured — or double-check what you just set — read it back:
+			</p>
+
+			<CodeBlock
+				title="Verify your config"
+				code={`git config user.name          # One value
+git config --global --list    # Everything you've set globally`}
+			/>
 
 			<VibeBox
 				prompts={[
-					'Set up my Git config with my name and email for this project',
+					'Set up my Git config with my name and email on this machine',
 					'Configure Git to use VS Code as my default editor'
 				]}
 			/>
@@ -181,11 +186,12 @@ git config --global user.email "your-enterprise-email@company.com"`}
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">repo</code
 				>
-				and
+				scope; add
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">read:org</code
-				> scopes). If your team tells you to use one, the rest of the workflow is identical.
+				> only if you'll also sign in the gh CLI with it). If your team tells you to use one, the rest
+				of the workflow is identical.
 			</Callout>
 
 			<CodeBlock
@@ -201,19 +207,33 @@ git config --global user.email "your-enterprise-email@company.com"`}
 
 			<CodeBlock
 				title="Save credentials (choose your OS)"
-				code={`# macOS - Store in Keychain (recommended)
+				code={`# macOS - usually preconfigured to use the Keychain; if not:
 git config --global credential.helper osxkeychain
 
-# Windows - Use Windows Credential Manager
+# Windows - Git for Windows ships with Credential Manager; if not:
 git config --global credential.helper manager
 
-# Linux - Store in the system keyring
-git config --global credential.helper libsecret`}
+# Linux - install Git Credential Manager (git-credential-manager),
+# then:
+git config --global credential.helper manager
+# Lightweight alternative (holds credentials in memory ~15 min):
+git config --global credential.helper cache`}
 			/>
 
 			<Callout type="tip">
-				After configuring a credential helper, the next time you clone, pull, or push, Git will
-				prompt you once and then save the credentials for future use.
+				On macOS and Windows a helper is usually <em>already configured</em> by the installer — run
+				these only if Git keeps re-prompting for your token. On Linux there's no default: install
+				<strong>Git Credential Manager</strong> (or use
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">cache</code
+				>). You may see older guides suggest
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">libsecret</code
+				>
+				— on Debian/Ubuntu that helper ships as source code you'd have to compile first, so it fails out
+				of the box. Once a helper is set, Git prompts you once and saves the credentials.
 			</Callout>
 
 			<h4 class="mt-7 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -244,6 +264,27 @@ ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519`}
 			/>
+
+			<Callout type="caution">
+				<strong>Make it survive a reboot (macOS):</strong> without a config file, the agent forgets
+				your key when you restart — and SSH auth mysteriously breaks days later. Create
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>~/.ssh/config</code
+				>
+				with:
+				<code
+					class="mt-1 block rounded px-2 py-1 text-xs whitespace-pre"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>{`Host *\n  AddKeysToAgent yes\n  UseKeychain yes\n  IdentityFile ~/.ssh/id_ed25519`}</code
+				>
+				(Linux: same file without the
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">UseKeychain</code
+				> line.)
+			</Callout>
 
 			<CodeBlock
 				title="Copy your public key"
@@ -296,7 +337,8 @@ cat ~/.ssh/id_ed25519.pub`}
 				disappears from your life.
 				<strong>A fine-grained token</strong> for scripts, CI pipelines, or short-lived access to a
 				specific repo.
-				<strong>Neither</strong> if a tool can sign you in through the browser — see below.
+				<strong>Or let a tool set one of those two up for you</strong> — browser sign-in (below) stores
+				an HTTPS token behind the scenes, no copy-pasting required.
 			</Callout>
 
 			<h4 class="mt-7 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -405,7 +447,7 @@ winget install --id GitHub.cli
 			<SectionHeader
 				level="section"
 				icon={Download}
-				title="1.3 The First Pull (Cloning the Repository)"
+				title="1.3 Getting the Code (Cloning the Repository)"
 				color="var(--color-primary)"
 			/>
 
@@ -434,8 +476,28 @@ winget install --id GitHub.cli
 
 			<CodeBlock
 				title="Clone the repository"
-				code="git clone https://github.com/Your-Enterprise/your-project.git"
+				code={`git clone https://github.com/Your-Enterprise/your-project.git
+cd your-project   # The clone lands in a NEW folder named after the repo`}
 			/>
+
+			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				That new folder <em>is</em> the repository — specifically, the hidden
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
+				>
+				directory inside it holds the entire history, every branch, all of it. Delete
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
+				>
+				and you're left with an ordinary folder of files. (And the #1 "Git is broken!" beginner moment:
+				running git commands from the <em>parent</em> folder — check you actually
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">cd</code
+				>'d in.)
+			</p>
 
 			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				The VS Code Way
