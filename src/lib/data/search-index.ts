@@ -197,7 +197,37 @@ const topicEntries: SearchEntry[] = [
 		title: 'Pull requests',
 		part: 'Branching & PRs',
 		description: 'Push your branch and open a PR for human review before merging to main.',
-		keywords: ['pull request', 'PR', 'code review', 'propose changes', 'merge to main'],
+		keywords: [
+			'pull request',
+			'PR',
+			'code review',
+			'propose changes',
+			'merge to main',
+			'merge request',
+			'MR'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-forges',
+		sectionId: 'section-8-3',
+		title: 'Beyond GitHub: GitLab, Bitbucket & friends',
+		part: 'Conclusion',
+		description:
+			'GitHub is a choice, not a given — the forges compared, and why your Git skills transfer to all of them.',
+		keywords: [
+			'gitlab',
+			'bitbucket',
+			'codeberg',
+			'forgejo',
+			'gitea',
+			'sourcehut',
+			'azure devops',
+			'self-host',
+			'github alternatives',
+			'forge',
+			'merge request'
+		],
 		kind: 'topic'
 	},
 	{

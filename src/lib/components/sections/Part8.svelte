@@ -456,6 +456,134 @@
 				</div>
 			</div>
 
+			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				GitHub Is a Choice, Not a Given
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				This guide uses GitHub because it's where most of the industry (and most of the AI-agent
+				ecosystem) lives — but here's an honest secret: <strong style="color: var(--color-text);"
+					>almost nothing you learned is GitHub-specific</strong
+				>. Git itself is decentralized; every clone carries the full history, and the "forge" —
+				GitHub, or any of the sites below — is just the hosting and collaboration layer on top. Even
+				the pull request is a forge invention, not a Git feature. Switching forges is one command (<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git remote set-url origin &lt;new-url&gt;</code
+				>) and a push. The alternatives worth knowing:
+			</p>
+
+			<div class="mb-4 space-y-3">
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://about.gitlab.com"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">GitLab</a
+						>
+						<span style="color: var(--color-text);"> — the whole-pipeline platform</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						GitHub's biggest rival, and the one you're most likely to meet at work. Pull requests
+						are called <strong>merge requests (MRs)</strong> — same thing, different name. Its edge:
+						one integrated application from issue to CI/CD to deployment to security scanning (it
+						had built-in pipelines years before GitHub Actions existed), and an open-source core you
+						can <strong>self-host for free</strong> — which is why regulated companies that can't put
+						code on someone else's cloud often run their own GitLab. What GitHub has that it doesn't:
+						the network — the world's largest open-source community, the Actions marketplace, and the
+						deepest AI-agent integrations (Copilot, Agent HQ).
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://bitbucket.org"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">Bitbucket</a
+						>
+						<span style="color: var(--color-text);"> — the Atlassian citizen</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Atlassian's forge. Its reason to exist is deep, native integration with Jira and
+						Confluence — branch from a ticket, and the ticket tracks the PR's whole lifecycle
+						automatically. If your company runs on Jira, you may well find your code here. Outside
+						that ecosystem it offers little GitHub doesn't, and its open-source presence is small.
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://codeberg.org"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">Codeberg</a
+						>
+						<span style="color: var(--color-text);">
+							&
+							<a
+								href="https://forgejo.org"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="underline underline-offset-2"
+								style="color: var(--color-primary);">Forgejo</a
+							> — the community option</span
+						>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						Codeberg is a nonprofit, donation-funded forge run for open source — no ads, no
+						tracking, no AI training on your code, and that <em>is</em> the pitch. It runs Forgejo, free
+						software you can self-host yourself as a single small binary (its ancestor Gitea works the
+						same way) — the lightweight answer when a whole GitLab is overkill. The trade-off is the same
+						network effect in reverse: fewer eyes, fewer integrations, no agent ecosystem.
+					</p>
+				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://sourcehut.org"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">SourceHut</a
+						>
+						<span style="color: var(--color-text);"> — Git the old way, on purpose</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						A deliberately minimal, JavaScript-free forge built around Git's original collaboration
+						model: patches reviewed over <strong>email</strong>, the way the Linux kernel still
+						works. No pull-request button at all. Worth knowing because it proves the point above —
+						the PR is a convention, not a law — and because some significant projects genuinely work
+						this way.
+					</p>
+				</div>
+			</div>
+
+			<p class="mb-4 text-[13px]" style="color: var(--color-text-secondary);">
+				(Also out there: <a
+					href="https://azure.microsoft.com/en-us/products/devops"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">Azure DevOps</a
+				>
+				in Microsoft-stack enterprises, and experimental peer-to-peer forges like
+				<a
+					href="https://radicle.xyz"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">Radicle</a
+				> with no central server at all. Wherever you land: same Git, same commands, same you.)
+			</p>
+
 			<Callout type="note">
 				<strong>And a glimpse past Git:</strong>
 				<a

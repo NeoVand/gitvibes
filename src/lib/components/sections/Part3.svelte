@@ -439,7 +439,9 @@ git merge origin/main   # Merge the updates into your branch`}
 				<code
 					class="rounded px-1.5 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>.
+				>. (One vocabulary note for job interviews: "pull request" is the GitHub/Bitbucket name.
+				GitLab calls the identical thing a <strong>merge request (MR)</strong> — and it's a forge feature,
+				not a Git command. Part 8 tours the forges beyond GitHub.)
 			</Callout>
 
 			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
