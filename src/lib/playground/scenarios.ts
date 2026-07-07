@@ -211,12 +211,12 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Reset and force push — rewrite pushed history',
 		description:
 			'You pushed two bad commits to your feature branch. Nobody else is working on it. Reset to before the bad commits and force push to clean up the remote.',
-		hint: 'Use git log to find the good commit, git reset --hard to go back, then git push --force (or --force-with-lease for safety). Never do this on shared branches like main!',
+		hint: 'Use git log to find the good commit, git reset --hard to go back, then git push --force-with-lease — the safe force that refuses if a teammate pushed in the meantime. Never do this on shared branches like main!',
 		suggestedCommands: [
 			'git log --oneline',
 			'git reset --hard HEAD~2',
-			'git log --oneline',
-			'git push --force origin feature/cleanup'
+			'git push origin feature/cleanup',
+			'git push --force-with-lease origin feature/cleanup'
 		],
 		seedFn: buildForcePushRepo
 	},

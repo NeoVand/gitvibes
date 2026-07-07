@@ -95,9 +95,29 @@
 
 			<CodeBlock
 				title="Discard changes"
-				code={`git restore .              # Discard ALL local changes
+				code={`git restore .              # Discard edits to tracked files
 git restore src/bad_file.py  # Discard a single file`}
 			/>
+
+			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				One blind spot: <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git restore</code
+				>
+				only rewinds files Git already tracks. <em>Brand-new</em> files the AI scaffolded are
+				untracked, so they survive it. Preview the leftovers with
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git clean -n</code
+				>
+				(a dry run), then delete them with
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git clean -fd</code
+				>.
+			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				In VS Code, you don't need the terminal for this. In the Source Control panel, hover over
@@ -186,7 +206,9 @@ git restore src/bad_file.py  # Discard a single file`}
 			</h4>
 			<PlaygroundNote>
 				You ran <code>git add .</code> too quickly and staged <code>.env</code> with credentials and
-				a debug file. Unstage them with <code>git restore --staged</code> before committing.
+				a debug file. Unstage them with <code>git restore --staged</code> before committing — then
+				remember the permanent fix from Part 2: add them to <code>.gitignore</code> so the next
+				<code>git add .</code> can't stage them again.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Unstage Secrets & Debug Files"
@@ -298,8 +320,17 @@ git commit --amend`}
 
 			<CodeBlock
 				title="Hard reset: destroy commits and changes"
-				code="git reset --hard HEAD~3   # Delete last 3 commits + all changes"
+				code="git reset --hard HEAD~3   # Remove last 3 commits + all changes"
 			/>
+
+			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				"Remove," not quite "delete": the commits vanish from your branch, but Git keeps them around
+				for ~30 days and the reflog (section 4.9) can bring them back. The truly unrecoverable loss
+				is different — see the <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--hard</code
+				> card below.
+			</p>
 
 			<h4 class="mt-6 mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
 				The "Safer" Resets
@@ -331,7 +362,11 @@ git commit --amend`}
 						everything
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
-						Deletes commits AND all code changes. Your files reset to the older commit's state.
+						Removes commits AND all code changes. Your files reset to the older commit's state —
+						including any <strong>uncommitted</strong> work sitting in your working tree, which is
+						the one thing the reflog can <em>never</em> bring back. Run
+						<code class="text-xs" style="font-family: var(--font-mono);">git status</code> first; if it
+						isn't clean, stash or commit before you reset.
 					</p>
 				</div>
 			</div>
@@ -412,10 +447,18 @@ git commit --amend`}
 
 			<CodeBlock
 				title="Safely undo a pushed commit"
-				code={`git log --oneline          # Find the hash: a1b2c3d
-git revert a1b2c3d         # Create an inverse commit
-git push                   # Push the revert`}
+				code={`git log --oneline           # Find the hash: a1b2c3d
+git revert --no-edit a1b2c3d # Create an inverse commit
+git push                    # Push the revert`}
 			/>
+
+			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				Without <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-edit</code
+				>, Git opens your editor so you can customize the revert message — fine once you expect it,
+				startling the first time (especially if that editor turns out to be vim).
+			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				Notice that you're not erasing anything -- you're adding a new commit on top that reverses
@@ -502,7 +545,7 @@ git push                   # Push the revert`}
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Replaces the server unconditionally. If a teammate pushed in the last 5 minutes, you
-						permanently destroy their work.
+						blow their commits off the server (they survive only in that teammate's local clone).
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-tip-bg);">
@@ -528,6 +571,22 @@ git push                   # Push the revert`}
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git fetch</code
 				> first, review what changed on the remote, and only then push.
 			</p>
+
+			<Callout type="caution">
+				<strong>And one trap:</strong> anything that fetches in the background quietly renews the
+				lease. VS Code's autofetch (<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git.autofetch</code
+				>), GitLens, and other IDE tooling can fetch every minute — after which
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>--force-with-lease</code
+				>
+				passes even though you never <em>looked</em> at what arrived. The lease proves the remote hasn't
+				changed since the last fetch — it can't prove you reviewed it. Fetch, read, then push.
+			</Callout>
 			<Callout type="caution">
 				<strong>What does the error look like?</strong> When you try to push after rewriting
 				history, Git will reject it with:
@@ -537,7 +596,13 @@ git push                   # Push the revert`}
 					>! [rejected] (non-fast-forward) — hint: Updates were rejected because the tip of your
 					current branch is behind</code
 				>
-				This is Git protecting you. Try it yourself below:
+				This is Git protecting you. But careful — the full hint goes on to suggest
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
+				>, and after a deliberate amend or reset that's exactly wrong: pulling merges the old commit
+				right back in, recreating the mess you just cleaned up. When <em>you</em> rewrote the history
+				on purpose, the answer is the lease push, not a pull. Try it yourself below:
 			</Callout>
 
 			<h4
@@ -551,8 +616,8 @@ git push                   # Push the revert`}
 				Your feature branch has two bad commits already pushed. Use <code
 					>git reset --hard HEAD~2</code
 				>
-				to go back, then <code>git push --force</code> to overwrite the remote. Never do this on shared
-				branches!
+				to go back, watch a plain <code>git push</code> get rejected, then overwrite the remote with
+				<code>git push --force-with-lease</code>. Never do this on shared branches!
 			</PlaygroundNote>
 			<LessonActivity title="Reset and Force Push" scenarioId="force-push" id="force-push" />
 
@@ -613,7 +678,9 @@ git push                   # Push the revert`}
 							<td class="px-3 py-2"
 								><code style="font-family: var(--font-mono);">git restore .</code></td
 							>
-							<td class="px-3 py-2">Discards all local changes in the working directory</td>
+							<td class="px-3 py-2"
+								>Discards edits to tracked files (new untracked files survive — see git clean)</td
+							>
 							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
 							<td class="px-3 py-2">Right-click file → "Discard Changes"</td>
 						</tr>
@@ -634,7 +701,9 @@ git push                   # Push the revert`}
 								><code style="font-family: var(--font-mono);">git commit --amend</code></td
 							>
 							<td class="px-3 py-2">Edits the message of the most recent commit</td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2"
+								><span style="color: var(--color-tip);">Safe (if not pushed yet)</span></td
+							>
 							<td class="px-3 py-2">... → Commit → Commit (Amend)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
@@ -645,7 +714,9 @@ git push                   # Push the revert`}
 								></td
 							>
 							<td class="px-3 py-2">Adds new files to the most recent commit</td>
-							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2"
+								><span style="color: var(--color-tip);">Safe (if not pushed yet)</span></td
+							>
 							<td class="px-3 py-2">Stage files → ... → Commit Staged (Amend)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
@@ -653,12 +724,15 @@ git push                   # Push the revert`}
 							<td class="px-3 py-2"
 								><code style="font-family: var(--font-mono);">git reset --hard HEAD~3</code></td
 							>
-							<td class="px-3 py-2">Destroys the last 3 commits and all their code changes</td>
+							<td class="px-3 py-2"
+								>Removes the last 3 commits and all their code changes (reflog can recover the
+								commits)</td
+							>
 							<td class="px-3 py-2"
 								><span style="color: var(--color-warning);">Local Only! (Rewrites history)</span
 								></td
 							>
-							<td class="px-3 py-2">GitLens → Right-click commit → Reset</td>
+							<td class="px-3 py-2">... → Commit → Undo Last Commit (once per commit)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Commits "vanished" after a hard reset</td>
@@ -682,7 +756,7 @@ git push                   # Push the revert`}
 							<td class="px-3 py-2"
 								><span style="color: var(--color-tip);">100% Safe (Public)</span></td
 							>
-							<td class="px-3 py-2">GitLens → Right-click commit → "Revert Commit..."</td>
+							<td class="px-3 py-2">Source Control Graph → Right-click commit → "Revert Commit"</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Reset a public branch, need to push</td>
@@ -693,7 +767,21 @@ git push                   # Push the revert`}
 							<td class="px-3 py-2"
 								><span style="color: var(--color-caution);">Enterprise "Break Glass"</span></td
 							>
-							<td class="px-3 py-2">Terminal only</td>
+							<td class="px-3 py-2">Git: Push (Force With Lease)</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-3 py-2">Stuck in "detached HEAD"</td>
+							<td class="px-3 py-2"
+								><code style="font-family: var(--font-mono);">git switch main</code><br /><code
+									style="font-family: var(--font-mono);">git switch -c keep-this</code
+								></td
+							>
+							<td class="px-3 py-2"
+								>Reattaches HEAD to a branch — create one first if you made commits to keep (see
+								section 4.8)</td
+							>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">Click the branch name in the status bar</td>
 						</tr>
 					</tbody>
 				</table>
