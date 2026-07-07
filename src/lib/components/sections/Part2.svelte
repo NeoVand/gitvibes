@@ -50,7 +50,8 @@
 
 		<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 			The diagram above shows the full cycle you'll repeat every time you work with AI-generated
-			code. Let's break it down:
+			code. This chapter covers the middle of the loop — discarding is Part 4's territory, and
+			pushing comes in Part 3. Let's break it down:
 		</p>
 
 		<Callout type="important">
@@ -91,10 +92,10 @@
 				<code
 					class="rounded px-1.5 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				> is your "heads-up display." The output shows two categories:
+				> is your "heads-up display." The output shows three categories:
 			</p>
 
-			<div class="mb-6 grid gap-3 sm:grid-cols-2">
+			<div class="mb-6 grid gap-3 sm:grid-cols-3">
 				<div class="rounded-lg p-4" style="background: var(--color-caution-bg);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
 						"Changes not staged" (Red)
@@ -111,7 +112,32 @@
 						Brand-new files the AI created that Git has never seen before.
 					</p>
 				</div>
+				<div class="rounded-lg p-4" style="background: var(--color-tip-bg);">
+					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-tip);">
+						"Changes to be committed" (Green)
+					</p>
+					<p class="text-xs" style="color: var(--color-text-secondary);">
+						Staged files — reviewed, approved, and going into the next commit. Your goal is moving
+						the right files here.
+					</p>
+				</div>
 			</div>
+
+			<CodeBlock
+				title="A typical git status, all three sections"
+				code={`On branch feature/login
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   src/auth.py
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   src/routes.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        src/session_store.py`}
+			/>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				The good news? You don't actually need to type <code
@@ -209,7 +235,14 @@
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>git add --patch</code
 				>
-				walks you through every individual block of changes ("hunk") interactively.
+				walks you through every individual block of changes ("hunk") interactively. One blind spot: it
+				only shows <em>modifications to tracked files</em> — brand-new files the AI created won't
+				appear at all. Stage those by name with
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git add &lt;file&gt;</code
+				> after reading them.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -238,7 +271,7 @@
 					class="rounded px-1 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">q</code
 				>
-				(quit). In the <strong>Try it yourself</strong> playground below,
+				(quit). In the <strong>Try It: The Complete Loop</strong> playground (next section),
 				<code
 					class="rounded px-1 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
@@ -304,7 +337,7 @@
 			<VibeBox
 				prompts={[
 					'Stage only the files related to the authentication feature',
-					'Review the diff of each changed file and stage the ones that look correct'
+					'Show me the diff of each changed file one at a time so I can decide what to stage'
 				]}
 			/>
 
@@ -326,8 +359,9 @@
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
 				>
-				files with secrets or debug files. Try the <strong>"Staged secrets and debug files"</strong> playground
-				scenario to practice this.
+				files with secrets or debug files. You'll practice exactly this in the
+				<strong>"Unstage Secrets"</strong> playground in section 4.2 (or right now — open the playground
+				from the header and pick the scenario).
 			</Callout>
 		</div>
 
@@ -354,13 +388,15 @@
 			</div>
 
 			<Callout type="note">
-				<strong>The Problem:</strong> You've staged your reviewed changes. Now, bundle them into a
-				permanent, immutable "save point" -- a <strong>commit</strong>.
+				<strong>The Problem:</strong> You've staged your reviewed changes. Now, bundle them into an
+				immutable "save point" -- a <strong>commit</strong>. (Immutable, not untouchable: Part 4
+				teaches the history-editing tools. What's written can be rewritten — but never silently
+				changed in place.)
 			</Callout>
 
 			<CodeBlock
 				title="Create a commit with a message"
-				code="git commit -m &quot;feat: Add user authentication endpoint&quot;"
+				code="git commit -m &quot;feat: add user authentication endpoint&quot;"
 			/>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -396,7 +432,7 @@
 								></td
 							>
 							<td class="px-4 py-2">A new feature for the user</td>
-							<td class="px-4 py-2 text-xs">feat: Add login button to homepage</td>
+							<td class="px-4 py-2 text-xs">feat: add login button to homepage</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -405,7 +441,7 @@
 								></td
 							>
 							<td class="px-4 py-2">A bug fix for the user</td>
-							<td class="px-4 py-2 text-xs">fix: Resolve dimension mismatch</td>
+							<td class="px-4 py-2 text-xs">fix: resolve dimension mismatch</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -414,7 +450,7 @@
 								></td
 							>
 							<td class="px-4 py-2">Documentation only changes</td>
-							<td class="px-4 py-2 text-xs">docs: Update API reference</td>
+							<td class="px-4 py-2 text-xs">docs: update API reference</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -423,7 +459,7 @@
 								></td
 							>
 							<td class="px-4 py-2">Formatting, missing semicolons, etc.</td>
-							<td class="px-4 py-2 text-xs">style: Fix indentation in utils</td>
+							<td class="px-4 py-2 text-xs">style: fix indentation in utils</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -432,7 +468,7 @@
 								></td
 							>
 							<td class="px-4 py-2">Code change that neither fixes a bug nor adds a feature</td>
-							<td class="px-4 py-2 text-xs">refactor: Simplify form validation</td>
+							<td class="px-4 py-2 text-xs">refactor: simplify form validation</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -441,7 +477,7 @@
 								></td
 							>
 							<td class="px-4 py-2">Adding or correcting tests</td>
-							<td class="px-4 py-2 text-xs">test: Add unit tests for auth</td>
+							<td class="px-4 py-2 text-xs">test: add unit tests for auth</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -450,7 +486,7 @@
 								></td
 							>
 							<td class="px-4 py-2">Build process or tools changes</td>
-							<td class="px-4 py-2 text-xs">chore: Update dependencies</td>
+							<td class="px-4 py-2 text-xs">chore: update dependencies</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-4 py-2"
@@ -459,7 +495,7 @@
 								></td
 							>
 							<td class="px-4 py-2">A code change that improves performance</td>
-							<td class="px-4 py-2 text-xs">perf: Cache database queries</td>
+							<td class="px-4 py-2 text-xs">perf: cache database queries</td>
 						</tr>
 					</tbody>
 				</table>
@@ -477,6 +513,12 @@
 					class="rounded border px-1 py-0.5 text-[11px]"
 					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
 					>Cmd+Enter</kbd
+				>
+				/
+				<kbd
+					class="rounded border px-1 py-0.5 text-[11px]"
+					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
+					>Ctrl+Enter</kbd
 				>). Notice the <strong>sparkle icon</strong> next to the input -- click it to let AI generate
 				a commit message from your staged changes:
 			</p>
@@ -610,11 +652,27 @@ coverage/
 *.log
 .cache/
 
-# OS & editor junk
-.DS_Store
-Thumbs.db
-.idea/`}
+# AI tool local state (personal settings stay personal)
+.claude/settings.local.json
+CLAUDE.local.md
+.cursor/
+.aider*`}
 			/>
+
+			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				(Purely personal noise like <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
+				>
+				or
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">.idea/</code
+				>
+				belongs in your <em>global</em> ignore file instead — see the end of this section. And while a
+				repo's main .gitignore lives at the root, you can drop extra ones in any subfolder to scope rules
+				to just that corner of the project.)
+			</p>
 
 			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
 				Pattern Syntax Essentials
@@ -676,10 +734,11 @@ Thumbs.db
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				<strong style="color: var(--color-text);">.gitignore only affects untracked files.</strong> If
-				a file was already committed before you added it to .gitignore, Git keeps tracking it — and keeps
-				committing your changes to it. To stop tracking a file without deleting it from your disk, remove
-				it from the index:
+				<strong style="color: var(--color-text);">.gitignore only affects untracked files.</strong>
+				If a file was already committed before you added it to .gitignore, Git keeps tracking it —
+				and keeps committing your changes to it. To stop tracking a file without deleting it from
+				your disk, remove it from the staging area (which Git's own messages call the <em>index</em> —
+				same thing, older name):
 			</p>
 
 			<CodeBlock
