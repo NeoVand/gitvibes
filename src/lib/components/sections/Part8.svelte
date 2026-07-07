@@ -336,7 +336,7 @@
 
 			<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 				You've practiced everything here in a real repository — but Git is deep, and the best
-				references are worth knowing by name. These five will cover you from quick lookups to true
+				references are worth knowing by name. These six will cover you from quick lookups to true
 				mastery:
 			</p>
 
@@ -437,7 +437,50 @@
 						it bookmarked next to your reflog.
 					</p>
 				</div>
+
+				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
+					<h4 class="mb-1 text-[14px] font-semibold">
+						<a
+							href="https://ohmygit.org"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="underline underline-offset-2"
+							style="color: var(--color-primary);">Oh My Git!</a
+						>
+						<span style="color: var(--color-text);"> — Git as a video game</span>
+					</h4>
+					<p class="text-[13px]" style="color: var(--color-text-secondary);">
+						An open-source game that visualizes Git's internals live as you play cards and type
+						commands. The gentlest way to make the commit graph feel physical — and genuinely fun.
+					</p>
+				</div>
 			</div>
+
+			<Callout type="note">
+				<strong>And a glimpse past Git:</strong>
+				<a
+					href="https://github.com/jj-vcs/jj"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">Jujutsu (jj)</a
+				>
+				is the most credible next-generation version control tool — a Git-compatible frontend that stores
+				real Git commits, so your team never has to know you're using it. It snapshots your working copy
+				automatically (every command is undoable with
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">jj undo</code
+				>), which is making it popular for agent-heavy workflows. Still pre-1.0 and evolving fast —
+				but everything you learned here transfers, because underneath, it <em>is</em> Git.
+				<a
+					href="https://steveklabnik.github.io/jujutsu-tutorial/"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">Steve Klabnik's tutorial</a
+				> is the place to start when you're curious.
+			</Callout>
 		</div>
 
 		<!-- Final Thoughts -->
