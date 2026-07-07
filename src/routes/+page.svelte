@@ -233,6 +233,40 @@
 		name="description"
 		content="An interactive guide to Git for developers using AI tools. Learn version control as your safety net for AI-assisted coding."
 	/>
+	<link rel="canonical" href="https://neovand.github.io/gitvibes/" />
+	{@html `<script type="application/ld+json">${JSON.stringify({
+		'@context': 'https://schema.org',
+		'@type': 'Course',
+		name: 'GitVibes — Git for Vibe Coders',
+		description:
+			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, and Git guardrails for AI agents — with 20 hands-on exercises in a real in-browser Git playground.',
+		url: 'https://neovand.github.io/gitvibes/',
+		provider: {
+			'@type': 'Organization',
+			name: 'GitVibes',
+			url: 'https://neovand.github.io/gitvibes/'
+		},
+		isAccessibleForFree: true,
+		educationalLevel: 'Beginner',
+		teaches: [
+			'Git fundamentals (status, staging, commits)',
+			'Branching and pull requests',
+			'Undoing mistakes (restore, reset, revert, reflog)',
+			'Merge and rebase conflict resolution',
+			'Git workflows for AI coding agents (AGENTS.md, hooks, worktrees)'
+		],
+		hasCourseInstance: {
+			'@type': 'CourseInstance',
+			courseMode: 'Online',
+			courseWorkload: 'PT6H'
+		},
+		offers: {
+			'@type': 'Offer',
+			price: 0,
+			priceCurrency: 'USD',
+			category: 'Free'
+		}
+	})}</scr${''}ipt>`}
 </svelte:head>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
