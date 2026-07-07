@@ -708,8 +708,8 @@ git worktree prune`}
 			<Callout type="important">
 				<strong>Checkpoints are not commits.</strong> Claude Code and Cursor both auto-checkpoint
 				the agent's edits so you can rewind a session — genuinely useful, and genuinely <em>not</em>
-				Git. Checkpoints are session-local: they don't capture what shell commands did, they can't
-				be pushed or shared, and they expire with the session. The rule of thumb:
+				Git. Checkpoints are session-local: they don't capture what shell commands did, they can't be
+				pushed or shared, and they expire with the session. The rule of thumb:
 				<strong>rewind with checkpoints between commits; save with commits</strong>. Anything worth
 				keeping past the current session goes into a real commit — the durable layer this whole
 				guide is about.
