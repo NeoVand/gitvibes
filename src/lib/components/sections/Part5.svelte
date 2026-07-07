@@ -256,6 +256,38 @@ git stash pop`}
 				It avoids cluttering the PR with "I merged main" commits.
 			</Callout>
 
+			<Callout type="important">
+				<strong>The push after a rebase.</strong> If your branch was already on GitHub, the rebase
+				just re-created commits the remote still has the old versions of — so a plain
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git push</code
+				>
+				gets rejected. The correct follow-up is
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git push --force-with-lease</code
+				>
+				— the safe force from section 4.6 — and it's only OK because this is <em>your</em> branch. Rebase,
+				lease-push, open the PR: that's the full ritual.
+			</Callout>
+
+			<p class="mt-4 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				One config gem while you're here: <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git config --global rebase.autostash true</code
+				>
+				makes Git stash your uncommitted work automatically before a rebase (or
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>pull --rebase</code
+				>) and pop it after — dissolving the "Git blocked my switch" problem 5.1 opened with, for
+				the rebase case at least.
+			</p>
+
 			<h4
 				id="rebase-merge"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
@@ -529,6 +561,14 @@ git switch main              # Stand on the branch that should receive it
 git cherry-pick e4f5a6b      # Copy exactly that commit here
 git log --oneline            # The fix is on main — the junk is not`}
 			/>
+
+			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				For an audit trail, add <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">-x</code
+				>: it appends "(cherry picked from commit e4f5a6b...)" to the message, so anyone reading
+				main later can trace where the fix came from. Perfect for the reject-the-PR workflow below.
+			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				<strong style="color: var(--color-text);">When to prefer it over merging:</strong> merge
@@ -828,8 +868,26 @@ git show v1.0.0                                  # Inspect what a release points
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>git push origin --tags</code
 				>
-				for all of them. (The playground's simulated remote doesn't sync tags, so practice the pushing
-				part in a real repository.) Need to remove a tag?
+				for all of them — though beware:
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--tags</code
+				>
+				throws <em>every</em> tag at the remote, including private bookmarks like the
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>pre-refactor</code
+				>
+				checkpoint below.
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git push --follow-tags</code
+				>
+				is the discerning version: it sends only <em>annotated</em> tags on commits you're pushing —
+				which is exactly why this section told you to annotate releases and keep bookmarks
+				lightweight. Need to remove a tag?
 				<code
 					class="rounded px-1.5 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
