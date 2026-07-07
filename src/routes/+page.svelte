@@ -13,7 +13,7 @@
 	import Part6 from '$lib/components/sections/Part6.svelte';
 	import Part7 from '$lib/components/sections/Part7.svelte';
 	import Part8 from '$lib/components/sections/Part8.svelte';
-	import { sectionIds } from '$lib/data/sections';
+	import { anchorIds } from '$lib/data/sections';
 	import {
 		loadThemePreference,
 		saveThemePreference,
@@ -92,7 +92,7 @@
 		applyTheme(theme);
 
 		const hash = window.location.hash.slice(1);
-		if (hash && sectionIds.includes(hash as (typeof sectionIds)[number])) {
+		if (hash && anchorIds.includes(hash)) {
 			activeSection = hash;
 			navClickActive = true;
 			requestAnimationFrame(() => {
@@ -101,7 +101,7 @@
 			});
 		}
 
-		const sectionEls = sectionIds
+		const sectionEls = anchorIds
 			.map((id) => document.getElementById(id))
 			.filter((el): el is HTMLElement => el !== null);
 

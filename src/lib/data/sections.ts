@@ -47,3 +47,29 @@ export const sectionIds = [
 	'section-8-2',
 	'section-8-3'
 ] as const;
+
+/**
+ * Anchor ids of the embedded playground activities (the sidebar's gamepad
+ * entries). Kept separate from sectionIds so the part/section hierarchy stays
+ * clean, but deep links and scroll-spy treat them the same way.
+ */
+export const playgroundAnchorIds = [
+	'core-loop',
+	'wrong-branch',
+	'sync-remote',
+	'branching',
+	'accidental-stage',
+	'force-push',
+	'undo',
+	'detached-head',
+	'reflog-rescue',
+	'stash',
+	'rebase-merge',
+	'conflicts',
+	'cherry-pick',
+	'rebase-conflict',
+	'release-tags'
+] as const;
+
+/** Every id that can appear in the URL hash and the sidebar scroll-spy. */
+export const anchorIds: readonly string[] = [...sectionIds, ...playgroundAnchorIds];
