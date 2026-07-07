@@ -256,6 +256,14 @@ git restore src/bad_file.py  # Discard a single file`}
 				message. Instead of creating a messy "oops" commit, you can quietly fix the last one.
 			</p>
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/git-amend.webp"
+					alt="git commit --amend — reopening the last commit to add what's missing"
+					caption="Amend reopens your last commit — add the forgotten file, fix the message, seal it again"
+				/>
+			</div>
+
 			<Callout type="note">
 				<strong>The Problem:</strong> You just committed but missed a file, or there's a typo in
 				your commit message. The commit has <strong>not been pushed yet</strong>.

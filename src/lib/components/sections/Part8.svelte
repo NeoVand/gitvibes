@@ -380,6 +380,14 @@
 				will tell you the moment you've won.
 			</p>
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/final-challenge.webp"
+					alt="The Final Challenge — three messes, one repo, no instructions"
+					caption="Three simultaneous messes, one repository — everything from Parts 2–5 at once"
+				/>
+			</div>
+
 			<Callout type="important">
 				<strong>Your mission:</strong> a payment feature was committed straight to
 				<code
@@ -457,6 +465,14 @@
 				title="8.4 Keep Learning — The References That Matter"
 				color="var(--color-primary)"
 			/>
+
+			<div class="mb-6">
+				<ExpandableImage
+					src="{base}/images/keep-learning.webp"
+					alt="Keep learning — a doorway opening onto a constellation of branching paths"
+					caption="This guide ends here — the history graph keeps going"
+				/>
+			</div>
 
 			<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 				You've practiced everything here in a real repository — but Git is deep, and the best

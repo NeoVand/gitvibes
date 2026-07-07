@@ -242,6 +242,14 @@
 			<h2 class="text-xl font-bold" style="color: var(--color-text);">Installing Git</h2>
 		</div>
 
+		<div class="mb-6">
+			<ExpandableImage
+				src="{base}/images/install-git.webp"
+				alt="Installing Git — a craftsman's tool ready to be lifted from its case"
+				caption="One install — then every project on your machine gets a safety net"
+			/>
+		</div>
+
 		<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 			Before anything else, you need Git on your machine. Pick your operating system:
 		</p>
@@ -373,6 +381,14 @@ sudo pacman -S git`}
 				style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
 			> folder that stores the entire history of every file — every change, by whom, and when.
 		</p>
+
+		<div class="my-6">
+			<ExpandableImage
+				src="{base}/images/what-is-a-repo.webp"
+				alt="A repository — the project folder above, the .git history vault below"
+				caption="A repo is a normal folder — with its entire history in the hidden .git vault beneath it"
+			/>
+		</div>
 
 		<p class="mb-4 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 			There are two kinds of repositories you'll work with:

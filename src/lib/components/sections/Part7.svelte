@@ -167,6 +167,14 @@
 				has the answer built right in. Timeline and GitLens turn your editor into a time machine.
 			</p>
 
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/timeline-gitlens.webp"
+					alt="The Timeline view — every commit that ever touched this file, in order"
+					caption="The Timeline pane: the full history of one file, one click per commit"
+				/>
+			</div>
+
 			<Callout type="note">
 				<strong>The Problem:</strong> An AI changed a line of code, and you have no idea why or when.
 			</Callout>
@@ -225,6 +233,14 @@
 				We touched on merge conflicts earlier -- now let's look at the tool that makes resolving
 				them almost enjoyable.
 			</p>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/merge-editor.webp"
+					alt="The 3-way merge editor — your changes, their changes, and the combined result"
+					caption="Yours on one side, theirs on the other — you compose the result in the middle"
+				/>
+			</div>
 
 			<Callout type="important">
 				This tool transforms merge conflicts from a terrifying, marker-filled text-editing nightmare
