@@ -518,6 +518,37 @@ echo "npm run lint && npm test" > .husky/pre-commit`}
 				> is a hole in your safety net, and it's a habit you especially don't want your agents learning.
 			</p>
 
+			<Callout type="important">
+				<strong>Which means: client hooks are seatbelts, not laws.</strong> Anything that can run
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
+				>
+				can also run it with
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-verify</code
+				>
+				— and agents do learn that trick from error loops. The layer nothing can skip lives on the
+				<em>server</em>: branch protection rulesets on
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
+				>
+				(require a PR, require passing CI, require an approval — section 3.3). Hooks catch problems in
+				seconds on the developer's machine; the ruleset is the law at the gate. Use both.
+			</Callout>
+
+			<Callout type="note">
+				<strong>A naming collision to keep straight:</strong> your agent tools have "hooks" too —
+				Claude Code hooks, Cursor hooks, VS Code agent hooks — which fire on
+				<em>agent lifecycle</em>
+				events (before a tool runs, after an edit). Those govern the agent; the hooks in this section
+				live in the <em>repository</em> and govern anyone who commits, human or machine. They complement
+				each other: an agent hook can stop a bad command before it runs, a Git hook stops a bad commit
+				no matter who makes it.
+			</Callout>
+
 			<VibeBox
 				prompts={[
 					'Set up a pre-commit hook that runs our lint and test scripts and blocks the commit if either fails',
@@ -647,6 +678,41 @@ git worktree prune`}
 				inside the repo shows up as an untracked directory, and an agent running
 				<code style="font-family: var(--font-mono);">git add .</code> will sweep it up as a confusing
 				embedded-repo pointer (Git prints a warning — which everyone ignores).
+			</Callout>
+
+			<Callout type="caution">
+				<strong>The #1 practical gotcha: a fresh worktree is code-only.</strong> It contains the
+				branch's <em>tracked</em> files and nothing else — no
+				<code style="font-family: var(--font-mono);">node_modules/</code>, no
+				<code style="font-family: var(--font-mono);">.venv</code>, no untracked
+				<code style="font-family: var(--font-mono);">.env</code>. Agent B's first command will fail
+				until someone runs the install step there, and two agents starting dev servers will fight
+				over the same port. Budget one setup command per worktree (and a port per agent) into your
+				plan — or into the agent's instructions.
+			</Callout>
+
+			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				And a sign of how central this pattern has become: the agent tools now create worktrees
+				<em>for you</em>. Claude Code has
+				<code style="font-family: var(--font-mono);">claude --worktree</code>
+				(agents get isolated worktrees under
+				<code style="font-family: var(--font-mono);">.claude/worktrees/</code>, auto-cleaned when
+				untouched), Cursor spins up a worktree per parallel agent, and desktop agent apps do it per
+				session. When you find a mystery directory or a
+				<code style="font-family: var(--font-mono);">worktree-quiet-fox</code> branch, that's what
+				it was —
+				<code style="font-family: var(--font-mono);">git worktree list</code> is how you audit them, and
+				now you know how to clean them up.
+			</p>
+
+			<Callout type="important">
+				<strong>Checkpoints are not commits.</strong> Claude Code and Cursor both auto-checkpoint
+				the agent's edits so you can rewind a session — genuinely useful, and genuinely <em>not</em>
+				Git. Checkpoints are session-local: they don't capture what shell commands did, they can't
+				be pushed or shared, and they expire with the session. The rule of thumb:
+				<strong>rewind with checkpoints between commits; save with commits</strong>. Anything worth
+				keeping past the current session goes into a real commit — the durable layer this whole
+				guide is about.
 			</Callout>
 
 			<VibeBox
