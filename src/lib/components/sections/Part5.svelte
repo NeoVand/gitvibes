@@ -538,7 +538,7 @@ git cherry-pick --abort`}
 				to confirm the fix arrived.
 			</PlaygroundNote>
 			<LessonActivity
-				title="Try it: Cherry-pick the gem"
+				title="Cherry-Pick: Take Only the Gem"
 				scenarioId="cherry-pick"
 				id="cherry-pick"
 			/>
@@ -660,7 +660,7 @@ git rebase --continue`}
 				<code>git rebase --abort</code> too — watch everything snap back.
 			</PlaygroundNote>
 			<LessonActivity
-				title="Try it: Survive a rebase conflict"
+				title="Rebase: Resolve, Continue, or Abort"
 				scenarioId="rebase-conflict"
 				id="rebase-conflict"
 			/>
@@ -803,7 +803,7 @@ git show v1.0.0                                  # Inspect what a release points
 				<code>git show v1.1.0</code> and <code>git log --oneline</code> to see what each release points
 				at.
 			</PlaygroundNote>
-			<LessonActivity title="Try it: Cut a release" scenarioId="release-tags" id="release-tags" />
+			<LessonActivity title="Tags: Cut a Release" scenarioId="release-tags" id="release-tags" />
 
 			<VibeBox
 				prompts={[
