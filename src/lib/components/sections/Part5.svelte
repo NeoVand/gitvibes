@@ -75,19 +75,39 @@
 
 			<CodeBlock
 				title="Stash, fix, and return"
-				code={`# 1. Stash your changes
-git stash push -m "WIP: refactoring pipeline, AI changes"
+				code={`# 1. Stash your changes (-u includes brand-new files)
+git stash push -u -m "WIP: refactoring pipeline, AI changes"
 
 # 2. Fix the urgent bug
 git switch main
 git pull
-git switch -c "hotfix/urgent-bug"
+git switch -c hotfix/urgent-bug
 # ... fix, test, commit, push, create PR ...
 
 # 3. Return to your work
 git switch feature/A
 git stash pop`}
 			/>
+
+			<Callout type="warning">
+				<strong>The untracked-files gotcha:</strong> a plain
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git stash</code
+				>
+				only saves changes to <em>tracked</em> files. Brand-new files the AI just created — never
+				committed, never staged — get left behind in the working tree. Add
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">-u</code
+				>
+				(<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>--include-untracked</code
+				>) to take them along — that's also why VS Code's menu has a separate
+				<strong>"Stash (Include Untracked)"</strong> item.
+			</Callout>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
 				<code
@@ -198,17 +218,20 @@ git stash pop`}
 					</h4>
 					<p class="mb-2 text-[13px]" style="color: var(--color-text-secondary);">
 						"Replays" your commits on top of the latest main. Creates a clean, linear history as if
-						you started today.
+						you started today. The replayed commits are <em>re-created</em> — same changes, brand-new
+						commit ids.
 					</p>
 					<p class="text-xs" style="color: var(--color-text-muted);">
-						History: "A, B, E, F, C', D'" -- all in a straight line.
+						History: main's commits, then copies of yours (the ' marks: same change, new id) — all
+						in a straight line.
 					</p>
 				</div>
 			</div>
 
 			<Callout type="caution">
 				<strong>The Golden Rule of Rebasing:</strong> Never rebase a public branch (one your team is also
-				using), as it rewrites history.
+				using). Because rebase re-creates the commits with new ids, everyone else's copy of the branch
+				still points at the old ones — you've rewritten a history they're standing on.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -334,15 +357,12 @@ x = 5
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code
 				>
-				names where it came from (<code
+				names where it came from — the branch you merged (like
+				<code
 					class="rounded px-1 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
 				>
-				when merging a local branch,
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">origin/main</code
-				> when the conflict came from a pull).
+				here; after a pull it can be a commit id or a longer label instead).
 			</p>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
@@ -368,6 +388,20 @@ x = 5
 				>.
 			</p>
 
+			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
+				Not ready to deal with it? There's an eject button here too:
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git merge --abort</code
+				>
+				cancels the merge and returns your branch to exactly how it was before you ran
+				<code
+					class="rounded px-1 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git merge</code
+				> — the same guilt-free escape you'll meet again with rebase (5.5) and cherry-pick (5.4).
+			</p>
+
 			<h4 class="mt-6 mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
 				The VS Code Way (The Superior Way)
 			</h4>
@@ -378,16 +412,15 @@ x = 5
 			</p>
 
 			<Callout type="tip">
-				This is one of the best features of the IDE. VS Code opens a <strong
-					>3-way Merge Editor</strong
-				>:
+				This is one of the best features of the IDE. Open a conflicted file and VS Code highlights
+				each block inline, with clickable links right above it: <strong>"Accept Current"</strong>
+				| <strong>"Accept Incoming"</strong> | <strong>"Accept Both"</strong>. For tangled,
+				overlapping conflicts, click <strong>"Resolve in Merge Editor"</strong> to open the full
+				3-way view:
 				<br /><br />
 				<strong>Left Pane:</strong> "Incoming" (teammate's changes)<br />
 				<strong>Right Pane:</strong> "Current" (your changes)<br />
-				<strong>Bottom Pane:</strong> "Result" (what will be saved)<br /><br />
-				Above each conflict block, VS Code shows clickable links: <strong>"Accept Current"</strong>
-				|
-				<strong>"Accept Incoming"</strong> | <strong>"Accept Both"</strong>.
+				<strong>Bottom Pane:</strong> "Result" (what will be saved)
 			</Callout>
 
 			<VsCodeScreenshot
@@ -603,9 +636,38 @@ git cherry-pick --abort`}
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
 				>
 				to see the paused state: it reports a rebase in progress and lists the conflicted files under
-				<strong style="color: var(--color-text);">"unmerged paths"</strong>. The files themselves
-				contain the same conflict markers you learned to read in section 5.3.
+				<strong style="color: var(--color-text);">"unmerged paths"</strong>. The files contain the
+				conflict markers you learned to read in section 5.3 —
+				<strong style="color: var(--color-text);">with one crucial twist</strong>.
 			</p>
+
+			<Callout type="warning">
+				<strong>The sides are swapped during a rebase.</strong> Git rebuilds your branch by standing
+				on
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
+				>
+				and replaying your commits onto it — so
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code
+				>
+				is <strong>main's version</strong>, and the bottom block is
+				<strong>your own commit</strong> arriving as the "incoming" change. Exactly backwards from a merge.
+				This is the single most famous rebase trap — read the labels, not the positions.
+			</Callout>
+
+			<CodeBlock
+				lang="python"
+				title="What you'll see in src/config.py — note who is who"
+				code={`<<<<<<< HEAD
+TIMEOUT = 10     # main's version (HEAD during a rebase!)
+=======
+TIMEOUT = 120    # your commit, being replayed
+>>>>>>> a1b2c3d (feat: raise the worker timeout)`}
+			/>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				From here, it's a three-step ritual — the same one every time:
@@ -767,12 +829,19 @@ git show v1.0.0                                  # Inspect what a release points
 					>git push origin --tags</code
 				>
 				for all of them. (The playground's simulated remote doesn't sync tags, so practice the pushing
-				part in a real repository.) Deleted a tag by mistake?
+				part in a real repository.) Need to remove a tag?
 				<code
 					class="rounded px-1.5 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>git tag -d v1.1.0</code
-				> removes one locally.
+				>
+				deletes it locally — and if you deleted one <em>by mistake</em>, just re-tag the same commit
+				(find it with
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git log --oneline</code
+				>, or fetch the tag back from the remote if you'd already pushed it).
 			</p>
 
 			<Callout type="tip">
