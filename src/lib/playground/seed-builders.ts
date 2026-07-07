@@ -278,6 +278,36 @@ export async function buildDetachedHeadRepo(engine: GitEngine): Promise<void> {
 	]);
 }
 
+/**
+ * The final challenge: three messes at once. A payment commit landed on main
+ * instead of a branch, a secret .env is sitting staged, and the cleaned-up
+ * main still needs its release tag.
+ */
+export async function buildCapstoneRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'README.md', content: '# Checkout Service\n' }
+	]);
+	await engine.commitFiles('feat: add user model', [
+		{ path: 'src/models.py', content: 'class User:\n    pass\n' }
+	]);
+
+	const mainOid = await engine.getCommitOid('main', 0);
+	engine.remote.setBranch('main', mainOid);
+	engine.remote.recordFetched('main', mainOid);
+	await writeRemoteTrackingRef(engine, 'origin', 'main', mainOid);
+
+	// Mess 1: the payment feature was committed straight to main
+	await engine.commitFiles('feat: add payment processing', [
+		{ path: 'src/payments.py', content: 'def process_payment():\n    return True\n' }
+	]);
+
+	// Mess 2: a secret is staged, ready to leak into the next commit
+	await engine.writeFile('.env', 'STRIPE_KEY=sk_live_51Hb9x\n');
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: '.env' });
+
+	// Mess 3 isn't a mess yet — it's the missing v1.0.0 tag on the clean main
+}
+
 /** History ready for a release tag, with one previous release tagged */
 export async function buildReleaseRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# CLI Tool\n' }]);

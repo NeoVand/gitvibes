@@ -37,6 +37,7 @@ import {
 	Table,
 	Tag,
 	Trash2,
+	Trophy,
 	Undo2,
 	UserCheck,
 	Webhook,
@@ -169,7 +170,9 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-8-1', label: 'AI-First Workflow', icon: Workflow },
 			{ id: 'section-8-2', label: 'Quick Reference', icon: Table },
-			{ id: 'section-8-3', label: 'Keep Learning', icon: Library }
+			{ id: 'section-8-3', label: 'Final Challenge', icon: Trophy },
+			{ id: 'capstone', label: 'Three Messes, One Repo', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-8-4', label: 'Keep Learning', icon: Library }
 		]
 	}
 ];

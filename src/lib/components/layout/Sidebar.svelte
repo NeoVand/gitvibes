@@ -3,6 +3,9 @@
 	import { ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-svelte';
 	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
+	import { sectionIds } from '$lib/data/sections';
+	import { progress } from '$lib/data/progress';
+	import { lessonScenarioIds } from '$lib/playground/scenarios';
 
 	let {
 		open = false,
@@ -17,6 +20,16 @@
 	} = $props();
 
 	const sections = sidebarNav;
+
+	// Reading progress: share of content sections ever scrolled into view.
+	// Exercise progress: lesson scenarios with a recorded completion.
+	const readPct = $derived(
+		Math.round((sectionIds.filter((id) => $progress.sections[id]).length / sectionIds.length) * 100)
+	);
+	const doneCount = $derived(
+		(lessonScenarioIds as readonly string[]).filter((id) => $progress.scenarios[id]).length
+	);
+	const isDone = (id: string) => Boolean($progress.scenarios[id]);
 
 	const expandedSections = new SvelteSet<string>();
 	const manuallyExpanded = new SvelteSet<string>();
@@ -128,6 +141,23 @@
 		</button>
 	</div>
 
+	{#if readPct > 0 || doneCount > 0}
+		<div
+			class="px-4 pb-2"
+			title="{readPct}% read · {doneCount}/{lessonScenarioIds.length} exercises completed"
+		>
+			<div class="h-1 w-full overflow-hidden rounded-full" style="background: var(--color-border);">
+				<div
+					class="h-full rounded-full transition-all duration-500"
+					style="width: {readPct}%; background: var(--color-primary);"
+				></div>
+			</div>
+			<p class="mt-1 text-[10.5px]" style="color: var(--color-text-muted);">
+				{readPct}% read · {doneCount}/{lessonScenarioIds.length} exercises
+			</p>
+		</div>
+	{/if}
+
 	<nav class="flex-1 overflow-y-auto px-3 py-2" use:autohideScroll>
 		{#each sections as section (section.id)}
 			{@const active = isActive(section.id)}
@@ -204,7 +234,12 @@
 									: '1'}; font-size: {child.isPlayground ? '12px' : '13px'};"
 							>
 								{@render navIcon(child, childActive, child.isPlayground ? 11 : 13)}
-								<span>{child.label}</span>
+								<span
+									>{child.label}{#if child.isPlayground && isDone(child.id)}<span
+											class="ml-1"
+											style="color: var(--color-tip);">✔</span
+										>{/if}</span
+								>
 							</button>
 						{/each}
 					</div>
@@ -305,7 +340,12 @@
 									: '1'}; font-size: {child.isPlayground ? '11px' : '12px'};"
 							>
 								{@render navIcon(child, childActive, child.isPlayground ? 10 : 12)}
-								<span>{child.label}</span>
+								<span
+									>{child.label}{#if child.isPlayground && isDone(child.id)}<span
+											class="ml-1"
+											style="color: var(--color-tip);">✔</span
+										>{/if}</span
+								>
 							</button>
 						{/each}
 					</div>

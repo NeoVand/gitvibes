@@ -1,6 +1,9 @@
+import git from 'isomorphic-git';
 import type { RepoSeed, GitEngine } from './git-engine';
+import { readFileAtCommit } from './tree-utils';
 import {
 	buildBranchingRepo,
+	buildCapstoneRepo,
 	buildCherryPickRepo,
 	buildDetachedHeadRepo,
 	buildMergeConflictRepo,
@@ -23,6 +26,51 @@ export interface PlaygroundScenario {
 	suggestedCommands: string[];
 	seed?: RepoSeed;
 	seedFn?: (engine: GitEngine) => Promise<void>;
+	/** One line naming the goal state, shown when the check passes. */
+	goal?: string;
+	/**
+	 * Returns true once the repo has reached the scenario's goal state. Run
+	 * after every command; keep it cheap and side-effect free.
+	 */
+	check?: (engine: GitEngine) => Promise<boolean>;
+}
+
+/* ── check helpers ─────────────────────────────────────────────── */
+
+async function tipOid(engine: GitEngine, branch: string): Promise<string | null> {
+	return git
+		.resolveRef({ fs: engine.fs, dir: engine.dir, ref: `refs/heads/${branch}` })
+		.catch(() => null);
+}
+
+async function tipMessage(engine: GitEngine, branch: string): Promise<string | null> {
+	const oid = await tipOid(engine, branch);
+	if (!oid) return null;
+	const { commit } = await git.readCommit({ fs: engine.fs, dir: engine.dir, oid });
+	return commit.message.trim();
+}
+
+async function headMessage(engine: GitEngine): Promise<string | null> {
+	const oid = await git
+		.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' })
+		.catch(() => null);
+	if (!oid) return null;
+	const { commit } = await git.readCommit({ fs: engine.fs, dir: engine.dir, oid });
+	return commit.message.trim();
+}
+
+/** Is `message` the subject of any commit reachable from `ref`? */
+async function logContains(engine: GitEngine, ref: string, message: string): Promise<boolean> {
+	const log = await git.log({ fs: engine.fs, dir: engine.dir, ref, depth: 50 }).catch(() => []);
+	return log.some((e) => e.commit.message.trim().startsWith(message));
+}
+
+async function fileAtHead(engine: GitEngine, filepath: string): Promise<string | null> {
+	const oid = await git
+		.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' })
+		.catch(() => null);
+	if (!oid) return null;
+	return readFileAtCommit(engine, oid, filepath);
 }
 
 export const playgroundScenarios: PlaygroundScenario[] = [
@@ -60,6 +108,19 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 				{ path: 'tests/test_auth.py', content: 'def test_auth():\n    assert True\n' },
 				{ path: 'src/middleware.py', content: 'def middleware():\n    pass\n' }
 			]
+		},
+		goal: 'Review the changes and commit the files you trust',
+		check: async (engine) => {
+			const log = await git
+				.log({ fs: engine.fs, dir: engine.dir, ref: 'HEAD', depth: 5 })
+				.catch(() => []);
+			if (log.length < 2) return false;
+			const committed = await Promise.all(
+				['src/auth.py', 'src/routes.py', 'src/middleware.py', 'tests/test_auth.py'].map((f) =>
+					fileAtHead(engine, f)
+				)
+			);
+			return committed.some((c) => c !== null);
 		}
 	},
 	{
@@ -76,7 +137,16 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git commit -m "feat: AI refactor attempt 1"',
 			'git push -u origin feature/ai-experiment'
 		],
-		seedFn: buildBranchingRepo
+		seedFn: buildBranchingRepo,
+		goal: 'Commit the AI work on its own branch and push it',
+		check: async (engine) => {
+			for (const [branch, oid] of engine.remote.branches) {
+				if (branch === 'main') continue;
+				const local = await tipOid(engine, branch);
+				if (local && local === oid) return true;
+			}
+			return false;
+		}
 	},
 	{
 		id: 'sync-remote',
@@ -91,7 +161,9 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git merge origin/main',
 			'git log --oneline'
 		],
-		seedFn: buildSyncRemoteRepo
+		seedFn: buildSyncRemoteRepo,
+		goal: "Fetch the teammates' commits and merge them into your branch",
+		check: async (engine) => (await fileAtHead(engine, 'src/shared.py')) === 'ef\n'
 	},
 	{
 		id: 'undo',
@@ -107,7 +179,9 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git log --oneline',
 			'git revert HEAD'
 		],
-		seedFn: buildUndoRepo
+		seedFn: buildUndoRepo,
+		goal: 'Clean the working tree and revert the pushed commit',
+		check: async (engine) => (await headMessage(engine))?.startsWith('Revert') ?? false
 	},
 	{
 		id: 'stash',
@@ -124,6 +198,14 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git switch feature/A',
 			'git stash pop'
 		],
+		goal: 'Create the hotfix branch, then restore your stashed work on feature/A',
+		check: async (engine) => {
+			const branches = await git.listBranches({ fs: engine.fs, dir: engine.dir });
+			if (!branches.some((b) => b.startsWith('hotfix/'))) return false;
+			const current = await git.currentBranch({ fs: engine.fs, dir: engine.dir });
+			if (current !== 'feature/A') return false;
+			return (await engine.readFile('src/pipeline.py')) === 'wip pipeline changes\n';
+		},
 		seed: {
 			commits: [
 				{ message: 'Last commit on main', files: [{ path: 'src/app.py', content: 'stable\n' }] }
@@ -157,7 +239,13 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git reset --hard HEAD~1',
 			'git rebase main'
 		],
-		seedFn: buildMergeRebaseRepo
+		seedFn: buildMergeRebaseRepo,
+		goal: "Bring main's commits into your feature branch (merge or rebase)",
+		check: async (engine) => {
+			const current = await git.currentBranch({ fs: engine.fs, dir: engine.dir });
+			if (current !== 'feature') return false;
+			return (await fileAtHead(engine, 'src/main.py')) === 'teammate f\n';
+		}
 	},
 	{
 		id: 'conflicts',
@@ -172,7 +260,19 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git add src/model.py',
 			'git commit -m "fix: resolve merge conflict in model.py"'
 		],
-		seedFn: buildMergeConflictRepo
+		seedFn: buildMergeConflictRepo,
+		goal: 'Resolve the conflict and complete the merge commit',
+		check: async (engine) => {
+			if (engine.mergeState !== null) return false;
+			const oid = await git
+				.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' })
+				.catch(() => null);
+			if (!oid) return false;
+			const { commit } = await git.readCommit({ fs: engine.fs, dir: engine.dir, oid });
+			if (commit.parent.length !== 2) return false;
+			const content = await fileAtHead(engine, 'src/model.py');
+			return content !== null && !content.includes('<<<<<<<');
+		}
 	},
 	{
 		id: 'wrong-branch',
@@ -187,7 +287,17 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git switch feature/payments',
 			'git log --oneline'
 		],
-		seedFn: buildWrongBranchRepo
+		seedFn: buildWrongBranchRepo,
+		goal: 'Payment commit lives on a feature branch; main is clean again',
+		check: async (engine) => {
+			if ((await tipMessage(engine, 'main')) !== 'feat: add user model') return false;
+			const branches = await git.listBranches({ fs: engine.fs, dir: engine.dir });
+			for (const b of branches) {
+				if (b === 'main') continue;
+				if ((await tipMessage(engine, b))?.startsWith('feat: add payment')) return true;
+			}
+			return false;
+		}
 	},
 	{
 		id: 'accidental-stage',
@@ -204,7 +314,20 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git status',
 			'git commit -m "feat: add server runner and new feature"'
 		],
-		seedFn: buildAccidentalStageRepo
+		seedFn: buildAccidentalStageRepo,
+		goal: 'Commit the real work — with the secret and the debug file left out',
+		check: async (engine) => {
+			const log = await git
+				.log({ fs: engine.fs, dir: engine.dir, ref: 'HEAD', depth: 5 })
+				.catch(() => []);
+			if (log.length < 2) return false;
+			const [env, debug, feature] = await Promise.all([
+				fileAtHead(engine, '.env'),
+				fileAtHead(engine, 'src/debug.py'),
+				fileAtHead(engine, 'src/feature.py')
+			]);
+			return env === 'SECRET_KEY=old_key\n' && debug === null && feature !== null;
+		}
 	},
 	{
 		id: 'force-push',
@@ -218,7 +341,16 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git push origin feature/cleanup',
 			'git push --force-with-lease origin feature/cleanup'
 		],
-		seedFn: buildForcePushRepo
+		seedFn: buildForcePushRepo,
+		goal: 'The remote branch matches your cleaned-up local history',
+		check: async (engine) => {
+			const local = await tipOid(engine, 'feature/cleanup');
+			if (!local || engine.remote.getBranch('feature/cleanup') !== local) return false;
+			const log = await git
+				.log({ fs: engine.fs, dir: engine.dir, ref: 'feature/cleanup', depth: 10 })
+				.catch(() => []);
+			return log.length === 2;
+		}
 	},
 	{
 		id: 'reflog-rescue',
@@ -232,7 +364,9 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git reset --hard HEAD@{1}',
 			'git log --oneline'
 		],
-		seedFn: buildReflogRescueRepo
+		seedFn: buildReflogRescueRepo,
+		goal: 'The lost commits are back at the tip of main',
+		check: async (engine) => (await headMessage(engine)) === 'feat: add caching layer'
 	},
 	{
 		id: 'rebase-conflict',
@@ -248,7 +382,13 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git add src/config.py',
 			'git rebase --continue'
 		],
-		seedFn: buildRebaseConflictRepo
+		seedFn: buildRebaseConflictRepo,
+		goal: 'Rebase completed with the conflict resolved in favor of the higher timeout',
+		check: async (engine) => {
+			if (engine.replayState !== null) return false;
+			if ((await fileAtHead(engine, 'src/config.py')) !== 'TIMEOUT = 120\n') return false;
+			return logContains(engine, 'HEAD', 'fix: lower timeout');
+		}
 	},
 	{
 		id: 'cherry-pick',
@@ -262,7 +402,10 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git log --oneline',
 			'cat src/billing.py'
 		],
-		seedFn: buildCherryPickRepo
+		seedFn: buildCherryPickRepo,
+		goal: 'The rounding fix is on main; the junk stays on experiment',
+		check: async (engine) =>
+			(await tipMessage(engine, 'main'))?.startsWith('fix: round currency') ?? false
 	},
 	{
 		id: 'detached-head',
@@ -277,7 +420,13 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git switch -c inspect-v02',
 			'git switch main'
 		],
-		seedFn: buildDetachedHeadRepo
+		seedFn: buildDetachedHeadRepo,
+		goal: 'Time-travel to the old commit, then escape back onto a branch',
+		check: async (engine) => {
+			const detachedOnce = engine.reflog.some((e) => /checkout: moving to HEAD~\d/.test(e.message));
+			if (!detachedOnce) return false;
+			return (await git.currentBranch({ fs: engine.fs, dir: engine.dir })) != null;
+		}
 	},
 	{
 		id: 'release-tags',
@@ -292,7 +441,59 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git log --oneline',
 			'git show v1.1.0'
 		],
-		seedFn: buildReleaseRepo
+		seedFn: buildReleaseRepo,
+		goal: 'v1.1.0 exists as an ANNOTATED tag at the release commit',
+		check: async (engine) => {
+			const tagOid = await git
+				.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'refs/tags/v1.1.0' })
+				.catch(() => null);
+			if (!tagOid) return false;
+			const tag = await git
+				.readTag({ fs: engine.fs, dir: engine.dir, oid: tagOid })
+				.catch(() => null);
+			return tag !== null;
+		}
+	},
+	{
+		id: 'capstone',
+		title: 'The Final Challenge — three messes, one repo',
+		description:
+			'Everything at once: a payment feature was committed straight to main, a live Stripe key is sitting STAGED, and the cleaned-up main still needs its v1.0.0 release tag. Fix all three.',
+		hint: 'Three tasks, any order: (1) unstage .env so the secret never gets committed; (2) move the payment commit to a feature branch (create the branch, then reset main back one commit); (3) put an annotated v1.0.0 tag on the cleaned-up main. Everything you need is in Parts 2-5.',
+		suggestedCommands: ['git status', 'git log --oneline', 'git restore --staged .env'],
+		seedFn: buildCapstoneRepo,
+		goal: 'Secret unstaged, payment commit on its own branch, main tagged v1.0.0',
+		check: async (engine) => {
+			// 1. The secret never made it into history, and isn't staged now
+			const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
+			const envRow = matrix.find(([f]) => f === '.env');
+			if (envRow && (envRow[3] === 2 || envRow[3] === 3)) return false;
+
+			// 2. Payment commit moved to a branch; main reset underneath it
+			if ((await tipMessage(engine, 'main')) !== 'feat: add user model') return false;
+			const branches = await git.listBranches({ fs: engine.fs, dir: engine.dir });
+			let paymentsBranch: string | null = null;
+			for (const b of branches) {
+				if (b === 'main') continue;
+				if ((await tipMessage(engine, b))?.startsWith('feat: add payment')) paymentsBranch = b;
+			}
+			if (!paymentsBranch) return false;
+			const paymentsTip = await tipOid(engine, paymentsBranch);
+			if (paymentsTip && (await readFileAtCommit(engine, paymentsTip, '.env')) !== null) {
+				return false; // committed the secret onto the branch — not a pass
+			}
+
+			// 3. Annotated v1.0.0 on the clean main tip
+			const tagOid = await git
+				.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'refs/tags/v1.0.0' })
+				.catch(() => null);
+			if (!tagOid) return false;
+			const tag = await git
+				.readTag({ fs: engine.fs, dir: engine.dir, oid: tagOid })
+				.catch(() => null);
+			if (!tag) return false;
+			return (await engine.peelTag(tagOid)) === (await tipOid(engine, 'main'));
+		}
 	},
 	{
 		id: 'clean-slate',
@@ -348,7 +549,8 @@ export const lessonScenarioIds = [
 	'rebase-conflict',
 	'cherry-pick',
 	'detached-head',
-	'release-tags'
+	'release-tags',
+	'capstone'
 ] as const;
 
 export type LessonScenarioId = (typeof lessonScenarioIds)[number];

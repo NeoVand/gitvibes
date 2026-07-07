@@ -45,7 +45,8 @@ export const sectionIds = [
 	'part-8',
 	'section-8-1',
 	'section-8-2',
-	'section-8-3'
+	'section-8-3',
+	'section-8-4'
 ] as const;
 
 /**
@@ -68,7 +69,8 @@ export const playgroundAnchorIds = [
 	'conflicts',
 	'cherry-pick',
 	'rebase-conflict',
-	'release-tags'
+	'release-tags',
+	'capstone'
 ] as const;
 
 /** Every id that can appear in the URL hash and the sidebar scroll-spy. */

@@ -209,8 +209,17 @@ const topicEntries: SearchEntry[] = [
 		kind: 'topic'
 	},
 	{
-		id: 'topic-forges',
+		id: 'topic-capstone',
 		sectionId: 'section-8-3',
+		title: 'The Final Challenge',
+		part: 'Conclusion',
+		description: 'One repo, three messes — the capstone exercise that proves you can do it.',
+		keywords: ['final challenge', 'capstone', 'exam', 'test yourself', 'skill checklist', 'quiz'],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-forges',
+		sectionId: 'section-8-4',
 		title: 'Beyond GitHub: GitLab, Bitbucket & friends',
 		part: 'Conclusion',
 		description:

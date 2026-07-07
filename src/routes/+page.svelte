@@ -14,6 +14,7 @@
 	import Part7 from '$lib/components/sections/Part7.svelte';
 	import Part8 from '$lib/components/sections/Part8.svelte';
 	import { anchorIds } from '$lib/data/sections';
+	import { markSectionVisited } from '$lib/data/progress';
 	import {
 		loadThemePreference,
 		saveThemePreference,
@@ -116,7 +117,10 @@
 					break;
 				}
 			}
-			if (best) activeSection = best;
+			if (best) {
+				activeSection = best;
+				markSectionVisited(best);
+			}
 		}
 
 		let rafId = 0;

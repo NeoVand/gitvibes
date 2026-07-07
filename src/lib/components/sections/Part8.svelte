@@ -1,16 +1,56 @@
 <script lang="ts">
-	import { BookOpen, Library, Workflow, Table } from 'lucide-svelte';
+	import { BookOpen, Library, Workflow, Table, Trophy } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import Callout from '../ui/Callout.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+	import { progress, toggleChecklistItem } from '$lib/data/progress';
 
 	let {
 		onOpenPlayground
 	}: {
 		onOpenPlayground?: () => void;
 	} = $props();
+
+	const SKILL_CHECKLIST = [
+		{ id: 'three-areas', label: 'I can explain working directory vs staging area vs repository.' },
+		{
+			id: 'review-diff',
+			label: 'I review AI diffs before staging: status → diff → add -p, never blind git add .'
+		},
+		{
+			id: 'commit-body',
+			label: 'I can write a Conventional Commit with a body that explains why.'
+		},
+		{
+			id: 'branch-push',
+			label: 'I can create a branch, push it with tracking, and open a draft PR.'
+		},
+		{
+			id: 'unstage-discard',
+			label: 'I know restore vs restore --staged vs commit --amend without checking.'
+		},
+		{
+			id: 'revert',
+			label: 'I can undo a pushed commit safely with revert (and know why not reset).'
+		},
+		{ id: 'reflog', label: 'I can recover "lost" commits with the reflog.' },
+		{
+			id: 'conflicts',
+			label: 'I can resolve a merge conflict AND a rebase conflict — and I know whose side HEAD is.'
+		},
+		{
+			id: 'lease-push',
+			label: 'I know when force-with-lease is safe and what the lease actually checks.'
+		},
+		{
+			id: 'agent-guardrails',
+			label: 'I can set up AGENTS.md, a pre-commit hook, and branch protection for an AI agent.'
+		}
+	];
 </script>
 
 <section id="part-8" class="py-10">
@@ -325,12 +365,96 @@
 			</div>
 		</div>
 
-		<!-- 8.3 Keep Learning -->
+		<!-- 8.3 The Final Challenge -->
 		<div id="section-8-3" class="mb-14">
 			<SectionHeader
 				level="section"
+				icon={Trophy}
+				title="8.3 The Final Challenge"
+				color="var(--color-primary)"
+			/>
+
+			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Reading is not knowing. Here's the exam — one repository, three simultaneous messes, no
+				step-by-step instructions. Everything you need is in Parts 2 through 5, and the playground
+				will tell you the moment you've won.
+			</p>
+
+			<Callout type="important">
+				<strong>Your mission:</strong> a payment feature was committed straight to
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
+				>, a live Stripe key is sitting <em>staged</em> and one careless commit away from leaking,
+				and the cleaned-up main still needs its
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">v1.0.0</code
+				> release tag. Fix all three, in any order.
+			</Callout>
+
+			<h4
+				id="capstone"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: The Final Challenge
+			</h4>
+			<PlaygroundNote>
+				Start with <code>git status</code> and <code>git log --oneline</code> to survey the damage. A
+				✔ appears in the terminal when all three goals are met — no partial credit.
+			</PlaygroundNote>
+			<LessonActivity title="The Final Challenge" scenarioId="capstone" id="capstone" />
+
+			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				The Skill Checklist
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Beyond the challenge, here's the honest self-test. Check each item only when you could do it
+				<em>right now, without looking anything up</em>. (Saved locally in your browser — nobody's
+				grading you but you.)
+			</p>
+
+			<div class="mb-4 space-y-1.5">
+				{#each SKILL_CHECKLIST as item (item.id)}
+					<button
+						type="button"
+						onclick={() => toggleChecklistItem(item.id)}
+						class="flex w-full cursor-pointer items-start gap-3 rounded-lg p-3 text-left transition-opacity hover:opacity-80"
+						style="background: var(--color-bg-secondary);"
+					>
+						<span
+							class="mt-0.5 flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded border text-[11px] font-bold"
+							style="border-color: {$progress.checklist[item.id]
+								? 'var(--color-tip)'
+								: 'var(--color-border)'}; color: var(--color-tip); background: {$progress.checklist[
+								item.id
+							]
+								? 'color-mix(in srgb, var(--color-tip) 15%, transparent)'
+								: 'transparent'};"
+						>
+							{$progress.checklist[item.id] ? '✔' : ''}
+						</span>
+						<span
+							class="text-[13px]"
+							style="color: {$progress.checklist[item.id]
+								? 'var(--color-text-muted)'
+								: 'var(--color-text-secondary)'};"
+						>
+							{item.label}
+						</span>
+					</button>
+				{/each}
+			</div>
+		</div>
+
+		<!-- 8.4 Keep Learning -->
+		<div id="section-8-4" class="mb-14">
+			<SectionHeader
+				level="section"
 				icon={Library}
-				title="8.3 Keep Learning — The References That Matter"
+				title="8.4 Keep Learning — The References That Matter"
 				color="var(--color-primary)"
 			/>
 

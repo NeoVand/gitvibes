@@ -22,6 +22,8 @@
 		loadScenarioSeed,
 		type PlaygroundScenario
 	} from '$lib/playground/scenarios';
+	import { progress, markScenarioComplete, staleCompletions } from '$lib/data/progress';
+	import { get } from 'svelte/store';
 
 	interface HistoryLine {
 		type: 'input' | 'output' | 'system';
@@ -94,6 +96,7 @@
 			engine ??= new GitEngine(embedded ? `embedded-${id}` : 'gitvibes-playground');
 			await loadScenarioSeed(engine, next);
 			if (generation !== loadGeneration) return;
+			checkArmed = true;
 			history = embedded
 				? [
 						{ type: 'system', text: next.description },
@@ -108,7 +111,8 @@
 							{
 								type: 'system',
 								text: 'Type git commands below. Enter "help" for supported commands.'
-							}
+							},
+							...refresherNudge(next.id)
 						]
 					: [
 							{ type: 'system', text: `Scenario: ${next.title}` },
@@ -172,11 +176,36 @@
 			}
 
 			await refreshDiagram();
+			await runScenarioCheck();
 		} catch (err) {
 			const message = err instanceof Error ? err.message : String(err);
 			history = [...history, { type: 'output', text: `error: ${message}`, error: true }];
 		}
 		scrollTerminal();
+	}
+
+	// Completion fires once per scenario load; resetting the scenario arms it
+	// again so learners can re-earn the check (and the practice count goes up).
+	let checkArmed = $state(true);
+
+	async function runScenarioCheck() {
+		if (!engine || !checkArmed || !scenario.check) return;
+		let passed = false;
+		try {
+			passed = await scenario.check(engine);
+		} catch {
+			passed = false;
+		}
+		if (!passed) return;
+		checkArmed = false;
+		markScenarioComplete(scenario.id);
+		history = [
+			...history,
+			{
+				type: 'system',
+				text: `✔ Scenario complete — ${scenario.goal ?? 'goal state reached'}. Nice work! (Reset to practice again.)`
+			}
+		];
 	}
 
 	function scrollTerminal() {
@@ -276,6 +305,24 @@
 		await loadScenario(getScenario(activeScenarioId));
 	}
 
+	/**
+	 * Spaced repetition, the honest local version: if a scenario was completed
+	 * a while ago, suggest re-running it when the panel opens. Skills fade —
+	 * recovery skills fastest.
+	 */
+	function refresherNudge(currentId: string): HistoryLine[] {
+		const stale = staleCompletions(get(progress)).filter((s) => s.id !== currentId);
+		if (stale.length === 0) return [];
+		const target = getScenario(stale[0].id);
+		if (target.id !== stale[0].id) return [];
+		return [
+			{
+				type: 'system',
+				text: `🔁 Refresher suggested: you completed "${target.title}" ${stale[0].daysAgo} days ago — pick it from the dropdown for a 2-minute rerun.`
+			}
+		];
+	}
+
 	async function changeScenario(nextId: string) {
 		activeScenarioId = nextId;
 		await loadScenario(getScenario(nextId));
@@ -298,7 +345,7 @@
 				aria-label="Scenario"
 			>
 				{#each playgroundScenarios as s (s.id)}
-					<option value={s.id}>{s.title}</option>
+					<option value={s.id}>{$progress.scenarios[s.id] ? '✔ ' : ''}{s.title}</option>
 				{/each}
 			</select>
 			<span class="pg-select-icon" aria-hidden="true">
