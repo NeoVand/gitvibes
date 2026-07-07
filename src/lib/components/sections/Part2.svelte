@@ -905,8 +905,8 @@ echo "Thumbs.db" >> ~/.gitignore_global`}
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">LF</code
 				>. On a mixed team this produces the classic horror diff:
 				<em>every line of the file "changed"</em>
-				because a teammate's editor rewrote the endings — and AI agents reformatting files make it
-				worse. The team-level fix is a committed
+				because a teammate's editor rewrote the endings — and AI agents reformatting files make it worse.
+				The team-level fix is a committed
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
