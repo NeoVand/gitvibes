@@ -308,6 +308,143 @@ export async function buildCapstoneRepo(engine: GitEngine): Promise<void> {
 	// Mess 3 isn't a mess yet — it's the missing v1.0.0 tag on the clean main
 }
 
+const PRICING_OK =
+	'def total(price, qty, discount):\n    return round(price * qty * (1 - discount), 2)\n';
+const PRICING_BUG =
+	'def total(price, qty, discount):\n    return round(price * qty - discount, 2)\n';
+
+/**
+ * Eight commits; one in the middle silently broke the pricing function.
+ * `run-tests` passes or fails based on the checked-out code — bisect finds
+ * the culprit in three steps instead of eight.
+ */
+export async function buildBisectRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/pricing.py', content: PRICING_OK },
+		{ path: 'README.md', content: '# Pricing Service\n' }
+	]);
+	const goodTag = await engine.getCommitOid('main', 0);
+	await git.tag({ fs: engine.fs, dir: engine.dir, ref: 'v1.0', object: goodTag });
+
+	await engine.commitFiles('feat: add currency formatting', [
+		{ path: 'src/format.py', content: 'def fmt(x):\n    return f"${x:.2f}"\n' }
+	]);
+	await engine.commitFiles('docs: document the pricing API', [
+		{ path: 'README.md', content: '# Pricing Service\n\nSee src/pricing.py.\n' }
+	]);
+	await engine.commitFiles('refactor: tidy pricing internals', [
+		{ path: 'src/pricing.py', content: `# pricing core\n${PRICING_OK}` }
+	]);
+	// The regression, buried mid-history by "an agent refactor"
+	await engine.commitFiles('refactor: simplify discount math', [
+		{ path: 'src/pricing.py', content: `# pricing core\n${PRICING_BUG}` }
+	]);
+	await engine.commitFiles('feat: add tax table', [
+		{ path: 'src/tax.py', content: 'TAX = {"CA": 0.0725}\n' }
+	]);
+	await engine.commitFiles('style: reformat tax table', [
+		{ path: 'src/tax.py', content: 'TAX = {\n    "CA": 0.0725,\n}\n' }
+	]);
+	await engine.commitFiles('feat: add invoice numbers', [
+		{ path: 'src/invoice.py', content: 'def next_id(n):\n    return n + 1\n' }
+	]);
+
+	engine.testRunner = async (e) => {
+		const pricing = await e.readFile('src/pricing.py');
+		const pass = pricing?.includes('(1 - discount)') ?? false;
+		return pass
+			? { pass, output: 'test_pricing ✓  test_format ✓  test_tax ✓\n3 passed' }
+			: {
+					pass,
+					output:
+						'test_pricing ✗  expected 17.96, got 19.90\ntest_format ✓  test_tax ✓\n1 failed, 2 passed'
+				};
+	};
+}
+
+/**
+ * A repo with (simulated) husky hooks installed: pre-commit fails while the
+ * debug marker is still in the code, commit-msg enforces Conventional Commits.
+ */
+export async function buildHooksRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/app.py', content: 'def main():\n    return serve()\n' },
+		{
+			path: 'package.json',
+			content: '{\n  "scripts": { "lint": "ruff check .", "test": "pytest" }\n}\n'
+		}
+	]);
+
+	// The hook scripts exist as real files so `cat` shows them...
+	await engine.writeFile(
+		'.husky/pre-commit',
+		'#!/bin/sh\nnpm run lint || exit 1\nnpm test || exit 1\n'
+	);
+	await engine.writeFile(
+		'.husky/commit-msg',
+		`#!/bin/sh\ngrep -qE '^(Merge|Revert)' "$1" && exit 0\nif ! grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\\(.+\\))?!?: .+' "$1"; then\n  echo "Commit message must follow Conventional Commits" >&2\n  exit 1\nfi\n`
+	);
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: '.husky/pre-commit' });
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: '.husky/commit-msg' });
+	await git.commit({
+		fs: engine.fs,
+		dir: engine.dir,
+		message: 'chore: install husky hooks',
+		author: { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' }
+	});
+
+	// ...and the engine enforces them.
+	engine.hooks = {
+		preCommit: {
+			file: 'src/app.py',
+			marker: 'BREAKPOINT',
+			error: "ruff: src/app.py:2: leftover debugging statement ('BREAKPOINT')"
+		},
+		commitMsg: {
+			pattern:
+				/^(Merge|Revert)|^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?!?: .+/,
+			error: "Commit message must follow Conventional Commits, e.g. 'fix: remove debug statement'"
+		}
+	};
+
+	// The agent left its mess: a debug marker in the code
+	await engine.writeFile(
+		'src/app.py',
+		'def main():\n    BREAKPOINT  # agent forgot to remove this\n    return serve()\n'
+	);
+}
+
+/** A feature branch with three messy WIP commits begging to become one */
+export async function buildInteractiveRebaseRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/app.py', content: 'def main():\n    pass\n' }
+	]);
+
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/onboarding', checkout: true });
+	await engine.commitFiles('wip: try onboarding form', [
+		{ path: 'src/form.py', content: 'def onboarding_form():\n    return "TODO"\n' }
+	]);
+	await engine.commitFiles('wip: fix typo', [
+		{ path: 'src/form.py', content: 'def onboarding_form():\n    return "todo"\n' }
+	]);
+	await engine.commitFiles('wip: form works now', [
+		{
+			path: 'src/form.py',
+			content: 'def onboarding_form():\n    return render("onboarding.html")\n'
+		}
+	]);
+}
+
+/** Two feature branches waiting for parallel agents — worktree practice */
+export async function buildWorktreesRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/auth.py', content: 'def login():\n    pass\n' },
+		{ path: 'src/payments.py', content: 'def charge():\n    pass\n' }
+	]);
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/auth-refactor' });
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'feature/payments' });
+}
+
 /** History ready for a release tag, with one previous release tagged */
 export async function buildReleaseRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# CLI Tool\n' }]);

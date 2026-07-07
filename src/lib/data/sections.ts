@@ -70,6 +70,10 @@ export const playgroundAnchorIds = [
 	'cherry-pick',
 	'rebase-conflict',
 	'release-tags',
+	'interactive-rebase',
+	'bisect',
+	'hooks',
+	'worktrees',
 	'capstone'
 ] as const;
 

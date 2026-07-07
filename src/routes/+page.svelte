@@ -15,6 +15,7 @@
 	import Part8 from '$lib/components/sections/Part8.svelte';
 	import { anchorIds } from '$lib/data/sections';
 	import { markSectionVisited } from '$lib/data/progress';
+	import { decodeSharedFromHash, type SharedSession } from '$lib/playground/share';
 	import {
 		loadThemePreference,
 		saveThemePreference,
@@ -26,6 +27,7 @@
 	let sidebarOpen = $state(false);
 	let cheatSheetOpen = $state(false);
 	let playgroundOpen = $state(false);
+	let sharedSession = $state<SharedSession | null>(null);
 	let activeSection = $state('hero');
 	let theme = $state<ThemePreference>('system');
 	let navClickActive = false;
@@ -91,6 +93,13 @@
 	onMount(() => {
 		theme = loadThemePreference();
 		applyTheme(theme);
+
+		// A shared playground session (#pg=...) opens the panel and replays
+		const decoded = decodeSharedFromHash(window.location.hash);
+		if (decoded) {
+			sharedSession = decoded;
+			playgroundOpen = true;
+		}
 
 		const hash = window.location.hash.slice(1);
 		if (hash && anchorIds.includes(hash)) {
@@ -237,7 +246,7 @@
 />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
-<PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} />
+<PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} shared={sharedSession} />
 
 <main
 	id="main-content"

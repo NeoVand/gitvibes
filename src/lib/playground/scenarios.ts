@@ -2,10 +2,14 @@ import git from 'isomorphic-git';
 import type { RepoSeed, GitEngine } from './git-engine';
 import { readFileAtCommit } from './tree-utils';
 import {
+	buildBisectRepo,
 	buildBranchingRepo,
 	buildCapstoneRepo,
 	buildCherryPickRepo,
 	buildDetachedHeadRepo,
+	buildHooksRepo,
+	buildInteractiveRebaseRepo,
+	buildWorktreesRepo,
 	buildMergeConflictRepo,
 	buildMergeRebaseRepo,
 	buildRebaseConflictRepo,
@@ -455,6 +459,108 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		}
 	},
 	{
+		id: 'interactive-rebase',
+		title: 'Squash the WIP — interactive rebase',
+		description:
+			'Your feature branch works, but its history is three "wip" commits nobody should ever read. Use git rebase -i to fold them into one well-named commit before the PR.',
+		hint: 'git rebase -i main lists the three commits oldest-first and asks p/s/r/d for each. Classic cleanup: r (reword) the first one to a proper message like "feat: add onboarding form", then s (squash) the other two into it. git log --oneline afterwards shows one clean commit.',
+		suggestedCommands: [
+			'git log --oneline',
+			'git rebase -i main',
+			'r',
+			'feat: add onboarding form',
+			's',
+			's',
+			'git log --oneline'
+		],
+		seedFn: buildInteractiveRebaseRepo,
+		goal: 'Three wip commits became one clean commit — same final code',
+		check: async (engine) => {
+			const current = await git.currentBranch({ fs: engine.fs, dir: engine.dir });
+			if (current !== 'feature/onboarding') return false;
+			const log = await git
+				.log({ fs: engine.fs, dir: engine.dir, ref: 'feature/onboarding', depth: 10 })
+				.catch(() => []);
+			if (log.length !== 2) return false;
+			const form = await fileAtHead(engine, 'src/form.py');
+			return form === 'def onboarding_form():\n    return render("onboarding.html")\n';
+		}
+	},
+	{
+		id: 'bisect',
+		title: 'Find the commit that broke it — git bisect',
+		description:
+			'The tests fail on main, but they passed at v1.0 — eight commits ago, half of them agent refactors. Instead of reading every diff, let git bisect binary-search the history for the culprit.',
+		hint: 'run-tests to confirm the breakage. Then: git bisect start, git bisect bad (HEAD is broken), git bisect good v1.0. Git checks out a midpoint — run-tests, answer git bisect good or git bisect bad, repeat. When it names the first bad commit, git bisect reset returns you home.',
+		suggestedCommands: [
+			'run-tests',
+			'git bisect start',
+			'git bisect bad',
+			'git bisect good v1.0',
+			'run-tests',
+			'git bisect bad',
+			'git bisect reset'
+		],
+		seedFn: buildBisectRepo,
+		goal: 'Bisect identified the exact commit that introduced the failure',
+		check: async (engine) => {
+			if (!engine.lastBisectResult) return false;
+			const log = await git
+				.log({ fs: engine.fs, dir: engine.dir, ref: 'main', depth: 20 })
+				.catch(() => []);
+			const culprit = log.find((e) =>
+				e.commit.message.startsWith('refactor: simplify discount math')
+			);
+			return culprit !== undefined && engine.lastBisectResult === culprit.oid;
+		}
+	},
+	{
+		id: 'hooks',
+		title: 'The hooks say no — fix it properly',
+		description:
+			'This repo has husky hooks installed: pre-commit runs lint + tests, commit-msg enforces Conventional Commits. An agent left a BREAKPOINT in src/app.py. Try to commit and watch the hooks veto it — then fix it for real.',
+		hint: 'cat .husky/pre-commit to see what runs. Committing is blocked while BREAKPOINT is in src/app.py — overwrite the file with a clean version using echo, stage it, and commit. Mind the message: the commit-msg hook wants "fix: ..." style. (--no-verify would bypass both — and leave the bug in.)',
+		suggestedCommands: [
+			'git status',
+			'cat .husky/pre-commit',
+			'git add src/app.py',
+			'git commit -m "remove debug"',
+			"echo 'def main():\\n    return serve()' > src/app.py",
+			'git add src/app.py',
+			'git commit -m "fix: remove leftover debug statement"'
+		],
+		seedFn: buildHooksRepo,
+		goal: 'A clean, conventionally-named commit made it past both hooks',
+		check: async (engine) => {
+			const msg = await headMessage(engine);
+			if (!msg || msg === 'chore: install husky hooks') return false;
+			if (!/^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?!?: .+/.test(msg)) {
+				return false;
+			}
+			const app = await fileAtHead(engine, 'src/app.py');
+			return app !== null && !app.includes('BREAKPOINT');
+		}
+	},
+	{
+		id: 'worktrees',
+		title: 'One repo, three working directories',
+		description:
+			'Agent A should refactor auth while Agent B builds payments — in parallel, in the same repository. Give each agent its own worktree, run into the branch-exclusivity guard on purpose, then clean up.',
+		hint: 'git worktree add ../proj-auth feature/auth-refactor gives Agent A a directory; do the same for feature/payments. Then try adding a worktree for main — Git refuses, because a branch can be checked out in only ONE worktree (that guarantee is the whole point). git worktree list shows the fleet, git worktree remove <path> cleans up.',
+		suggestedCommands: [
+			'git worktree add ../proj-auth feature/auth-refactor',
+			'git worktree add ../proj-payments feature/payments',
+			'git worktree list',
+			'git worktree add ../oops main',
+			'git worktree remove ../proj-auth',
+			'git worktree list'
+		],
+		seedFn: buildWorktreesRepo,
+		goal: 'Ran two parallel worktrees, then cleaned up after the agents',
+		check: async (engine) =>
+			engine.worktreeHighWater >= 2 && engine.worktrees.length < engine.worktreeHighWater
+	},
+	{
 		id: 'capstone',
 		title: 'The Final Challenge — three messes, one repo',
 		description:
@@ -550,6 +656,10 @@ export const lessonScenarioIds = [
 	'cherry-pick',
 	'detached-head',
 	'release-tags',
+	'interactive-rebase',
+	'bisect',
+	'hooks',
+	'worktrees',
 	'capstone'
 ] as const;
 
@@ -569,14 +679,18 @@ export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
   git checkout [<commit>] -- <file> | git restore [--staged|--source <rev>] <file|.>
   git reset [--soft|--mixed|--hard] [<rev>] | git reset [HEAD] <file>
   git merge <branch> [--abort] | git rebase <branch> [--abort|--continue]
+  git rebase -i <upstream>   (interactive: pick/squash/reword/drop per commit)
   git cherry-pick <commit> [--abort|--continue]
+  git bisect start | good <rev> | bad [<rev>] | reset   (+ run-tests)
+  git worktree add <path> <branch> | add -b <new> <path> | list | remove | prune
   git tag [-a <name> -m "msg"] [<name>] [-d <name>]
   git stash [push [-u] [-m "msg"]] | pop | apply | list | drop | clear  (stash@{n} ok)
   git fetch origin [--prune] | git pull [--rebase] origin <branch>
   git push [-u|--force-with-lease|--force] origin [branch|tag] | git push --tags
   git remote -v | git revert <commit> | git rm [--cached] <file>
   git clean -n | -f [-d]   (n = dry run, d = directories)
-  echo "content" > file | cat <file> | ls
+  echo "content" > file | cat <file> | ls | run-tests
   y | n | a | d | q  (responses during git add -p)
+  p | s | r | d | q  (responses during git rebase -i)
 
-Other: clear, help`;
+Other: clear, help, undo, redo, share  (share copies a link to this exact state)`;

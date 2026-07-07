@@ -344,10 +344,12 @@ describe('revert guards', () => {
 });
 
 describe('teaching messages and misc', () => {
-	it('git rebase -i explains itself', async () => {
-		const result = await run('git rebase -i HEAD~2');
-		expect(result.error).toBe(true);
-		expect(result.output).toContain('Interactive rebase');
+	it('git rebase -i opens the interactive session (q aborts cleanly)', async () => {
+		const start = await run('git rebase -i HEAD~1');
+		expect(start.error).toBeFalsy();
+		expect(start.output).toContain('Interactive rebase');
+		const quit = await run('q');
+		expect(quit.output).toContain('aborted');
 	});
 
 	it('cherry-pick ranges explain the a..b exclusivity gotcha', async () => {

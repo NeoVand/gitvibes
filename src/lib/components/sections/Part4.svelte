@@ -931,7 +931,7 @@ git switch main`}
 			</Callout>
 
 			<h4
-				id="detached-head-activity"
+				id="detached-head"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
 				style="color: var(--color-text);"
 			>
@@ -1080,7 +1080,7 @@ git switch -c rescue 4c7d3b9`}
 			</Callout>
 
 			<h4
-				id="reflog-rescue-activity"
+				id="reflog-rescue"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
 				style="color: var(--color-text);"
 			>
@@ -1102,6 +1102,39 @@ git switch -c rescue 4c7d3b9`}
 				prompts={[
 					'The last reset deleted commits I still need — check the reflog and restore them',
 					'Find the commit where tests still passed in the reflog and create a rescue branch on it'
+				]}
+			/>
+
+			<p class="mt-8 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				The reflog answers "where did my commits <em>go</em>?" Its sibling question — "which commit
+				<em>broke</em> this?" — has its own tool:
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git bisect</code
+				>
+				binary-searches your history. Mark one commit as bad and one as good, and Git checks out midpoints
+				for you to test — 1,000 commits take ten rounds, not a thousand. In the agent era this is the
+				tool for "somewhere in the bot's forty commits, the tests started failing."
+			</p>
+
+			<h4
+				id="bisect"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Find the Bad Commit
+			</h4>
+			<PlaygroundNote>
+				The tests fail on <code>main</code> but passed at <code>v1.0</code>, eight commits ago. Use
+				<code>git bisect</code> plus the <code>run-tests</code> command to pin down the culprit in three
+				rounds instead of eight.
+			</PlaygroundNote>
+			<LessonActivity title="Bisect: Binary-Search the History" scenarioId="bisect" id="bisect" />
+
+			<VibeBox
+				prompts={[
+					'The tests fail now but passed at v1.0 — bisect between them and tell me the first bad commit',
+					'Run git bisect to find which of your last 20 commits broke the login flow'
 				]}
 			/>
 		</div>

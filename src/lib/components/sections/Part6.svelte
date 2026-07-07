@@ -4,7 +4,9 @@
 	import Callout from '../ui/Callout.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 </script>
@@ -549,6 +551,20 @@ echo "npm run lint && npm test" > .husky/pre-commit`}
 				no matter who makes it.
 			</Callout>
 
+			<h4
+				id="hooks"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: The Hooks Say No
+			</h4>
+			<PlaygroundNote>
+				This repo has (simulated) husky hooks installed. An agent left a <code>BREAKPOINT</code> in
+				<code>src/app.py</code> — try to commit it and watch pre-commit block you, then get vetoed by
+				commit-msg for a sloppy message. Fix both properly.
+			</PlaygroundNote>
+			<LessonActivity title="Hooks: Mechanical Guardrails" scenarioId="hooks" id="hooks" />
+
 			<VibeBox
 				prompts={[
 					'Set up a pre-commit hook that runs our lint and test scripts and blocks the commit if either fails',
@@ -714,6 +730,20 @@ git worktree prune`}
 				keeping past the current session goes into a real commit — the durable layer this whole
 				guide is about.
 			</Callout>
+
+			<h4
+				id="worktrees"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: One Repo, Three Working Directories
+			</h4>
+			<PlaygroundNote>
+				Give Agent A and Agent B a worktree each, run into the branch-exclusivity guard on purpose,
+				then clean up with <code>git worktree remove</code>. (The playground simulates the
+				bookkeeping — the terminal stays in the main worktree.)
+			</PlaygroundNote>
+			<LessonActivity title="Worktrees: Parallel Agents" scenarioId="worktrees" id="worktrees" />
 
 			<VibeBox
 				prompts={[

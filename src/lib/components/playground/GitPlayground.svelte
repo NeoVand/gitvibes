@@ -23,6 +23,7 @@
 		type PlaygroundScenario
 	} from '$lib/playground/scenarios';
 	import { progress, markScenarioComplete, staleCompletions } from '$lib/data/progress';
+	import { shareUrl, type SharedSession } from '$lib/playground/share';
 	import { get } from 'svelte/store';
 
 	interface HistoryLine {
@@ -40,7 +41,8 @@
 		hideHeader = false,
 		onClose,
 		onResetReady,
-		id = 'playground'
+		id = 'playground',
+		shared = null
 	}: {
 		scenarioId?: string;
 		embedded?: boolean;
@@ -50,7 +52,14 @@
 		onClose?: () => void;
 		onResetReady?: (reset: () => void) => void;
 		id?: string;
+		shared?: SharedSession | null;
 	} = $props();
+
+	// One-shot: a shared session (from a #pg= link) replays once on first load.
+	// Capturing the initial prop value is intentional — later prop changes
+	// must NOT re-trigger a replay.
+	// svelte-ignore state_referenced_locally
+	let pendingShared: SharedSession | null = shared;
 
 	let graphCollapsed = $state(false);
 
@@ -97,6 +106,8 @@
 			await loadScenarioSeed(engine, next);
 			if (generation !== loadGeneration) return;
 			checkArmed = true;
+			commandLog = [];
+			redoStack = [];
 			history = embedded
 				? [
 						{ type: 'system', text: next.description },
@@ -122,6 +133,23 @@
 								text: 'Type git commands below. Enter "help" for supported commands.'
 							}
 						];
+			// A shared #pg= link: replay the captured commands onto the fresh seed
+			if (pendingShared && pendingShared.scenarioId === next.id && engine) {
+				const toReplay = pendingShared.commands;
+				pendingShared = null;
+				for (const cmd of toReplay) {
+					await runGitCommand(engine, cmd).catch(() => {});
+				}
+				commandLog = [...toReplay];
+				await recalibrateCheck(); // no award for someone else's commands
+				history = [
+					...history,
+					{
+						type: 'system',
+						text: `▶ Restored a shared session: ${toReplay.length} command${toReplay.length === 1 ? '' : 's'} replayed. Type "undo" to step back through them.`
+					}
+				];
+			}
 			await refreshDiagram();
 		} catch (err) {
 			if (generation !== loadGeneration) return;
@@ -142,15 +170,77 @@
 		onResetReady?.(resetScenario);
 	});
 
-	async function handleSubmit(e: Event) {
-		e.preventDefault();
-		const command = input.trim();
-		if (!command) return;
+	// Undo is replay-based: rebuild the seed and re-run every command except
+	// the undone one. Commands are deterministic enough that the resulting
+	// state is equivalent — and it's immune to every kind of engine state.
+	let commandLog: string[] = [];
+	let redoStack: string[] = [];
 
-		history = [...history, { type: 'input', text: command }];
-		input = '';
-		historyIndex = -1;
+	async function rebuildFromLog() {
+		if (!engine) return;
+		loading = true;
+		try {
+			await loadScenarioSeed(engine, scenario);
+			for (const cmd of commandLog) {
+				await runGitCommand(engine, cmd).catch(() => {});
+			}
+			await recalibrateCheck();
+		} finally {
+			loading = false;
+		}
+		await refreshDiagram();
+	}
 
+	/**
+	 * After a rebuild/replay, only stay armed if the goal ISN'T already met —
+	 * re-reaching a previously-earned state shouldn't re-award it, but future
+	 * genuine progress should still complete.
+	 */
+	async function recalibrateCheck() {
+		if (!engine || !scenario.check) {
+			checkArmed = false;
+			return;
+		}
+		try {
+			checkArmed = !(await scenario.check(engine));
+		} catch {
+			checkArmed = true;
+		}
+	}
+
+	async function handleUndo() {
+		if (commandLog.length === 0) {
+			history = [...history, { type: 'system', text: 'Nothing to undo yet.' }];
+			return;
+		}
+		const undone = commandLog.pop()!;
+		redoStack.push(undone);
+		await rebuildFromLog();
+		history = [...history, { type: 'system', text: `↩ Undid: ${undone}` }];
+	}
+
+	async function handleRedo() {
+		const cmd = redoStack.pop();
+		if (!cmd) {
+			history = [...history, { type: 'system', text: 'Nothing to redo.' }];
+			return;
+		}
+		await executeCommand(cmd, { fromRedo: true });
+	}
+
+	function handleShare() {
+		const url = shareUrl({ scenarioId: activeScenarioId, commands: commandLog });
+		navigator.clipboard?.writeText(url).catch(() => {});
+		history = [
+			...history,
+			{
+				type: 'system',
+				text: `🔗 Share link (copied to clipboard):\n${url}\nAnyone opening it gets this scenario with your ${commandLog.length} command${commandLog.length === 1 ? '' : 's'} replayed.`
+			}
+		];
+	}
+
+	async function executeCommand(command: string, opts: { fromRedo?: boolean } = {}) {
 		if (!engine) {
 			history = [
 				...history,
@@ -161,6 +251,13 @@
 				}
 			];
 			return;
+		}
+
+		// Stateless display commands don't belong in the undo/share log
+		const stateless = command === 'clear' || command === 'help';
+		if (!stateless) {
+			if (!opts.fromRedo) redoStack = [];
+			commandLog.push(command);
 		}
 
 		try {
@@ -180,6 +277,26 @@
 		} catch (err) {
 			const message = err instanceof Error ? err.message : String(err);
 			history = [...history, { type: 'output', text: `error: ${message}`, error: true }];
+		}
+	}
+
+	async function handleSubmit(e: Event) {
+		e.preventDefault();
+		const command = input.trim();
+		if (!command) return;
+
+		history = [...history, { type: 'input', text: command }];
+		input = '';
+		historyIndex = -1;
+
+		if (command === 'undo') {
+			await handleUndo();
+		} else if (command === 'redo') {
+			await handleRedo();
+		} else if (command === 'share') {
+			handleShare();
+		} else {
+			await executeCommand(command);
 		}
 		scrollTerminal();
 	}
@@ -237,9 +354,22 @@
 		}
 	}
 
-	const SHELL_COMMANDS = ['git', 'ls', 'cat', 'echo', 'clear', 'help'];
+	const SHELL_COMMANDS = [
+		'git',
+		'ls',
+		'cat',
+		'echo',
+		'clear',
+		'help',
+		'run-tests',
+		'undo',
+		'redo',
+		'share'
+	];
 	const GIT_SUBCOMMANDS = [
 		'status',
+		'bisect',
+		'worktree',
 		'add',
 		'commit',
 		'diff',

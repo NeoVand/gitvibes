@@ -2,6 +2,7 @@ import git from 'isomorphic-git';
 import type { GitEngine } from './git-engine';
 import { formatUnifiedDiff } from './diff';
 import { handlePatchAnswer, startPatchSession } from './patch-mode';
+import { handleRebaseIAnswer, startRebaseISession } from './rebase-interactive';
 import {
 	DEFAULT_REMOTE,
 	DEFAULT_REMOTE_URL,
@@ -1081,6 +1082,216 @@ async function runMergeAbort(engine: GitEngine): Promise<CommandResult> {
 	return { output: 'Merge aborted; working tree restored.' };
 }
 
+async function runBisect(engine: GitEngine, rest: string[]): Promise<CommandResult> {
+	const { fs, dir } = engine;
+	const sub = rest[0];
+
+	if (sub === 'start') {
+		const branch = (await git.currentBranch({ fs, dir })) ?? 'main';
+		engine.bisectState = { suspects: [], testing: null, originalRef: branch };
+		return {
+			output:
+				'status: waiting for both good and bad commits\nhint: mark the broken commit with "git bisect bad" (defaults to HEAD)\nhint: mark a commit known to work with "git bisect good <rev>"'
+		};
+	}
+
+	if (sub === 'reset') {
+		if (!engine.bisectState) return { output: 'We are not bisecting.', error: true };
+		const ref = engine.bisectState.originalRef;
+		await git.checkout({ fs, dir, ref, force: true });
+		engine.bisectState = null;
+		engine.recordReflog(
+			await git.resolveRef({ fs, dir, ref: 'HEAD' }),
+			`checkout: moving to ${ref}`
+		);
+		return { output: `Previous HEAD position was restored — back on '${ref}'` };
+	}
+
+	if (sub !== 'good' && sub !== 'bad') {
+		return {
+			output:
+				'usage: git bisect start | git bisect good <rev> | git bisect bad [<rev>] | git bisect reset',
+			error: true
+		};
+	}
+
+	const state = engine.bisectState;
+	if (!state) {
+		return { output: 'You need to run "git bisect start" first.', error: true };
+	}
+
+	// Resolve which commit is being marked
+	let markOid: string;
+	if (rest[1]) {
+		try {
+			markOid = await engine.resolveRevision(rest[1]);
+		} catch {
+			return { output: `fatal: ambiguous argument '${rest[1]}': unknown revision`, error: true };
+		}
+	} else {
+		markOid = state.testing ?? (await git.resolveRef({ fs, dir, ref: 'HEAD' }));
+	}
+
+	if (state.suspects.length === 0) {
+		// Still collecting the initial good/bad endpoints
+		if (sub === 'bad') {
+			state.testing = null;
+			(state as unknown as { badOid?: string }).badOid = markOid;
+		} else {
+			(state as unknown as { goodOid?: string }).goodOid = markOid;
+		}
+		const anchors = state as unknown as { badOid?: string; goodOid?: string };
+		if (!anchors.badOid || !anchors.goodOid) {
+			return {
+				output: `status: waiting for ${anchors.badOid ? 'good' : 'bad'} commit${anchors.badOid ? '' : 's'}`
+			};
+		}
+		// Both endpoints known: suspects = commits in good..bad, oldest first
+		const badLog = await git.log({ fs, dir, ref: anchors.badOid, depth: 100 });
+		const goodSet = new Set(
+			(await git.log({ fs, dir, ref: anchors.goodOid, depth: 100 })).map((e) => e.oid)
+		);
+		state.suspects = badLog
+			.filter((e) => !goodSet.has(e.oid))
+			.map((e) => e.oid)
+			.reverse();
+		if (state.suspects.length === 0) {
+			engine.bisectState = null;
+			return {
+				output: 'fatal: the bad commit is reachable from the good one — nothing to bisect',
+				error: true
+			};
+		}
+	} else {
+		// Narrow the suspect range based on the verdict for the tested commit
+		const idx = state.suspects.indexOf(markOid);
+		if (idx === -1) {
+			return {
+				output: `error: commit ${shortOid(markOid)} is not in the current suspect range`,
+				error: true
+			};
+		}
+		state.suspects =
+			sub === 'good' ? state.suspects.slice(idx + 1) : state.suspects.slice(0, idx + 1);
+		if (state.suspects.length === 0) {
+			engine.bisectState = null;
+			return { output: 'fatal: bisect range is empty — were good and bad swapped?', error: true };
+		}
+	}
+
+	if (state.suspects.length === 1) {
+		const culprit = state.suspects[0];
+		const { commit } = await git.readCommit({ fs, dir, oid: culprit });
+		engine.lastBisectResult = culprit;
+		return {
+			output: `${shortOid(culprit)} is the first bad commit\n    ${commit.message.split('\n')[0]}\n\nRun "git bisect reset" to return to ${state.originalRef}, then fix (or revert) that commit.`
+		};
+	}
+
+	// Check out the midpoint for testing
+	const mid = Math.floor((state.suspects.length - 1) / 2);
+	const testOid = state.suspects[mid];
+	state.testing = testOid;
+	await git.checkout({ fs, dir, ref: testOid, force: true });
+	engine.recordReflog(testOid, `checkout: bisect testing ${shortOid(testOid)}`);
+	const { commit } = await git.readCommit({ fs, dir, oid: testOid });
+	const steps = Math.ceil(Math.log2(state.suspects.length));
+	return {
+		output: `Bisecting: ${state.suspects.length} revision${state.suspects.length === 1 ? '' : 's'} left to test (roughly ${steps} step${steps === 1 ? '' : 's'})\n[${shortOid(testOid)}] ${commit.message.split('\n')[0]}\nhint: test this version (run-tests), then git bisect good or git bisect bad`
+	};
+}
+
+async function runWorktree(engine: GitEngine, rest: string[]): Promise<CommandResult> {
+	const { fs, dir } = engine;
+	const sub = rest[0];
+
+	if (sub === 'list' || !sub) {
+		const head = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
+		const current = (await git.currentBranch({ fs, dir })) ?? '(detached HEAD)';
+		const lines = [`${dir}          ${head ? shortOid(head) : '-------'} [${current}]`];
+		for (const wt of engine.worktrees) {
+			const oid = await git
+				.resolveRef({ fs, dir, ref: `refs/heads/${wt.branch}` })
+				.catch(() => null);
+			lines.push(`${wt.path}    ${oid ? shortOid(oid) : '-------'} [${wt.branch}]`);
+		}
+		return { output: lines.join('\n') };
+	}
+
+	if (sub === 'add') {
+		const createFlag = rest.includes('-b');
+		const positional = rest.slice(1).filter((a) => !a.startsWith('-'));
+		let path: string;
+		let branch: string;
+		if (createFlag) {
+			// git worktree add -b <new-branch> <path> [<start>]
+			branch = positional[0];
+			path = positional[1];
+			if (!branch || !path) {
+				return { output: 'usage: git worktree add -b <new-branch> <path> [<start>]', error: true };
+			}
+			const start = positional[2] ? await engine.resolveRevision(positional[2]) : undefined;
+			await git.branch({ fs, dir, ref: branch, object: start });
+		} else {
+			// git worktree add <path> <branch>
+			path = positional[0];
+			branch = positional[1];
+			if (!path || !branch) {
+				return { output: 'usage: git worktree add <path> <branch>', error: true };
+			}
+			const branches = await git.listBranches({ fs, dir });
+			if (!branches.includes(branch)) {
+				return { output: `fatal: invalid reference: ${branch}`, error: true };
+			}
+		}
+		const current = await git.currentBranch({ fs, dir });
+		if (branch === current) {
+			return {
+				output: `fatal: '${branch}' is already checked out at '${dir}'\nhint: a branch can only be checked out in ONE worktree at a time — that exclusivity is the isolation guarantee`,
+				error: true
+			};
+		}
+		const clash = engine.worktrees.find((w) => w.branch === branch);
+		if (clash) {
+			return {
+				output: `fatal: '${branch}' is already checked out at '${clash.path}'`,
+				error: true
+			};
+		}
+		if (engine.worktrees.some((w) => w.path === path)) {
+			return { output: `fatal: '${path}' already exists`, error: true };
+		}
+		engine.worktrees.push({ path, branch });
+		engine.worktreeHighWater = Math.max(engine.worktreeHighWater, engine.worktrees.length);
+		const oid = await git.resolveRef({ fs, dir, ref: `refs/heads/${branch}` });
+		const { commit } = await git.readCommit({ fs, dir, oid });
+		return {
+			output: `Preparing worktree (checking out '${branch}')\nHEAD is now at ${shortOid(oid)} ${commit.message.split('\n')[0]}\nnote: the playground terminal stays in ${dir} — the new directory is bookkeeping\nnote: (in real Git you'd cd there and run npm install before starting an agent)`
+		};
+	}
+
+	if (sub === 'remove') {
+		const path = rest.slice(1).filter((a) => !a.startsWith('-'))[0];
+		if (!path) return { output: 'usage: git worktree remove <path>', error: true };
+		const idx = engine.worktrees.findIndex((w) => w.path === path);
+		if (idx === -1) {
+			return { output: `fatal: '${path}' is not a working tree`, error: true };
+		}
+		engine.worktrees.splice(idx, 1);
+		return { output: '' };
+	}
+
+	if (sub === 'prune') {
+		return { output: '' };
+	}
+
+	return {
+		output:
+			'usage: git worktree add <path> <branch> | add -b <new> <path> | list | remove <path> | prune',
+		error: true
+	};
+}
+
 async function runCat(engine: GitEngine, filepath: string): Promise<CommandResult> {
 	const content = await engine.readFile(filepath);
 	if (content === null)
@@ -1216,6 +1427,10 @@ export async function runGitCommand(engine: GitEngine, rawInput: string): Promis
 		return { output: colorizeDiff(await handlePatchAnswer(engine, input)), colored: true };
 	}
 
+	if (engine.rebaseISession) {
+		return await handleRebaseIAnswer(engine, rawInput);
+	}
+
 	if (input === 'clear') return { output: '__CLEAR__' };
 
 	const catMatch = input.match(/^cat\s+(.+)$/);
@@ -1239,6 +1454,17 @@ export async function runGitCommand(engine: GitEngine, rawInput: string): Promis
 	}
 
 	if (input === 'help') return { output: PLAYGROUND_COMMANDS_HELP };
+
+	if (input === 'run-tests' || input === 'npm test' || input === 'npm run test') {
+		if (!engine.testRunner) {
+			return {
+				output: 'run-tests: this scenario has no test suite. (Try the bisect scenario!)',
+				error: true
+			};
+		}
+		const result = await engine.testRunner(engine);
+		return { output: result.output, error: !result.pass };
+	}
 
 	const segments = input.includes('&&') ? input.split('&&').map((s) => s.trim()) : [input];
 	const outputs: string[] = [];
@@ -1322,6 +1548,31 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				const mergeState = engine.mergeState;
 
 				if (stageAll) await stageTracked(engine);
+
+				// Simulated repository hooks (scenario-configured), skippable with
+				// --no-verify — exactly like the real thing, seatbelt included.
+				const noVerify = rest.includes('--no-verify');
+				if (engine.hooks && !noVerify) {
+					const pre = engine.hooks.preCommit;
+					if (pre) {
+						// Real pre-commit hooks test the WORKING TREE (see 6.2's
+						// lint-staged fine print) — so does this one.
+						const content = await engine.readFile(pre.file);
+						if (content?.includes(pre.marker)) {
+							return {
+								output: `Running checks before commit...\n${pre.error}\nhusky - pre-commit hook exited with code 1 (error)\nhint: fix the problem (or, against all advice, bypass with --no-verify)`,
+								error: true
+							};
+						}
+					}
+					const msgHook = engine.hooks.commitMsg;
+					if (msgHook && message && !msgHook.pattern.test(message)) {
+						return {
+							output: `${msgHook.error}\nhusky - commit-msg hook exited with code 1 (error)`,
+							error: true
+						};
+					}
+				}
 
 				if (isAmend) {
 					const oid = await git.commit({
@@ -1745,11 +1996,14 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 
 			case 'rebase': {
 				if (rest.includes('-i') || rest.includes('--interactive')) {
-					return {
-						output:
-							"Interactive rebase isn't supported in the playground yet.\nIn real Git, git rebase -i opens a todo list where you can reorder, squash,\nreword, or drop commits. Here, try git reset --soft HEAD~n to re-do recent\ncommits, or git commit --amend to fix the latest one.",
-						error: true
-					};
+					const upstream = rest.filter((a) => !a.startsWith('-')).pop();
+					if (!upstream) {
+						return {
+							output: 'usage: git rebase -i <upstream>  (e.g. git rebase -i HEAD~3)',
+							error: true
+						};
+					}
+					return await startRebaseISession(engine, upstream);
 				}
 				if (rest.includes('--abort')) return await runReplayAbort(engine, 'rebase');
 				if (rest.includes('--continue')) return await runReplayContinue(engine, 'rebase');
@@ -1861,6 +2115,12 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				}
 				return { output: files.map((f) => `rm '${f}'`).join('\n') };
 			}
+
+			case 'bisect':
+				return await runBisect(engine, rest);
+
+			case 'worktree':
+				return await runWorktree(engine, rest);
 
 			case 'clean': {
 				const flagChars = new Set(

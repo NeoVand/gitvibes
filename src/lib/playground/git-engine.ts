@@ -3,6 +3,7 @@ import git from 'isomorphic-git';
 import LightningFS from '@isomorphic-git/lightning-fs';
 import { RemoteState, writeRemoteTrackingRef, type RemoteBranchRef } from './remote-state';
 import type { PatchSession } from './patch-mode';
+import type { RebaseISession } from './rebase-interactive';
 
 export interface PlaygroundFile {
 	path: string;
@@ -108,6 +109,33 @@ export interface MergeState {
 	theirsLabel: string;
 }
 
+export interface BisectState {
+	/** Suspect commits, oldest → newest; the first bad one is in here */
+	suspects: string[];
+	/** The commit currently checked out for testing */
+	testing: string | null;
+	/** Branch to return to on `git bisect reset` */
+	originalRef: string;
+}
+
+export interface HookConfig {
+	/** commit-msg: the message must match, or the commit is blocked */
+	commitMsg?: { pattern: RegExp; error: string };
+	/**
+	 * pre-commit: block while any listed file still contains the marker —
+	 * a stand-in for "the lint/test suite fails".
+	 */
+	preCommit?: { file: string; marker: string; error: string };
+}
+
+export interface WorktreeEntry {
+	path: string;
+	branch: string;
+}
+
+/** A scenario-provided fake test suite, run by the `run-tests` shell verb. */
+export type TestRunner = (engine: GitEngine) => Promise<{ pass: boolean; output: string }>;
+
 export class GitEngine {
 	// Assigned by reset()/resetWith(), which every entry point calls before
 	// use — creating one here too would leak a LightningFS (and its per-name
@@ -129,6 +157,20 @@ export class GitEngine {
 	mergeState: MergeState | null = null;
 	/** The branch checked out before the last branch switch — powers `git switch -` */
 	previousBranch: string | null = null;
+	/** In-progress `git rebase -i` question-and-answer session */
+	rebaseISession: RebaseISession | null = null;
+	/** In-progress `git bisect` session */
+	bisectState: BisectState | null = null;
+	/** The first-bad commit found by the most recent completed bisect */
+	lastBisectResult: string | null = null;
+	/** Scenario-provided fake test suite for `run-tests` */
+	testRunner: TestRunner | null = null;
+	/** Simulated repository hooks (scenario-configured) */
+	hooks: HookConfig | null = null;
+	/** Registered linked worktrees (bookkeeping only — one real workdir) */
+	worktrees: WorktreeEntry[] = [];
+	/** Most worktrees ever registered at once — lets checks verify the exercise */
+	worktreeHighWater = 0;
 	private initPromise: Promise<void> | null = null;
 
 	constructor(private fsName = 'gitvibes-playground') {}
@@ -138,15 +180,26 @@ export class GitEngine {
 		if (this.reflog.length > 100) this.reflog.pop();
 	}
 
-	async reset(seed?: RepoSeed): Promise<void> {
-		this.fs = createMemoryFs(this.fsName);
-		this.initPromise = null;
+	private clearSessionState(): void {
 		this.remote.clear();
 		this.patchSession = null;
+		this.rebaseISession = null;
 		this.reflog = [];
 		this.replayState = null;
 		this.mergeState = null;
 		this.previousBranch = null;
+		this.bisectState = null;
+		this.lastBisectResult = null;
+		this.testRunner = null;
+		this.hooks = null;
+		this.worktrees = [];
+		this.worktreeHighWater = 0;
+	}
+
+	async reset(seed?: RepoSeed): Promise<void> {
+		this.fs = createMemoryFs(this.fsName);
+		this.initPromise = null;
+		this.clearSessionState();
 		await this.ensureInit();
 
 		if (!seed) return;
@@ -189,12 +242,7 @@ export class GitEngine {
 	async resetWith(fn: (engine: GitEngine) => Promise<void>): Promise<void> {
 		this.fs = createMemoryFs(this.fsName);
 		this.initPromise = null;
-		this.remote.clear();
-		this.patchSession = null;
-		this.reflog = [];
-		this.replayState = null;
-		this.mergeState = null;
-		this.previousBranch = null;
+		this.clearSessionState();
 		await this.ensureInit();
 		await fn(this);
 	}

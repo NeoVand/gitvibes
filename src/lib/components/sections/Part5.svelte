@@ -307,6 +307,43 @@ git stash pop`}
 					'Update my feature branch with the latest changes from main using rebase'
 				]}
 			/>
+
+			<p class="mt-8 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Rebase has one more trick: <code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git rebase -i</code
+				>
+				(<strong>interactive</strong>) lets you rewrite your own branch's history commit by commit —
+				squash five "wip" commits into one, reword a sloppy message, drop an experiment entirely.
+				It's how a messy working branch becomes a clean, reviewable PR. The Golden Rule applies
+				double here: only ever on commits that haven't been shared.
+			</p>
+
+			<h4
+				id="interactive-rebase"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Squash the WIP
+			</h4>
+			<PlaygroundNote>
+				Your branch works but its history is three <code>wip:</code> commits. Run
+				<code>git rebase -i main</code>, reword the first commit to something worthy, and squash the
+				other two into it.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Interactive Rebase: Clean the History"
+				scenarioId="interactive-rebase"
+				id="interactive-rebase"
+			/>
+
+			<VibeBox
+				prompts={[
+					'Squash my wip commits on this branch into one commit with a proper message',
+					'Clean up this branch history with an interactive rebase before I open the PR'
+				]}
+			/>
 		</div>
 
 		<!-- 5.3 Merge Conflicts -->

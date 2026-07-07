@@ -121,7 +121,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-4-8', label: 'Detached HEAD', icon: Compass },
 			{ id: 'detached-head', label: 'Time Travel', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-4-9', label: 'Reflog Rescue', icon: History },
-			{ id: 'reflog-rescue', label: 'Rescue Lost Commits', icon: Gamepad2, isPlayground: true }
+			{ id: 'reflog-rescue', label: 'Rescue Lost Commits', icon: Gamepad2, isPlayground: true },
+			{ id: 'bisect', label: 'Find the Bad Commit', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{
@@ -133,6 +134,7 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'stash', label: 'Stash Workflow', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-5-2', label: 'Rebase vs Merge', icon: GitMerge },
 			{ id: 'rebase-merge', label: 'Merge vs. Rebase', icon: Gamepad2, isPlayground: true },
+			{ id: 'interactive-rebase', label: 'Squash the WIP', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-5-3', label: 'Merge Conflicts', icon: FileWarning },
 			{ id: 'conflicts', label: 'Conflict Resolution', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-5-4', label: 'Cherry-Pick', icon: Cherry },
@@ -150,7 +152,9 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-6-1', label: 'Teaching AI Git', icon: Sparkles },
 			{ id: 'section-6-2', label: 'Automating with Hooks', icon: Webhook },
-			{ id: 'section-6-3', label: 'Parallel Agents: Worktrees', icon: FolderGit2 }
+			{ id: 'hooks', label: 'The Hooks Say No', icon: Gamepad2, isPlayground: true },
+			{ id: 'section-6-3', label: 'Parallel Agents: Worktrees', icon: FolderGit2 },
+			{ id: 'worktrees', label: 'Worktree Fleet', icon: Gamepad2, isPlayground: true }
 		]
 	},
 	{

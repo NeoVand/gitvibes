@@ -1,7 +1,16 @@
 <script lang="ts">
 	import GitPlayground from '$lib/components/playground/GitPlayground.svelte';
+	import type { SharedSession } from '$lib/playground/share';
 
-	let { open = false, onToggle }: { open: boolean; onToggle: () => void } = $props();
+	let {
+		open = false,
+		onToggle,
+		shared = null
+	}: {
+		open: boolean;
+		onToggle: () => void;
+		shared?: SharedSession | null;
+	} = $props();
 
 	let hasOpened = $state(false);
 
@@ -37,7 +46,13 @@
 	aria-label="Git Playground"
 >
 	{#if hasOpened}
-		<GitPlayground panel id="global-playground" onClose={onToggle} />
+		<GitPlayground
+			panel
+			id="global-playground"
+			onClose={onToggle}
+			scenarioId={shared?.scenarioId ?? 'core-loop'}
+			{shared}
+		/>
 	{/if}
 </aside>
 

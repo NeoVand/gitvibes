@@ -214,7 +214,7 @@ describe('shell conveniences', () => {
 	});
 
 	it('errors honestly on unsupported git subcommands and unknown commands', async () => {
-		const unsupported = await run('git bisect start');
+		const unsupported = await run('git blame src/app.py');
 		expect(unsupported.error).toBe(true);
 		expect(unsupported.output).toContain('not supported');
 
