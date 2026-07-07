@@ -349,7 +349,7 @@ sudo pacman -S git`}
 		</p>
 		<CodeBlock
 			code={`git --version
-# git version 2.44.0`}
+# git version 2.55.0`}
 			title="Verify installation"
 		/>
 		<p class="mt-3 text-[13px]" style="color: var(--color-text-muted);">

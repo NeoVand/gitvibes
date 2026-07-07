@@ -55,8 +55,18 @@
 			<p class="mb-6" style="color: var(--color-text-secondary);">
 				This is your new "save game" loop — the practical rhythm between you and your agent. Follow
 				these 8 steps for every piece of work. Encode your Git conventions once in the repo (see
-				section 6.1) so agents follow them automatically instead of re-explaining branch rules in
-				every chat.
+				<a
+					href="#section-6-1"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">section 6.1</a
+				>) so agents follow them automatically instead of re-explaining branch rules in every chat.
+				And remember: you can practice any step of this loop in the
+				<button
+					type="button"
+					onclick={onOpenPlayground}
+					class="cursor-pointer underline underline-offset-2"
+					style="color: var(--color-primary);">Git Playground</button
+				> — real Git commands, right in your browser.
 			</p>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -72,14 +82,10 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Branch</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							Create an isolated branch. Practice any step of this loop in the
-							<button
-								type="button"
-								onclick={onOpenPlayground}
-								class="cursor-pointer underline underline-offset-2"
-								style="color: var(--color-primary);">Git Playground</button
+							Create an isolated branch so the AI can never touch <code
+								style="font-family: var(--font-mono);">main</code
 							>
-							(Try real Git commands in your browser from each lesson).
+							directly.
 							<code style="font-family: var(--font-mono);"
 								>git switch -c ai-experiment/new-feature</code
 							>
@@ -268,7 +274,7 @@
 							<td class="px-3 py-2"
 								><code style="font-family: var(--font-mono);">git reset --soft HEAD~1</code></td
 							>
-							<td class="px-3 py-2">GitLens: Reset</td>
+							<td class="px-3 py-2">... menu: Commit → Undo Last Commit</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Revert public commit</td>
@@ -291,14 +297,16 @@
 									>git fetch && git rebase origin/main</code
 								></td
 							>
-							<td class="px-3 py-2">... menu: Pull, Rebase</td>
+							<td class="px-3 py-2">... menu: Pull (Rebase)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Safe force push</td>
 							<td class="px-3 py-2"
 								><code style="font-family: var(--font-mono);">git push --force-with-lease</code></td
 							>
-							<td class="px-3 py-2">Terminal only</td>
+							<td class="px-3 py-2"
+								>Git: Push (Force With Lease) — needs the git.allowForcePush setting</td
+							>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Practice all commands</td>
