@@ -234,6 +234,10 @@
 		content="An interactive guide to Git for developers using AI tools. Learn version control as your safety net for AI-assisted coding."
 	/>
 	<link rel="canonical" href="https://neovand.github.io/gitvibes/" />
+	<!-- Safe {@html}: the payload is JSON.stringify of a static literal — no
+	     user input can reach it. It exists only to emit the JSON-LD script tag,
+	     which Svelte cannot render any other way. -->
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 	{@html `<script type="application/ld+json">${JSON.stringify({
 		'@context': 'https://schema.org',
 		'@type': 'Course',

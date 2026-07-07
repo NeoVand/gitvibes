@@ -200,7 +200,7 @@ export async function buildGitGraph(engine: GitEngine): Promise<string> {
 	};
 
 	for (const node of ordered) {
-		let lane = node.lane;
+		const lane = node.lane;
 		if (lane !== mainBranch && !created.has(lane)) {
 			// Root-parented or unusual lane: create it from wherever we are
 			checkout(mainBranch);
