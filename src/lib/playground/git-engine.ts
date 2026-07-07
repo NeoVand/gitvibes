@@ -99,8 +99,20 @@ export interface ReplayState {
 	remaining: { oid: string; message: string }[];
 }
 
+export interface MergeState {
+	/** HEAD before the merge attempt — what merge --abort returns to */
+	origHead: string;
+	/** Tip of the branch being merged in — the second parent of the resolution commit */
+	theirsOid: string;
+	/** Human label for the merged branch ("main", "origin/main") */
+	theirsLabel: string;
+}
+
 export class GitEngine {
-	fs: LightningFS;
+	// Assigned by reset()/resetWith(), which every entry point calls before
+	// use — creating one here too would leak a LightningFS (and its per-name
+	// Web Lock) per engine.
+	fs!: LightningFS;
 	dir = '/repo';
 	remote = new RemoteState();
 	patchSession: PatchSession | null = null;
@@ -110,13 +122,16 @@ export class GitEngine {
 	 */
 	reflog: ReflogEntry[] = [];
 	replayState: ReplayState | null = null;
-	/** HEAD before the last merge attempt — what merge --abort returns to */
-	mergeOrigHead: string | null = null;
+	/**
+	 * Non-null exactly while a conflicted merge is in progress (isomorphic-git
+	 * has no MERGE_HEAD, so the engine carries the state itself).
+	 */
+	mergeState: MergeState | null = null;
+	/** The branch checked out before the last branch switch — powers `git switch -` */
+	previousBranch: string | null = null;
 	private initPromise: Promise<void> | null = null;
 
-	constructor(private fsName = 'gitvibes-playground') {
-		this.fs = createMemoryFs(this.fsName);
-	}
+	constructor(private fsName = 'gitvibes-playground') {}
 
 	recordReflog(oid: string, message: string): void {
 		this.reflog.unshift({ oid, message });
@@ -130,6 +145,8 @@ export class GitEngine {
 		this.patchSession = null;
 		this.reflog = [];
 		this.replayState = null;
+		this.mergeState = null;
+		this.previousBranch = null;
 		await this.ensureInit();
 
 		if (!seed) return;
@@ -176,6 +193,8 @@ export class GitEngine {
 		this.patchSession = null;
 		this.reflog = [];
 		this.replayState = null;
+		this.mergeState = null;
+		this.previousBranch = null;
 		await this.ensureInit();
 		await fn(this);
 	}
@@ -244,19 +263,19 @@ export class GitEngine {
 		if (dirPath.length > this.dir.length) {
 			await this.ensureDir(dirPath);
 		}
-		const before = await this.fs.promises.stat(fullPath).catch(() => null);
-		await this.fs.promises.writeFile(fullPath, content, 'utf8');
-		if (before) {
-			// "Racy git": change detection compares size+mtime against the
-			// index, and LightningFS stamps millisecond mtimes — a rewrite in
-			// the same millisecond with same-length content looks unchanged.
-			// Rewrite after a tick so the mtime always moves.
-			const after = await this.fs.promises.stat(fullPath).catch(() => null);
-			if (after && after.mtimeMs === before.mtimeMs) {
-				await new Promise((resolve) => setTimeout(resolve, 2));
-				await this.fs.promises.writeFile(fullPath, content, 'utf8');
-			}
+		// "Racy git": isomorphic-git's change detection compares SECOND-
+		// granularity mtimes plus size against the index, so a same-length
+		// rewrite in the same second as the last `git add` looks unchanged no
+		// matter how the mtime is nudged. But compareStats also checks the
+		// inode — and LightningFS only allocates a fresh one when the path
+		// didn't exist. Unlink-then-write forces a re-hash every time the
+		// content actually changed.
+		const existing = await this.fs.promises.readFile(fullPath, 'utf8').catch(() => null);
+		if (existing === content) return;
+		if (existing !== null) {
+			await this.fs.promises.unlink(fullPath).catch(() => {});
 		}
+		await this.fs.promises.writeFile(fullPath, content, 'utf8');
 	}
 
 	private async ensureDir(dirPath: string): Promise<void> {
@@ -335,6 +354,10 @@ export class GitEngine {
 			}
 		}
 
+		// An annotated tag resolves to a tag *object*; nearly every consumer
+		// (checkout, log decoration, reset) wants the commit it points at.
+		oid = await this.peelTag(oid);
+
 		for (const step of suffixes.match(/[~^]\d*/g) ?? []) {
 			const op = step[0];
 			const count = step.length > 1 ? Number(step.slice(1)) : 1;
@@ -352,6 +375,15 @@ export class GitEngine {
 	/** @deprecated kept as the historical name — same as resolveRevision */
 	async resolveHead(rev: string): Promise<string> {
 		return this.resolveRevision(rev);
+	}
+
+	/** Follow annotated-tag objects down to the commit they tag. */
+	async peelTag(oid: string): Promise<string> {
+		for (;;) {
+			const tag = await git.readTag({ fs: this.fs, dir: this.dir, oid }).catch(() => null);
+			if (!tag) return oid;
+			oid = tag.tag.object;
+		}
 	}
 
 	private async parentOf(oid: string, n: number, rev: string): Promise<string> {

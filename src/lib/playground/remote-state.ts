@@ -13,7 +13,10 @@ export interface RemoteBranchRef {
 export class RemoteState {
 	readonly url = DEFAULT_REMOTE_URL;
 	branches = new Map<string, string>();
-	upstream: string | null = null;
+	/** Tags that have been pushed to the remote. */
+	tags = new Map<string, string>();
+	/** Per-local-branch upstream (local branch name -> remote branch name). */
+	upstreams = new Map<string, string>();
 	/**
 	 * What the local repo believes each remote branch points at, as of the
 	 * last fetch/push. --force-with-lease compares against this, not against
@@ -29,6 +32,14 @@ export class RemoteState {
 		return this.branches.get(branch);
 	}
 
+	setUpstream(localBranch: string, remoteBranch: string) {
+		this.upstreams.set(localBranch, remoteBranch);
+	}
+
+	getUpstream(localBranch: string): string | undefined {
+		return this.upstreams.get(localBranch);
+	}
+
 	recordFetched(branch: string, oid: string) {
 		this.lastFetched.set(branch, oid);
 	}
@@ -39,8 +50,9 @@ export class RemoteState {
 
 	clear() {
 		this.branches.clear();
+		this.tags.clear();
 		this.lastFetched.clear();
-		this.upstream = null;
+		this.upstreams.clear();
 	}
 }
 

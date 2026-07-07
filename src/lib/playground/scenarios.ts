@@ -39,7 +39,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'y',
 			'n',
 			'git add src/auth.py',
-			'git commit -m "feat: Add user authentication"'
+			'git commit -m "feat: add user authentication"'
 		],
 		seed: {
 			commits: [
@@ -114,10 +114,10 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Urgent hotfix — stash AI work first',
 		description:
 			"You're mid-refactor on feature/A when a critical bug report comes in. Stash your work-in-progress, switch to main, create a hotfix branch, then come back.",
-		hint: 'Use git stash push -m "message" to save work, switch branches freely, then git stash pop to restore. Use git stash list to see saved stashes.',
+		hint: 'Use git stash push -u -m "message" to save work (-u takes brand-new files along too), switch branches freely, then git stash pop to restore. Use git stash list to see saved stashes.',
 		suggestedCommands: [
 			'git status',
-			'git stash push -m "WIP: pipeline refactor"',
+			'git stash push -u -m "WIP: pipeline refactor"',
 			'git stash list',
 			'git switch main',
 			'git switch -c hotfix/urgent-bug',
@@ -170,7 +170,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git diff',
 			"echo 'x = 10' > src/model.py",
 			'git add src/model.py',
-			'git commit -m "fix: Resolve merge conflict in model.py"'
+			'git commit -m "fix: resolve merge conflict in model.py"'
 		],
 		seedFn: buildMergeConflictRepo
 	},
@@ -202,7 +202,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			'git restore --staged .env',
 			'git restore --staged src/debug.py',
 			'git status',
-			'git commit -m "feat: Add server runner and new feature"'
+			'git commit -m "feat: add server runner and new feature"'
 		],
 		seedFn: buildAccidentalStageRepo
 	},
@@ -358,21 +358,22 @@ export function isLessonScenario(id: string): id is LessonScenarioId {
 }
 
 export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
-  git status | git diff [--staged] | git log [--oneline] [--all] [-n <k>]
-  git show [<commit>] | git reflog
-  git add <file|glob> | git add . | git add -p  (hunk-by-hunk staging)
-  git commit -m "msg" | git commit --amend [-m "msg"]
-  git branch [-d|-m|-v|-a] | git switch [-c] <branch>
+  git status | git log [--oneline] [--all] [-n <k>] [<ref>]
+  git diff [--staged] [--stat] [<rev>] [<a>..<b>] | git show [<commit>] | git reflog
+  git add <file|glob> | git add . | git add -u | git add -p  (hunk staging)
+  git commit [-a] -m "msg" | git commit --amend [-m "msg"]
+  git branch [-d|-m|-v|-a] [<name> [<start>]] | git switch [-c] <branch> [<start>] | git switch -
   git checkout [-b] <branch> | git checkout <commit>  (detached HEAD)
-  git checkout <commit> -- <file> | git restore [--staged|--source <rev>] <file>
-  git reset --soft|--mixed|--hard <rev>   (rev: HEAD~N, HEAD^, HEAD@{n}, hash)
+  git checkout [<commit>] -- <file> | git restore [--staged|--source <rev>] <file|.>
+  git reset [--soft|--mixed|--hard] [<rev>] | git reset [HEAD] <file>
   git merge <branch> [--abort] | git rebase <branch> [--abort|--continue]
   git cherry-pick <commit> [--abort|--continue]
   git tag [-a <name> -m "msg"] [<name>] [-d <name>]
-  git stash push -m "msg" | pop | apply | list | drop | clear
-  git fetch origin | git pull [--rebase] origin <branch>
-  git push [-u|--force-with-lease|--force] origin [branch]
-  git remote -v | git revert <commit> | git rm [--cached] <file> | git clean -f
+  git stash [push [-u] [-m "msg"]] | pop | apply | list | drop | clear  (stash@{n} ok)
+  git fetch origin [--prune] | git pull [--rebase] origin <branch>
+  git push [-u|--force-with-lease|--force] origin [branch|tag] | git push --tags
+  git remote -v | git revert <commit> | git rm [--cached] <file>
+  git clean -n | -f [-d]   (n = dry run, d = directories)
   echo "content" > file | cat <file> | ls
   y | n | a | d | q  (responses during git add -p)
 

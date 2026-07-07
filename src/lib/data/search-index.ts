@@ -226,7 +226,8 @@ const topicEntries: SearchEntry[] = [
 		sectionId: 'section-4-4',
 		title: 'Undo the last commit',
 		part: 'Undo Toolkit',
-		description: 'Use git reset to un-commit — soft keeps changes staged, mixed keeps them unstaged.',
+		description:
+			'Use git reset to un-commit — soft keeps changes staged, mixed keeps them unstaged.',
 		keywords: [
 			'uncommit',
 			'undo commit',

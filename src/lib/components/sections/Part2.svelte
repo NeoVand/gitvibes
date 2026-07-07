@@ -735,10 +735,10 @@ CLAUDE.local.md
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				<strong style="color: var(--color-text);">.gitignore only affects untracked files.</strong>
-				If a file was already committed before you added it to .gitignore, Git keeps tracking it —
-				and keeps committing your changes to it. To stop tracking a file without deleting it from
-				your disk, remove it from the staging area (which Git's own messages call the <em>index</em> —
-				same thing, older name):
+				If a file was already committed before you added it to .gitignore, Git keeps tracking it — and
+				keeps committing your changes to it. To stop tracking a file without deleting it from your disk,
+				remove it from the staging area (which Git's own messages call the <em>index</em> — same thing,
+				older name):
 			</p>
 
 			<CodeBlock

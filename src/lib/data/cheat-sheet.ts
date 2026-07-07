@@ -257,7 +257,8 @@ export const cheatSheet: CheatSheetCategory[] = [
 			},
 			{
 				command: 'git cherry-pick <start>..<end>',
-				description: 'Apply a range of commits (excludes <start> itself; use <start>^.. to include it)'
+				description:
+					'Apply a range of commits (excludes <start> itself; use <start>^.. to include it)'
 			},
 			{
 				command: 'git cherry-pick --continue',

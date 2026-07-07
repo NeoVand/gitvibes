@@ -111,7 +111,8 @@ function colorizeLog(raw: string): string {
 }
 
 function parseQuotedMessage(input: string): string | null {
-	const match = input.match(/-m\s+("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|[^\s-][^\s]*)/);
+	// Accepts -m and clustered short flags ending in m (git commit -am "msg")
+	const match = input.match(/(?:^|\s)-[a-zA-Z]*m\s+("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|[^\s-][^\s]*)/);
 	if (!match) return null;
 	const raw = match[1];
 	if ((raw.startsWith('"') && raw.endsWith('"')) || (raw.startsWith("'") && raw.endsWith("'"))) {
@@ -120,30 +121,66 @@ function parseQuotedMessage(input: string): string | null {
 	return raw;
 }
 
+/**
+ * Split args on whitespace, stripping quotes from tokens that are fully
+ * wrapped in them — so `git switch -c "fix/bug"` doesn't create a branch
+ * with literal quote characters in its name.
+ */
+function tokenize(args: string): string[] {
+	return args
+		.split(/\s+/)
+		.filter(Boolean)
+		.map((t) =>
+			t.length >= 2 &&
+			((t.startsWith('"') && t.endsWith('"')) || (t.startsWith("'") && t.endsWith("'")))
+				? t.slice(1, -1)
+				: t
+		);
+}
+
+/** Stage every tracked modification and deletion (git add -u / commit -a). */
+async function stageTracked(engine: GitEngine): Promise<void> {
+	const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
+	for (const [filepath, head, workdir] of matrix) {
+		if (head === 1 && workdir === 2) {
+			await git.add({ fs: engine.fs, dir: engine.dir, filepath });
+		} else if (head === 1 && workdir === 0) {
+			await git.remove({ fs: engine.fs, dir: engine.dir, filepath });
+		}
+	}
+}
+
 function shortOid(oid: string): string {
 	return oid.slice(0, 7);
 }
 
-async function isMergeInProgress(engine: GitEngine): Promise<boolean> {
-	try {
-		await git.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'MERGE_HEAD' });
-		return true;
-	} catch {
-		return false;
-	}
+/**
+ * isomorphic-git has no MERGE_HEAD; the engine carries conflicted-merge
+ * state itself. A merge is "in progress" exactly while that state is set.
+ */
+function isMergeInProgress(engine: GitEngine): boolean {
+	return engine.mergeState !== null;
 }
 
 async function formatStatus(engine: GitEngine): Promise<string> {
 	const { fs, dir } = engine;
-	const branch = (await git.currentBranch({ fs, dir })) ?? 'HEAD';
+	const branch = await git.currentBranch({ fs, dir });
 	const matrix = await git.statusMatrix({ fs, dir });
-	const merging = await isMergeInProgress(engine);
+	const merging = isMergeInProgress(engine);
 
-	const lines: string[] = [`On branch ${branch}`];
-	if (engine.remote.upstream) {
-		const upstream = engine.remote.upstream;
+	const lines: string[] = [];
+	if (branch) {
+		lines.push(`On branch ${branch}`);
+	} else {
+		const headOid = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
+		lines.push(`HEAD detached at ${headOid ? shortOid(headOid) : '(unknown)'}`);
+	}
+	const upstream = branch ? engine.remote.getUpstream(branch) : undefined;
+	if (branch && upstream) {
 		const localOid = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
-		const remoteOid = engine.remote.getBranch(upstream);
+		// Status reports against the remote-tracking ref (what the last
+		// fetch/push saw), not the true remote — just like real git.
+		const remoteOid = await resolveRemoteBranch(engine, DEFAULT_REMOTE, upstream);
 		if (localOid && remoteOid) {
 			if (localOid === remoteOid) {
 				lines.push(`Your branch is up to date with 'origin/${upstream}'.`);
@@ -246,18 +283,27 @@ async function formatLog(
 	engine: GitEngine,
 	oneline: boolean,
 	all: boolean,
-	limit?: number
+	limit?: number,
+	startRef?: string
 ): Promise<string> {
 	const { fs, dir } = engine;
-	const branchSet = new Set<string>();
-	if (all) {
-		for (const b of await git.listBranches({ fs, dir })) branchSet.add(b);
-		for (const ref of engine.remote.branches.keys()) branchSet.add(`origin/${ref}`);
-	} else {
-		branchSet.add((await git.currentBranch({ fs, dir })) ?? 'main');
-	}
+	const current = await git.currentBranch({ fs, dir });
+	// The log only knows what the local repo knows: local branches plus the
+	// remote-tracking refs written by fetch/push — never the true remote.
+	const trackingBranches = await git
+		.listBranches({ fs, dir, remote: DEFAULT_REMOTE })
+		.catch(() => [] as string[]);
 
-	const current = (await git.currentBranch({ fs, dir })) ?? 'main';
+	const branchSet = new Set<string>();
+	if (startRef) {
+		branchSet.add(startRef);
+	} else if (all) {
+		for (const b of await git.listBranches({ fs, dir })) branchSet.add(b);
+		for (const b of trackingBranches) branchSet.add(`origin/${b}`);
+		if (!current) branchSet.add('HEAD');
+	} else {
+		branchSet.add(current ?? 'HEAD');
+	}
 
 	// Tip decorations: only the commit a ref points AT gets "(HEAD -> main, tag: v1)"
 	const decorations = new Map<string, string[]>();
@@ -271,8 +317,17 @@ async function formatLog(
 		const oid = await git.resolveRef({ fs, dir, ref: `refs/heads/${b}` }).catch(() => null);
 		if (oid) decorate(oid, b === current ? `HEAD -> ${b}` : b, b === current);
 	}
-	for (const [b, oid] of engine.remote.branches) decorate(oid, `origin/${b}`);
+	if (!current) {
+		const headOid = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
+		if (headOid) decorate(headOid, 'HEAD', true);
+	}
+	for (const b of trackingBranches) {
+		const oid = await resolveRemoteBranch(engine, DEFAULT_REMOTE, b);
+		if (oid) decorate(oid, `origin/${b}`);
+	}
 	for (const t of await git.listTags({ fs, dir }).catch(() => [])) {
+		// resolveRevision peels annotated tags to the commit they point at,
+		// so the decoration lands on a commit the log will actually show.
 		const oid = await engine.resolveRevision(t).catch(() => null);
 		if (oid) decorate(oid, `tag: ${t}`);
 	}
@@ -283,9 +338,9 @@ async function formatLog(
 	for (const branch of branchSet) {
 		let ref = branch;
 		if (branch.startsWith('origin/')) {
-			const remoteOid = engine.remote.getBranch(branch.slice('origin/'.length));
-			if (!remoteOid) continue;
-			ref = remoteOid;
+			const trackingOid = await resolveRemoteBranch(engine, DEFAULT_REMOTE, branch.slice(7));
+			if (!trackingOid) continue;
+			ref = trackingOid;
 		}
 		const log = await git.log({ fs, dir, ref, depth: 50 }).catch(() => []);
 		for (const entry of log) {
@@ -327,6 +382,32 @@ async function addAll(engine: GitEngine): Promise<void> {
 	for (const file of await engine.listWorkingFiles()) {
 		await git.add({ fs: engine.fs, dir: engine.dir, filepath: file });
 	}
+}
+
+/** Post-order removal of directories left empty after git clean -d. */
+async function removeEmptyDirs(engine: GitEngine, current?: string): Promise<boolean> {
+	const dir = current ?? engine.dir;
+	const entries = (await engine.fs.promises.readdir(dir).catch(() => [])) as string[];
+	let empty = true;
+	for (const entry of entries) {
+		if (dir === engine.dir && entry === '.git') {
+			empty = false;
+			continue;
+		}
+		const full = `${dir}/${entry}`;
+		const stat = await engine.fs.promises.stat(full).catch(() => null);
+		if (stat?.isDirectory()) {
+			const childEmpty = await removeEmptyDirs(engine, full);
+			if (childEmpty) {
+				await engine.fs.promises.rmdir(full).catch(() => {});
+			} else {
+				empty = false;
+			}
+		} else {
+			empty = false;
+		}
+	}
+	return current !== undefined && empty;
 }
 
 /** Move the current branch tip and working tree to the given commit. */
@@ -512,26 +593,38 @@ async function runCherryPick(engine: GitEngine, rev: string): Promise<CommandRes
 async function runMerge(engine: GitEngine, branch: string): Promise<CommandResult> {
 	const { fs, dir } = engine;
 	const current = (await git.currentBranch({ fs, dir })) ?? 'HEAD';
-	let theirs = branch;
 
+	// Resolve what we're merging. For origin/x this reads the remote-TRACKING
+	// ref (what the last fetch saw) — never the true remote, and never by
+	// creating a local branch literally named "origin/x" (which made a second
+	// merge explode with AlreadyExistsError).
+	let theirsOid: string | null;
 	if (branch.startsWith('origin/')) {
-		const remoteBranch = branch.slice('origin/'.length);
-		const remoteOid = engine.remote.getBranch(remoteBranch);
-		if (!remoteOid) return { output: `fatal: couldn't find remote ref ${branch}`, error: true };
-		await git.branch({ fs, dir, ref: branch, object: remoteOid });
-		theirs = branch;
+		theirsOid = await resolveRemoteBranch(engine, DEFAULT_REMOTE, branch.slice(7));
+		if (!theirsOid) {
+			return {
+				output: `merge: ${branch} - not something we can merge\nhint: run git fetch first to download the remote branches`,
+				error: true
+			};
+		}
+	} else {
+		theirsOid = await git.resolveRef({ fs, dir, ref: `refs/heads/${branch}` }).catch(() => null);
+		if (!theirsOid) {
+			return { output: `merge: ${branch} - not something we can merge`, error: true };
+		}
 	}
 
-	engine.mergeOrigHead = await git.resolveRef({ fs, dir, ref: 'HEAD' }).catch(() => null);
+	const origHead = await git.resolveRef({ fs, dir, ref: 'HEAD' });
 	try {
 		const result = await git.merge({
 			fs,
 			dir,
 			ours: current,
-			theirs,
+			theirs: branch,
 			author: AUTHOR,
 			abortOnConflict: false
 		});
+		engine.mergeState = null;
 		if (result.oid) {
 			engine.recordReflog(
 				result.oid,
@@ -545,6 +638,7 @@ async function runMerge(engine: GitEngine, branch: string): Promise<CommandResul
 		const message = err instanceof Error ? err.message : String(err);
 		if (/conflict/i.test(message)) {
 			// isomorphic-git's MergeConflictError carries the conflicted paths
+			engine.mergeState = { origHead, theirsOid, theirsLabel: branch };
 			const filepaths =
 				err && typeof err === 'object' && 'data' in err
 					? ((err as { data?: { filepaths?: string[] } }).data?.filepaths ?? [])
@@ -565,6 +659,14 @@ async function runStash(engine: GitEngine, args: string): Promise<CommandResult>
 	const { fs, dir } = engine;
 	const joined = args.trim();
 
+	/** stash@{2} → 2; bare subcommands → 0 */
+	const parseRefIdx = (rest: string): number | null => {
+		const trimmed = rest.trim();
+		if (!trimmed) return 0;
+		const match = trimmed.match(/^stash@\{(\d+)\}$/);
+		return match ? Number(match[1]) : null;
+	};
+
 	if (joined === 'list') {
 		const list = (await git.stash({ fs, dir, op: 'list' })) as unknown;
 		if (!list || (Array.isArray(list) && list.length === 0)) return { output: '' };
@@ -577,7 +679,8 @@ async function runStash(engine: GitEngine, args: string): Promise<CommandResult>
 		return { output: lines.join('\n') };
 	}
 
-	if (joined.startsWith('push')) {
+	// Bare `git stash` == `git stash push`
+	if (joined === '' || joined.startsWith('push') || joined === '-u' || joined === '-m') {
 		const msgMatch = joined.match(/-m\s+("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|[^\s-]+)/);
 		let message = 'WIP';
 		if (msgMatch) {
@@ -587,24 +690,51 @@ async function runStash(engine: GitEngine, args: string): Promise<CommandResult>
 					? raw.slice(1, -1)
 					: raw;
 		}
-		await git.stash({ fs, dir, op: 'push', message });
+		try {
+			await git.stash({ fs, dir, op: 'push', message });
+		} catch (err) {
+			const msg = err instanceof Error ? err.message : String(err);
+			if (/nothing to stash|clean/i.test(msg)) {
+				return { output: 'No local changes to save' };
+			}
+			throw err;
+		}
 		return {
 			output: `Saved working directory and index state\n  On ${(await git.currentBranch({ fs, dir })) ?? 'HEAD'}: ${message}`
 		};
 	}
 
-	if (joined === 'pop') {
-		await git.stash({ fs, dir, op: 'pop' });
-		return { output: 'Dropped refs/stash@{0} (stash applied)' };
-	}
-	if (joined === 'apply') {
-		await git.stash({ fs, dir, op: 'apply' });
+	const applyLike = joined.match(/^(pop|apply|drop)\s*(.*)$/);
+	if (applyLike) {
+		const op = applyLike[1] as 'pop' | 'apply' | 'drop';
+		const refIdx = parseRefIdx(applyLike[2]);
+		if (refIdx === null) {
+			return {
+				output: `error: '${applyLike[2].trim()}' is not a stash reference — use stash@{n}`,
+				error: true
+			};
+		}
+		// isomorphic-git silently no-ops past the end of the stash list;
+		// real git errors, and the error is the teachable part.
+		const existing = (await git.stash({ fs, dir, op: 'list' }).catch(() => [])) as unknown;
+		const count = Array.isArray(existing)
+			? existing.length
+			: typeof existing === 'string' && existing.trim()
+				? existing.trim().split('\n').length
+				: 0;
+		if (refIdx >= count) {
+			return { output: `error: stash@{${refIdx}} is not a valid reference`, error: true };
+		}
+		try {
+			await git.stash({ fs, dir, op, refIdx });
+		} catch {
+			return { output: `error: stash@{${refIdx}} is not a valid reference`, error: true };
+		}
+		if (op === 'pop') return { output: `Dropped refs/stash@{${refIdx}} (stash applied)` };
+		if (op === 'drop') return { output: `Dropped refs/stash@{${refIdx}}` };
 		return { output: '' };
 	}
-	if (joined === 'drop' || joined.startsWith('drop ')) {
-		await git.stash({ fs, dir, op: 'drop' });
-		return { output: 'Dropped refs/stash@{0}' };
-	}
+
 	if (joined === 'clear') {
 		await git.stash({ fs, dir, op: 'clear' });
 		return { output: '' };
@@ -615,19 +745,43 @@ async function runStash(engine: GitEngine, args: string): Promise<CommandResult>
 	};
 }
 
-async function runFetch(engine: GitEngine, remote = DEFAULT_REMOTE): Promise<CommandResult> {
-	const lines: string[] = [`From ${DEFAULT_REMOTE_URL}`];
+async function runFetch(
+	engine: GitEngine,
+	remote = DEFAULT_REMOTE,
+	prune = false
+): Promise<CommandResult> {
+	const lines: string[] = [];
 	for (const [branch, oid] of engine.remote.branches) {
 		const oldOid = await resolveRemoteBranch(engine, remote, branch);
-		await writeRemoteTrackingRef(engine, remote, branch, oid);
+		// Renew the lease even when nothing changed — fetching is what
+		// force-with-lease measures against.
 		engine.remote.recordFetched(branch, oid);
-		const oldShort = oldOid ? shortOid(oldOid) : '0000000';
-		lines.push(`   ${oldShort}..${shortOid(oid)}  ${branch}       -> ${remote}/${branch}`);
+		if (oldOid === oid) continue;
+		await writeRemoteTrackingRef(engine, remote, branch, oid);
+		const oldShort = oldOid ? shortOid(oldOid) : null;
+		lines.push(
+			oldShort
+				? `   ${oldShort}..${shortOid(oid)}  ${branch}       -> ${remote}/${branch}`
+				: ` * [new branch]      ${branch}       -> ${remote}/${branch}`
+		);
 	}
-	if (engine.remote.branches.size === 0) {
-		return { output: 'Everything up-to-date' };
+	if (prune) {
+		const tracking = await git
+			.listBranches({ fs: engine.fs, dir: engine.dir, remote })
+			.catch(() => [] as string[]);
+		for (const b of tracking) {
+			if (b === 'HEAD' || engine.remote.branches.has(b)) continue;
+			await git
+				.deleteRef({ fs: engine.fs, dir: engine.dir, ref: `refs/remotes/${remote}/${b}` })
+				.catch(() => {});
+			lines.push(` - [deleted]         (none)     -> ${remote}/${b}`);
+		}
 	}
-	return { output: lines.join('\n') };
+	if (lines.length === 0) {
+		// Real fetch prints nothing when there's nothing new
+		return { output: '' };
+	}
+	return { output: [`From ${DEFAULT_REMOTE_URL}`, ...lines].join('\n') };
 }
 
 async function runPush(engine: GitEngine, args: string): Promise<CommandResult> {
@@ -641,11 +795,44 @@ async function runPush(engine: GitEngine, args: string): Promise<CommandResult> 
 	);
 	const parts = argList.filter((p) => !p.startsWith('-'));
 	const remote = parts[0] ?? DEFAULT_REMOTE;
+
+	// git push --tags: push every local tag (and nothing else)
+	if (argList.includes('--tags')) {
+		const tags = await git.listTags({ fs, dir });
+		const lines: string[] = [];
+		for (const t of tags) {
+			if (engine.remote.tags.get(t)) continue;
+			const tagOid = await git.resolveRef({ fs, dir, ref: `refs/tags/${t}` });
+			engine.remote.tags.set(t, tagOid);
+			lines.push(` * [new tag]         ${t} -> ${t}`);
+		}
+		if (lines.length === 0) return { output: 'Everything up-to-date' };
+		return { output: [`To ${DEFAULT_REMOTE_URL}`, ...lines].join('\n') };
+	}
+
+	// git push origin v1.2.0: a tag ref, not a branch
+	const localTags = await git.listTags({ fs, dir });
+	if (parts[1] && localTags.includes(parts[1])) {
+		const t = parts[1];
+		if (engine.remote.tags.get(t)) return { output: 'Everything up-to-date' };
+		const tagOid = await git.resolveRef({ fs, dir, ref: `refs/tags/${t}` });
+		engine.remote.tags.set(t, tagOid);
+		return { output: `To ${DEFAULT_REMOTE_URL}\n * [new tag]         ${t} -> ${t}` };
+	}
+
 	const branch = parts[1] ?? (await git.currentBranch({ fs, dir }));
 
 	if (!branch) return { output: 'fatal: no branch checked out', error: true };
 
-	const oid = await git.resolveRef({ fs, dir, ref: `refs/heads/${branch}` });
+	const oid = await git
+		.resolveRef({ fs, dir, ref: `refs/heads/${branch}` })
+		.catch(() => null as string | null);
+	if (!oid) {
+		return {
+			output: `error: src refspec ${branch} does not match any\nerror: failed to push some refs to '${DEFAULT_REMOTE_URL}'`,
+			error: true
+		};
+	}
 	const existingRemoteOid = engine.remote.getBranch(branch);
 
 	if (existingRemoteOid && !isForce && !isForceWithLease) {
@@ -674,7 +861,7 @@ async function runPush(engine: GitEngine, args: string): Promise<CommandResult> 
 	engine.remote.setBranch(branch, oid);
 	await writeRemoteTrackingRef(engine, remote, branch, oid);
 	engine.remote.recordFetched(branch, oid);
-	if (setUpstream) engine.remote.upstream = branch;
+	if (setUpstream) engine.remote.setUpstream(branch, branch);
 
 	const forceLabel = isForceWithLease ? ' (force-with-lease)' : isForce ? ' (forced update)' : '';
 	const isNew = !existingRemoteOid;
@@ -700,13 +887,50 @@ async function runPull(engine: GitEngine, args: string): Promise<CommandResult> 
 
 async function runRevert(engine: GitEngine, ref: string): Promise<CommandResult> {
 	const { fs, dir } = engine;
-	const oid = await resolveCommitOid(engine, ref);
+	let oid: string;
+	try {
+		oid = await engine.resolveRevision(ref);
+	} catch {
+		// Fall back to the branch-scoped short-hash lookup
+		oid = await resolveCommitOid(engine, ref);
+	}
 	const { commit } = await git.readCommit({ fs, dir, oid });
 	const parentOid = commit.parent[0];
 	if (!parentOid) return { output: 'fatal: cannot revert a root commit', error: true };
 
 	const parentFiles = await listFilesAtCommit(engine, parentOid);
 	const commitFiles = await listFilesAtCommit(engine, oid);
+	const touched = new Set([...commitFiles, ...parentFiles]);
+
+	// Real git refuses to overwrite local modifications; so do we.
+	const matrix = await git.statusMatrix({ fs, dir });
+	const dirty = matrix
+		.filter(([filepath, head, workdir, stage]) => {
+			if (!touched.has(filepath)) return false;
+			return !(head === 1 && workdir === 1 && stage === 1);
+		})
+		.map(([filepath]) => filepath);
+	if (dirty.length > 0) {
+		return {
+			output: `error: your local changes to the following files would be overwritten by revert:\n${dirty.map((f) => `\t${f}`).join('\n')}\nhint: commit or stash your changes first.`,
+			error: true
+		};
+	}
+
+	// Real git three-way-merges the inverse patch; the playground just writes
+	// the parent's content back. If the file changed again in a LATER commit,
+	// that would silently destroy the later change — refuse honestly instead.
+	for (const file of touched) {
+		const inCommit = commitFiles.includes(file);
+		const atCommit = inCommit ? await readFileAtCommit(engine, oid, file) : null;
+		const atHead = await readHeadFile(engine, file);
+		if (atCommit !== atHead) {
+			return {
+				output: `error: could not revert ${shortOid(oid)} — '${file}' has changed in a later commit.\nhint: in real Git this becomes a merge conflict to resolve by hand; the playground\nhint: can only revert commits whose files haven't changed since. Try reverting the\nhint: most recent commit that touched the file.`,
+				error: true
+			};
+		}
+	}
 
 	for (const file of commitFiles) {
 		const parentContent = await readFileAtCommit(engine, parentOid, file);
@@ -843,21 +1067,15 @@ async function runTag(engine: GitEngine, restJoined: string): Promise<CommandRes
 
 async function runMergeAbort(engine: GitEngine): Promise<CommandResult> {
 	const { fs, dir } = engine;
-	const merging = await isMergeInProgress(engine);
-	if (!merging && !engine.mergeOrigHead) {
+	if (!engine.mergeState) {
 		return { output: 'fatal: There is no merge to abort (MERGE_HEAD missing).', error: true };
 	}
-	const target = engine.mergeOrigHead ?? (await git.resolveRef({ fs, dir, ref: 'HEAD' }));
+	const target = engine.mergeState.origHead;
 	const branch = await git.currentBranch({ fs, dir });
 	if (branch) {
 		await moveBranchTo(engine, branch, target);
 	}
-	try {
-		await engine.fs.promises.unlink(`${dir}/.git/MERGE_HEAD`);
-	} catch {
-		// merge may have already been resolved or the ref cleaned up
-	}
-	engine.mergeOrigHead = null;
+	engine.mergeState = null;
 	engine.recordReflog(target, 'merge: aborted');
 	return { output: 'Merge aborted; working tree restored.' };
 }
@@ -931,6 +1149,64 @@ async function formatDiff(engine: GitEngine, staged: boolean): Promise<string> {
 	return lines.join('\n') || (staged ? 'No staged changes.' : '');
 }
 
+/**
+ * Diff two revisions, or a revision against the working tree (to === null).
+ */
+async function formatDiffBetween(
+	engine: GitEngine,
+	from: string,
+	to: string | null
+): Promise<string> {
+	const fromOid = await engine.resolveRevision(from);
+	const toOid = to === null ? null : await engine.resolveRevision(to);
+
+	const fromFiles = await listFilesAtCommit(engine, fromOid);
+	const toFiles =
+		toOid === null ? await engine.listWorkingFiles() : await listFilesAtCommit(engine, toOid);
+	const allFiles = [...new Set([...fromFiles, ...toFiles])].sort();
+
+	const lines: string[] = [];
+	for (const filepath of allFiles) {
+		const before = await readFileAtCommit(engine, fromOid, filepath);
+		const after =
+			toOid === null
+				? await engine.readFile(filepath)
+				: await readFileAtCommit(engine, toOid, filepath);
+		if (before === after) continue;
+		lines.push(...fileDiffBlock(filepath, before, after));
+	}
+	return lines.join('\n');
+}
+
+/** Collapse a unified diff into --stat form: per-file counts + a summary. */
+function statify(diffText: string): string {
+	if (!diffText.trim()) return '';
+	const perFile: { file: string; add: number; del: number }[] = [];
+	let current: { file: string; add: number; del: number } | null = null;
+	for (const line of diffText.split('\n')) {
+		const header = line.match(/^diff --git a\/(.+) b\//);
+		if (header) {
+			current = { file: header[1], add: 0, del: 0 };
+			perFile.push(current);
+			continue;
+		}
+		if (!current) continue;
+		if (line.startsWith('+') && !line.startsWith('+++')) current.add++;
+		else if (line.startsWith('-') && !line.startsWith('---')) current.del++;
+	}
+	const width = Math.max(...perFile.map((f) => f.file.length));
+	const lines = perFile.map(
+		(f) =>
+			` ${f.file.padEnd(width)} | ${f.add + f.del} ${'+'.repeat(Math.min(f.add, 20))}${'-'.repeat(Math.min(f.del, 20))}`
+	);
+	const totalAdd = perFile.reduce((n, f) => n + f.add, 0);
+	const totalDel = perFile.reduce((n, f) => n + f.del, 0);
+	lines.push(
+		` ${perFile.length} file${perFile.length === 1 ? '' : 's'} changed, ${totalAdd} insertion${totalAdd === 1 ? '' : 's'}(+), ${totalDel} deletion${totalDel === 1 ? '' : 's'}(-)`
+	);
+	return lines.join('\n');
+}
+
 export async function runGitCommand(engine: GitEngine, rawInput: string): Promise<CommandResult> {
 	const input = rawInput.trim();
 	if (!input) return { output: '' };
@@ -982,10 +1258,12 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 	}
 
 	const args = input.slice(4).trim();
-	const [sub, ...rest] = args.split(/\s+/);
+	const [sub, ...rest] = tokenize(args);
 
 	try {
 		switch (sub) {
+			case 'help':
+				return { output: PLAYGROUND_COMMANDS_HELP };
 			case 'status': {
 				const raw = await formatStatus(engine);
 				return { output: colorizeStatus(raw), colored: true };
@@ -999,13 +1277,28 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						colored: true
 					};
 				}
-				const target = rest.join(' ').trim();
-				if (!target) return { output: 'Nothing specified, nothing added.', error: true };
-				if (target === '.' || target === '-A' || target === '--all') {
+				if (rest.includes('-A') || rest.includes('--all')) {
 					await addAll(engine);
 					return { output: '' };
 				}
-				for (const pathspec of rest.filter((a) => !a.startsWith('-'))) {
+				if (rest.includes('-u') || rest.includes('--update')) {
+					// Stage tracked modifications and deletions; untracked files
+					// are exactly what -u leaves alone.
+					await stageTracked(engine);
+					return { output: '' };
+				}
+				const pathspecs = rest.filter((a) => !a.startsWith('-'));
+				if (pathspecs.length === 0) {
+					return {
+						output: "Nothing specified, nothing added.\nhint: Maybe you wanted to say 'git add .'?",
+						error: true
+					};
+				}
+				if (pathspecs.length === 1 && pathspecs[0] === '.') {
+					await addAll(engine);
+					return { output: '' };
+				}
+				for (const pathspec of pathspecs) {
 					const matches = await expandPathspec(engine, pathspec);
 					if (matches.length === 0) {
 						return {
@@ -1022,8 +1315,12 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 
 			case 'commit': {
 				const isAmend = rest.includes('--amend');
+				// Clustered short flags containing 'a' (-a, -am) stage tracked changes
+				const stageAll = rest.some((t) => /^-[a-z]*a[a-z]*$/.test(t));
 				const message = parseQuotedMessage(args);
-				const merging = await isMergeInProgress(engine);
+				const mergeState = engine.mergeState;
+
+				if (stageAll) await stageTracked(engine);
 
 				if (isAmend) {
 					const oid = await git.commit({
@@ -1042,16 +1339,34 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 					return { output: `[${branch} ${shortOid(oid)}] ${summary}` };
 				}
 
-				if (merging && !message) {
+				if (mergeState) {
+					// Block until every conflict has been staged, with real git's
+					// wording instead of a raw UnmergedPathsError.
+					const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
+					const unresolved = matrix
+						.filter(([, , , stage]) => stage === 3)
+						.map(([filepath]) => filepath);
+					if (unresolved.length > 0) {
+						return {
+							output: `error: Committing is not possible because you have unmerged files.\nhint: Fix them up in the work tree, and then use 'git add <file>'\nhint: to mark resolution and make a commit.\nUnmerged paths:\n${unresolved.map((f) => `\t${f}`).join('\n')}`,
+							error: true
+						};
+					}
+					// A resolved merge commit has TWO parents — that's what makes
+					// it a merge in the history and the graph.
+					const ourHead = await git.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' });
+					const mergeMessage = message ?? `Merge ${mergeState.theirsLabel}`;
 					const oid = await git.commit({
 						fs: engine.fs,
 						dir: engine.dir,
-						message: 'Merge commit',
-						author: AUTHOR
+						message: mergeMessage,
+						author: AUTHOR,
+						parent: [ourHead, mergeState.theirsOid]
 					});
-					engine.recordReflog(oid, 'commit (merge): Merge commit');
+					engine.mergeState = null;
+					engine.recordReflog(oid, `commit (merge): ${mergeMessage.split('\n')[0]}`);
 					const branch = (await git.currentBranch({ fs: engine.fs, dir: engine.dir })) ?? 'main';
-					return { output: `[${branch} ${shortOid(oid)}] Merge commit` };
+					return { output: `[${branch} ${shortOid(oid)}] ${mergeMessage.split('\n')[0]}` };
 				}
 
 				if (!message) {
@@ -1069,6 +1384,27 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			}
 
 			case 'log': {
+				if (rest.includes('-p') || rest.includes('--patch')) {
+					return {
+						output:
+							"git log -p isn't supported in the playground — use git show <commit> to see one commit's diff.",
+						error: true
+					};
+				}
+				const authorFlag = rest.find((a) => a.startsWith('--author'));
+				if (authorFlag) {
+					return {
+						output: "git log --author isn't supported in the playground yet.",
+						error: true
+					};
+				}
+				if (rest.includes('--graph')) {
+					return {
+						output:
+							"git log --graph isn't supported in the terminal — but the commit graph panel beside it is live and updates after every command.",
+						error: true
+					};
+				}
 				const oneline = rest.includes('--oneline');
 				const all = rest.includes('--all');
 				const nFlagIdx = rest.indexOf('-n');
@@ -1079,7 +1415,22 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						: dashN
 							? Number(dashN.slice(1))
 							: undefined;
-				const raw = await formatLog(engine, oneline, all, limit);
+				// git log <ref>: start the walk from that ref instead of HEAD
+				const positional = rest.filter(
+					(a, i) => !a.startsWith('-') && !(nFlagIdx >= 0 && i === nFlagIdx + 1)
+				);
+				let startRef: string | undefined;
+				if (positional.length > 0) {
+					try {
+						startRef = await engine.resolveRevision(positional[0]);
+					} catch {
+						return {
+							output: `fatal: ambiguous argument '${positional[0]}': unknown revision`,
+							error: true
+						};
+					}
+				}
+				const raw = await formatLog(engine, oneline, all, limit, startRef);
 				return { output: colorizeLog(raw), colored: true };
 			}
 
@@ -1136,24 +1487,51 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						})
 					);
 					const remoteLines = rest.includes('-a')
-						? [...engine.remote.branches.keys()].map((b) => `  remotes/origin/${b}`)
+						? (
+								await git
+									.listBranches({ fs: engine.fs, dir: engine.dir, remote: DEFAULT_REMOTE })
+									.catch(() => [] as string[])
+							)
+								.filter((b) => b !== 'HEAD')
+								.map((b) => `  remotes/origin/${b}`)
 						: [];
 					return { output: [...localLines, ...remoteLines].join('\n') || 'No branches yet' };
 				}
-				await git.branch({ fs: engine.fs, dir: engine.dir, ref: rest[rest.length - 1] });
+				// git branch <name> [<start-point>]
+				const names = rest.filter((a) => !a.startsWith('-'));
+				const newName = names[0];
+				const startPoint = names[1];
+				if (!newName) return { output: 'fatal: branch name required', error: true };
+				const object = startPoint ? await engine.resolveRevision(startPoint) : undefined;
+				await git.branch({ fs: engine.fs, dir: engine.dir, ref: newName, object });
 				return { output: '' };
 			}
 
 			case 'switch':
 			case 'checkout': {
-				// git checkout <rev> -- <file>: restore a file without moving HEAD
 				const dashDash = rest.indexOf('--');
-				if (sub === 'checkout' && dashDash > 0) {
-					const rev = rest[dashDash - 1];
+				if (sub === 'checkout' && dashDash >= 0) {
+					const rev = dashDash > 0 ? rest[dashDash - 1] : null;
 					const files = rest.slice(dashDash + 1);
 					if (files.length === 0) {
 						return { output: 'fatal: you must specify path(s) after --', error: true };
 					}
+					if (!rev) {
+						// git checkout -- <file>: restore the working tree from the
+						// INDEX (not HEAD), leaving the index untouched.
+						for (const filepath of files) {
+							const content = await readIndexFile(engine, filepath);
+							if (content === null) {
+								return {
+									output: `error: pathspec '${filepath}' did not match any file(s) known to git`,
+									error: true
+								};
+							}
+							await engine.writeFile(filepath, content);
+						}
+						return { output: '' };
+					}
+					// git checkout <rev> -- <file>: restore file + index from <rev>
 					const oid = await engine.resolveRevision(rev);
 					for (const filepath of files) {
 						const content = await readFileAtCommit(engine, oid, filepath);
@@ -1169,10 +1547,31 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 					return { output: `Updated ${files.length} path(s) from ${rev}` };
 				}
 
+				const currentBefore = await git.currentBranch({ fs: engine.fs, dir: engine.dir });
+
+				// git switch - / git checkout -: back to the previous branch
+				if (rest.length === 1 && rest[0] === '-') {
+					if (!engine.previousBranch) {
+						return { output: 'fatal: no previous branch to switch to', error: true };
+					}
+					const target = engine.previousBranch;
+					await git.checkout({ fs: engine.fs, dir: engine.dir, ref: target });
+					engine.previousBranch = currentBefore ?? null;
+					const tip = await git.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' });
+					engine.recordReflog(tip, `checkout: moving to ${target}`);
+					return { output: `Switched to branch '${target}'` };
+				}
+
 				const create = rest.includes('-c') || rest.includes('-b');
-				const name = rest.filter((a) => !a.startsWith('-')).pop();
+				const positional = rest.filter((a) => !a.startsWith('-'));
+				const name = positional[0];
 				if (!name) return { output: 'fatal: missing branch name', error: true };
-				if (create) await git.branch({ fs: engine.fs, dir: engine.dir, ref: name });
+				if (create) {
+					// git switch -c <name> [<start-point>]
+					const startPoint = positional[1];
+					const object = startPoint ? await engine.resolveRevision(startPoint) : undefined;
+					await git.branch({ fs: engine.fs, dir: engine.dir, ref: name, object });
+				}
 				const branches = await git.listBranches({ fs: engine.fs, dir: engine.dir });
 				if (!create && !branches.includes(name)) {
 					// Checking out a commit directly: detached HEAD
@@ -1186,12 +1585,14 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						};
 					}
 					await git.checkout({ fs: engine.fs, dir: engine.dir, ref: oid });
+					engine.previousBranch = currentBefore ?? engine.previousBranch;
 					engine.recordReflog(oid, `checkout: moving to ${name}`);
 					return {
 						output: `Note: switching to '${name}'.\n\nYou are in 'detached HEAD' state. You can look around and experiment,\nbut any commits you make here belong to no branch. To keep work made\nhere, create a branch: git switch -c <new-branch-name>`
 					};
 				}
 				await git.checkout({ fs: engine.fs, dir: engine.dir, ref: name });
+				if (currentBefore && currentBefore !== name) engine.previousBranch = currentBefore;
 				const tip = await git.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' });
 				engine.recordReflog(tip, `checkout: moving to ${name}`);
 				return {
@@ -1223,6 +1624,17 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 					return { output: '' };
 				}
 				if (staged) {
+					if (filepath === '.') {
+						// isomorphic-git's resetIndex has no pathspec support, so
+						// walk the matrix and unstage everything individually.
+						const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
+						for (const [f, head, , stage] of matrix) {
+							if (stage === 2 || stage === 3 || (head === 1 && stage === 0)) {
+								await git.resetIndex({ fs: engine.fs, dir: engine.dir, filepath: f });
+							}
+						}
+						return { output: '' };
+					}
 					await git.resetIndex({ fs: engine.fs, dir: engine.dir, filepath });
 					return { output: '' };
 				}
@@ -1234,7 +1646,48 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				const hard = rest.includes('--hard');
 				const soft = rest.includes('--soft');
 				const mixed = rest.includes('--mixed') || (!hard && !soft);
-				const rev = rest.find((r) => !r.startsWith('-')) ?? 'HEAD~1';
+				const positional = rest.filter((r) => !r.startsWith('-'));
+
+				// Disambiguate `git reset HEAD~1` from `git reset <file>` and
+				// `git reset HEAD <file>`: the first positional is a revision iff
+				// it resolves as one and isn't an existing path.
+				let rev = 'HEAD';
+				let files: string[] = [];
+				if (positional.length > 0) {
+					const first = positional[0];
+					const isExistingPath = (await engine.readFile(first)) !== null;
+					let resolved = false;
+					if (!isExistingPath) {
+						try {
+							await engine.resolveRevision(first);
+							resolved = true;
+						} catch {
+							resolved = false;
+						}
+					}
+					if (resolved) {
+						rev = first;
+						files = positional.slice(1);
+					} else {
+						files = positional;
+					}
+				}
+
+				if (files.length > 0) {
+					if (hard || soft) {
+						return { output: 'fatal: Cannot do hard/soft reset with paths.', error: true };
+					}
+					// git reset [HEAD] <file>: unstage just those paths
+					for (const pathspec of files) {
+						const matches = await expandPathspec(engine, pathspec);
+						const targets = matches.length > 0 ? matches : [pathspec];
+						for (const filepath of targets) {
+							await git.resetIndex({ fs: engine.fs, dir: engine.dir, filepath });
+						}
+					}
+					return { output: '' };
+				}
+
 				const oid = await engine.resolveHead(rev);
 				// Move the current branch ref, not HEAD itself — writing an oid
 				// into HEAD would silently detach it and later commits would no
@@ -1254,6 +1707,21 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						ref: branch ?? oid,
 						force: true
 					});
+					// checkout diffs target-tree vs INDEX, so when the ref didn't
+					// move (git reset --hard with no rev) it does nothing — restore
+					// modified tracked files by hand and unstage staged new ones.
+					const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
+					for (const [filepath, head, workdir, stage] of matrix) {
+						if (head === 1 && (workdir !== 1 || stage !== 1)) {
+							const content = await readFileAtCommit(engine, oid, filepath);
+							if (content !== null) {
+								await engine.writeFile(filepath, content);
+								await git.add({ fs: engine.fs, dir: engine.dir, filepath });
+							}
+						} else if (head === 0 && (stage === 2 || stage === 3)) {
+							await git.resetIndex({ fs: engine.fs, dir: engine.dir, filepath });
+						}
+					}
 				} else if (mixed) {
 					const matrix = await git.statusMatrix({ fs: engine.fs, dir: engine.dir });
 					for (const [filepath, , , stage] of matrix) {
@@ -1270,35 +1738,52 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			}
 
 			case 'merge': {
-				if (rest.includes('--abort')) return runMergeAbort(engine);
-				return runMerge(engine, rest.filter((a) => !a.startsWith('-')).pop() ?? '');
+				if (rest.includes('--abort')) return await runMergeAbort(engine);
+				return await runMerge(engine, rest.filter((a) => !a.startsWith('-')).pop() ?? '');
 			}
 
 			case 'rebase': {
-				if (rest.includes('--abort')) return runReplayAbort(engine, 'rebase');
-				if (rest.includes('--continue')) return runReplayContinue(engine, 'rebase');
-				return runRebase(engine, rest.filter((a) => !a.startsWith('-')).pop() ?? 'main');
+				if (rest.includes('-i') || rest.includes('--interactive')) {
+					return {
+						output:
+							"Interactive rebase isn't supported in the playground yet.\nIn real Git, git rebase -i opens a todo list where you can reorder, squash,\nreword, or drop commits. Here, try git reset --soft HEAD~n to re-do recent\ncommits, or git commit --amend to fix the latest one.",
+						error: true
+					};
+				}
+				if (rest.includes('--abort')) return await runReplayAbort(engine, 'rebase');
+				if (rest.includes('--continue')) return await runReplayContinue(engine, 'rebase');
+				return await runRebase(engine, rest.filter((a) => !a.startsWith('-')).pop() ?? 'main');
 			}
 
 			case 'cherry-pick': {
-				if (rest.includes('--abort')) return runReplayAbort(engine, 'cherry-pick');
-				if (rest.includes('--continue')) return runReplayContinue(engine, 'cherry-pick');
+				if (rest.includes('--abort')) return await runReplayAbort(engine, 'cherry-pick');
+				if (rest.includes('--continue')) return await runReplayContinue(engine, 'cherry-pick');
 				const rev = rest.filter((a) => !a.startsWith('-')).pop();
 				if (!rev) return { output: 'fatal: you must name a commit to cherry-pick', error: true };
-				return runCherryPick(engine, rev);
+				if (rev.includes('..')) {
+					return {
+						output:
+							"Commit ranges aren't supported in the playground — cherry-pick commits one\nat a time. (Real Git accepts a..b, which EXCLUDES a itself; use a^..b to\ninclude it — a classic gotcha.)",
+						error: true
+					};
+				}
+				return await runCherryPick(engine, rev);
 			}
 
 			case 'stash':
-				return runStash(engine, rest.join(' '));
+				return await runStash(engine, rest.join(' '));
 
-			case 'fetch':
-				return runFetch(engine, rest[0] ?? DEFAULT_REMOTE);
+			case 'fetch': {
+				const prune = rest.includes('--prune') || rest.includes('-p');
+				const remote = rest.filter((a) => !a.startsWith('-'))[0] ?? DEFAULT_REMOTE;
+				return await runFetch(engine, remote, prune);
+			}
 
 			case 'pull':
-				return runPull(engine, rest.join(' '));
+				return await runPull(engine, rest.join(' '));
 
 			case 'push':
-				return runPush(engine, rest.join(' '));
+				return await runPush(engine, rest.join(' '));
 
 			case 'remote':
 				if (rest.includes('-v') || rest.length === 0) {
@@ -1313,18 +1798,36 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 
 			case 'revert': {
 				const ref = rest.filter((a) => !a.startsWith('-')).pop() ?? 'HEAD';
-				return runRevert(engine, ref);
+				return await runRevert(engine, ref);
 			}
 
 			case 'diff': {
 				const staged = rest.includes('--staged') || rest.includes('--cached');
-				const raw = await formatDiff(engine, staged);
+				const stat = rest.includes('--stat');
+				const positional = rest.filter((a) => !a.startsWith('-'));
+
+				let raw: string;
+				if (positional.length === 1 && positional[0].includes('..')) {
+					// git diff a..b (also tolerates a...b as an approximation)
+					const [from, to] = positional[0].split(/\.{2,3}/);
+					raw = await formatDiffBetween(engine, from, to || 'HEAD');
+				} else if (positional.length === 2) {
+					raw = await formatDiffBetween(engine, positional[0], positional[1]);
+				} else if (positional.length === 1) {
+					// git diff <rev>: that commit vs the working tree
+					raw = await formatDiffBetween(engine, positional[0], null);
+				} else {
+					raw = await formatDiff(engine, staged);
+				}
+				if (stat) {
+					return { output: esc(statify(raw)), colored: true };
+				}
 				return { output: colorizeDiff(raw), colored: true };
 			}
 
 			case 'show': {
 				const rev = rest.filter((a) => !a.startsWith('-')).pop() ?? 'HEAD';
-				return runShow(engine, rev);
+				return await runShow(engine, rev);
 			}
 
 			case 'reflog': {
@@ -1336,7 +1839,7 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			}
 
 			case 'tag':
-				return runTag(engine, rest.join(' '));
+				return await runTag(engine, rest.join(' '));
 
 			case 'rm': {
 				const cached = rest.includes('--cached');
@@ -1359,9 +1862,16 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 			}
 
 			case 'clean': {
-				if (!rest.includes('-f') && !rest.includes('-fd') && !rest.includes('-df')) {
+				const flagChars = new Set(
+					rest.filter((t) => /^-[a-z]+$/.test(t)).flatMap((t) => t.slice(1).split(''))
+				);
+				const dryRun = flagChars.has('n');
+				const force = flagChars.has('f');
+				const removeDirs = flagChars.has('d');
+				if (!force && !dryRun) {
 					return {
-						output: 'fatal: clean.requireForce is true and neither -f given; refusing to clean',
+						output:
+							'fatal: clean.requireForce is true and neither -f nor -n given; refusing to clean\nhint: preview with git clean -n, delete with git clean -f (add -d for directories)',
 						error: true
 					};
 				}
@@ -1369,9 +1879,16 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				const removed: string[] = [];
 				for (const [filepath, head, workdir, stage] of matrix) {
 					if (head === 0 && workdir === 2 && stage === 0) {
-						await engine.fs.promises.unlink(`${engine.dir}/${filepath}`);
-						removed.push(`Removing ${filepath}`);
+						if (dryRun) {
+							removed.push(`Would remove ${filepath}`);
+						} else {
+							await engine.fs.promises.unlink(`${engine.dir}/${filepath}`);
+							removed.push(`Removing ${filepath}`);
+						}
 					}
+				}
+				if (!dryRun && removeDirs) {
+					await removeEmptyDirs(engine);
 				}
 				return { output: removed.join('\n') || 'Nothing to clean' };
 			}

@@ -39,22 +39,27 @@ export async function buildMergeConflictRepo(engine: GitEngine): Promise<void> {
 
 	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'feature/ai-experiment' });
 
+	// Leave a REAL in-progress merge behind: abortOnConflict:false writes the
+	// conflict markers and index stages, and engine.mergeState is what makes
+	// git status report unmerged paths, git merge --abort work, and the
+	// resolution commit come out with two parents.
+	const origHead = await git.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' });
+	const theirsOid = await git.resolveRef({
+		fs: engine.fs,
+		dir: engine.dir,
+		ref: 'refs/heads/main'
+	});
 	try {
 		await git.merge({
 			fs: engine.fs,
 			dir: engine.dir,
 			ours: 'feature/ai-experiment',
 			theirs: 'main',
+			abortOnConflict: false,
 			author: { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' }
 		});
 	} catch {
-		const content = await engine.readFile('src/model.py');
-		if (!content?.includes('<<<<<<<')) {
-			await engine.writeFile(
-				'src/model.py',
-				'<<<<<<< HEAD\nx = 10\n# AI refactor\n=======\nx = 5\n# teammate fix\n>>>>>>> main\n'
-			);
-		}
+		engine.mergeState = { origHead, theirsOid, theirsLabel: 'main' };
 	}
 }
 
@@ -79,6 +84,9 @@ export async function buildSyncRemoteRepo(engine: GitEngine): Promise<void> {
 	});
 
 	engine.remote.setBranch('main', remoteMainOid);
+	// Deliberately stale: the tracking ref (and the lease knowledge) point at
+	// the old tip until the learner fetches — that's the whole lesson.
+	engine.remote.recordFetched('main', localMainOid);
 	await writeRemoteTrackingRef(engine, 'origin', 'main', localMainOid);
 
 	await git.branch({
@@ -102,7 +110,9 @@ export async function buildUndoRepo(engine: GitEngine): Promise<void> {
 
 	const pushedOid = await engine.getCommitOid('feature/experiment', 0);
 	engine.remote.setBranch('feature/experiment', pushedOid);
-	engine.remote.upstream = 'feature/experiment';
+	engine.remote.recordFetched('feature/experiment', pushedOid);
+	engine.remote.setUpstream('feature/experiment', 'feature/experiment');
+	await writeRemoteTrackingRef(engine, 'origin', 'feature/experiment', pushedOid);
 
 	await engine.writeFile('src/model.py', 'messed up by ai\n');
 	await engine.writeFile('src/utils.py', 'bad ai output\n');
@@ -121,6 +131,7 @@ export async function buildBranchingRepo(engine: GitEngine): Promise<void> {
 
 	const mainOid = await engine.getCommitOid('main', 0);
 	engine.remote.setBranch('main', mainOid);
+	engine.remote.recordFetched('main', mainOid);
 	await writeRemoteTrackingRef(engine, 'origin', 'main', mainOid);
 
 	await engine.writeFile('src/main.py', 'def main():\n    run_ai_pipeline()\n');
@@ -130,15 +141,16 @@ export async function buildBranchingRepo(engine: GitEngine): Promise<void> {
 /** Committed to wrong branch — need to move commit to a feature branch */
 export async function buildWrongBranchRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# App\n' }]);
-	await engine.commitFiles('feat: Add user model', [
+	await engine.commitFiles('feat: add user model', [
 		{ path: 'src/models.py', content: 'class User:\n    pass\n' }
 	]);
 
 	const mainOid = await engine.getCommitOid('main', 0);
 	engine.remote.setBranch('main', mainOid);
+	engine.remote.recordFetched('main', mainOid);
 	await writeRemoteTrackingRef(engine, 'origin', 'main', mainOid);
 
-	await engine.commitFiles('feat: Add payment processing', [
+	await engine.commitFiles('feat: add payment processing', [
 		{ path: 'src/payments.py', content: 'def process_payment():\n    return True\n' },
 		{ path: 'src/billing.py', content: 'def create_invoice():\n    pass\n' }
 	]);
@@ -178,7 +190,8 @@ export async function buildForcePushRepo(engine: GitEngine): Promise<void> {
 
 	const pushedOid = await engine.getCommitOid('feature/cleanup', 0);
 	engine.remote.setBranch('feature/cleanup', pushedOid);
-	engine.remote.upstream = 'feature/cleanup';
+	engine.remote.recordFetched('feature/cleanup', pushedOid);
+	engine.remote.setUpstream('feature/cleanup', 'feature/cleanup');
 	await writeRemoteTrackingRef(engine, 'origin', 'feature/cleanup', pushedOid);
 }
 

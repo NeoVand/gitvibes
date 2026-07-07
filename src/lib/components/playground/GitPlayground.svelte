@@ -80,11 +80,20 @@
 		diagram = await buildGitGraph(engine);
 	}
 
+	// Guards against interleaved loads (rapid scenario switches): only the
+	// newest load may publish its results.
+	let loadGeneration = 0;
+
 	async function loadScenario(next: PlaygroundScenario) {
+		const generation = ++loadGeneration;
 		loading = true;
 		try {
-			engine = new GitEngine(embedded ? `embedded-${id}` : 'gitvibes-playground');
+			// Reuse one engine per playground — every load allocates a fresh
+			// in-memory filesystem via reset, and re-creating the engine itself
+			// would leak the previous instance's Web Lock.
+			engine ??= new GitEngine(embedded ? `embedded-${id}` : 'gitvibes-playground');
 			await loadScenarioSeed(engine, next);
+			if (generation !== loadGeneration) return;
 			history = embedded
 				? [
 						{ type: 'system', text: next.description },
@@ -111,13 +120,16 @@
 						];
 			await refreshDiagram();
 		} catch (err) {
+			if (generation !== loadGeneration) return;
 			const message = err instanceof Error ? err.message : String(err);
 			history = [{ type: 'output', text: `Failed to initialize repo: ${message}`, error: true }];
 		} finally {
-			loading = false;
-			// Embedded playgrounds load as the reader scrolls; autofocusing them
-			// would steal focus and yank the page scroll to the input.
-			if (!embedded) inputEl?.focus();
+			if (generation === loadGeneration) {
+				loading = false;
+				// Embedded playgrounds load as the reader scrolls; autofocusing them
+				// would steal focus and yank the page scroll to the input.
+				if (!embedded) inputEl?.focus();
+			}
 		}
 	}
 
