@@ -1,0 +1,183 @@
+<script lang="ts">
+	import { base } from '$app/paths';
+	import { cheatSheet } from '$lib/data/cheat-sheet';
+	import { tokenizeGitCommand } from '$lib/data/git-syntax';
+</script>
+
+<!-- Print-only source page for static/gitvibes-cheatsheet.pdf.
+     Not linked from the site; regenerate the PDF with
+     `node scripts/make-cheatsheet-pdf.mjs` (dev server running). -->
+<svelte:head>
+	<title>GitVibes — Git Cheat Sheet</title>
+	<meta name="robots" content="noindex" />
+</svelte:head>
+
+<div class="sheet">
+	<!-- div, not <header>: the site-wide print stylesheet hides `header`
+	     to strip app chrome, and page.pdf renders in print media -->
+	<div class="masthead">
+		<img src="{base}/images/logo.webp" alt="" class="logo" />
+		<div>
+			<h1>Git Cheat Sheet</h1>
+			<p class="sub">
+				GitVibes — Git for Vibe Coders · <span class="url">neovand.github.io/gitvibes</span>
+			</p>
+		</div>
+	</div>
+
+	<div class="columns">
+		{#each cheatSheet as category (category.label)}
+			<section class="category">
+				<h2>{category.label}</h2>
+				<ul>
+					{#each category.commands as cmd (cmd.command)}
+						<li>
+							<code
+								>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span
+										class="tok tok-{token.type}">{token.text}</span
+									>{/each}</code
+							>
+							<p>{cmd.description}</p>
+						</li>
+					{/each}
+				</ul>
+			</section>
+		{/each}
+	</div>
+</div>
+
+<style>
+	/* Self-contained light palette: the PDF must look right regardless of the
+	   reader's theme, and dark pages waste ink. */
+	:global(html):has(.sheet),
+	:global(body):has(.sheet) {
+		background: #ffffff !important;
+	}
+
+	.sheet {
+		max-width: 186mm;
+		margin: 0 auto;
+		background: #ffffff;
+		color: #1e293b;
+		font-family: var(--font-sans);
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+	}
+
+	.masthead {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding-bottom: 10px;
+		margin-bottom: 12px;
+		border-bottom: 2.5px solid #818cf8;
+	}
+
+	.logo {
+		width: 42px;
+		height: 42px;
+	}
+
+	h1 {
+		font-family: var(--font-heading);
+		font-size: 21px;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		color: #1e1b4b;
+		margin: 0;
+	}
+
+	.sub {
+		margin: 2px 0 0;
+		font-size: 10.5px;
+		color: #64748b;
+	}
+
+	.url {
+		color: #6366f1;
+		font-weight: 600;
+	}
+
+	.columns {
+		column-count: 2;
+		column-gap: 7mm;
+	}
+
+	.category {
+		break-inside: avoid;
+		margin-bottom: 11px;
+	}
+
+	h2 {
+		font-family: var(--font-heading);
+		font-size: 12.5px;
+		font-weight: 700;
+		color: #4338ca;
+		margin: 0 0 5px;
+		padding: 2px 0 2px 8px;
+		border-left: 3px solid #818cf8;
+		background: #eef2ff;
+		border-radius: 0 4px 4px 0;
+	}
+
+	ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	li {
+		margin-bottom: 6px;
+		break-inside: avoid;
+	}
+
+	code {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 9.5px;
+		line-height: 1.45;
+		background: #f8fafc;
+		border: 1px solid #e2e8f0;
+		border-radius: 4px;
+		padding: 2.5px 6px;
+		color: #334155;
+	}
+
+	li p {
+		margin: 1.5px 0 0 2px;
+		font-size: 8.75px;
+		line-height: 1.4;
+		color: #64748b;
+	}
+
+	/* Token colors tuned for white paper (the app's dark-theme tok-* colors
+	   are too pale for print) */
+	.sheet :global(.tok-git) {
+		color: #db2777;
+		font-weight: 600;
+	}
+	.sheet :global(.tok-subcommand),
+	.sheet :global(.tok-command) {
+		color: #4f46e5;
+		font-weight: 600;
+	}
+	.sheet :global(.tok-flag) {
+		color: #0e7490;
+	}
+	.sheet :global(.tok-string) {
+		color: #047857;
+	}
+	.sheet :global(.tok-placeholder) {
+		color: #b45309;
+		font-style: italic;
+	}
+	.sheet :global(.tok-hash) {
+		color: #b45309;
+	}
+	.sheet :global(.tok-arg) {
+		color: #334155;
+	}
+	.sheet :global(.tok-comment) {
+		color: #94a3b8;
+	}
+</style>

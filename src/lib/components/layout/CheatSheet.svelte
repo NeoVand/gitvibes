@@ -1,4 +1,8 @@
 <script lang="ts">
+	import { asset } from '$app/paths';
+
+	// The pre-generated PDF (scripts/make-cheatsheet-pdf.mjs) shipped in static/
+	const pdfHref = asset('/gitvibes-cheatsheet.pdf');
 	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import {
 		X,
@@ -15,7 +19,9 @@
 		Tag,
 		Wrench,
 		Check,
-		Copy
+		Copy,
+		Maximize2,
+		Download
 	} from 'lucide-svelte';
 	import { SvelteSet } from 'svelte/reactivity';
 	import { cheatSheet, type CheatSheetCategory } from '$lib/data/cheat-sheet';
@@ -26,6 +32,20 @@
 	let searchQuery = $state('');
 	let expandedCategories = new SvelteSet<string>(cheatSheet.map((c) => c.label));
 	let copiedCommand = $state<string | null>(null);
+	let modalOpen = $state(false);
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape' && modalOpen) {
+			event.stopPropagation();
+			modalOpen = false;
+		}
+	}
+
+	// `autofocus` is ignored on dynamically inserted elements; the modal
+	// exists to browse commands, so search is its entry point.
+	function focusOnMount(node: HTMLElement) {
+		node.focus();
+	}
 
 	// Map icon string names to lucide components
 	const iconMap: Record<string, typeof Settings> = {
@@ -84,6 +104,46 @@
 	});
 </script>
 
+<svelte:window onkeydown={handleKeydown} />
+
+{#snippet commandRow(cmd: { command: string; description: string })}
+	{@const isCopied = copiedCommand === cmd.command}
+	<button
+		onclick={() => copyCommand(cmd.command)}
+		class="group block w-full cursor-pointer rounded-md px-2 py-[6px] text-left transition-colors"
+		style="background: transparent;"
+		title="Click to copy"
+	>
+		<div class="flex items-start gap-1.5">
+			<code
+				class="inline-block rounded px-1 py-0.5 text-[11px] leading-relaxed break-all"
+				style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
+				>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span class="tok tok-{token.type}"
+						>{token.text}</span
+					>{/each}</code
+			>
+			<span
+				class="mt-0.5 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
+				style="color: {isCopied ? 'var(--color-tip)' : 'var(--color-text-muted)'};"
+			>
+				{#if isCopied}
+					<Check size={11} />
+				{:else}
+					<Copy size={11} />
+				{/if}
+			</span>
+		</div>
+		<p class="mt-0.5 text-[11px] leading-snug" style="color: var(--color-text-muted);">
+			{cmd.description}
+		</p>
+		{#if isCopied}
+			<span class="mt-0.5 inline-block text-[10px] font-medium" style="color: var(--color-tip);">
+				Copied!
+			</span>
+		{/if}
+	</button>
+{/snippet}
+
 <!-- Backdrop on mobile -->
 {#if open}
 	<button
@@ -111,14 +171,35 @@
 		>
 			Git Cheat Sheet
 		</span>
-		<button
-			onclick={onToggle}
-			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors"
-			style="color: var(--color-text-muted);"
-			aria-label="Close cheat sheet"
-		>
-			<X size={15} />
-		</button>
+		<div class="flex items-center gap-0.5">
+			<a
+				href={pdfHref}
+				download="gitvibes-cheatsheet.pdf"
+				class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
+				style="color: var(--color-text-muted);"
+				aria-label="Download as PDF"
+				title="Download as PDF"
+			>
+				<Download size={14} />
+			</a>
+			<button
+				onclick={() => (modalOpen = true)}
+				class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
+				style="color: var(--color-text-muted);"
+				aria-label="Expand cheat sheet"
+				title="Expand"
+			>
+				<Maximize2 size={13} />
+			</button>
+			<button
+				onclick={onToggle}
+				class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
+				style="color: var(--color-text-muted);"
+				aria-label="Close cheat sheet"
+			>
+				<X size={15} />
+			</button>
+		</div>
 	</div>
 
 	<!-- Search -->
@@ -169,44 +250,7 @@
 						style="border-color: var(--color-border);"
 					>
 						{#each category.commands as cmd (cmd.command)}
-							{@const isCopied = copiedCommand === cmd.command}
-							<button
-								onclick={() => copyCommand(cmd.command)}
-								class="group block w-full cursor-pointer rounded-md px-2 py-[6px] text-left transition-colors"
-								style="background: transparent;"
-								title="Click to copy"
-							>
-								<div class="flex items-start gap-1.5">
-									<code
-										class="inline-block rounded px-1 py-0.5 text-[11px] leading-relaxed break-all"
-										style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
-										>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span
-												class="tok tok-{token.type}">{token.text}</span
-											>{/each}</code
-									>
-									<span
-										class="mt-0.5 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-										style="color: {isCopied ? 'var(--color-tip)' : 'var(--color-text-muted)'};"
-									>
-										{#if isCopied}
-											<Check size={11} />
-										{:else}
-											<Copy size={11} />
-										{/if}
-									</span>
-								</div>
-								<p class="mt-0.5 text-[11px] leading-snug" style="color: var(--color-text-muted);">
-									{cmd.description}
-								</p>
-								{#if isCopied}
-									<span
-										class="mt-0.5 inline-block text-[10px] font-medium"
-										style="color: var(--color-tip);"
-									>
-										Copied!
-									</span>
-								{/if}
-							</button>
+							{@render commandRow(cmd)}
 						{/each}
 					</div>
 				{/if}
@@ -223,11 +267,137 @@
 	</div>
 </aside>
 
+<!-- ───── EXPANDED MODAL ───── -->
+{#if modalOpen}
+	<div class="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8">
+		<button
+			class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+			onclick={() => (modalOpen = false)}
+			aria-label="Close expanded cheat sheet"
+		></button>
+		<div
+			class="cheat-modal relative flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border shadow-2xl"
+			style="border-color: var(--color-border);"
+			role="dialog"
+			aria-modal="true"
+			aria-label="Git cheat sheet"
+		>
+			<div
+				class="flex shrink-0 items-center justify-between border-b px-5 py-3"
+				style="border-color: var(--color-border);"
+			>
+				<span
+					class="text-xs font-semibold tracking-wider uppercase"
+					style="color: var(--color-text-muted); letter-spacing: 0.08em;"
+				>
+					Git Cheat Sheet
+				</span>
+				<div class="flex items-center gap-1">
+					<a
+						href={pdfHref}
+						download="gitvibes-cheatsheet.pdf"
+						class="flex h-7 cursor-pointer items-center gap-1.5 rounded-md border px-2.5 text-[11px] font-medium transition-colors hover:opacity-80"
+						style="color: var(--color-text-secondary); border-color: var(--color-border);"
+						aria-label="Download as PDF"
+					>
+						<Download size={12} />
+						PDF
+					</a>
+					<button
+						onclick={() => (modalOpen = false)}
+						class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
+						style="color: var(--color-text-muted);"
+						aria-label="Close expanded cheat sheet"
+					>
+						<X size={15} />
+					</button>
+				</div>
+			</div>
+
+			<div
+				class="flex shrink-0 items-center gap-2 border-b px-5 py-2.5"
+				style="border-color: var(--color-border); background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);"
+			>
+				<Search size={13} style="color: var(--color-text-muted); flex-shrink: 0;" />
+				<input
+					type="text"
+					placeholder="Filter commands..."
+					bind:value={searchQuery}
+					use:focusOnMount
+					class="w-full border-none bg-transparent text-xs shadow-none outline-none focus:border-none focus:shadow-none focus:ring-0 focus:outline-none"
+					style="color: var(--color-text); font-family: var(--font-sans);"
+				/>
+			</div>
+
+			<div class="min-h-0 flex-1 overflow-y-auto px-5 py-4" use:autohideScroll>
+				<div class="cheat-modal-columns">
+					{#each filteredCategories as category (category.label)}
+						{@const IconComponent = iconMap[category.icon]}
+						<section class="cheat-modal-category mb-4">
+							<h3
+								class="mb-1 flex items-center gap-2 rounded-md px-2.5 py-1.5 text-[13px] font-semibold"
+								style="color: var(--color-text-secondary); background: color-mix(in srgb, var(--color-primary) 8%, transparent); border-left: 3px solid var(--color-primary);"
+							>
+								{#if IconComponent}
+									<IconComponent size={14} strokeWidth={2} />
+								{/if}
+								<span class="flex-1">{category.label}</span>
+								<span class="text-[10px] font-normal" style="color: var(--color-text-muted);">
+									{category.commands.length}
+								</span>
+							</h3>
+							{#each category.commands as cmd (cmd.command)}
+								{@render commandRow(cmd)}
+							{/each}
+						</section>
+					{/each}
+				</div>
+
+				{#if filteredCategories.length === 0}
+					<div class="px-2 py-8 text-center">
+						<p class="text-xs" style="color: var(--color-text-muted);">
+							No commands match your search.
+						</p>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+{/if}
+
 <style>
 	/* Frosted glass, matching the header and sidebar */
 	.cheat-panel {
 		background: color-mix(in srgb, var(--color-bg-secondary) 62%, transparent);
 		backdrop-filter: blur(24px) saturate(1.4);
 		-webkit-backdrop-filter: blur(24px) saturate(1.4);
+	}
+
+	.cheat-modal {
+		background: color-mix(in srgb, var(--color-bg-secondary) 78%, transparent);
+		backdrop-filter: blur(28px) saturate(1.5);
+		-webkit-backdrop-filter: blur(28px) saturate(1.5);
+	}
+
+	/* Categories flow through balanced columns; each stays whole */
+	.cheat-modal-columns {
+		column-count: 1;
+		column-gap: 1.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.cheat-modal-columns {
+			column-count: 2;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.cheat-modal-columns {
+			column-count: 3;
+		}
+	}
+
+	.cheat-modal-category {
+		break-inside: avoid;
 	}
 </style>

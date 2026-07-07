@@ -56,7 +56,7 @@ Every lesson opens with an original piece of banner art — all **40** of them, 
 - **VS Code screenshots** — real UI with hover-to-expand and captions
 - **Vibe prompts** — copy-paste AI prompts for common Git workflows
 - **Search** — `⌘K` / `Ctrl+K` command palette with panic-query aliases ("oops", "undo reset --hard", "wrong branch")
-- **Cheat sheet** — quick command reference from the header
+- **Cheat sheet** — quick command reference from the header, expandable into a full-screen three-column view, downloadable as a typeset PDF
 - **Light / dark theme**, installable as a PWA, works offline after one visit
 - **Fully static** — no backend; deploys to GitHub Pages
 
@@ -147,6 +147,8 @@ Open [http://localhost:5173](http://localhost:5173).
 ## Assets
 
 Section banner images live in `static/images/` (kebab-case filenames). Image generation prompts for creating or updating posters are in [`docs/IMAGE_PROMPTS.md`](docs/IMAGE_PROMPTS.md). Drop new art in as PNG and run `node scripts/optimize-images.mjs` to convert it to WebP, then `node scripts/make-poster.mjs` to refresh the banner poster above (it reads the curriculum order straight from the section components).
+
+The downloadable cheat sheet PDF (`static/gitvibes-cheatsheet.pdf`) is rendered from the unlisted `/cheatsheet-print` route — after editing `src/lib/data/cheat-sheet.ts`, regenerate it with `node scripts/make-cheatsheet-pdf.mjs` (dev server running).
 
 VS Code screenshots under `static/images/vscode/` are from the [Visual Studio Code documentation](https://code.visualstudio.com/docs/sourcecontrol/overview) (© Microsoft, [CC BY 3.0](https://github.com/microsoft/vscode-docs/blob/main/License.md)), vendored so the site has no runtime dependency on the docs CDN.
 
