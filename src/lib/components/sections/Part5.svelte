@@ -784,6 +784,19 @@ git rebase --continue`}
 				but on your own branch, the worst case is typing one command and being back where you started.
 			</Callout>
 
+			<Callout type="tip">
+				<strong>Resolving the same conflict twice? Never again:</strong>
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git config --global rerere.enabled true</code
+				>
+				turns on <em>reuse recorded resolution</em> — Git remembers how you resolved each conflict and
+				replays the answer the next time the identical conflict appears. On a long-lived AI branch that
+				gets rebased onto main every day, this is the difference between resolving the agent's conflict
+				once and resolving it every single morning.
+			</Callout>
+
 			<h4
 				id="rebase-conflict"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"

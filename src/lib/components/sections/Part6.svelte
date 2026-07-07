@@ -317,6 +317,65 @@ description: Create a clean Git checkpoint after a working change.
 				so throwing work away costs nothing.
 			</Callout>
 
+			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Who Wrote This — You or the Machine?
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Six months from now, someone running <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git blame</code
+				>
+				will want to know whether a human decided this line or an agent generated it. Three layers of
+				attribution, weakest to strongest:
+			</p>
+
+			<ul
+				class="mb-4 list-inside list-disc space-y-1.5 text-[13px]"
+				style="color: var(--color-text-secondary);"
+			>
+				<li>
+					<strong>Trailers.</strong> Claude Code and Copilot append
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>Co-Authored-By:</code
+					>
+					lines to their commits by default — you'll see these in your own history. Useful as a hint,
+					but easy to strip or forget, so never treat them as a measurement of anything.
+				</li>
+				<li>
+					<strong>Per-worktree identity.</strong> Running agents in worktrees (6.3)? Give each its
+					own name so blame tells Agent A from Agent B:
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>git config extensions.worktreeConfig true</code
+					>, then
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>git config --worktree user.name "Agent A (auth)"</code
+					> inside each worktree.
+				</li>
+				<li>
+					<strong>Signing.</strong> The strong claim runs the other way: commits <em>you</em>
+					sign are verifiably yours. Modern setup is SSH-based and reuses the key from Part 1 (<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>gpg.format ssh</code
+					>
+					+
+					<code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>commit.gpgsign true</code
+					>); GitHub shows "Verified" badges, and its <em>vigilant mode</em> flags anything unsigned that
+					claims to be you. In a world of agents committing under borrowed names, "the human signed off
+					here" is worth making cryptographic.
+				</li>
+			</ul>
+
 			<VibeBox
 				prompts={[
 					'Read AGENTS.md and follow its Git rules for every change in this session',
@@ -730,6 +789,23 @@ git worktree prune`}
 				keeping past the current session goes into a real commit — the durable layer this whole
 				guide is about.
 			</Callout>
+
+			<p class="mt-5 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				Two monorepo-scale companions worth knowing by name: <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git sparse-checkout set pkg/api</code
+				>
+				materializes only the directories an agent actually needs (a worktree per agent, a package per
+				worktree, nothing else on disk), and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git maintenance start</code
+				>
+				schedules background housekeeping — worth turning on once a fleet of agents starts churning out
+				objects faster than any human team ever did.
+			</p>
 
 			<h4
 				id="worktrees"

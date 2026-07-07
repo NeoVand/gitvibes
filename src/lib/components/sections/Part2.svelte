@@ -891,6 +891,54 @@ echo "Thumbs.db" >> ~/.gitignore_global`}
 				file.
 			</Callout>
 
+			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Line Endings: the Cross-Platform Papercut
+			</h4>
+
+			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				Windows ends lines with <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">CRLF</code
+				>, macOS and Linux with
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">LF</code
+				>. On a mixed team this produces the classic horror diff:
+				<em>every line of the file "changed"</em>
+				because a teammate's editor rewrote the endings — and AI agents reformatting files make it
+				worse. The team-level fix is a committed
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>.gitattributes</code
+				> file, which overrides everyone's personal settings:
+			</p>
+
+			<CodeBlock
+				title=".gitattributes — one line ends the war"
+				code={`# Commit LF, let Git normalize what each OS checks out
+* text=auto
+
+# Files that must keep exact bytes, no conversion ever
+*.png binary
+*.webp binary`}
+			/>
+
+			<p class="mb-3 text-[13px]" style="color: var(--color-text-secondary);">
+				(You may also see <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>core.autocrlf</code
+				>
+				in older guides — that's the per-machine version of the same idea. Prefer
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>.gitattributes</code
+				>: it lives in the repo, so it protects teammates and agents who never configured anything.
+				If a diff ever claims every line changed, check line endings before anything else.)
+			</p>
+
 			<VibeBox
 				prompts={[
 					'Write a .gitignore for this project — look at my stack and include editor and OS artifacts',

@@ -457,6 +457,27 @@ winget install --id GitHub.cli
 				caption="VS Code automatically opens your browser to sign in to GitHub -- no tokens to manage."
 			/>
 
+			<Callout type="warning">
+				<strong>The enterprise wall: SAML SSO authorization.</strong> In most companies on GitHub
+				Enterprise Cloud, a working token or SSH key is <em>not enough</em> — it must also be
+				explicitly <strong>authorized for your organization</strong>, or every clone fails with the
+				famously misleading
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>repository not found</code
+				>
+				(the repo exists; your credential just isn't SSO-blessed). The fix takes ten seconds: GitHub →
+				<strong>Settings</strong>
+				→ your token or SSH key → <strong>"Configure SSO"</strong> → Authorize for your org. If day
+				one at a new job ends in
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>ERROR: Repository not found</code
+				>, check this before anything else.
+			</Callout>
+
 			<VibeBox
 				prompts={[
 					'Generate an ed25519 SSH key and add it to my GitHub account',
@@ -564,6 +585,36 @@ cd your-project   # The clone lands in a NEW folder named after the repo`}
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
 				>) checked out. Other branches exist as remote-tracking branches until you explicitly check
 				them out.
+			</Callout>
+
+			<Callout type="warning">
+				<strong
+					>If you see a <code
+						class="rounded px-1 py-0.5 text-xs"
+						style="background: var(--color-code-bg); font-family: var(--font-mono);"
+						>.gitmodules</code
+					> file, stop and read this.</strong
+				>
+				The repo uses
+				<strong>submodules</strong> — other Git repositories pinned inside this one. A plain clone
+				leaves those directories <em>empty</em>; you need
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git clone --recurse-submodules &lt;url&gt;</code
+				>
+				(or, after the fact,
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>git submodule update --init --recursive</code
+				>). Two rules until you've studied them properly: don't hand-edit inside a submodule
+				directory, and watch AI agents around them — a careless
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
+				> can silently commit a moved submodule pointer, which is a notorious way for agents to break
+				builds.
 			</Callout>
 
 			<VibeBox

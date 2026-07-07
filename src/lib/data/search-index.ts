@@ -21,6 +21,7 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('reflog') || cmd.includes('head@{')) return 'section-4-9';
 	if (cmd.includes('cherry-pick')) return 'section-5-4';
 	if (cmd.includes('rebase --continue') || cmd.includes('rebase --abort')) return 'section-5-5';
+	if (cmd.includes('rebase -i')) return 'interactive-rebase';
 	if (cmd.includes('rebase')) return 'section-5-2';
 	if (cmd.includes('credential') || cmd.includes('ssh') || cmd.startsWith('gh auth'))
 		return 'section-1-2';
@@ -49,9 +50,8 @@ function resolveSectionId(command: string, category: string): string {
 	if (cmd.includes('force')) return 'section-4-6';
 	if (cmd.includes('merge')) return 'section-5-2';
 	if (cmd.includes('log') || cmd.includes('show') || cmd.includes('blame')) return 'section-7-2';
-	if (cmd.includes('bisect') || cmd.includes('submodule')) {
-		return 'section-8-2';
-	}
+	if (cmd.includes('bisect')) return 'bisect';
+	if (cmd.includes('submodule')) return 'section-1-3';
 	if (cmd.includes('tag')) return 'section-5-6';
 
 	const categoryFallback: Record<string, string> = {
@@ -147,7 +147,11 @@ const topicEntries: SearchEntry[] = [
 			'credentials',
 			'credential helper',
 			'permission denied',
-			'403'
+			'403',
+			'saml',
+			'sso',
+			'repository not found',
+			'configure sso'
 		],
 		kind: 'topic'
 	},
@@ -205,6 +209,103 @@ const topicEntries: SearchEntry[] = [
 			'merge to main',
 			'merge request',
 			'MR'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-line-endings',
+		sectionId: 'section-2-4',
+		title: 'Line endings & .gitattributes',
+		part: 'Core Safety Loop',
+		description: 'CRLF vs LF, the every-line-changed diff, and the one-line .gitattributes fix.',
+		keywords: [
+			'line endings',
+			'crlf',
+			'lf',
+			'autocrlf',
+			'gitattributes',
+			'every line changed',
+			'whole file changed'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-submodules',
+		sectionId: 'section-1-3',
+		title: 'Submodules (.gitmodules)',
+		part: 'Enterprise Onboarding',
+		description:
+			'Repos pinned inside repos — clone with --recurse-submodules, and mind the agents.',
+		keywords: [
+			'submodule',
+			'submodules',
+			'gitmodules',
+			'recurse-submodules',
+			'empty folder after clone',
+			'nested repo'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-attribution',
+		sectionId: 'section-6-1',
+		title: 'Attribution & signing in the agent age',
+		part: 'Git for AI Agents',
+		description:
+			'Co-Authored-By trailers, per-worktree agent identities, and SSH commit signing with vigilant mode.',
+		keywords: [
+			'co-authored-by',
+			'signing',
+			'sign commits',
+			'gpg',
+			'ssh signing',
+			'verified badge',
+			'vigilant mode',
+			'who wrote this',
+			'blame agent',
+			'attribution'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-rerere',
+		sectionId: 'section-5-5',
+		title: 'rerere — never resolve the same conflict twice',
+		part: 'Advanced Workflows',
+		description: 'Git remembers your conflict resolutions and replays them on identical conflicts.',
+		keywords: ['rerere', 'same conflict again', 'reuse recorded resolution', 'repeated conflict'],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-bisect',
+		sectionId: 'bisect',
+		title: 'Find the commit that broke it (bisect)',
+		part: 'Undo Toolkit',
+		description: 'Binary-search history for the first bad commit — with a hands-on exercise.',
+		keywords: [
+			'bisect',
+			'which commit broke',
+			'find bad commit',
+			'regression',
+			'tests started failing',
+			'binary search'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-interactive-rebase',
+		sectionId: 'interactive-rebase',
+		title: 'Interactive rebase — squash the WIP',
+		part: 'Advanced Workflows',
+		description: 'Fold messy wip commits into clean ones with rebase -i (hands-on exercise).',
+		keywords: [
+			'interactive rebase',
+			'rebase -i',
+			'squash',
+			'squash commits',
+			'reword',
+			'clean up history',
+			'fixup'
 		],
 		kind: 'topic'
 	},
