@@ -273,18 +273,20 @@ ssh-add ~/.ssh/id_ed25519`}
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
 					>~/.ssh/config</code
 				>
-				with:
-				<code
-					class="mt-1 block rounded px-2 py-1 text-xs whitespace-pre"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>{`Host *\n  AddKeysToAgent yes\n  UseKeychain yes\n  IdentityFile ~/.ssh/id_ed25519`}</code
-				>
-				(Linux: same file without the
+				with the lines below (on Linux, drop the
 				<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);">UseKeychain</code
-				> line.)
+				> line):
 			</Callout>
+
+			<CodeBlock
+				title="~/.ssh/config — load the key automatically"
+				code={'Host *\n' +
+					'  AddKeysToAgent yes\n' +
+					'  UseKeychain yes\n' +
+					'  IdentityFile ~/.ssh/id_ed25519'}
+			/>
 
 			<CodeBlock
 				title="Copy your public key"
