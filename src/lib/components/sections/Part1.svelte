@@ -100,6 +100,27 @@ git config --global user.email "your-enterprise-email@company.com"`}
 git config --global --list    # Everything you've set globally`}
 			/>
 
+			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				While you're here, four more one-time settings pay for themselves many times over:
+			</p>
+
+			<CodeBlock
+				title="Quality-of-life defaults"
+				code={`# New repos start on 'main' (matches GitHub; becomes Git's own
+# built-in default in Git 3.0)
+git config --global init.defaultBranch main
+
+# Git messages open in VS Code instead of a terminal editor
+git config --global core.editor "code --wait"
+
+# First push of a new branch just works - no upstream error
+git config --global push.autoSetupRemote true
+
+# When you pull into local commits, replay yours on top
+# (you'll meet the alternative in Part 3)
+git config --global pull.rebase true`}
+			/>
+
 			<VibeBox
 				prompts={[
 					'Set up my Git config with my name and email on this machine',
