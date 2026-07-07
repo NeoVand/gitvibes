@@ -38,6 +38,9 @@
 									>{/each}</code
 							>
 							<p>{cmd.description}</p>
+							{#if cmd.detail}
+								<p class="detail">{cmd.detail}</p>
+							{/if}
 						</li>
 					{/each}
 				</ul>
@@ -101,10 +104,17 @@
 	.columns {
 		column-count: 2;
 		column-gap: 7mm;
+		/* auto, not balance: Chromium's balancing pass across page
+		   fragments pushes the whole multicol box past page 1 once the
+		   content grows — auto fills sequentially and fragments cleanly */
+		column-fill: auto;
 	}
 
+	/* Categories may split across columns/pages — with the detail text the
+	   big ones are taller than a full column, and break-inside: avoid on a
+	   too-tall first category blanks page 1 entirely. Each command (li)
+	   stays whole, and headings stick to their first command. */
 	.category {
-		break-inside: avoid;
 		margin-bottom: 11px;
 	}
 
@@ -118,6 +128,7 @@
 		border-left: 3px solid #818cf8;
 		background: #eef2ff;
 		border-radius: 0 4px 4px 0;
+		break-after: avoid;
 	}
 
 	ul {
@@ -148,6 +159,11 @@
 		font-size: 8.75px;
 		line-height: 1.4;
 		color: #64748b;
+	}
+
+	li p.detail {
+		font-size: 8px;
+		color: #94a3b8;
 	}
 
 	/* Token colors tuned for white paper (the app's dark-theme tok-* colors

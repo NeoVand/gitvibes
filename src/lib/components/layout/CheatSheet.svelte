@@ -24,7 +24,11 @@
 		Download
 	} from 'lucide-svelte';
 	import { SvelteSet } from 'svelte/reactivity';
-	import { cheatSheet, type CheatSheetCategory } from '$lib/data/cheat-sheet';
+	import {
+		cheatSheet,
+		type CheatSheetCategory,
+		type CheatSheetCommand
+	} from '$lib/data/cheat-sheet';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 
 	let { open = false, onToggle }: { open: boolean; onToggle: () => void } = $props();
@@ -69,7 +73,9 @@
 		for (const category of cheatSheet) {
 			const matchingCommands = category.commands.filter(
 				(cmd) =>
-					cmd.command.toLowerCase().includes(query) || cmd.description.toLowerCase().includes(query)
+					cmd.command.toLowerCase().includes(query) ||
+					cmd.description.toLowerCase().includes(query) ||
+					cmd.detail?.toLowerCase().includes(query)
 			);
 			if (matchingCommands.length > 0) {
 				result.push({ ...category, commands: matchingCommands });
@@ -106,7 +112,7 @@
 
 <svelte:window onkeydown={handleKeydown} />
 
-{#snippet commandRow(cmd: { command: string; description: string })}
+{#snippet commandRow(cmd: CheatSheetCommand, showDetail: boolean = false)}
 	{@const isCopied = copiedCommand === cmd.command}
 	<!-- The copy affordance overlays on hover instead of reserving a column —
 	     in the 336px panel that width is the difference between commands
@@ -139,6 +145,14 @@
 		<p class="mt-0.5 text-[11px] leading-snug" style="color: var(--color-text-muted);">
 			{cmd.description}
 		</p>
+		{#if showDetail && cmd.detail}
+			<p
+				class="mt-1 text-[11px] leading-relaxed"
+				style="color: color-mix(in srgb, var(--color-text-muted) 78%, transparent);"
+			>
+				{cmd.detail}
+			</p>
+		{/if}
 		{#if isCopied}
 			<span class="mt-0.5 inline-block text-[10px] font-medium" style="color: var(--color-tip);">
 				Copied!
@@ -348,7 +362,7 @@
 								</span>
 							</h3>
 							{#each category.commands as cmd (cmd.command)}
-								{@render commandRow(cmd)}
+								{@render commandRow(cmd, true)}
 							{/each}
 						</section>
 					{/each}
