@@ -120,6 +120,24 @@ git restore src/bad_file.py  # Discard a single file`}
 			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
+				And one more trick for the road — restore doesn't have to stop at "the last commit." The
+				most common real-world rescue is <em>one file, from an older commit</em>: the AI broke
+				<code
+					class="rounded px-1.5 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>src/parser.py</code
+				>
+				three commits ago and you only just noticed. No reset, no history surgery:
+			</p>
+
+			<CodeBlock
+				title="Pull one file back from the past"
+				code={`git restore --source=HEAD~3 src/parser.py
+# The file's content is now as it was 3 commits ago;
+# everything else stays untouched. Review it, then commit.`}
+			/>
+
+			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				In VS Code, you don't need the terminal for this. In the Source Control panel, hover over
 				the file you want to discard under "Changes" and click the <strong>curved arrow</strong>
 				icon. To discard ALL changes at once, click the curved arrow next to the "Changes" header. You
@@ -683,6 +701,19 @@ git push                    # Push the revert`}
 							>
 							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
 							<td class="px-3 py-2">Right-click file → "Discard Changes"</td>
+						</tr>
+						<tr style="border-top: 1px solid var(--color-border);">
+							<td class="px-3 py-2">One file broke several commits ago</td>
+							<td class="px-3 py-2"
+								><code style="font-family: var(--font-mono);"
+									>git restore --source=HEAD~3 &lt;file&gt;</code
+								></td
+							>
+							<td class="px-3 py-2"
+								>Brings back that file's old content; history and other files untouched</td
+							>
+							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
+							<td class="px-3 py-2">Timeline → click old commit → copy the old version</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">File staged by accident</td>
