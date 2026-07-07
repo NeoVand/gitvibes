@@ -666,3 +666,109 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > STYLE: Dark navy (#0f1117), film grain, the `.git` core is the brightest element (indigo-white), benches lit with distinct accent temperatures (emerald, amber, rose) but 90% of frame dark and desaturated.
 >
 > AVOID: humanoid robots, matrix rain, crowded UI panels, more than three benches. 16:9 aspect ratio.
+
+---
+
+## Missing banners batch (July 2026)
+
+**Numbering note:** the curriculum was renumbered in July 2026 — the "Part 6: VS Code Git Integration" prompts above correspond to today's **Part 7**, and "Part 7: Conclusion" corresponds to today's **Part 8**. The entries below use current section ids and supersede any older prompt with the same topic.
+
+**Palette note (bake into every render):** these accents come straight from the app's dark theme so banners sit naturally in the page — indigo `#818cf8` (primary), pink-rose `#f472b6` (the "main" branch color in the commit graphs), emerald `#a6e3a1` (terminal green / success), amber `#d97706` (warning warmth), cyan `#0284c7` (info). Background stays `#0f1117` to match the existing banner series. Use at most two or three accents per image, always as localized glow on a mostly dark frame.
+
+### section-intro-install — Installing Git → `install-git.png`
+
+> Create a cinematic editorial poster about **installing Git** — the single tool that works everywhere.
+>
+> CONCEPT: Asymmetrical composition. Right two-thirds: one beautifully worn hand tool — a precision multitool or engraved chisel, abstract enough not to read as any real brand — being lifted out of a fitted, velvet-lined case that glows faintly from within. The case interior carries a subtle circuit-etch texture. Three small, unmarked mounting slots beside the case hint that this same tool has homes everywhere (three platforms, never named or logo'd). Left third: large weathered monospace `git --version` with aged print texture, and beneath it in small muted monospace the reply: `git version 2.55.0` with a soft emerald `$` prompt glint.
+>
+> One quiet chip bottom-left: **One tool · every platform**
+>
+> MOOD: Unboxing a craftsman's instrument — anticipation, simplicity, readiness. The journey starts by picking up the tool. Premium developer-tooling campaign poster, not a download page.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, faint paper texture, worn typography edges. The case interior glows selective indigo (#818cf8); the version reply glints emerald (#a6e3a1). 90% of the frame dark and desaturated, localized color only.
+>
+> AVOID: OS logos (no apple, no windows panes, no penguin), progress bars, terminal screenshots, download arrows, package-manager icons. One tool, one case, one confirmation. 16:9 aspect ratio.
+
+### section-intro-repo — What Is a Repository? → `what-is-a-repo.png`
+
+> Create a cinematic editorial poster about **what a repository actually is** — an ordinary folder with its entire history hidden beneath the floor.
+>
+> CONCEPT: Architectural cutaway, asymmetrical. Upper half: a calm, ordinary project folder rendered as a minimal room — a few plain file-cards (`app.py`, `README.md`) resting on a clean floor, lit neutrally. Below the floorline: a vast luminous vault descending into darkness — layered strata of glowing commit nodes, thin branch threads, and archival shelves, all clearly BIGGER than the room above. A single hairline shaft of indigo light connects a file above to its history below. On the vault door, small worn monospace: `.git`
+>
+> Left edge: large weathered serif **"The Repository"** vertically oriented, aged print texture. One quiet chip bottom: **Your files above · their entire history below**
+>
+> MOOD: Discovering the basement archive under an ordinary house — quiet awe, hidden depth. Museum-cutaway elegance, not a filesystem diagram.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, faint blueprint-paper texture on the cutaway line. The vault strata glow selective indigo (#818cf8) with sparse emerald (#a6e3a1) node accents; the room above stays neutral and muted. 90% dark, localized glow below the floorline.
+>
+> AVOID: literal folder icons with tabs, database cylinders, cloud shapes, labeled arrows, more than one connecting light shaft. One room, one vault, one revelation. 16:9 aspect ratio.
+
+### section-4-3 — "I Forgot a File in My Last Commit" (Amend) → `git-amend.png`
+
+> Create a cinematic editorial poster about **amending the last commit** — the private correction before anyone sees.
+>
+> CONCEPT: Off-center composition. Right third: a single commit rendered as a Polaroid-like snapshot, slightly tilted, worn edges, faded ink. A second small file-card is being slipped INTO the photograph's frame — half-merged into the image, its edge still glowing faintly amber — the forgotten file joining the snapshot. A thin pencil line traces a message correction across the photo's caption area, barely visible.
+>
+> Left side: large weathered monospace `--amend` with editorial typography. Beneath it, a faint watermark in very low opacity: **"unpushed only"**
+>
+> MOOD: Quiet correction before mailing the letter — intimate, private, slightly conspiratorial. No drama; nobody will ever know.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, strong paper texture on the Polaroid. The joining file-card edge glows warm amber (#d97706); the photo frame carries the faintest pink-rose (#f472b6) edge light. Everything else dark and restrained.
+>
+> AVOID: hands, erasers, undo arrows, before/after panels, clocks. One snapshot, one file slipping in, one pencil line. 16:9 aspect ratio.
+
+### section-7-2 — The Timeline View & GitLens → `timeline-gitlens.png`
+
+> Create a cinematic editorial poster about **file history as archaeology** — the VS Code Timeline and blame.
+>
+> CONCEPT: Asymmetrical. A single vertical thread of light descends from the upper right, carrying five unevenly spaced commit nodes — the top node crisp and bright, each lower node progressively older, dustier, more dissolved, like sediment layers. Beside two nodes, faint one-line annotations in tiny monospace (an author initial, a relative date `3w ago`) — suggestions of blame, not readable paragraphs. At the very top, the thread pins into the corner of an abstracted editor pane edge — just a sliver of chrome, enough to say "this lives in the editor."
+>
+> Left side: large weathered serif **"Who changed this?"** with aged print texture. Beneath, small muted monospace: **"…and why."**
+>
+> MOOD: Archaeological descent — tracing a line of code back through strata of time. Contemplative, slightly mysterious, museum-after-dark.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, aged paper texture. The thread glows faint cyan (#0284c7); each node carries a single pixel-hint of diff color — emerald (#a6e3a1) or rose (#f472b6). The top node alone is bright. 90% dark.
+>
+> AVOID: author avatars, readable diffs, magnifying glasses, hourglasses, full editor mockups. One descending thread, five fading nodes, one question. 16:9 aspect ratio.
+
+### section-7-3 — The 3-Way Merge Editor → `merge-editor.png`
+
+> Create a cinematic editorial poster about **the three-way merge editor** — two truths becoming one.
+>
+> CONCEPT: Architectural composition in subtle perspective. Two abstract rectangular planes float in the upper half — the left tinted cool cyan (#0284c7, "Incoming"), the right tinted soft emerald (#a6e3a1, "Current") — each carrying faint abstract line-textures, no readable code. Below them, a third wider plane: the Result — mostly dark, with interleaved line-textures from both parents settling into place, and ONE line still hovering undecided between the planes, lit warm amber (#d97706). Thin luminous checkbox glints sit at the edge of each upper plane — the merge editor's choice mechanism, implied not labeled.
+>
+> Left edge: large weathered monospace **"resolve"** in the negative space, aged print treatment. One quiet chip bottom: **Two sides · one result · you decide**
+>
+> MOOD: Calm arbitration — architectural convergence rather than conflict. The tension is almost over; this is the room where it gets settled.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, aged print texture. Only the plane tints, the amber undecided line, and the checkbox glints carry color. Generous negative space around the three planes.
+>
+> AVOID: literal VS Code chrome, labeled panes, AI sparkle badges, tug-of-war imagery, red anywhere. Three planes, one undecided line, quiet resolution. 16:9 aspect ratio.
+
+### section-8-3 — The Final Challenge → `final-challenge.png`
+
+> Create a cinematic editorial poster for **the capstone exam** — one repository, three messes, no instructions.
+>
+> CONCEPT: A single dark workbench scene, asymmetrical, lit like a night-before-the-exam workshop. Center-right: one crystalline repository core (a faceted, softly glowing form) resting on the bench — and around it, three small trouble-lights, each a distinct, restrained signal: (1) a commit-orb sitting on the WRONG rail, slightly off its track, ringed faint pink-rose (#f472b6); (2) a key-card half-slid into a staging slot, glinting warning amber (#d97706) — the secret one careless commit from leaking; (3) an empty brass tag-marker lying ready beside the core, waiting to be driven in — the unnamed release. No figure, or at most rolled-up-sleeves shadow at the frame edge.
+>
+> Upper left: large weathered serif **"The Final Challenge"** with aged print texture. Small muted monospace beneath: **"three messes · one repo · everything you've learned"**
+>
+> MOOD: Exam-night calm — earned confidence, tools within reach, quiet before focused work. The image should feel like a test you are ready for.
+>
+> STYLE: Dark navy background (#0f1117), heavy film grain, worn edges. The repo core glows steady indigo (#818cf8); the three trouble-lights are the only other color, each small and localized. 90% of the frame dark.
+>
+> AVOID: trophies, medals, confetti, checklists, countdown timers, red alarms. Three quiet faults, one capable atmosphere. 16:9 aspect ratio.
+
+### section-8-4 — Keep Learning → `keep-learning.png`
+
+> Create a cinematic editorial poster about **the path continuing** — graduation from this guide into the wider Git world.
+>
+> CONCEPT: Asymmetrical threshold scene. Foreground left: the corner of a dark, warm study — a desk edge with a closed, worn workbook whose cover carries a faint branch-graph emboss (this course, finished). From the study, an open doorway spills soft light rightward onto a vast night landscape: a constellation field where distant glowing nodes connect into faint branch-and-merge patterns across the sky — other books, tools, and communities, rendered as unlabeled stars of slightly different warmths (one indigo cluster, one emerald, one amber — never named). A thin luminous path leads from the doorway toward the constellations, its first few paving stones shaped subtly like commit nodes.
+>
+> Upper left: large weathered serif **"Keep Learning"** with aged print texture. Small muted monospace beneath: **"the history continues"**
+>
+> MOOD: Commencement at dusk — gratitude, momentum, an open horizon. Warm study behind, infinite graph ahead.
+>
+> STYLE: Dark navy background (#0f1117), soft film grain, paper texture on the workbook. Doorway light warm and restrained; constellation nodes in sparse indigo (#818cf8), emerald (#a6e3a1), and amber (#d97706) glints. Vast negative space in the sky.
+>
+> AVOID: graduation caps, diplomas, literal book covers with titles, brand logos, signposts with labels, rocket ships. One doorway, one path, one field of possibilities. 16:9 aspect ratio.

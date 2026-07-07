@@ -72,7 +72,13 @@
 						gitBranchLabel7: '#e2e8f0',
 						gitInv0: '#db2777',
 						commitLabelColor: '#94a3b8',
-						commitLabelBackground: '#1e2030',
+						// Near-opaque, not fully: rotated labels sometimes cross the
+						// lane below, and the label text must stay easy to read (a
+						// hint of the crossed pill showing through is acceptable).
+						// Don't shrink the font — mermaid derives the label's
+						// distance from its node from the text width, so smaller
+						// text collapses onto the commit dot.
+						commitLabelBackground: 'rgba(30, 32, 48, 0.92)',
 						commitLabelFontSize: '12px',
 						tagLabelColor: '#e2e8f0',
 						tagLabelBackground: '#db2777',
@@ -131,7 +137,7 @@
 						gitBranchLabel7: '#ffffff',
 						gitInv0: '#be185d',
 						commitLabelColor: '#64748b',
-						commitLabelBackground: '#f1f5f9',
+						commitLabelBackground: 'rgba(241, 245, 249, 0.94)',
 						commitLabelFontSize: '12px',
 						tagLabelColor: '#ffffff',
 						tagLabelBackground: '#db2777',

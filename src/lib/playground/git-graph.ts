@@ -22,8 +22,19 @@ interface CommitNode {
 	lane: string;
 }
 
-function sanitizeLabel(message: string): string {
-	return message.split('\n')[0].replace(/"/g, "'").slice(0, 28).trim() || 'commit';
+/**
+ * First line of the message, quote-safe, cut to `max` characters at a word
+ * boundary. Multi-lane graphs use a tighter cut: Mermaid rotates commit
+ * labels 45° down-left, so long labels on an upper lane stab straight
+ * through the branch pill of the lane below.
+ */
+function sanitizeLabel(message: string, max = 28): string {
+	const line = message.split('\n')[0].replace(/"/g, "'").trim();
+	if (!line) return 'commit';
+	if (line.length <= max) return line;
+	const cut = line.slice(0, max);
+	const lastSpace = cut.lastIndexOf(' ');
+	return `${(lastSpace > max / 2 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`;
 }
 
 function sanitizeTag(name: string): string {
@@ -177,6 +188,11 @@ export async function buildGitGraph(engine: GitEngine): Promise<string> {
 	}
 
 	// ── emit ─────────────────────────────────────────────────────────────
+	// Tighter labels when several lanes are drawn: rotated labels from an
+	// upper lane otherwise collide with the branch pills below them.
+	const laneCount = new Set([...nodes.values()].map((n) => n.lane)).size;
+	const labelMax = laneCount > 1 ? 20 : 28;
+
 	const lines: string[] = ['gitGraph'];
 	const created = new Set<string>([mainBranch]);
 	const lastEmitted = new Map<string, string>();
@@ -225,9 +241,9 @@ export async function buildGitGraph(engine: GitEngine): Promise<string> {
 			lines.push(`  merge ${mergeSourceLane}${tagAttr}`);
 		} else if (secondParent) {
 			// A merge whose second parent isn't a drawable lane tip
-			lines.push(`  commit id: "⑂ ${sanitizeLabel(node.message).slice(0, 25)}"${tagAttr}`);
+			lines.push(`  commit id: "⑂ ${sanitizeLabel(node.message, labelMax - 2)}"${tagAttr}`);
 		} else {
-			lines.push(`  commit id: "${sanitizeLabel(node.message)}"${tagAttr}`);
+			lines.push(`  commit id: "${sanitizeLabel(node.message, labelMax)}"${tagAttr}`);
 		}
 		lastEmitted.set(lane, node.oid);
 		createForksAt(node.oid, lane);
