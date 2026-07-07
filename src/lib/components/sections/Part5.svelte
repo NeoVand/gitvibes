@@ -524,7 +524,7 @@ git cherry-pick --abort`}
 			</Callout>
 
 			<h4
-				id="cherry-pick-activity"
+				id="cherry-pick"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
 				style="color: var(--color-text);"
 			>
@@ -646,7 +646,7 @@ git rebase --continue`}
 			</Callout>
 
 			<h4
-				id="rebase-conflict-activity"
+				id="rebase-conflict"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
 				style="color: var(--color-text);"
 			>
@@ -791,7 +791,7 @@ git show v1.0.0                                  # Inspect what a release points
 			</Callout>
 
 			<h4
-				id="release-tags-activity"
+				id="release-tags"
 				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
 				style="color: var(--color-text);"
 			>
