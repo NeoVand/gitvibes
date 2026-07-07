@@ -26,18 +26,21 @@ GitVibes teaches Git through the lens of AI-assisted development. Instead of dry
 | **5. Advanced Workflows**    | Stash, rebase vs merge, merge conflicts, cherry-pick, rebase conflict recovery, tags & releases         |
 | **6. Git for AI Agents**     | Teaching agents Git (`AGENTS.md`, skills), enforcing standards with hooks, parallel agents w/ worktrees |
 | **7. VS Code Cockpit**       | Source Control, Timeline & GitLens, 3-way merge editor                                                  |
-| **8. Conclusion**            | The AI-first workflow, quick reference card                                                             |
+| **8. Conclusion**            | The AI-first workflow, quick reference card, the Final Challenge, the forges beyond GitHub              |
 
 ### Features
 
 - **Git Playground** — run real Git commands in the browser (isomorphic-git), opened as a sidebar panel from anywhere on the site
-- **Try it yourself** — embedded playground tabs in hands-on lessons (Parts 2–5)
+- **20 hands-on exercises** with live success detection — a ✔ fires the moment the repo reaches the goal state, from the core loop to `bisect`, interactive rebase, hook guardrails, worktree fleets, and a three-messes-at-once capstone
+- **A truthful commit graph** — real fork points, real merge edges, tags, remote-tracking positions, and detached-HEAD markers, redrawn after every command
+- **`undo` / `redo` / `share`** in every terminal — share serializes your exact session into a link anyone can replay
+- **Progress that persists** — sections read, exercises completed, a self-assessed skill checklist, and spaced-repetition refresher nudges (all localStorage; no accounts, no backend)
 - **Expandable banners** — click any section poster to open a full-screen lightbox
 - **VS Code screenshots** — real UI with hover-to-expand and captions
 - **Vibe prompts** — copy-paste AI prompts for common Git workflows
-- **Search** — `⌘K` / `Ctrl+K` command palette across the whole tutorial
+- **Search** — `⌘K` / `Ctrl+K` command palette with panic-query aliases ("oops", "undo reset --hard", "wrong branch")
 - **Cheat sheet** — quick command reference from the header
-- **Light / dark theme**
+- **Light / dark theme**, installable as a PWA, works offline after one visit
 - **Fully static** — no backend; deploys to GitHub Pages
 
 ## How the Git Playground works
