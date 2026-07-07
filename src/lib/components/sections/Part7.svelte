@@ -108,7 +108,8 @@
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">... Menu</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
-						All advanced commands: Pull, Push, Stash, Commit (Amend), Branch, Revert, and more.
+						All advanced commands, tucked into submenus: Pull, Push, Stash, Branch, and Commit
+						(where Amend and Undo Last Commit live).
 					</p>
 				</div>
 			</div>
@@ -119,12 +120,11 @@
 					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
 					>Ctrl+Shift+G</kbd
 				>
-				(or
+				to open the Source Control panel from anywhere — and yes, it's
 				<kbd
 					class="rounded border px-1 py-0.5 text-[11px]"
-					style="border-color: var(--color-border); background: var(--color-bg-tertiary);"
-					>Cmd+Shift+G</kbd
-				> on Mac) to open the Source Control panel from anywhere:
+					style="border-color: var(--color-border); background: var(--color-bg-tertiary);">Ctrl</kbd
+				> even on a Mac (⌘⇧G is taken by search):
 			</p>
 
 			<VsCodeScreenshot
@@ -172,9 +172,11 @@
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				Open any file, then look in the Explorer panel for the <strong>"Timeline"</strong> pane at the
-				bottom. This shows the complete commit history for that specific file. Click any commit to see
-				a diff, or right-click and select "Restore."
+				Open any file, then look in the Explorer panel for the <strong>"Timeline"</strong> pane at
+				the bottom. This shows the complete commit history for that specific file. Click any commit
+				to see a diff of what it changed. The Timeline also mixes in <strong>Local History</strong> snapshots
+				of your saves — and those entries have a right-click → "Restore Contents" that can rescue even
+				changes you never committed.
 			</p>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -189,10 +191,11 @@
 			/>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				VS Code also has <strong>built-in Git Blame</strong>. Hover over any line of code and you'll
-				see who changed it and when, right in the status bar. For even richer inline annotations on
-				every single line, install the <strong>GitLens</strong> extension from the VS Code Marketplace
-				-- it's practically essential for professional work:
+				VS Code also has <strong>built-in Git Blame</strong>. Put your cursor on any line of code
+				and the status bar shows who last changed it and when (an always-on inline annotation is one
+				setting away — search Settings for "blame"). The <strong>GitLens</strong> extension goes deeper
+				— rich line history, comparisons across branches and commits — though many of its advanced features
+				now sit behind a paid Pro plan. Start with the built-ins; add GitLens when you hit their ceiling:
 			</p>
 
 			<VsCodeScreenshot
@@ -230,8 +233,10 @@
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				When a conflict occurs, VS Code highlights the conflicting files. Clicking one opens the
-				3-way editor with three panes:
+				When a conflict occurs, VS Code highlights the conflicting files in the Source Control view.
+				Clicking one opens it with the inline conflict markers you know from section 5.3 — look for
+				the <strong>"Resolve in Merge Editor"</strong> button in the corner to switch to the 3-way view
+				with three panes:
 			</p>
 
 			<div class="mb-6 space-y-2">
@@ -287,6 +292,13 @@
 					</div>
 				</div>
 			</div>
+
+			<Callout type="warning">
+				One trap to know: those labels describe a <em>merge</em>. During a <strong>rebase</strong>,
+				they swap — "Current" is the branch you're rebasing onto, and "Incoming" is your own
+				replayed commit (the same side-flip explained in section 5.5). Read the code, not just the
+				labels.
+			</Callout>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				Here's the merge editor in action. Use the checkboxes next to each change to select which
