@@ -83,6 +83,11 @@ export function toggleChecklistItem(id: string): void {
 	}));
 }
 
+/** Wipe every recording — completions, sections read, checklist. */
+export function resetProgress(): void {
+	progress.set({ scenarios: {}, sections: {}, checklist: {} });
+}
+
 export interface StaleCompletion {
 	id: string;
 	daysAgo: number;

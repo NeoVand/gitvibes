@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { SvelteSet } from 'svelte/reactivity';
-	import { ChevronRight, PanelLeftClose, PanelLeft } from 'lucide-svelte';
+	import { ChevronRight, PanelLeftClose, PanelLeft, RotateCcw } from 'lucide-svelte';
 	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
 	import { sectionIds } from '$lib/data/sections';
-	import { progress } from '$lib/data/progress';
+	import { progress, resetProgress } from '$lib/data/progress';
 	import { lessonScenarioIds } from '$lib/playground/scenarios';
 
 	let {
@@ -35,6 +35,22 @@
 	const manuallyExpanded = new SvelteSet<string>();
 	let flyoutSection = $state<string | null>(null);
 	let flyoutY = $state(0);
+
+	// Resetting wipes every recording (bar, ✔ ticks, checklist) — ask twice.
+	let resetArmed = $state(false);
+	let resetTimer: ReturnType<typeof setTimeout> | undefined;
+
+	function handleResetProgress() {
+		if (!resetArmed) {
+			resetArmed = true;
+			clearTimeout(resetTimer);
+			resetTimer = setTimeout(() => (resetArmed = false), 2500);
+			return;
+		}
+		clearTimeout(resetTimer);
+		resetArmed = false;
+		resetProgress();
+	}
 
 	function toggleSection(id: string) {
 		if (expandedSections.has(id)) {
@@ -146,14 +162,36 @@
 			class="px-4 pb-2"
 			title="{readPct}% read · {doneCount}/{lessonScenarioIds.length} exercises completed"
 		>
-			<div class="h-1 w-full overflow-hidden rounded-full" style="background: var(--color-border);">
+			<!-- mr-1 puts the reset button on the same vertical axis (30px from
+			     the right edge) as the section carets and the collapse button -->
+			<div class="flex items-center">
 				<div
-					class="h-full rounded-full transition-all duration-500"
-					style="width: {readPct}%; background: var(--color-primary);"
-				></div>
+					class="h-1 flex-1 overflow-hidden rounded-full"
+					style="background: var(--color-border);"
+				>
+					<div
+						class="h-full rounded-full transition-all duration-500"
+						style="width: {readPct}%; background: var(--color-primary);"
+					></div>
+				</div>
+				<button
+					onclick={handleResetProgress}
+					class="mr-1 ml-2 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-all hover:opacity-100"
+					style="color: {resetArmed
+						? 'var(--color-warning)'
+						: 'var(--color-text-muted)'}; opacity: {resetArmed ? '1' : '0.6'};"
+					aria-label={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
+					title={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
+				>
+					<RotateCcw size={11} />
+				</button>
 			</div>
 			<p class="mt-1 text-[10.5px]" style="color: var(--color-text-muted);">
-				{readPct}% read · {doneCount}/{lessonScenarioIds.length} exercises
+				{#if resetArmed}
+					Click again to reset all progress
+				{:else}
+					{readPct}% read · {doneCount}/{lessonScenarioIds.length} exercises
+				{/if}
 			</p>
 		</div>
 	{/if}
@@ -195,9 +233,11 @@
 						</span>
 					</button>
 					{#if section.children}
+						<!-- -mr-1 lines the caret up with the collapse and reset buttons
+						     (all centered 30px from the sidebar's right edge) -->
 						<button
 							onclick={() => toggleSection(section.id)}
-							class="flex h-5 w-5 cursor-pointer items-center justify-center rounded transition-colors"
+							class="-mr-1 flex h-5 w-5 cursor-pointer items-center justify-center rounded transition-colors"
 							aria-label={expandedSections.has(section.id) ? 'Collapse' : 'Expand'}
 						>
 							<ChevronRight
