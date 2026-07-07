@@ -248,6 +248,15 @@
 					const r = parseFloat(circle.getAttribute('r') ?? '0');
 					if (r > 10) circle.setAttribute('r', '10');
 				}
+
+				// gitGraph tag pills (tags, origin/*, HEAD) are pinned so close to
+				// their commit that the pill's bottom edge lands on the dot's top
+				// edge (~y-9.7 vs y-10 in mermaid v11 geometry). Lift the whole
+				// tag — polygon, pin-hole and text — clear of the node.
+				for (const el of container.querySelectorAll('.tag-label, .tag-label-bkg, .tag-hole')) {
+					const prior = el.getAttribute('transform');
+					el.setAttribute('transform', `translate(0, -6)${prior ? ` ${prior}` : ''}`);
+				}
 			})
 			.catch((err) => {
 				console.warn('Mermaid render error:', err);
