@@ -60,6 +60,7 @@ export async function buildMergeConflictRepo(engine: GitEngine): Promise<void> {
 		});
 	} catch {
 		engine.mergeState = { origHead, theirsOid, theirsLabel: 'main' };
+		await engine.relabelConflictMarkers(['src/model.py'], 'feature/ai-experiment');
 	}
 }
 

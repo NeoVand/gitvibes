@@ -223,6 +223,12 @@ describe('merge conflict lifecycle', () => {
 		expect(status.output).toContain('src/model.py');
 	});
 
+	it('the ours marker reads HEAD, exactly as lesson 5.3 teaches', async () => {
+		const content = await engine.readFile('src/model.py');
+		expect(content).toContain('<<<<<<< HEAD');
+		expect(content).toContain('>>>>>>> main');
+	});
+
 	it('commit is blocked until the conflict is staged', async () => {
 		const blocked = await run('git commit -m "too early"');
 		expect(blocked.error).toBe(true);

@@ -643,6 +643,7 @@ async function runMerge(engine: GitEngine, branch: string): Promise<CommandResul
 				err && typeof err === 'object' && 'data' in err
 					? ((err as { data?: { filepaths?: string[] } }).data?.filepaths ?? [])
 					: [];
+			await engine.relabelConflictMarkers(filepaths, current);
 			const perFile = filepaths.map(
 				(f) => `Auto-merging ${f}\nCONFLICT (content): Merge conflict in ${f}`
 			);

@@ -386,6 +386,25 @@ export class GitEngine {
 		}
 	}
 
+	/**
+	 * isomorphic-git labels the ours side of conflict markers with the branch
+	 * name; real git says HEAD (and that distinction is exactly what lesson
+	 * 5.5 teaches). Rewrite the ours marker in the given conflicted files.
+	 */
+	async relabelConflictMarkers(files: string[], oursLabel: string): Promise<void> {
+		for (const f of files) {
+			const content = await this.readFile(f);
+			if (!content) continue;
+			const updated = content
+				.split('\n')
+				.map((line) => (line === `<<<<<<< ${oursLabel}` ? '<<<<<<< HEAD' : line))
+				.join('\n');
+			if (updated !== content) {
+				await this.writeFile(f, updated);
+			}
+		}
+	}
+
 	private async parentOf(oid: string, n: number, rev: string): Promise<string> {
 		const { commit } = await git.readCommit({ fs: this.fs, dir: this.dir, oid });
 		const parent = commit.parent[n - 1];
