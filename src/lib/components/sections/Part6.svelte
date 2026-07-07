@@ -78,15 +78,29 @@
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
 							>AGENTS.md</code
 						>
-						is the cross-tool standard for project-wide rules — recognized by GitHub Copilot, Claude Code,
-						Codex, and other agents. In monorepos, the nearest file to the code you're editing takes precedence.
-						Claude Code also reads
+						is the cross-tool standard for project-wide rules — an open spec (now stewarded by the Linux
+						Foundation) read by OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI, and twenty-plus other
+						agents. In monorepos, the nearest file to the code you're editing takes precedence. The one
+						big exception:
+						<strong
+							>Claude Code reads
+							<code
+								class="rounded px-1 py-0.5 text-xs"
+								style="background: var(--color-code-bg); font-family: var(--font-mono);"
+								>CLAUDE.md</code
+							>, not AGENTS.md</strong
+						>
+						(as of mid-2026). The documented bridge is a one-line CLAUDE.md containing
 						<code
 							class="rounded px-1 py-0.5 text-xs"
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>CLAUDE.md</code
+							>@AGENTS.md</code
 						>
-						for the same role. In VS Code, add
+						— an import that pulls the shared file in — or a symlink (<code
+							class="rounded px-1 py-0.5 text-xs"
+							style="background: var(--color-code-bg); font-family: var(--font-mono);"
+							>ln -s AGENTS.md CLAUDE.md</code
+						>). In VS Code, add
 						<code
 							class="rounded px-1 py-0.5 text-xs"
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
@@ -114,15 +128,23 @@
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
 							>SKILL.md</code
 						>
-						file (name + description in YAML frontmatter, instructions in the body). Store them in
+						file (name + description in YAML frontmatter, instructions in the body). The format is portable;
+						the folder isn't yet — each tool has its own discovery path, like
 						<code
 							class="rounded px-1 py-0.5 text-xs"
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
 							>.agents/skills/</code
 						>
-						for portable, version-controlled workflows your whole team shares. Agents discover skills
-						at startup and load the full instructions only when a task matches — perfect for detailed
-						Git procedures without bloating every chat. Example: a
+						for Codex and
+						<code
+							class="rounded px-1 py-0.5 text-xs"
+							style="background: var(--color-code-bg); font-family: var(--font-mono);"
+							>.claude/skills/</code
+						>
+						for Claude Code — so check where your agent looks. Either way they're version-controlled workflows
+						your whole team shares. Agents discover skills at startup and load the full instructions only
+						when a task matches — perfect for detailed Git procedures without bloating every chat. Example:
+						a
 						<code
 							class="rounded px-1 py-0.5 text-xs"
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
@@ -403,7 +425,11 @@ npm test || { echo "Tests failed - commit blocked." >&2; exit 1; }`}
 			<CodeBlock
 				title=".git/hooks/commit-msg"
 				code={`#!/bin/sh
-if ! grep -qE '^(feat|fix|docs|style|refactor|test|chore)(\\(.+\\))?!?: .+' "$1"; then
+# Git's own merge and revert commits ("Merge branch ...", "Revert ...")
+# also pass through this hook - wave them through.
+grep -qE '^(Merge|Revert)' "$1" && exit 0
+
+if ! grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\\(.+\\))?!?: .+' "$1"; then
   echo "Commit message must follow Conventional Commits, e.g. 'feat: add login form'" >&2
   exit 1
 fi`}
@@ -450,9 +476,20 @@ git config core.hooksPath .githooks
 				code={`npm install --save-dev husky
 npx husky init
 
-# your hooks now live in the committed .husky/ folder
-echo "npm test" > .husky/pre-commit`}
+# init already created .husky/pre-commit (it runs "npm test").
+# Overwrite it with whatever checks you want:
+echo "npm run lint && npm test" > .husky/pre-commit`}
 			/>
+
+			<Callout type="note">
+				Fine print: pre-commit hooks run against your <em>working tree</em>, not the staged
+				snapshot. If you stage only part of a file with
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
+				>, the tests pass on code that isn't what you're committing. Tools like
+				<strong>lint-staged</strong> exist to close exactly that gap.
+			</Callout>
 
 			<Callout type="important">
 				<strong>Hooks fire on agent commits too.</strong> When Claude Code, Cursor, or any AI agent
@@ -608,7 +645,8 @@ git worktree prune`}
 					>../proj-auth</code
 				>, not <code style="font-family: var(--font-mono);">./proj-auth</code>) — a worktree nested
 				inside the repo shows up as an untracked directory, and an agent running
-				<code style="font-family: var(--font-mono);">git add .</code> might happily commit it.
+				<code style="font-family: var(--font-mono);">git add .</code> will sweep it up as a confusing
+				embedded-repo pointer (Git prints a warning — which everyone ignores).
 			</Callout>
 
 			<VibeBox
