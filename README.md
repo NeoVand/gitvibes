@@ -8,11 +8,28 @@ An interactive, visual guide to Git for developers who use AI-assisted coding to
 
 **[Live Site →](https://neovand.github.io/gitvibes/)**
 
+<p align="center">
+  <a href="https://github.com/NeoVand/gitvibes/releases"><img src="https://img.shields.io/github/v/release/NeoVand/gitvibes?style=flat-square&color=f472b6&label=release" alt="Latest release" /></a>
+  <a href="https://github.com/NeoVand/gitvibes/actions/workflows/deploy.yml"><img src="https://img.shields.io/github/actions/workflow/status/NeoVand/gitvibes/deploy.yml?style=flat-square&label=deploy" alt="Deploy status" /></a>
+  <img src="https://img.shields.io/badge/license-MIT-a6e3a1?style=flat-square" alt="MIT license" />
+  <br />
+  <img src="https://img.shields.io/badge/Svelte_5-SvelteKit-FF3E00?style=flat-square&logo=svelte&logoColor=white" alt="SvelteKit (Svelte 5)" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
+  <img src="https://img.shields.io/badge/isomorphic--git-real_git_in_the_browser-F05033?style=flat-square&logo=git&logoColor=white" alt="isomorphic-git" />
+  <img src="https://img.shields.io/badge/Mermaid-live_diagrams-FF3670?style=flat-square&logo=mermaid&logoColor=white" alt="Mermaid" />
+  <img src="https://img.shields.io/badge/PWA-works_offline-5A0FC8?style=flat-square&logo=pwa&logoColor=white" alt="PWA" />
+</p>
+
 ![GitVibes — Git for Vibe Coders](static/images/Hero.webp)
 
 ## What is this?
 
 GitVibes teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks through real scenarios — _"the AI just changed 10 files, what do I do?"_ — with cinematic section banners, interactive playgrounds, Mermaid diagrams, and step-by-step VS Code screenshots.
+
+Every lesson opens with an original piece of banner art — all **40** of them, in curriculum order:
+
+[![All 40 GitVibes section banners, from the hero art to Keep Learning](docs/images/banner-poster.webp)](docs/images/banner-poster.webp)
 
 ### Curriculum
 
@@ -46,6 +63,12 @@ GitVibes teaches Git through the lens of AI-assisted development. Instead of dry
 ## How the Git Playground works
 
 The playground lets you run real Git commands in the browser — no server, no sandboxed iframe. It pairs [isomorphic-git](https://isomorphic-git.org/) (a full Git implementation in JavaScript) with [LightningFS](https://github.com/nicolo-ribaudo/lightning-fs) (an in-memory virtual filesystem backed by IndexedDB) so every `git commit`, `git merge`, and `git stash` behaves like the real thing.
+
+Here's the merge-conflict exercise mid-session. Everything in the terminal is genuine Git: `git status` reporting unmerged paths, `cat` showing the actual `<<<<<<<` conflict markers isomorphic-git wrote into the file, a resolving commit with its real hash — and the moment the merge completes, the success check fires and the commit graph redraws with both branches joined by a true merge node:
+
+<p align="center">
+  <img src="docs/images/playground-conflict.webp" width="720" alt="The merge-conflict exercise: git status shows unmerged paths, cat shows real conflict markers, a commit resolves the merge, the scenario-complete check fires, and the commit graph shows main and feature/ai-experiment joined by a merge node" />
+</p>
 
 ```mermaid
 flowchart TD
@@ -123,7 +146,7 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Assets
 
-Section banner images live in `static/images/` (kebab-case filenames). Image generation prompts for creating or updating posters are in [`docs/IMAGE_PROMPTS.md`](docs/IMAGE_PROMPTS.md). Drop new art in as PNG and run `node scripts/optimize-images.mjs` to convert it to WebP.
+Section banner images live in `static/images/` (kebab-case filenames). Image generation prompts for creating or updating posters are in [`docs/IMAGE_PROMPTS.md`](docs/IMAGE_PROMPTS.md). Drop new art in as PNG and run `node scripts/optimize-images.mjs` to convert it to WebP, then `node scripts/make-poster.mjs` to refresh the banner poster above (it reads the curriculum order straight from the section components).
 
 VS Code screenshots under `static/images/vscode/` are from the [Visual Studio Code documentation](https://code.visualstudio.com/docs/sourcecontrol/overview) (© Microsoft, [CC BY 3.0](https://github.com/microsoft/vscode-docs/blob/main/License.md)), vendored so the site has no runtime dependency on the docs CDN.
 
