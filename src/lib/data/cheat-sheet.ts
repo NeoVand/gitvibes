@@ -123,12 +123,20 @@ export const cheatSheet: CheatSheetCategory[] = [
 				description: 'Fetch and merge changes from a remote branch'
 			},
 			{
+				command: 'git pull --rebase',
+				description: 'Fetch and replay your local commits on top (linear history)'
+			},
+			{
 				command: 'git push <remote> <branch>',
 				description: 'Push local commits to a remote branch'
 			},
 			{
 				command: 'git push -u <remote> <branch>',
 				description: 'Push and set the upstream tracking branch'
+			},
+			{
+				command: 'git push --force-with-lease',
+				description: 'Force push, but abort if someone else pushed first (safe force)'
 			}
 		]
 	},
@@ -136,7 +144,10 @@ export const cheatSheet: CheatSheetCategory[] = [
 		label: 'Stashing',
 		icon: 'archive',
 		commands: [
-			{ command: 'git stash', description: 'Stash uncommitted changes in the working directory' },
+			{
+				command: 'git stash',
+				description: 'Stash tracked changes (staged and unstaged; add -u for untracked files)'
+			},
 			{
 				command: 'git stash push -m "<message>"',
 				description: 'Stash changes with a descriptive message'
@@ -242,7 +253,7 @@ export const cheatSheet: CheatSheetCategory[] = [
 			},
 			{
 				command: 'git cherry-pick <start>..<end>',
-				description: 'Apply a range of commits to the current branch'
+				description: 'Apply a range of commits (excludes <start> itself; use <start>^.. to include it)'
 			},
 			{
 				command: 'git cherry-pick --continue',
