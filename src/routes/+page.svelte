@@ -150,7 +150,7 @@
 		window.addEventListener('scroll', onScroll, { passive: true });
 		updateActiveSection();
 
-		if (window.innerWidth >= 1024) {
+		if (window.innerWidth >= 1024 && !playgroundOpen) {
 			sidebarOpen = true;
 		}
 
@@ -208,21 +208,47 @@
 		sidebarOpen = !sidebarOpen;
 	}
 
+	// Opening the playground panel enters desktop "reading mode": the sidebar
+	// auto-collapses and the content reflows beside the panel. The sidebar's
+	// prior state is restored when the panel closes.
+	let sidebarBeforePanel = false;
+
+	/** Call BEFORE setting playgroundOpen = true. */
+	function enterReadingMode() {
+		if (!playgroundOpen) {
+			sidebarBeforePanel = sidebarOpen;
+			sidebarOpen = false;
+		}
+	}
+
+	/** Call AFTER setting playgroundOpen = false — restores the sidebar. */
+	function maybeLeaveReadingMode() {
+		if (!playgroundOpen) {
+			sidebarOpen = sidebarBeforePanel;
+		}
+	}
+
 	function toggleCheatSheet() {
 		if (!cheatSheetOpen) {
 			playgroundOpen = false;
+			maybeLeaveReadingMode();
 		}
 		cheatSheetOpen = !cheatSheetOpen;
 	}
 
 	function togglePlayground() {
 		if (!playgroundOpen) {
+			enterReadingMode();
 			cheatSheetOpen = false;
 		}
 		playgroundOpen = !playgroundOpen;
+		if (!playgroundOpen) {
+			maybeLeaveReadingMode();
+		}
 	}
 
 	function openPlayground() {
+		enterReadingMode();
 		cheatSheetOpen = false;
 		playgroundOpen = true;
 	}
@@ -290,7 +316,8 @@
 
 <main
 	id="main-content"
-	class="main-content transition-[margin-left] duration-200 ease-out"
+	class="main-content transition-[margin] duration-200 ease-out"
+	class:reading-mode={playgroundOpen}
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen
 		? 'var(--sidebar-width)'
 		: 'var(--sidebar-collapsed-width)'};"
