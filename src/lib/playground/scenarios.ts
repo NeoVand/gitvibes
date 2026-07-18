@@ -84,7 +84,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Introduce yourself to Git',
 		description:
 			'Your first playground! This is a real Git repository running in your browser. Every commit records WHO made it — and right now this repo only knows the sandbox default, "Vibe Coder". Set your own identity, make a commit, and watch the log credit you.',
-		hint: 'git config user.name "Your Name" and git config user.email set your identity (--global does the same across the sandbox). git config --list shows what is set. Then stage the waiting file and commit — git log shows exactly who made each save point.',
+		hint: '`git config user.name "Your Name"` and `git config user.email` set your identity (`--global` does the same across the sandbox). `git config --list` shows what is set. Then stage the waiting file and commit \u2014 `git log` shows exactly who made each save point.',
 		suggestedCommands: [
 			'git log',
 			'git config user.name "Ada Lovelace"',
@@ -125,7 +125,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'AI changed 4 files — review before commit',
 		description:
 			"Your AI assistant just modified three files and created one new file. Don't blindly git add . — review each change and stage only what you trust.",
-		hint: 'Start with git status, then git diff to see what changed. Use git add -p to review hunks interactively, or git add <file> to stage specific files you trust.',
+		hint: 'Start with `git status`, then `git diff` to see what changed. Use `git add -p` to review hunks interactively, or `git add <file>` to stage specific files you trust.',
 		suggestedCommands: [
 			'git status',
 			'git diff',
@@ -174,7 +174,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Isolate AI work on a branch',
 		description:
 			'Main is stable and pushed. Your AI just generated new code in the working directory. Create a branch to isolate the experiment before committing.',
-		hint: 'Always branch before committing AI work. Use git switch -c <name> to create and switch, then stage, commit, and push with -u to set upstream tracking.',
+		hint: 'Always branch before committing AI work. Use `git switch -c <name>` to create and switch, then stage, commit, and push with `-u` to set upstream tracking.',
 		suggestedCommands: [
 			'git status',
 			'git diff',
@@ -199,7 +199,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Teammates pushed — sync before PR',
 		description:
 			"You're on a feature branch ready to open a PR, but your teammates have pushed new commits to origin/main. You need to incorporate their changes first.",
-		hint: 'Fetch first to download remote changes without merging. Then merge origin/main into your branch. Alternatively, use git pull origin main to fetch + merge in one step.',
+		hint: 'Fetch first to download remote changes without merging. Then merge `origin/main` into your branch. Alternatively, use `git pull origin main` to fetch + merge in one step.',
 		suggestedCommands: [
 			'git log --oneline --all',
 			'git fetch origin',
@@ -216,7 +216,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'AI broke everything — undo it all',
 		description:
 			'The AI made a mess: bad working directory changes, a file accidentally staged, and a broken commit already pushed. Practice every undo tool in your toolkit.',
-		hint: 'Use git restore <file> to discard working changes, git restore --staged <file> to unstage, and git revert HEAD to safely undo a pushed commit without rewriting history.',
+		hint: 'Use `git restore <file>` to discard working changes, `git restore --staged <file>` to unstage, and `git revert HEAD` to safely undo a pushed commit without rewriting history.',
 		suggestedCommands: [
 			'git status',
 			'git diff',
@@ -234,7 +234,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Urgent hotfix — stash AI work first',
 		description:
 			"You're mid-refactor on feature/A when a critical bug report comes in. Stash your work-in-progress, switch to main, create a hotfix branch, then come back.",
-		hint: 'Use git stash push -u -m "message" to save work (-u takes brand-new files along too), switch branches freely, then git stash pop to restore. Use git stash list to see saved stashes.',
+		hint: 'Use `git stash push -u -m "message"` to save work (`-u` takes brand-new files along too), switch branches freely, then `git stash pop` to restore. Use `git stash list` to see saved stashes.',
 		suggestedCommands: [
 			'git status',
 			'git stash push -u -m "WIP: pipeline refactor"',
@@ -277,7 +277,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Rebase vs merge — choose your strategy',
 		description:
 			'Your feature branch and main have diverged. Try both strategies: git merge main keeps a merge commit, git rebase main replays your work on top for a linear history.',
-		hint: 'Run git log --oneline --all to see the divergence. Try git merge main first. Reset and try git rebase main to compare. Rebase = cleaner history, merge = safer for shared branches.',
+		hint: 'Run `git log --oneline --all` to see the divergence. Try `git merge main` first. Reset and try `git rebase main` to compare. Rebase = cleaner history, merge = safer for shared branches.',
 		suggestedCommands: [
 			'git log --oneline --all',
 			'git merge main',
@@ -298,7 +298,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Resolve a merge conflict',
 		description:
 			'A merge left a conflict in src/model.py — the file has <<<<<<< and >>>>>>> markers. You need to pick the right version, stage it, and complete the merge commit.',
-		hint: 'Check git status to see conflicted files. Use echo to write the resolved content, then git add the file and git commit to finalize the merge.',
+		hint: 'Check `git status` to see conflicted files. Use `echo` to write the resolved content, then `git add` the file and `git commit` to finalize the merge.',
 		suggestedCommands: [
 			'git status',
 			'git diff',
@@ -325,7 +325,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Oops — committed to main instead of a branch',
 		description:
 			'You accidentally committed a payment feature directly to main instead of creating a feature branch first. The commit is local (not pushed). Move it to the right branch.',
-		hint: 'Create the feature branch (it will include your commit), then switch to main and git reset --hard HEAD~1 to remove it from main. Switch back to the feature branch to verify.',
+		hint: 'Create the feature branch (it will include your commit), then switch to `main` and `git reset --hard HEAD~1` to remove it from main. Switch back to the feature branch to verify.',
 		suggestedCommands: [
 			'git log --oneline',
 			'git branch feature/payments',
@@ -350,7 +350,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Staged secrets and debug files — unstage them',
 		description:
 			'You ran git add . too quickly and staged everything — including .env with credentials and a debug file with pdb. Unstage the dangerous files before committing.',
-		hint: "Use git status to see what is staged. Use git restore --staged <file> to unstage files you don't want to commit. Use git diff --staged to verify what remains.",
+		hint: "Use `git status` to see what is staged. Use `git restore --staged <file>` to unstage files you don't want to commit. Use `git diff --staged` to verify what remains.",
 		suggestedCommands: [
 			'git status',
 			'git diff --staged',
@@ -380,7 +380,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Reset and force push — rewrite pushed history',
 		description:
 			'You pushed two bad commits to your feature branch. Nobody else is working on it. Reset to before the bad commits and force push to clean up the remote.',
-		hint: 'Use git log to find the good commit, git reset --hard to go back, then git push --force-with-lease — the safe force that refuses if a teammate pushed in the meantime. Never do this on shared branches like main!',
+		hint: 'Use `git log` to find the good commit, `git reset --hard` to go back, then `git push --force-with-lease` \u2014 the safe force that refuses if a teammate pushed in the meantime. Never do this on shared branches like `main`!',
 		suggestedCommands: [
 			'git log --oneline',
 			'git reset --hard HEAD~2',
@@ -403,7 +403,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'The agent reset --hard — rescue lost commits',
 		description:
 			'An agent ran git reset --hard HEAD~2 and two commits vanished from the log. Nothing is truly lost: the reflog remembers every place HEAD has been. Find the lost commit and bring it back.',
-		hint: 'git log shows only what is reachable — git reflog shows everything HEAD touched. Find the hash from before the reset, then git reset --hard <hash> to restore it (or cherry-pick individual commits).',
+		hint: '`git log` shows only what is reachable \u2014 `git reflog` shows everything `HEAD` touched. Find the hash from before the reset, then `git reset --hard <hash>` to restore it (or cherry-pick individual commits).',
 		suggestedCommands: [
 			'git log --oneline',
 			'git reflog',
@@ -419,7 +419,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Rebase hits a conflict — resolve or abort',
 		description:
 			'Your feature branch raised TIMEOUT in src/config.py, but main lowered it. Rebasing onto main stops at a conflict. Read the markers, resolve, and continue — or abort and return to safety.',
-		hint: 'Run git rebase main, then cat src/config.py to read the <<<<<<< markers. Overwrite the file with the value you want using echo, git add it, then git rebase --continue. Lost? git rebase --abort restores everything.',
+		hint: 'Run `git rebase main`, then `cat src/config.py` to read the `<<<<<<<` markers. Overwrite the file with the value you want using `echo`, `git add` it, then `git rebase --continue`. Lost? `git rebase --abort` restores everything.',
 		suggestedCommands: [
 			'git log --oneline --all',
 			'git rebase main',
@@ -441,7 +441,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Grab the one good commit from a messy branch',
 		description:
 			'The experiment branch is mostly half-finished work, but it contains one gem: a currency rounding fix. Bring exactly that commit to main and leave the rest behind.',
-		hint: 'git log --oneline --all shows the experiment commits. git cherry-pick <hash> (or cherry-pick experiment for the branch tip) copies a single commit onto your current branch.',
+		hint: '`git log --oneline --all` shows the experiment commits. `git cherry-pick <hash>` (or `git cherry-pick experiment` for the branch tip) copies a single commit onto your current branch.',
 		suggestedCommands: [
 			'git log --oneline --all',
 			'git cherry-pick experiment',
@@ -458,7 +458,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Time-travel to an old commit — and escape safely',
 		description:
 			"Version 0.4 is misbehaving and you want to inspect how 0.2 looked. Checking out an old commit puts you in 'detached HEAD' state — look around, then escape with your work intact.",
-		hint: 'git checkout HEAD~2 detaches HEAD at the old commit — cat files to inspect. To keep any work made there, git switch -c <branch>. To just leave, git switch main.',
+		hint: '`git checkout HEAD~2` detaches HEAD at the old commit \u2014 `cat` files to inspect. To keep any work made there, `git switch -c <branch>`. To just leave, `git switch main`.',
 		suggestedCommands: [
 			'git log --oneline',
 			'git checkout HEAD~2',
@@ -479,7 +479,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Cut a release — tag and inspect it',
 		description:
 			'v1.0.0 shipped two commits ago and the import feature is ready. Mark the current commit as v1.1.0 with an annotated tag, then inspect what each release points at.',
-		hint: 'git tag -a v1.1.0 -m "message" creates an annotated tag at HEAD. Plain git tag lists tags, git show v1.1.0 inspects one, and git log --oneline shows tag decorations.',
+		hint: '`git tag -a v1.1.0 -m "message"` creates an annotated tag at `HEAD`. Plain `git tag` lists tags, `git show v1.1.0` inspects one, and `git log --oneline` shows tag decorations.',
 		suggestedCommands: [
 			'git log --oneline',
 			'git tag -a v1.1.0 -m "Release: import support"',
@@ -505,7 +505,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Squash the WIP — interactive rebase',
 		description:
 			'Your feature branch works, but its history is three "wip" commits nobody should ever read. Use git rebase -i to fold them into one well-named commit before the PR.',
-		hint: 'git rebase -i main lists the three commits oldest-first and asks p/s/r/d for each. Classic cleanup: r (reword) the first one to a proper message like "feat: add onboarding form", then s (squash) the other two into it. git log --oneline afterwards shows one clean commit.',
+		hint: '`git rebase -i main` lists the three commits oldest-first and asks `p`/`s`/`r`/`d` for each. Classic cleanup: `r` (reword) the first one to a proper message like `feat: add onboarding form`, then `s` (squash) the other two into it. `git log --oneline` afterwards shows one clean commit.',
 		suggestedCommands: [
 			'git log --oneline',
 			'git rebase -i main',
@@ -533,7 +533,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Find the commit that broke it — git bisect',
 		description:
 			'The tests fail on main, but they passed at v1.0 — eight commits ago, half of them agent refactors. Instead of reading every diff, let git bisect binary-search the history for the culprit.',
-		hint: 'run-tests to confirm the breakage. Then: git bisect start, git bisect bad (HEAD is broken), git bisect good v1.0. Git checks out a midpoint — run-tests, answer git bisect good or git bisect bad, repeat. When it names the first bad commit, git bisect reset returns you home.',
+		hint: '`run-tests` to confirm the breakage. Then: `git bisect start`, `git bisect bad` (HEAD is broken), `git bisect good v1.0`. Git checks out a midpoint \u2014 `run-tests`, answer `git bisect good` or `git bisect bad`, repeat. When it names the first bad commit, `git bisect reset` returns you home.',
 		suggestedCommands: [
 			'run-tests',
 			'git bisect start',
@@ -562,7 +562,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'The hooks say no — fix it properly',
 		description:
 			'This repo has husky hooks installed: pre-commit runs lint + tests, commit-msg enforces Conventional Commits. An agent left a BREAKPOINT in src/app.py. Try to commit and watch the hooks veto it — then fix it for real.',
-		hint: 'cat .husky/pre-commit to see what runs. Committing is blocked while BREAKPOINT is in src/app.py — overwrite the file with a clean version using echo, stage it, and commit. Mind the message: the commit-msg hook wants "fix: ..." style. (--no-verify would bypass both — and leave the bug in.)',
+		hint: '`cat .husky/pre-commit` to see what runs. Committing is blocked while BREAKPOINT is in `src/app.py` \u2014 overwrite the file with a clean version using `echo`, stage it, and commit. Mind the message: the commit-msg hook wants `fix: ...` style. (`--no-verify` would bypass both \u2014 and leave the bug in.)',
 		suggestedCommands: [
 			'git status',
 			'cat .husky/pre-commit',
@@ -589,7 +589,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'One repo, three working directories',
 		description:
 			'Agent A should refactor auth while Agent B builds payments — in parallel, in the same repository. Give each agent its own worktree, run into the branch-exclusivity guard on purpose, then clean up.',
-		hint: 'git worktree add ../proj-auth feature/auth-refactor gives Agent A a directory; do the same for feature/payments. Then try adding a worktree for main — Git refuses, because a branch can be checked out in only ONE worktree (that guarantee is the whole point). git worktree list shows the fleet, git worktree remove <path> cleans up.',
+		hint: '`git worktree add ../proj-auth feature/auth-refactor` gives Agent A a directory; do the same for `feature/payments`. Then try adding a worktree for `main` \u2014 Git refuses, because a branch can be checked out in only ONE worktree (that guarantee is the whole point). `git worktree list` shows the fleet, `git worktree remove <path>` cleans up.',
 		suggestedCommands: [
 			'git worktree add ../proj-auth feature/auth-refactor',
 			'git worktree add ../proj-payments feature/payments',
@@ -608,7 +608,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: "Review the robot's PR — merge the bot branch",
 		description:
 			'A branch named dependabot/npm-lodash-4.17.21 appeared: the dependency bot proposing an upgrade. Review exactly what it changes, merge it into main, and clean up the branch — the same moves the Merge button makes on GitHub.',
-		hint: 'git log --oneline --all shows the bot branch. git diff main..dependabot/npm-lodash-4.17.21 shows its exact change — read it like any diff. Merge it into main (you are already on main), then delete the merged branch with git branch -d (the safe -d refuses if work is unmerged).',
+		hint: '`git log --oneline --all` shows the bot branch. `git diff main..dependabot/npm-lodash-4.17.21` shows its exact change \u2014 read it like any diff. Merge it into `main` (you are already on main), then delete the merged branch with `git branch -d` (the safe `-d` refuses if work is unmerged).',
 		suggestedCommands: [
 			'git log --oneline --all',
 			'git diff main..dependabot/npm-lodash-4.17.21',
@@ -663,7 +663,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Be release-please for a day',
 		description:
 			"Since v1.0.0, main has gained a feat and a fix. Do the release bot's bookkeeping by hand: read the log, decide the next version, update the changelog, commit the paperwork, and cut the annotated tag.",
-		hint: 'git log --oneline shows the conventional commits since the v1.0.0 tag — a feat: means the next release is a MINOR bump: v1.1.0. Rewrite CHANGELOG.md with echo, commit it as "chore(main): release 1.1.0", then git tag -a v1.1.0 -m "Release 1.1.0". (Real release-please prepends to the changelog; the playground keeps it to one line.)',
+		hint: '`git log --oneline` shows the conventional commits since the `v1.0.0` tag \u2014 a `feat:` means the next release is a MINOR bump: v1.1.0. Rewrite `CHANGELOG.md` with `echo`, commit it as `chore(main): release 1.1.0`, then `git tag -a v1.1.0 -m "Release 1.1.0"`. (Real release-please prepends to the changelog; the playground keeps it to one line.)',
 		suggestedCommands: [
 			'git log --oneline',
 			"echo '## 1.1.0 - csv export + fixes' > CHANGELOG.md",
@@ -695,7 +695,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'The Final Challenge — three messes, one repo',
 		description:
 			'Everything at once: a payment feature was committed straight to main, a live Stripe key is sitting STAGED, and the cleaned-up main still needs its v1.0.0 release tag. Fix all three.',
-		hint: 'Three tasks, any order: (1) unstage .env so the secret never gets committed; (2) move the payment commit to a feature branch (create the branch, then reset main back one commit); (3) put an annotated v1.0.0 tag on the cleaned-up main. Everything you need is in Parts 2-5.',
+		hint: 'Three tasks, any order: (1) unstage `.env` so the secret never gets committed; (2) move the payment commit to a feature branch (create the branch, then reset `main` back one commit); (3) put an annotated `v1.0.0` tag on the cleaned-up main. Everything you need is in Parts 2-5.',
 		suggestedCommands: [
 			'git status',
 			'git log --oneline',
@@ -743,7 +743,7 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 		title: 'Playground — start from scratch',
 		description:
 			'An empty repo for free experimentation. Create files, branches, commits — try anything. Type help to see all supported commands.',
-		hint: 'Use echo "content" > filename to create files, then git add and git commit. Try creating branches with git switch -c.',
+		hint: 'Use `echo "content" > filename` to create files, then `git add` and `git commit`. Try creating branches with `git switch -c`.',
 		suggestedCommands: [
 			'help',
 			'echo "hello world" > README.md',

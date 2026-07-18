@@ -142,6 +142,17 @@ const CASES: { id: string; solution: string[] }[] = [
 	}
 ];
 
+describe('scenario hints (RichHint contract)', () => {
+	it('every hint has balanced backticks and at least one highlighted command', async () => {
+		const { playgroundScenarios } = await import('./scenarios');
+		for (const scenario of playgroundScenarios) {
+			const ticks = (scenario.hint.match(/`/g) ?? []).length;
+			expect(ticks % 2, `${scenario.id} hint has unbalanced backticks`).toBe(0);
+			expect(ticks, `${scenario.id} hint should highlight at least one command`).toBeGreaterThan(0);
+		}
+	});
+});
+
 describe('scenario success checks', () => {
 	for (const { id, solution } of CASES) {
 		it(`${id}: false on seed, true after the intended solution`, async () => {

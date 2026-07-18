@@ -11,6 +11,7 @@
 		CornerDownLeft
 	} from 'lucide-svelte';
 	import MermaidDiagram from '$lib/components/ui/MermaidDiagram.svelte';
+	import RichHint from './RichHint.svelte';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import { git, GitEngine } from '$lib/playground/git-engine';
@@ -862,7 +863,7 @@
 			class="shrink-0 px-3 py-2 text-[11px] leading-snug sm:px-5 sm:py-2.5 sm:text-xs sm:leading-relaxed"
 			style="color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border); background: color-mix(in srgb, var(--color-bg-secondary) 45%, transparent);"
 		>
-			{scenario.hint}
+			<RichHint text={scenario.hint} />
 		</p>
 
 		<div class="flex min-h-0 flex-1 flex-col overflow-hidden">
@@ -975,7 +976,7 @@
 			style="background: color-mix(in srgb, var(--color-important) 5%, var(--color-bg-secondary)); border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary);"
 		>
 			<Lightbulb size={14} class="mt-0.5 flex-shrink-0" style="color: var(--color-important);" />
-			<span>{scenario.hint}</span>
+			<span><RichHint text={scenario.hint} /></span>
 		</div>
 
 		<div
