@@ -10,6 +10,7 @@
 	import SectionHeader from '../ui/SectionHeader.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-5" class="py-10">
@@ -91,36 +92,19 @@ git stash pop`}
 
 			<Callout type="warning">
 				<strong>The untracked-files gotcha:</strong> a plain
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git stash</code
-				>
+				<Code code="git stash" />
 				only saves changes to <em>tracked</em> files. Brand-new files the AI just created — never
 				committed, never staged — get left behind in the working tree. Add
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">-u</code
-				>
-				(<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>--include-untracked</code
-				>) to take them along — that's also why VS Code's menu has a separate
+				<Code code="-u" />
+				(<Code code="--include-untracked" />) to take them along — that's also why VS Code's menu
+				has a separate
 				<strong>"Stash (Include Untracked)"</strong> item.
 			</Callout>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git stash pop</code
-				>
+				<Code code="git stash pop" />
 				re-applies your changes and removes them from the stash. Use
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git stash apply</code
-				> to keep the stash entry for reuse.
+				<Code code="git stash apply" /> to keep the stash entry for reuse.
 			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -150,8 +134,8 @@ git stash pop`}
 				Try It: The Stash Workflow
 			</h4>
 			<PlaygroundNote>
-				You're mid-refactor on <code>feature/A</code> when a critical bug comes in. Stash your work, fix
-				the bug on a hotfix branch, then come back and pop the stash.
+				You're mid-refactor on <Code code="feature/A" /> when a critical bug comes in. Stash your work,
+				fix the bug on a hotfix branch, then come back and pop the stash.
 			</PlaygroundNote>
 			<LessonActivity title="Stash: Context-Switch Safely" scenarioId="stash" id="stash" />
 
@@ -187,10 +171,7 @@ git stash pop`}
 
 			<Callout type="note">
 				<strong>The Problem:</strong> Your feature branch is "stale."
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				<Code code="main" />
 				has moved on. There are two philosophies for updating it.
 			</Callout>
 
@@ -259,33 +240,18 @@ git stash pop`}
 			<Callout type="important">
 				<strong>The push after a rebase.</strong> If your branch was already on GitHub, the rebase
 				just re-created commits the remote still has the old versions of — so a plain
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git push</code
-				>
+				<Code code="git push" />
 				gets rejected. The correct follow-up is
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git push --force-with-lease</code
-				>
+				<Code code="git push --force-with-lease" />
 				— the safe force from section 4.6 — and it's only OK because this is <em>your</em> branch. Rebase,
 				lease-push, open the PR: that's the full ritual.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				One config gem while you're here: <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git config --global rebase.autostash true</code
-				>
+				One config gem while you're here: <Code code="git config --global rebase.autostash true" />
 				makes Git stash your uncommitted work automatically before a rebase (or
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>pull --rebase</code
-				>) and pop it after — dissolving the "Git blocked my switch" problem 5.1 opened with, for
-				the rebase case at least.
+				<Code code="pull --rebase" />) and pop it after — dissolving the "Git blocked my switch"
+				problem 5.1 opened with, for the rebase case at least.
 			</p>
 
 			<h4
@@ -296,8 +262,10 @@ git stash pop`}
 				Try It: Merge vs. Rebase
 			</h4>
 			<PlaygroundNote>
-				Your feature branch and <code>main</code> have diverged. Try <code>git merge main</code>
-				first, then reset and try <code>git rebase main</code> to compare the resulting history.
+				Your feature branch and <Code code="main" /> have diverged. Try <Code
+					code="git merge main"
+				/>
+				first, then reset and try <Code code="git rebase main" /> to compare the resulting history.
 			</PlaygroundNote>
 			<LessonActivity title="Merge vs. Rebase" scenarioId="rebase-merge" id="rebase-merge" />
 
@@ -309,11 +277,7 @@ git stash pop`}
 			/>
 
 			<p class="mt-8 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Rebase has one more trick: <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git rebase -i</code
-				>
+				Rebase has one more trick: <Code code="git rebase -i" />
 				(<strong>interactive</strong>) lets you rewrite your own branch's history commit by commit —
 				squash five "wip" commits into one, reword a sloppy message, drop an experiment entirely.
 				It's how a messy working branch becomes a clean, reviewable PR. The Golden Rule applies
@@ -328,9 +292,9 @@ git stash pop`}
 				Try It: Squash the WIP
 			</h4>
 			<PlaygroundNote>
-				Your branch works but its history is three <code>wip:</code> commits. Run
-				<code>git rebase -i main</code>, reword the first commit to something worthy, and squash the
-				other two into it.
+				Your branch works but its history is three <Code code="wip:" /> commits. Run
+				<Code code="git rebase -i main" />, reword the first commit to something worthy, and squash
+				the other two into it.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Interactive Rebase: Clean the History"
@@ -370,20 +334,12 @@ git stash pop`}
 
 			<Callout type="warning">
 				<strong>The Problem:</strong> You run
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
-				>
+				<Code code="git pull" />
 				(or merge
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				<Code code="main" />
 				into your branch) and Git halts with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">CONFLICT</code
-				>. You and a teammate edited the same lines. Git needs you, the human, to resolve it.
+				<Code code="CONFLICT" />. You and a teammate edited the same lines. Git needs you, the
+				human, to resolve it.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -407,68 +363,33 @@ x = 5
 			/>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Everything between <code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code
-				>
+				Everything between <Code code="<<<<<<< HEAD" />
 				and the
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">=======</code
-				>
+				<Code code="=======" />
 				divider is <strong style="color: var(--color-text);">your side</strong> (here, the AI's
 				refactor on your branch). Everything below the divider is
 				<strong style="color: var(--color-text);">the incoming side</strong>
 				— the label after
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code
-				>
+				<Code code=">>>>>>>" />
 				names where it came from — the branch you merged (like
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				<Code code="main" />
 				here; after a pull it can be a commit id or a longer label instead).
 			</p>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
-				Delete all the markers (<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>&lt;&lt;&lt;</code
-				>,
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">===</code
-				>,
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>&gt;&gt;&gt;</code
-				>) and edit the code to be the correct final version, then stage and commit. In the
-				playground, you can write the resolved file with
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>echo 'x = 10' &gt; src/model.py</code
-				>.
+				Delete all the markers (<Code code="<<<" />,
+				<Code code="===" />,
+				<Code code=">>>" />) and edit the code to be the correct final version, then stage and
+				commit. In the playground, you can write the resolved file with
+				<Code code="echo 'x = 10' > src/model.py" />.
 			</p>
 
 			<p class="my-4 text-[13px]" style="color: var(--color-text-secondary);">
 				Not ready to deal with it? There's an eject button here too:
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git merge --abort</code
-				>
+				<Code code="git merge --abort" />
 				cancels the merge and returns your branch to exactly how it was before you ran
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git merge</code
-				> — the same guilt-free escape you'll meet again with rebase (5.5) and cherry-pick (5.4).
+				<Code code="git merge" /> — the same guilt-free escape you'll meet again with rebase (5.5) and
+				cherry-pick (5.4).
 			</p>
 
 			<h4 class="mt-6 mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -518,25 +439,12 @@ x = 5
 				Try It: Resolving a Merge Conflict
 			</h4>
 			<PlaygroundNote>
-				The scenario starts mid-merge with conflict markers in <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>src/model.py</code
-				>. Use
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">echo</code
-				>
+				The scenario starts mid-merge with conflict markers in <Code code="src/model.py" />. Use
+				<Code code="echo" />
 				to overwrite the file, then
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add</code
-				>
+				<Code code="git add" />
 				and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
-				> to finish.
+				<Code code="git commit" /> to finish.
 			</PlaygroundNote>
 			<LessonActivity title="Merge Conflict Resolution" scenarioId="conflicts" id="conflicts" />
 
@@ -580,11 +488,7 @@ x = 5
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git cherry-pick</code
-				>
+				<Code code="git cherry-pick" />
 				copies one commit's changes onto your current branch as a
 				<strong style="color: var(--color-text);">new commit</strong> — same change, same message, but
 				a brand-new hash, because it now sits on a different parent. The original commit stays untouched
@@ -600,11 +504,9 @@ git log --oneline            # The fix is on main — the junk is not`}
 			/>
 
 			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				For an audit trail, add <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">-x</code
-				>: it appends "(cherry picked from commit e4f5a6b...)" to the message, so anyone reading
-				main later can trace where the fix came from. Perfect for the reject-the-PR workflow below.
+				For an audit trail, add <Code code="-x" />: it appends "(cherry picked from commit
+				e4f5a6b...)" to the message, so anyone reading main later can trace where the fix came from.
+				Perfect for the reject-the-PR workflow below.
 			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -641,10 +543,10 @@ git cherry-pick --abort`}
 				Try It: Cherry-Pick the Gem
 			</h4>
 			<PlaygroundNote>
-				The <code>experiment</code> branch has a half-finished dashboard rewrite and one gem: a
-				currency rounding fix. Use <code>git log --oneline --all</code> to find it, then
-				<code>git cherry-pick</code> it onto <code>main</code> — and check
-				<code>src/billing.py</code>
+				The <Code code="experiment" /> branch has a half-finished dashboard rewrite and one gem: a currency
+				rounding fix. Use <Code code="git log --oneline --all" /> to find it, then
+				<Code code="git cherry-pick" /> it onto <Code code="main" /> — and check
+				<Code code="src/billing.py" />
 				to confirm the fix arrived.
 			</PlaygroundNote>
 			<LessonActivity
@@ -672,12 +574,8 @@ git cherry-pick --abort`}
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
 				Section 5.2 sold you on rebase for clean history — but it skipped the scary part. Your
-				feature branch tuned <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>src/config.py</code
-				>, main changed the same lines, and halfway through the rebase Git slams the brakes. Here's
-				how to read the wreck and drive out of it.
+				feature branch tuned <Code code="src/config.py" />, main changed the same lines, and halfway
+				through the rebase Git slams the brakes. Here's how to read the wreck and drive out of it.
 			</p>
 
 			<div class="my-6">
@@ -690,16 +588,10 @@ git cherry-pick --abort`}
 
 			<Callout type="note">
 				<strong>The Problem:</strong> You ran
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git rebase main</code
-				>
+				<Code code="git rebase main" />
 				and Git stopped with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">CONFLICT</code
-				>. The rebase is half-done and you're not sure whether to fix it or flee.
+				<Code code="CONFLICT" />. The rebase is half-done and you're not sure whether to fix it or
+				flee.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -708,10 +600,7 @@ git cherry-pick --abort`}
 				main also changed, Git can't guess the winner — so it
 				<strong style="color: var(--color-text);">pauses mid-replay</strong>
 				and hands you the keys. Run
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				>
+				<Code code="git status" />
 				to see the paused state: it reports a rebase in progress and lists the conflicted files under
 				<strong style="color: var(--color-text);">"unmerged paths"</strong>. The files contain the
 				conflict markers you learned to read in section 5.3 —
@@ -721,16 +610,9 @@ git cherry-pick --abort`}
 			<Callout type="warning">
 				<strong>The sides are swapped during a rebase.</strong> Git rebuilds your branch by standing
 				on
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				<Code code="main" />
 				and replaying your commits onto it — so
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code
-				>
+				<Code code="<<<<<<< HEAD" />
 				is <strong>main's version</strong>, and the bottom block is
 				<strong>your own commit</strong> arriving as the "incoming" change. Exactly backwards from a merge.
 				This is the single most famous rebase trap — read the labels, not the positions.
@@ -774,10 +656,7 @@ git rebase --continue`}
 			/>
 
 			<Callout type="important">
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--abort</code
-				>
+				<Code code="--abort" />
 				is the reason rebasing your <strong>local</strong> branches is always safe to attempt. The rebase
 				doesn't touch your original commits until it finishes — abort at any pause and your branch is
 				restored exactly as it was. The Golden Rule from 5.2 still stands (never rebase shared branches),
@@ -786,11 +665,7 @@ git rebase --continue`}
 
 			<Callout type="tip">
 				<strong>Resolving the same conflict twice? Never again:</strong>
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git config --global rerere.enabled true</code
-				>
+				<Code code="git config --global rerere.enabled true" />
 				turns on <em>reuse recorded resolution</em> — Git remembers how you resolved each conflict and
 				replays the answer the next time the identical conflict appears. On a long-lived AI branch that
 				gets rebased onto main every day, this is the difference between resolving the agent's conflict
@@ -805,11 +680,15 @@ git rebase --continue`}
 				Try It: Survive a Rebase Conflict
 			</h4>
 			<PlaygroundNote>
-				Your <code>feature/tuning</code> branch raised the timeout in <code>src/config.py</code>,
-				but <code>main</code> lowered the same line. Run <code>git rebase main</code>, then
-				<code>cat src/config.py</code> to read the conflict markers. Fix the file with
-				<code>echo</code>, then <code>git add</code> and <code>git rebase --continue</code>. Try
-				<code>git rebase --abort</code> too — watch everything snap back.
+				Your <Code code="feature/tuning" /> branch raised the timeout in <Code
+					code="src/config.py"
+				/>, but <Code code="main" /> lowered the same line. Run <Code code="git rebase main" />,
+				then
+				<Code code="cat src/config.py" /> to read the conflict markers. Fix the file with
+				<Code code="echo" />, then <Code code="git add" /> and <Code
+					code="git rebase --continue"
+				/>. Try
+				<Code code="git rebase --abort" /> too — watch everything snap back.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Rebase: Resolve, Continue, or Abort"
@@ -856,9 +735,7 @@ git rebase --continue`}
 			<div class="mb-6 grid gap-4 sm:grid-cols-2">
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-note);">
-						Lightweight: <code class="text-xs" style="font-family: var(--font-mono);"
-							>git tag v1.1.0</code
-						>
+						Lightweight: <Code code="git tag v1.1.0" />
 					</h4>
 					<p class="mb-2 text-[13px]" style="color: var(--color-text-secondary);">
 						Just a name pointing at a commit. No author, no date, no message. Fine for private
@@ -867,9 +744,7 @@ git rebase --continue`}
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
 					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-important);">
-						Annotated: <code class="text-xs" style="font-family: var(--font-mono);"
-							>git tag -a v1.1.0 -m "..."</code
-						>
+						Annotated: <Code code="git tag -a v1.1.0 -m &quot;...&quot;" />
 					</h4>
 					<p class="mb-2 text-[13px]" style="color: var(--color-text-secondary);">
 						A full object with author, date, and message. <strong>Always annotate releases</strong> —
@@ -881,13 +756,11 @@ git rebase --continue`}
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				<strong style="color: var(--color-text);">Naming convention:</strong> most projects use
 				<strong style="color: var(--color-text);">semantic versioning</strong> —
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>MAJOR.MINOR.PATCH</code
-				>. Bump <strong style="color: var(--color-text);">MAJOR</strong> when you break existing
-				users (v1.x → v2.0.0), <strong style="color: var(--color-text);">MINOR</strong> when you add
-				features compatibly (v1.0 → v1.1.0), and
+				<Code code="MAJOR.MINOR.PATCH" />. Bump
+				<strong style="color: var(--color-text);">MAJOR</strong>
+				when you break existing users (v1.x → v2.0.0),
+				<strong style="color: var(--color-text);">MINOR</strong>
+				when you add features compatibly (v1.0 → v1.1.0), and
 				<strong style="color: var(--color-text);">PATCH</strong> for pure bug fixes (v1.1.0 → v1.1.1).
 				One glance at a version tells users how scared to be.
 			</p>
@@ -901,70 +774,34 @@ git show v1.0.0                                  # Inspect what a release points
 			/>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				One surprise: in real Git, <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git push</code
-				>
+				One surprise: in real Git, <Code code="git push" />
 				does <strong style="color: var(--color-text);">not</strong> send tags. You push them
 				explicitly —
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git push origin v1.1.0</code
-				>
+				<Code code="git push origin v1.1.0" />
 				for one tag, or
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git push origin --tags</code
-				>
+				<Code code="git push origin --tags" />
 				for all of them — though beware:
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--tags</code
-				>
+				<Code code="--tags" />
 				throws <em>every</em> tag at the remote, including private bookmarks like the
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>pre-refactor</code
-				>
+				<Code code="pre-refactor" />
 				checkpoint below.
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git push --follow-tags</code
-				>
+				<Code code="git push --follow-tags" />
 				is the discerning version: it sends only <em>annotated</em> tags on commits you're pushing —
 				which is exactly why this section told you to annotate releases and keep bookmarks
 				lightweight. Need to remove a tag?
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git tag -d v1.1.0</code
-				>
+				<Code code="git tag -d v1.1.0" />
 				deletes it locally — and if you deleted one <em>by mistake</em>, just re-tag the same commit
 				(find it with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git log --oneline</code
-				>, or fetch the tag back from the remote if you'd already pushed it).
+				<Code code="git log --oneline" />, or fetch the tag back from the remote if you'd already
+				pushed it).
 			</p>
 
 			<Callout type="tip">
 				<strong>The AI-first habit:</strong> tag before letting an agent loose on a big refactor —
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git tag -a pre-refactor -m "Last known good before agent rewrite"</code
-				>. If things go sideways, a named restore point beats scrolling through the reflog trying to
+				<Code code="git tag -a pre-refactor -m &quot;Last known good before agent rewrite&quot;" />.
+				If things go sideways, a named restore point beats scrolling through the reflog trying to
 				remember which
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>{'HEAD@{n}'}</code
-				> was the good one.
+				<Code code={'HEAD@{n}'} /> was the good one.
 			</Callout>
 
 			<h4
@@ -976,9 +813,10 @@ git show v1.0.0                                  # Inspect what a release points
 			</h4>
 			<PlaygroundNote>
 				v1.0.0 shipped two commits ago and the import feature is ready. Tag the current commit with
-				<code>git tag -a v1.1.0 -m "Release: import support"</code>, list your tags, then use
-				<code>git show v1.1.0</code> and <code>git log --oneline</code> to see what each release points
-				at.
+				<Code code="git tag -a v1.1.0 -m &quot;Release: import support&quot;" />, list your tags,
+				then use
+				<Code code="git show v1.1.0" /> and <Code code="git log --oneline" /> to see what each release
+				points at.
 			</PlaygroundNote>
 			<LessonActivity title="Tags: Cut a Release" scenarioId="release-tags" id="release-tags" />
 

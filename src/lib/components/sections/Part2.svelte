@@ -11,6 +11,7 @@
 	import SectionHeader from '../ui/SectionHeader.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-2" class="py-10">
@@ -89,10 +90,7 @@
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				> is your "heads-up display." The output shows three categories:
+				<Code code="git status" /> is your "heads-up display." The output shows three categories:
 			</p>
 
 			<div class="mb-6 grid gap-3 sm:grid-cols-3">
@@ -140,10 +138,7 @@ Untracked files:
 			/>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				The good news? You don't actually need to type <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				>
+				The good news? You don't actually need to type <Code code="git status" />
 				in the terminal. VS Code shows you all of this visually. Just click the
 				<strong>Source Control icon</strong>
 				in the Activity Bar (the branch icon on the left sidebar). The badge shows how many files changed,
@@ -204,11 +199,8 @@ Untracked files:
 
 			<Callout type="warning">
 				<strong>The Problem:</strong>
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				> shows the AI changed five files. Blindly trusting this is how bugs are introduced. You must
-				review every line and then "stage" the changes you approve.
+				<Code code="git status" /> shows the AI changed five files. Blindly trusting this is how bugs
+				are introduced. You must review every line and then "stage" the changes you approve.
 			</Callout>
 
 			<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -216,25 +208,13 @@ Untracked files:
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				>
+				<Code code="git status" />
 				tells you <em>which</em> files changed;
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git diff</code
-				>
+				<Code code="git diff" />
 				shows you <em>what</em> changed inside them — removed lines in red with a
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">-</code
-				>, added lines in green with a
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">+</code
-				>. It's the terminal twin of the VS Code Diff Editor you'll meet below, and it's the command
-				every AI agent runs before staging (Part 6 makes it a rule).
+				<Code code="-" />, added lines in green with a
+				<Code code="+" />. It's the terminal twin of the VS Code Diff Editor you'll meet below, and
+				it's the command every AI agent runs before staging (Part 6 makes it a rule).
 			</p>
 
 			<CodeBlock
@@ -244,12 +224,9 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 			/>
 
 			<Callout type="tip">
-				Make <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git diff --staged</code
-				> your ritual final check: it shows exactly — and only — what's about to be frozen into the commit.
-				If a secret or debug print shows up there, you just caught it in time.
+				Make <Code code="git diff --staged" /> your ritual final check: it shows exactly — and only —
+				what's about to be frozen into the commit. If a secret or debug print shows up there, you just
+				caught it in time.
 			</Callout>
 
 			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -271,19 +248,11 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 			</h4>
 			<Callout type="tip">
 				This is your single most powerful review tool. The AI made multiple changes in one file, and
-				you only want to accept some of them. <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git add --patch</code
-				>
+				you only want to accept some of them. <Code code="git add --patch" />
 				walks you through every individual block of changes ("hunk") interactively. One blind spot: it
 				only shows <em>modifications to tracked files</em> — brand-new files the AI created won't
 				appear at all. Stage those by name with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git add &lt;file&gt;</code
-				> after reading them.
+				<Code code="git add <file>" /> after reading them.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -293,40 +262,19 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 			<CodeBlock code="git add --patch  # or git add -p" title="Interactive staging" />
 
 			<p class="mt-4 mb-4 text-[13px]" style="color: var(--color-text-secondary);">
-				For each hunk, Git asks: <code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">y</code
-				>
+				For each hunk, Git asks: <Code code="y" />
 				(stage),
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">n</code
-				>
+				<Code code="n" />
 				(skip),
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">s</code
-				>
+				<Code code="s" />
 				(split into smaller pieces),
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">q</code
-				>
+				<Code code="q" />
 				(quit). In the <strong>Try It: The Complete Loop</strong> playground (next section),
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
-				>
+				<Code code="git add -p" />
 				is simplified to file-by-file staging — type
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">y</code
-				>
+				<Code code="y" />
 				or
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">n</code
-				> on the next line for each file.
+				<Code code="n" /> on the next line for each file.
 			</p>
 
 			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -334,10 +282,7 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				This is where VS Code really shines. Instead of typing cryptic <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">y/n/s/q</code
-				>
+				This is where VS Code really shines. Instead of typing cryptic <Code code="y/n/s/q" />
 				responses in the terminal, you get a beautiful side-by-side Diff Editor. To stage an entire file,
 				just hover over it and click the <strong>+</strong> button:
 			</p>
@@ -363,10 +308,7 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				For even more precision, click a file to open the Diff Editor, then select specific lines
 				and right-click → <strong>"Stage Selected Ranges"</strong>. This is the visual equivalent of
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
-				>, but far easier to use:
+				<Code code="git add -p" />, but far easier to use:
 			</p>
 
 			<VsCodeScreenshot
@@ -383,23 +325,11 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 			/>
 
 			<Callout type="warning">
-				<strong
-					>Accidentally staged everything with <code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-					>?</strong
-				>
+				<strong>Accidentally staged everything with <Code code="git add ." />?</strong>
 				Use
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git restore --staged &lt;file&gt;</code
-				>
+				<Code code="git restore --staged <file>" />
 				to unstage specific files before committing. This is especially critical if you accidentally staged
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
-				>
+				<Code code=".env" />
 				files with secrets or debug files. You'll practice exactly this in the
 				<strong>"Unstage Secrets"</strong> playground in section 4.2 (or right now — open the playground
 				from the header and pick the scenario).
@@ -550,20 +480,11 @@ git diff --staged   # Staged changes: what the next commit will contain`}
 				The subject line above says <em>what</em> changed. The "why" lives in the commit
 				<strong>body</strong> — a blank line after the subject, then as many lines of context as the
 				change deserves. Run
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
-				>
+				<Code code="git commit" />
 				with <em>no</em>
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">-m</code
-				>
+				<Code code="-m" />
 				and Git opens your editor (VS Code, if you set
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">core.editor</code
-				> in Part 1) for exactly this:
+				<Code code="core.editor" /> in Part 1) for exactly this:
 			</p>
 
 			<CodeBlock
@@ -589,11 +510,7 @@ the load and matches how the session middleware already behaves.`}
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				One last habit: prove to yourself the save point exists. Right after committing, run
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git log --oneline -1</code
-				>
+				<Code code="git log --oneline -1" />
 				— one line, your hash and message. (That's also the final step Part 6 teaches agents: commit,
 				then report the hash.)
 			</p>
@@ -640,10 +557,8 @@ the load and matches how the session middleware already behaves.`}
 				Try It: The Complete Loop
 			</h4>
 			<PlaygroundNote>
-				Run real Git commands in your browser. Type <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">help</code
-				> in the terminal for the full command list.
+				Run real Git commands in your browser. Type <Code code="help" /> in the terminal for the full
+				command list.
 			</PlaygroundNote>
 			<LessonActivity title="The Core Safety Loop" scenarioId="core-loop" id="core-loop" />
 
@@ -659,33 +574,20 @@ the load and matches how the session middleware already behaves.`}
 			<SectionHeader
 				level="section"
 				icon={EyeOff}
-				title="2.4 What NOT to Commit (.gitignore)"
+				title="2.4 What NOT to Commit (`.gitignore`)"
 				color="var(--color-primary)"
 			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
 				You asked the AI to scaffold your project, and it delivered: dependencies installed, an
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
-				>
+				<Code code=".env" />
 				file holding your API keys, and a working app. Then it helpfully runs
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-				>
+				<Code code="git add ." />
 				— and now your secrets, your
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>node_modules</code
-				>
+				<Code code="node_modules" />
 				folder, and a stray
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
-				> are all staged for your next commit. You just learned how permanent a commit is — before you
-				freeze that mistake into history, you need to teach Git what to ignore.
+				<Code code=".DS_Store" /> are all staged for your next commit. You just learned how permanent
+				a commit is — before you freeze that mistake into history, you need to teach Git what to ignore.
 			</p>
 
 			<div class="my-6">
@@ -699,26 +601,17 @@ the load and matches how the session middleware already behaves.`}
 			<Callout type="note">
 				<strong>The Problem:</strong> AI agents move fast and stage everything. Without a guardrail,
 				one
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-				> can commit API keys, gigabytes of dependencies, and OS junk into a history that everyone on
-				your team will clone.
+				<Code code="git add ." /> can commit API keys, gigabytes of dependencies, and OS junk into a history
+				that everyone on your team will clone.
 			</Callout>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				A <strong style="color: var(--color-text);">.gitignore</strong> file is a plain text file at
 				the root of your repository that lists patterns of files Git should pretend don't exist.
 				Ignored files never show up as "untracked" in
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				>, and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-				> silently skips them. The file itself gets committed, so the whole team — and every AI agent
-				working in the repo — shares the same guardrail.
+				<Code code="git status" />, and
+				<Code code="git add ." /> silently skips them. The file itself gets committed, so the whole team
+				— and every AI agent working in the repo — shares the same guardrail.
 			</p>
 
 			<CodeBlock
@@ -752,15 +645,9 @@ CLAUDE.local.md
 			/>
 
 			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				(Purely personal noise like <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
-				>
+				(Purely personal noise like <Code code=".DS_Store" />
 				or
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.idea/</code
-				>
+				<Code code=".idea/" />
 				belongs in your <em>global</em> ignore file instead — see the end of this section. And while a
 				repo's main .gitignore lives at the root, you can drop extra ones in any subfolder to scope rules
 				to just that corner of the project.)
@@ -775,49 +662,25 @@ CLAUDE.local.md
 				style="color: var(--color-text-secondary);"
 			>
 				<li>
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">*.log</code
-					>
+					<Code code="*.log" />
 					— a glob: matches any file ending in <strong>.log</strong>, in any directory
 				</li>
 				<li>
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">dist/</code
-					> — a trailing slash matches only directories (and everything inside them)
+					<Code code="dist/" /> — a trailing slash matches only directories (and everything inside them)
 				</li>
 				<li>
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>/config.json</code
-					> — a leading slash anchors the pattern to the repository root
+					<Code code="/config.json" /> — a leading slash anchors the pattern to the repository root
 				</li>
 				<li>
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>docs/**/*.tmp</code
-					>
+					<Code code="docs/**/*.tmp" />
 					—
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">**</code
-					> matches any depth of nested directories
+					<Code code="**" /> matches any depth of nested directories
 				</li>
 				<li>
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>!.env.example</code
-					>
+					<Code code="!.env.example" />
 					— a leading
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">!</code
-					> negates a pattern, re-including a file an earlier rule excluded (it can't re-include anything
-					inside an excluded directory, though)
+					<Code code="!" /> negates a pattern, re-including a file an earlier rule excluded (it can't
+					re-include anything inside an excluded directory, though)
 				</li>
 			</ul>
 
@@ -848,12 +711,8 @@ git commit -m "chore: stop tracking ignored files"`}
 				The key still exists in every older commit, and anyone who clones the repository can read it.
 				Treat a pushed secret as compromised: <strong>rotate the credential immediately</strong>
 				(revoke the key and issue a new one), then scrub it from history with a rewriting tool like
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git filter-repo</code
-				> — specialized surgery beyond this guide, but worth knowing the name. Rotation comes first; no
-				amount of history surgery un-leaks a key that's already been seen.
+				<Code code="git filter-repo" /> — specialized surgery beyond this guide, but worth knowing the
+				name. Rotation comes first; no amount of history surgery un-leaks a key that's already been seen.
 			</Callout>
 
 			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -861,15 +720,9 @@ git commit -m "chore: stop tracking ignored files"`}
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Files like <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.DS_Store</code
-				>
+				Files like <Code code=".DS_Store" />
 				(macOS) or
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">Thumbs.db</code
-				>
+				<Code code="Thumbs.db" />
 				(Windows) are about <em>your machine</em>, not the project. Instead of asking every
 				repository to ignore them, configure a
 				<strong style="color: var(--color-text);">global ignore file</strong> that applies to all your
@@ -896,22 +749,12 @@ echo "Thumbs.db" >> ~/.gitignore_global`}
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Windows ends lines with <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">CRLF</code
-				>, macOS and Linux with
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">LF</code
-				>. On a mixed team this produces the classic horror diff:
+				Windows ends lines with <Code code="CRLF" />, macOS and Linux with
+				<Code code="LF" />. On a mixed team this produces the classic horror diff:
 				<em>every line of the file "changed"</em>
 				because a teammate's editor rewrote the endings — and AI agents reformatting files make it worse.
 				The team-level fix is a committed
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>.gitattributes</code
-				> file, which overrides everyone's personal settings:
+				<Code code=".gitattributes" /> file, which overrides everyone's personal settings:
 			</p>
 
 			<CodeBlock
@@ -925,18 +768,11 @@ echo "Thumbs.db" >> ~/.gitignore_global`}
 			/>
 
 			<p class="mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				(You may also see <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>core.autocrlf</code
-				>
+				(You may also see <Code code="core.autocrlf" />
 				in older guides — that's the per-machine version of the same idea. Prefer
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>.gitattributes</code
-				>: it lives in the repo, so it protects teammates and agents who never configured anything.
-				If a diff ever claims every line changed, check line endings before anything else.)
+				<Code code=".gitattributes" />: it lives in the repo, so it protects teammates and agents
+				who never configured anything. If a diff ever claims every line changed, check line endings
+				before anything else.)
 			</p>
 
 			<VibeBox

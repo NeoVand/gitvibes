@@ -11,6 +11,7 @@
 	import SectionHeader from '../ui/SectionHeader.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-3" class="py-10">
@@ -37,15 +38,9 @@
 
 		<Callout type="important">
 			The most important rule in collaborative software development: <strong
-				>you never, ever work directly on the <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				> branch</strong
+				>you never, ever work directly on the <Code code="main" /> branch</strong
 			>. The
-			<code
-				class="rounded px-1.5 py-0.5 text-xs"
-				style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-			>
+			<Code code="main" />
 			branch represents the official, stable, production-ready code. Your work must happen in an isolated
 			"parallel universe" called a <strong>branch</strong>.
 		</Callout>
@@ -78,10 +73,7 @@
 			</Callout>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
-				First, make sure you're on <code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				First, make sure you're on <Code code="main" />
 				and it's up to date. Then create your branch:
 			</p>
 
@@ -107,11 +99,7 @@
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				When you click the branch name, VS Code opens a Quick Pick menu listing all your branches.
 				Select <strong>"+ Create new branch..."</strong> at the top, type a name like
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>feature/my-new-idea</code
-				>, and you're immediately switched to it:
+				<Code code="feature/my-new-idea" />, and you're immediately switched to it:
 			</p>
 
 			<VsCodeScreenshot
@@ -121,10 +109,7 @@
 			/>
 
 			<Callout type="tip">
-				Your new branch starts exactly where <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				Your new branch starts exactly where <Code code="main" />
 				is — but it isn't a copy of anything. A branch is just a <em>label</em> pointing at a commit
 				(which is why creating one is instant, and why you can have hundreds). From here on, new
 				commits move <em>your</em> label while main's stays put. If the AI destroys everything, it
@@ -136,46 +121,22 @@
 				<strong>Common mistake — committed to main by accident?</strong> Don't panic. If you haven't
 				pushed yet, the fix is simple: create the feature branch (your commits come with it), then
 				switch back to main and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git reset --hard HEAD~1</code
-				>
+				<Code code="git reset --hard HEAD~1" />
 				to remove the commit from main. (Reading that address:
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">HEAD</code
-				>
+				<Code code="HEAD" />
 				is the commit you're standing on, and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">~1</code
-				>
+				<Code code="~1" />
 				means "one step back" — so
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">HEAD~1</code
-				>
+				<Code code="HEAD~1" />
 				is the previous commit,
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">HEAD~3</code
-				>
+				<Code code="HEAD~3" />
 				three commits back.) You'll master
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
-				>
+				<Code code="git reset" />
 				in Part 4. One precondition: make sure
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git status</code
-				>
+				<Code code="git status" />
 				is clean first —
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--hard</code
-				> also wipes any uncommitted edits, and those have no undo. Try it yourself below:
+				<Code code="--hard" /> also wipes any uncommitted edits, and those have no undo. Try it yourself
+				below:
 			</Callout>
 
 			<h4
@@ -186,9 +147,9 @@
 				Try It: Oops — Committed to Main
 			</h4>
 			<PlaygroundNote>
-				The playground starts with a payment commit on <code>main</code> that should be on a feature
-				branch. Create the branch, then reset <code>main</code> with
-				<code>git reset --hard HEAD~1</code>.
+				The playground starts with a payment commit on <Code code="main" /> that should be on a feature
+				branch. Create the branch, then reset <Code code="main" /> with
+				<Code code="git reset --hard HEAD~1" />.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Move Commit to Feature Branch"
@@ -229,10 +190,7 @@
 			<Callout type="note">
 				<strong>The Problem:</strong> You've been working on your feature branch for a few days.
 				Your teammates have merged their work into
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>. Your branch is now "stale."
+				<Code code="main" />. Your branch is now "stale."
 			</Callout>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -278,51 +236,24 @@ git merge origin/main   # Merge the updates into your branch`}
 			/>
 
 			<Callout type="tip">
-				As a best practice, <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git fetch</code
-				>
+				As a best practice, <Code code="git fetch" />
 				first to see what's coming before merging.
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
-				>
+				<Code code="git pull" />
 				is just a "black box" shortcut.
 			</Callout>
 
 			<Callout type="important">
-				<strong
-					>When plain <code
-						class="rounded px-1.5 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
-					> refuses to run:</strong
-				>
+				<strong>When plain <Code code="git pull" /> refuses to run:</strong>
 				if your branch and the remote have <em>both</em> moved (you committed locally, a teammate
 				pushed), modern Git stops with
-				<code
-					class="mt-1 mb-1 block rounded px-2 py-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>fatal: Need to specify how to reconcile divergent branches.</code
-				>
+				<Code code="fatal: Need to specify how to reconcile divergent branches." />
 				It's asking which strategy you want:
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git pull --no-rebase</code
-				>
+				<Code code="git pull --no-rebase" />
 				(merge, like this section) or
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git pull --rebase</code
-				>
+				<Code code="git pull --rebase" />
 				(replay your commits on top — the cleaner habit you'll learn in section 5.2). Pick a default once
 				with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git config --global pull.rebase true</code
-				> and you'll never see the error again.
+				<Code code="git config --global pull.rebase true" /> and you'll never see the error again.
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -358,21 +289,10 @@ git merge origin/main   # Merge the updates into your branch`}
 				Try It: Fetch and Merge Remote Updates
 			</h4>
 			<PlaygroundNote>
-				The playground simulates a remote called <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">origin</code
-				>
+				The playground simulates a remote called <Code code="origin" />
 				— no real network calls. After
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git fetch origin</code
-				>, run
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git log --oneline --all</code
-				> to see both local and remote branches.
+				<Code code="git fetch origin" />, run
+				<Code code="git log --oneline --all" /> to see both local and remote branches.
 			</PlaygroundNote>
 			<LessonActivity title="Sync with Remote" scenarioId="sync-remote" id="sync-remote" />
 
@@ -409,10 +329,7 @@ git merge origin/main   # Merge the updates into your branch`}
 
 			<Callout type="note">
 				<strong>The Problem:</strong> Your feature is complete, tested, and ready to be merged into
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>. You do not merge it directly. You "propose" the change via a
+				<Code code="main" />. You do not merge it directly. You "propose" the change via a
 				<strong>Pull Request (PR)</strong>.
 			</Callout>
 
@@ -436,12 +353,10 @@ git merge origin/main   # Merge the updates into your branch`}
 				A <strong>Pull Request</strong> is a request for discussion. It is the formal, auditable
 				gate where your human teammates review your AI-generated code, suggest changes, and
 				ultimately "sign off" before it enters
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>. (One vocabulary note for job interviews: "pull request" is the GitHub/Bitbucket name.
-				GitLab calls the identical thing a <strong>merge request (MR)</strong> — and it's a forge feature,
-				not a Git command. Part 9 tours the forges beyond GitHub.)
+				<Code code="main" />. (One vocabulary note for job interviews: "pull request" is the
+				GitHub/Bitbucket name. GitLab calls the identical thing a
+				<strong>merge request (MR)</strong> — and it's a forge feature, not a Git command. Part 9 tours
+				the forges beyond GitHub.)
 			</Callout>
 
 			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -480,11 +395,8 @@ git merge origin/main   # Merge the updates into your branch`}
 			<Callout type="note">
 				Teams enforce all of this with <strong>rulesets</strong> (repo Settings → Rules) — require a
 				PR, require passing checks, require an approval before anything reaches
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>. If your push to main is rejected at work, that's not an error — that's the process
-				working.
+				<Code code="main" />. If your push to main is rejected at work, that's not an error — that's
+				the process working.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -535,16 +447,9 @@ git fetch --prune         # Drop tracking refs for branches deleted on GitHub`}
 				Try It: Branch, Commit, and Push
 			</h4>
 			<PlaygroundNote>
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git push</code
-				>
+				<Code code="git push" />
 				in the playground updates a simulated remote — try
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git remote -v</code
-				> to see it.
+				<Code code="git remote -v" /> to see it.
 			</PlaygroundNote>
 			<LessonActivity title="Branching Workflow" scenarioId="branching" id="branching" />
 

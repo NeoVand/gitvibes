@@ -27,6 +27,8 @@ An interactive, visual guide to Git for developers who use AI-assisted coding to
 
 GitVibes teaches Git through the lens of AI-assisted development. Instead of dry reference docs, it walks through real scenarios — _"the AI just changed 10 files, what do I do?"_ — with cinematic section banners, interactive playgrounds, Mermaid diagrams, and step-by-step VS Code screenshots.
 
+New to the command line itself? Start with **[TerminalVibes](https://neovand.github.io/terminalvibes/)** — the sister course that teaches bash from zero, in the same style.
+
 Every lesson opens with an original piece of banner art — all **40** of them, in curriculum order:
 
 [![All 40 GitVibes section banners, from the hero art to Keep Learning](docs/images/banner-poster.webp)](docs/images/banner-poster.webp)

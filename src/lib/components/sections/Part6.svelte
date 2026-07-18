@@ -9,6 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-6" class="py-10">
@@ -75,41 +76,23 @@
 						Always-on instructions: AGENTS.md &amp; friends
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>AGENTS.md</code
-						>
+						<Code code="AGENTS.md" />
 						is the cross-tool standard for project-wide rules — an open spec (now stewarded by the Linux
 						Foundation) read by OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI, and twenty-plus other
 						agents. In monorepos, the nearest file to the code you're editing takes precedence. The one
 						big exception:
 						<strong
 							>Claude Code reads
-							<code
-								class="rounded px-1 py-0.5 text-xs"
-								style="background: var(--color-code-bg); font-family: var(--font-mono);"
-								>CLAUDE.md</code
-							>, not AGENTS.md</strong
+							<Code code="CLAUDE.md" />, not AGENTS.md</strong
 						>
 						(as of mid-2026). The documented bridge is a one-line CLAUDE.md containing
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>@AGENTS.md</code
-						>
-						— an import that pulls the shared file in — or a symlink (<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>ln -s AGENTS.md CLAUDE.md</code
-						>). In VS Code, add
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>.github/copilot-instructions.md</code
-						> for Copilot-specific standards. Put your team's Git constitution here: branch naming, Conventional
-						Commits, "never reset shared branches," PR expectations. Keep it concise — this loads on every
-						session.
+						<Code code="@AGENTS.md" />
+						— an import that pulls the shared file in — or a symlink (<Code
+							code="ln -s AGENTS.md CLAUDE.md"
+						/>). In VS Code, add
+						<Code code=".github/copilot-instructions.md" /> for Copilot-specific standards. Put your team's
+						Git constitution here: branch naming, Conventional Commits, "never reset shared branches,"
+						PR expectations. Keep it concise — this loads on every session.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
@@ -125,34 +108,18 @@
 							rel="noopener noreferrer">Agent Skills</a
 						>
 						format: a folder with a
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>SKILL.md</code
-						>
+						<Code code="SKILL.md" />
 						file (name + description in YAML frontmatter, instructions in the body). The format is portable;
 						the folder isn't yet — each tool has its own discovery path, like
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>.agents/skills/</code
-						>
+						<Code code=".agents/skills/" />
 						for Codex and
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>.claude/skills/</code
-						>
+						<Code code=".claude/skills/" />
 						for Claude Code — so check where your agent looks. Either way they're version-controlled workflows
 						your whole team shares. Agents discover skills at startup and load the full instructions only
 						when a task matches — perfect for detailed Git procedures without bloating every chat. Example:
 						a
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>git-save-game/</code
-						> skill that walks through the full save-game ritual — branch, review, stage, commit — before
-						every PR.
+						<Code code="git-save-game/" /> skill that walks through the full save-game ritual — branch,
+						review, stage, commit — before every PR.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
@@ -160,41 +127,18 @@
 						VS Code: scoped rules &amp; custom agents
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						For rules that apply only to certain files, add <code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>*.instructions.md</code
-						>
+						For rules that apply only to certain files, add <Code code="*.instructions.md" />
 						files under
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>.github/instructions/</code
-						>
+						<Code code=".github/instructions/" />
 						with an
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);">applyTo</code
-						>
+						<Code code="applyTo" />
 						glob in the frontmatter. For specialized personas, define custom agents as
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>.github/agents/*.agent.md</code
-						>
+						<Code code=".github/agents/*.agent.md" />
 						— YAML frontmatter sets the name, description, tools, and model; the body holds focused instructions
 						(e.g., a "Git Review" agent that inspects staged diffs and suggests commit splits). Use
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>/create-instruction</code
-						>
+						<Code code="/create-instruction" />
 						or
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>/create-agent</code
-						> in VS Code chat to scaffold these files.
+						<Code code="/create-agent" /> in VS Code chat to scaffold these files.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
@@ -289,32 +233,20 @@ description: Create a clean Git checkpoint after a working change.
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				Even well-instructed agents produce big diffs, and a 40-file diff read top-to-bottom is
-				where review discipline goes to die. Triage instead: run <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git diff --stat</code
-				>
+				where review discipline goes to die. Triage instead: run <Code code="git diff --stat" />
 				first to see which files changed and by how much — that one screen tells you whether the change
 				matches the task you assigned. Then review file by file with
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git diff &lt;file&gt;</code
-				>, starting with the files you'd least expect to change. When only part of the work is good,
-				use
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
-				> to stage the keepers hunk by hunk and discard the rest.
+				<Code code="git diff <file>" />, starting with the files you'd least expect to change. When
+				only part of the work is good, use
+				<Code code="git add -p" /> to stage the keepers hunk by hunk and discard the rest.
 			</p>
 
 			<Callout type="tip">
 				<strong>Reject, don't salvage.</strong> When a huge AI pull request is mostly wrong, resist
 				the urge to edit it into shape — salvage-editing someone else's sprawling diff takes longer
 				than redoing it and hides mistakes you didn't notice. Close the PR,
-				<code style="font-family: var(--font-mono);">git cherry-pick</code> the few good commits onto
-				a fresh branch, and re-prompt for the rest with tighter scope. Cheap branches (Part 3) exist precisely
-				so throwing work away costs nothing.
+				<Code code="git cherry-pick" /> the few good commits onto a fresh branch, and re-prompt for the
+				rest with tighter scope. Cheap branches (Part 3) exist precisely so throwing work away costs nothing.
 			</Callout>
 
 			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -322,10 +254,7 @@ description: Create a clean Git checkpoint after a working change.
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Six months from now, someone running <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git blame</code
-				>
+				Six months from now, someone running <Code code="git blame" />
 				will want to know whether a human decided this line or an agent generated it. Three layers of
 				attribution, weakest to strongest:
 			</p>
@@ -336,43 +265,25 @@ description: Create a clean Git checkpoint after a working change.
 			>
 				<li>
 					<strong>Trailers.</strong> Claude Code and Copilot append
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>Co-Authored-By:</code
-					>
+					<Code code="Co-Authored-By:" />
 					lines to their commits by default — you'll see these in your own history. Useful as a hint,
 					but easy to strip or forget, so never treat them as a measurement of anything.
 				</li>
 				<li>
 					<strong>Per-worktree identity.</strong> Running agents in worktrees (6.3)? Give each its
 					own name so blame tells Agent A from Agent B:
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>git config extensions.worktreeConfig true</code
-					>, then
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>git config --worktree user.name "Agent A (auth)"</code
-					> inside each worktree.
+					<Code code="git config extensions.worktreeConfig true" />, then
+					<Code code="git config --worktree user.name &quot;Agent A (auth)&quot;" /> inside each worktree.
 				</li>
 				<li>
 					<strong>Signing.</strong> The strong claim runs the other way: commits <em>you</em>
-					sign are verifiably yours. Modern setup is SSH-based and reuses the key from Part 1 (<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>gpg.format ssh</code
-					>
+					sign are verifiably yours. Modern setup is SSH-based and reuses the key from Part 1 (<Code
+						code="gpg.format ssh"
+					/>
 					+
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>commit.gpgsign true</code
-					>); GitHub shows "Verified" badges, and its <em>vigilant mode</em> flags anything unsigned that
-					claims to be you. In a world of agents committing under borrowed names, "the human signed off
-					here" is worth making cryptographic.
+					<Code code="commit.gpgsign true" />); GitHub shows "Verified" badges, and its
+					<em>vigilant mode</em> flags anything unsigned that claims to be you. In a world of agents committing
+					under borrowed names, "the human signed off here" is worth making cryptographic.
 				</li>
 			</ul>
 
@@ -418,15 +329,9 @@ description: Create a clean Git checkpoint after a working change.
 				A <strong style="color: var(--color-text);">Git hook</strong> is a script that Git runs
 				automatically at a specific moment — before a commit is created, after a merge, before a
 				push. Hooks live in the
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git/hooks/</code
-				>
+				<Code code=".git/hooks/" />
 				directory of your repository, where Git puts a set of
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.sample</code
-				>
+				<Code code=".sample" />
 				files to get you started. One crucial detail:
 				<strong style="color: var(--color-text);">
 					the .git directory is never committed, so hooks are not versioned</strong
@@ -441,11 +346,7 @@ description: Create a clean Git checkpoint after a working change.
 				The <strong style="color: var(--color-text);">pre-commit</strong> hook runs before Git
 				creates a commit. If the script exits with a non-zero status, the commit is blocked. Create
 				a file named
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>.git/hooks/pre-commit</code
-				> (no file extension) and make it executable:
+				<Code code=".git/hooks/pre-commit" /> (no file extension) and make it executable:
 			</p>
 
 			<CodeBlock
@@ -460,11 +361,8 @@ npm test || { echo "Tests failed - commit blocked." >&2; exit 1; }`}
 			<CodeBlock title="Make it executable (once)" code="chmod +x .git/hooks/pre-commit" />
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				From now on, every <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
-				> in this repository runs your lint and test suite first. If either fails, nothing gets committed
-				— no exceptions, no forgetting.
+				From now on, every <Code code="git commit" /> in this repository runs your lint and test suite
+				first. If either fails, nothing gets committed — no exceptions, no forgetting.
 			</p>
 
 			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -476,11 +374,7 @@ npm test || { echo "Tests failed - commit blocked." >&2; exit 1; }`}
 				a file containing the proposed commit message. Here's a compact one that enforces
 				<strong style="color: var(--color-text);">Conventional Commits</strong>
 				(messages like
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>feat: add login form</code
-				>):
+				<Code code="feat: add login form" />):
 			</p>
 
 			<CodeBlock
@@ -501,17 +395,10 @@ fi`}
 			</h4>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Since <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git/hooks/</code
-				>
+				Since <Code code=".git/hooks/" />
 				isn't versioned, your teammates (and their agents) won't get your hooks automatically. The lightweight
 				fix is a committed hooks folder plus
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>core.hooksPath</code
-				>:
+				<Code code="core.hooksPath" />:
 			</p>
 
 			<CodeBlock
@@ -526,10 +413,7 @@ git config core.hooksPath .githooks
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				In the JavaScript world, <strong style="color: var(--color-text);">Husky</strong> is the
 				popular tool that automates exactly this — it wires up the hooks path when anyone runs
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">npm install</code
-				>:
+				<Code code="npm install" />:
 			</p>
 
 			<CodeBlock
@@ -545,57 +429,37 @@ echo "npm run lint && npm test" > .husky/pre-commit`}
 			<Callout type="note">
 				Fine print: pre-commit hooks run against your <em>working tree</em>, not the staged
 				snapshot. If you stage only part of a file with
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add -p</code
-				>, the tests pass on code that isn't what you're committing. Tools like
+				<Code code="git add -p" />, the tests pass on code that isn't what you're committing. Tools
+				like
 				<strong>lint-staged</strong> exist to close exactly that gap.
 			</Callout>
 
 			<Callout type="important">
 				<strong>Hooks fire on agent commits too.</strong> When Claude Code, Cursor, or any AI agent
 				runs
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
-				>, your pre-commit and commit-msg hooks run exactly as if you'd typed the command yourself.
-				This is how you enforce standards on AI-authored code
+				<Code code="git commit" />, your pre-commit and commit-msg hooks run exactly as if you'd
+				typed the command yourself. This is how you enforce standards on AI-authored code
 				<em>without trusting the AI to remember</em> — the agent literally cannot commit failing code
 				or a sloppy message. Better yet, agents read the error output and usually fix the problem and
 				retry on their own.
 			</Callout>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				One escape hatch to know about: <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git commit --no-verify</code
-				>
+				One escape hatch to know about: <Code code="git commit --no-verify" />
 				skips the pre-commit and commit-msg hooks entirely. It exists for genuine emergencies — a broken
 				hook blocking a critical hotfix — but use it sparingly. Every
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-verify</code
-				> is a hole in your safety net, and it's a habit you especially don't want your agents learning.
+				<Code code="--no-verify" /> is a hole in your safety net, and it's a habit you especially don't
+				want your agents learning.
 			</p>
 
 			<Callout type="important">
 				<strong>Which means: client hooks are seatbelts, not laws.</strong> Anything that can run
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git commit</code
-				>
+				<Code code="git commit" />
 				can also run it with
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-verify</code
-				>
+				<Code code="--no-verify" />
 				— and agents do learn that trick from error loops. The layer nothing can skip lives on the
 				<em>server</em>: branch protection rulesets on
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>
+				<Code code="main" />
 				(require a PR, require passing CI, require an approval — section 3.3). Hooks catch problems in
 				seconds on the developer's machine; the ruleset is the law at the gate. Use both.
 			</Callout>
@@ -618,9 +482,9 @@ echo "npm run lint && npm test" > .husky/pre-commit`}
 				Try It: The Hooks Say No
 			</h4>
 			<PlaygroundNote>
-				This repo has (simulated) husky hooks installed. An agent left a <code>BREAKPOINT</code> in
-				<code>src/app.py</code> — try to commit it and watch pre-commit block you, then get vetoed by
-				commit-msg for a sloppy message. Fix both properly.
+				This repo has (simulated) husky hooks installed. An agent left a <Code code="BREAKPOINT" /> in
+				<Code code="src/app.py" /> — try to commit it and watch pre-commit block you, then get vetoed
+				by commit-msg for a sloppy message. Fix both properly.
 			</PlaygroundNote>
 			<LessonActivity title="Hooks: Mechanical Guardrails" scenarioId="hooks" id="hooks" />
 
@@ -651,21 +515,17 @@ echo "npm run lint && npm test" > .husky/pre-commit`}
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
 				Here's the endgame scenario: you want Agent A refactoring the auth module while Agent B
 				builds the payments feature — in the same repository, at the same time. If both agents share
-				one working directory, they'll trample each other's files, and every <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git switch</code
-				> by one agent yanks the floor out from under the other. Worktrees solve this.
+				one working directory, they'll trample each other's files, and every <Code
+					code="git switch"
+				/> by one agent yanks the floor out from under the other. Worktrees solve this.
 			</p>
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
 				A <strong style="color: var(--color-text);">worktree</strong> is an extra working directory
 				attached to the same repository. All worktrees share one
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
-				> database — same commits, same branches, same remotes — but each directory has its own checked-out
-				branch, its own files on disk, and its own staging area. Creating one takes a second, because
-				nothing is copied except the files of the branch you check out.
+				<Code code=".git" /> database — same commits, same branches, same remotes — but each directory
+				has its own checked-out branch, its own files on disk, and its own staging area. Creating one
+				takes a second, because nothing is copied except the files of the branch you check out.
 			</p>
 
 			<CodeBlock
@@ -686,11 +546,9 @@ git worktree list
 			/>
 
 			<p class="mt-2 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				If the branch doesn't exist yet, <code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git worktree add -b feature/payments ../proj-payments</code
-				> creates it in one step. Note that a branch can only be checked out in one worktree at a time
+				If the branch doesn't exist yet, <Code
+					code="git worktree add -b feature/payments ../proj-payments"
+				/> creates it in one step. Note that a branch can only be checked out in one worktree at a time
 				— Git enforces this, which is exactly the isolation guarantee you want: two agents can never be
 				editing the same branch's files.
 			</p>
@@ -719,17 +577,12 @@ git worktree list
 			</p>
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
-				A few habits keep this tidy: name each worktree directory after its branch (<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">proj-auth</code
-				>
+				A few habits keep this tidy: name each worktree directory after its branch (<Code
+					code="proj-auth"
+				/>
 				for
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>feature/auth-refactor</code
-				>) so you always know which terminal belongs to which agent, and clean up when a branch
-				merges.
+				<Code code="feature/auth-refactor" />) so you always know which terminal belongs to which
+				agent, and clean up when a branch merges.
 			</p>
 
 			<CodeBlock
@@ -742,42 +595,40 @@ git worktree prune`}
 			/>
 
 			<Callout type="warning">
-				<strong>Two sharp edges.</strong> First, worktrees share the repository — local config (<code
-					style="font-family: var(--font-mono);">.git/config</code
-				>) and the stash list are per-repo, not per-worktree, so a
-				<code style="font-family: var(--font-mono);">git stash</code>
+				<strong>Two sharp edges.</strong> First, worktrees share the repository — local config (<Code
+					code=".git/config"
+				/>) and the stash list are per-repo, not per-worktree, so a
+				<Code code="git stash" />
 				made in one worktree is visible (and poppable) from all of them. Second, always create worktrees
-				<em>outside</em> the main repo folder (<code style="font-family: var(--font-mono);"
-					>../proj-auth</code
-				>, not <code style="font-family: var(--font-mono);">./proj-auth</code>) — a worktree nested
-				inside the repo shows up as an untracked directory, and an agent running
-				<code style="font-family: var(--font-mono);">git add .</code> will sweep it up as a confusing
-				embedded-repo pointer (Git prints a warning — which everyone ignores).
+				<em>outside</em> the main repo folder (<Code code="../proj-auth" />, not <Code
+					code="./proj-auth"
+				/>) — a worktree nested inside the repo shows up as an untracked directory, and an agent
+				running
+				<Code code="git add ." /> will sweep it up as a confusing embedded-repo pointer (Git prints a
+				warning — which everyone ignores).
 			</Callout>
 
 			<Callout type="caution">
 				<strong>The #1 practical gotcha: a fresh worktree is code-only.</strong> It contains the
 				branch's <em>tracked</em> files and nothing else — no
-				<code style="font-family: var(--font-mono);">node_modules/</code>, no
-				<code style="font-family: var(--font-mono);">.venv</code>, no untracked
-				<code style="font-family: var(--font-mono);">.env</code>. Agent B's first command will fail
-				until someone runs the install step there, and two agents starting dev servers will fight
-				over the same port. Budget one setup command per worktree (and a port per agent) into your
-				plan — or into the agent's instructions.
+				<Code code="node_modules/" />, no
+				<Code code=".venv" />, no untracked
+				<Code code=".env" />. Agent B's first command will fail until someone runs the install step
+				there, and two agents starting dev servers will fight over the same port. Budget one setup
+				command per worktree (and a port per agent) into your plan — or into the agent's
+				instructions.
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				And a sign of how central this pattern has become: the agent tools now create worktrees
 				<em>for you</em>. Claude Code has
-				<code style="font-family: var(--font-mono);">claude --worktree</code>
+				<Code code="claude --worktree" />
 				(agents get isolated worktrees under
-				<code style="font-family: var(--font-mono);">.claude/worktrees/</code>, auto-cleaned when
-				untouched), Cursor spins up a worktree per parallel agent, and desktop agent apps do it per
-				session. When you find a mystery directory or a
-				<code style="font-family: var(--font-mono);">worktree-quiet-fox</code> branch, that's what
-				it was —
-				<code style="font-family: var(--font-mono);">git worktree list</code> is how you audit them, and
-				now you know how to clean them up.
+				<Code code=".claude/worktrees/" />, auto-cleaned when untouched), Cursor spins up a worktree
+				per parallel agent, and desktop agent apps do it per session. When you find a mystery
+				directory or a
+				<Code code="worktree-quiet-fox" /> branch, that's what it was —
+				<Code code="git worktree list" /> is how you audit them, and now you know how to clean them up.
 			</p>
 
 			<Callout type="important">
@@ -791,18 +642,12 @@ git worktree prune`}
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				Two monorepo-scale companions worth knowing by name: <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git sparse-checkout set pkg/api</code
-				>
+				Two monorepo-scale companions worth knowing by name: <Code
+					code="git sparse-checkout set pkg/api"
+				/>
 				materializes only the directories an agent actually needs (a worktree per agent, a package per
 				worktree, nothing else on disk), and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git maintenance start</code
-				>
+				<Code code="git maintenance start" />
 				schedules background housekeeping — worth turning on once a fleet of agents starts churning out
 				objects faster than any human team ever did.
 			</p>
@@ -816,7 +661,7 @@ git worktree prune`}
 			</h4>
 			<PlaygroundNote>
 				Give Agent A and Agent B a worktree each, run into the branch-exclusivity guard on purpose,
-				then clean up with <code>git worktree remove</code>. (The playground simulates the
+				then clean up with <Code code="git worktree remove" />. (The playground simulates the
 				bookkeeping — the terminal stays in the main worktree.)
 			</PlaygroundNote>
 			<LessonActivity title="Worktrees: Parallel Agents" scenarioId="worktrees" id="worktrees" />
