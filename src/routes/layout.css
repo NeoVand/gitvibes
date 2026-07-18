@@ -75,6 +75,7 @@
 	--sidebar-width: 280px;
 	--sidebar-collapsed-width: 52px;
 	--header-height: 48px;
+	--panel-reading-width: min(50vw, 44rem);
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 	--font-heading: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -273,9 +274,26 @@ strong {
 @media (max-width: 1023px) {
 	.main-content {
 		margin-left: var(--sidebar-collapsed-width) !important;
+		/* Reading mode is desktop-only: below 1024px panels overlay the page. */
+		margin-right: 0 !important;
 	}
 	.sidebar-drawer {
 		background: var(--color-bg) !important;
+	}
+}
+
+/* Desktop reading mode: an open playground panel RESHAPES the page — the
+   course text reflows into the remaining column instead of being covered,
+   so learners read and practice side by side. */
+@media (min-width: 1024px) {
+	.main-content.reading-mode {
+		margin-right: var(--panel-reading-width);
+	}
+
+	/* Tighter section gutters while sharing the viewport with a panel. */
+	.main-content.reading-mode :where(.px-6) {
+		padding-left: 1rem;
+		padding-right: 1rem;
 	}
 }
 

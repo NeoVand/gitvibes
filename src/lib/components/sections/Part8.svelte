@@ -9,6 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-8" class="py-10">
@@ -30,14 +31,12 @@
 		<p class="mb-4 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
 			Everything so far happened between you, your agent, and your repository. But open any active
 			project on GitHub and you'll see an entourage you didn't create: green checkmarks appearing on
-			every pull request, PRs opened by accounts named <code style="font-family: var(--font-mono);"
-				>dependabot</code
-			>
+			every pull request, PRs opened by accounts named <Code code="dependabot" />
 			and
-			<code style="font-family: var(--font-mono);">release-please</code>, security scans running on
-			a schedule, version numbers bumping themselves. None of it is magic, and none of it is
-			optional knowledge anymore — this machinery is how modern software actually ships, and every
-			piece of it is built from things you already know: branches, commits, PRs, and tags.
+			<Code code="release-please" />, security scans running on a schedule, version numbers bumping
+			themselves. None of it is magic, and none of it is optional knowledge anymore — this machinery
+			is how modern software actually ships, and every piece of it is built from things you already
+			know: branches, commits, PRs, and tags.
 		</p>
 
 		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
@@ -123,11 +122,8 @@ jobs:
 					style="color: var(--color-primary);">section 6.2</a
 				>) run locally — the difference is <em>where</em> and <em>always</em>. A pre-commit hook is
 				a seatbelt you buckle on your own machine, and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-verify</code
-				> unbuckles it. CI runs on a machine nobody can sweet-talk. Hooks are the seatbelt; CI is the
-				law.
+				<Code code="--no-verify" /> unbuckles it. CI runs on a machine nobody can sweet-talk. Hooks are
+				the seatbelt; CI is the law.
 			</p>
 
 			<MermaidDiagram
@@ -155,10 +151,9 @@ jobs:
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
 				The sibling acronym, <strong style="color: var(--color-text);">CD</strong> — Continuous
 				Delivery or Deployment — is what happens <em>after</em> green: code that reaches
-				<code style="font-family: var(--font-mono);">main</code> ships to users automatically. Many
-				projects (including this site) deploy on every merge — a second workflow builds the app and
-				publishes it the moment a PR lands. That immediacy is exactly why the gate in front of main
-				matters: when merging
+				<Code code="main" /> ships to users automatically. Many projects (including this site) deploy
+				on every merge — a second workflow builds the app and publishes it the moment a PR lands. That
+				immediacy is exactly why the gate in front of main matters: when merging
 				<em>is</em> shipping, "we'll fix it before the release" is not a sentence that exists.
 			</p>
 
@@ -212,18 +207,13 @@ jobs:
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
 						Your project stands on dozens of open-source packages, and dependencies age like food,
 						not wine: every one has its own release stream and, occasionally, its own security
-						holes. Dependabot watches all of them and opens PRs on your behalf — branches named <code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>dependabot/npm_and_yarn/...</code
-						>
+						holes. Dependabot watches all of them and opens PRs on your behalf — branches named <Code
+							code="dependabot/npm_and_yarn/..."
+						/>
 						with commits like
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>chore(deps): bump lodash from 4.17.20 to 4.17.21</code
-						>. The elegant part: its PR triggers <em>your</em> CI. The robot proposes, your test suite
-						disposes. If the update breaks the build, you find out in the PR — not in production.
+						<Code code="chore(deps): bump lodash from 4.17.20 to 4.17.21" />. The elegant part: its
+						PR triggers <em>your</em> CI. The robot proposes, your test suite disposes. If the update
+						breaks the build, you find out in the PR — not in production.
 					</p>
 				</div>
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
@@ -244,10 +234,7 @@ jobs:
 						Secret scanning — the leak alarm
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Remember the staged <code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
-						>
+						Remember the staged <Code code=".env" />
 						drama from
 						<a
 							href="#section-2-4"
@@ -285,13 +272,10 @@ updates:
 				Two quieter pieces complete the safety net. The <strong style="color: var(--color-text);"
 					>lockfile</strong
 				>
-				(<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>package-lock.json</code
-				>) pins the exact version of every package <em>and every package's packages</em>, so your
-				laptop, CI, and production all install byte-identical dependencies — it's why the lockfile
-				belongs in Git even though you never edit it by hand. And
+				(<Code code="package-lock.json" />) pins the exact version of every package
+				<em>and every package's packages</em>, so your laptop, CI, and production all install
+				byte-identical dependencies — it's why the lockfile belongs in Git even though you never
+				edit it by hand. And
 				<strong style="color: var(--color-text);">supply-chain pinning</strong>: careful repos
 				reference third-party Actions by full commit hash instead of a friendly tag. You know from
 				<a
@@ -301,10 +285,8 @@ updates:
 				>
 				that a tag is just a movable label — and if an attacker compromises an Action's repo, they can
 				quietly move
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">v4</code
-				> to malicious code. A commit hash can't be moved. Same Git concept, now a security boundary.
+				<Code code="v4" /> to malicious code. A commit hash can't be moved. Same Git concept, now a security
+				boundary.
 			</p>
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
@@ -337,9 +319,9 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 				Try It: Review the Robot's PR
 			</h4>
 			<PlaygroundNote>
-				Dependabot has pushed a branch. Inspect exactly what it wants to change with <code
-					>git diff</code
-				>, merge it, and clean up the branch — the same moves the "Merge" button does for you on
+				Dependabot has pushed a branch. Inspect exactly what it wants to change with <Code
+					code="git diff"
+				/>, merge it, and clean up the branch — the same moves the "Merge" button does for you on
 				GitHub.
 			</PlaygroundNote>
 			<LessonActivity title="Review the Robot's PR" scenarioId="bot-pr" id="bot-pr" />
@@ -357,7 +339,7 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 			<SectionHeader
 				level="section"
 				icon={PackageCheck}
-				title="8.3 Releases on Autopilot: SemVer, Conventional Commits, release-please"
+				title="8.3 Releases on Autopilot: SemVer, Conventional Commits, `release-please`"
 				color="var(--color-primary)"
 			/>
 
@@ -388,10 +370,7 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 			</h4>
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
-				A version like <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">2.4.1</code
-				>
+				A version like <Code code="2.4.1" />
 				reads as
 				<strong style="color: var(--color-text);">major.minor.patch</strong>, and each position
 				carries a promise to whoever upgrades: a <em>patch</em> bump (2.4.1 → 2.4.2) means "bug
@@ -412,15 +391,9 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 					style="color: var(--color-primary);">Part 2</a
 				>
 				you've been writing
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">feat:</code
-				>
+				<Code code="feat:" />
 				and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">fix:</code
-				>
+				<Code code="fix:" />
 				prefixes, and in
 				<a
 					href="#section-6-2"
@@ -428,26 +401,13 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 					style="color: var(--color-primary);">section 6.2</a
 				>
 				a hook started enforcing them. Here's the payoff: those prefixes map straight onto SemVer.
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">fix:</code
-				>
+				<Code code="fix:" />
 				means the next release is at least a patch.
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">feat:</code
-				>
+				<Code code="feat:" />
 				promotes it to a minor. A
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">feat!:</code
-				>
+				<Code code="feat!:" />
 				or a
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>BREAKING CHANGE:</code
-				>
+				<Code code="BREAKING CHANGE:" />
 				footer forces a major. Your commit history stopped being prose and became data — which means a
 				machine can read it.
 			</p>
@@ -461,20 +421,12 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 				release bot) watches main and keeps a running draft of the next release. It reads every
 				conventional commit since the last tag, computes the right version bump, and opens — a pull
 				request. The PR contains exactly two things: an updated
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>CHANGELOG.md</code
-				>
+				<Code code="CHANGELOG.md" />
 				grouping your commits into Features and Bug Fixes, and the version bump. As more commits land
 				on main, the bot quietly amends its own PR. When you decide it's release time, you merge the PR
 				like any other — and the bot tags the commit and publishes a GitHub Release. If you've ever wondered
 				what a commit like
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>chore(main): release 1.1.0 (#42)</code
-				> is: that's someone merging the accountant's paperwork.
+				<Code code="chore(main): release 1.1.0 (#42)" /> is: that's someone merging the accountant's paperwork.
 			</p>
 
 			<MermaidDiagram
@@ -522,9 +474,9 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 				Try It: Be release-please for a Day
 			</h4>
 			<PlaygroundNote>
-				Two conventional commits have landed since <code>v1.0.0</code>. Do the accountant's job by
-				hand exactly once — read the log, write the changelog, commit the paperwork, cut the tag —
-				and you'll never wonder what the bot does again.
+				Two conventional commits have landed since <Code code="v1.0.0" />. Do the accountant's job
+				by hand exactly once — read the log, write the changelog, commit the paperwork, cut the tag
+				— and you'll never wonder what the bot does again.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Be release-please for a Day"

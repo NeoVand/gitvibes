@@ -21,6 +21,7 @@
 	import SectionHeader from '../ui/SectionHeader.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-4" class="py-10">
@@ -100,33 +101,18 @@ git restore src/bad_file.py  # Discard a single file`}
 			/>
 
 			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				One blind spot: <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git restore</code
-				>
+				One blind spot: <Code code="git restore" />
 				only rewinds files Git already tracks. <em>Brand-new</em> files the AI scaffolded are
 				untracked, so they survive it. Preview the leftovers with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git clean -n</code
-				>
+				<Code code="git clean -n" />
 				(a dry run), then delete them with
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git clean -fd</code
-				>.
+				<Code code="git clean -fd" />.
 			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				And one more trick for the road — restore doesn't have to stop at "the last commit." The
 				most common real-world rescue is <em>one file, from an older commit</em>: the AI broke
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>src/parser.py</code
-				>
+				<Code code="src/parser.py" />
 				three commits ago and you only just noticed. No reset, no history surgery:
 			</p>
 
@@ -167,11 +153,8 @@ git restore src/bad_file.py  # Discard a single file`}
 			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				You hit <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-				> a bit too quickly and staged files you didn't mean to include. No worries — unstaging is completely
-				harmless and doesn't touch your code.
+				You hit <Code code="git add ." /> a bit too quickly and staged files you didn't mean to include.
+				No worries — unstaging is completely harmless and doesn't touch your code.
 			</p>
 
 			<div class="my-6">
@@ -184,10 +167,7 @@ git restore src/bad_file.py  # Discard a single file`}
 
 			<Callout type="note">
 				<strong>The Problem:</strong> You used
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-				>
+				<Code code="git add ." />
 				and accidentally staged a file with a bad AI change. You need to "unstage" it.
 			</Callout>
 
@@ -223,10 +203,10 @@ git restore src/bad_file.py  # Discard a single file`}
 				Try It: Unstage Dangerous Files
 			</h4>
 			<PlaygroundNote>
-				You ran <code>git add .</code> too quickly and staged <code>.env</code> with credentials and
-				a debug file. Unstage them with <code>git restore --staged</code> before committing — then
-				remember the permanent fix from Part 2: add them to <code>.gitignore</code> so the next
-				<code>git add .</code> can't stage them again.
+				You ran <Code code="git add ." /> too quickly and staged <Code code=".env" /> with credentials
+				and a debug file. Unstage them with <Code code="git restore --staged" /> before committing — then
+				remember the permanent fix from Part 2: add them to <Code code=".gitignore" /> so the next
+				<Code code="git add ." /> can't stage them again.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Unstage Secrets & Debug Files"
@@ -296,11 +276,8 @@ git commit --amend`}
 				>
 				— either it was never pushed, or it lives on your own personal branch and you follow up with a
 				careful
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>--force-with-lease</code
-				> push (see section 4.6). If teammates may have pulled the commit, don't amend — revert instead.
+				<Code code="--force-with-lease" /> push (see section 4.6). If teammates may have pulled the commit,
+				don't amend — revert instead.
 			</Callout>
 
 			<VibeBox
@@ -352,10 +329,7 @@ git commit --amend`}
 			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
 				"Remove," not quite "delete": the commits vanish from your branch, but Git keeps them around
 				for ~30 days and the reflog (section 4.9) can bring them back. The truly unrecoverable loss
-				is different — see the <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--hard</code
-				> card below.
+				is different — see the <Code code="--hard" /> card below.
 			</p>
 
 			<h4 class="mt-6 mb-3 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -365,8 +339,7 @@ git commit --amend`}
 			<div class="mb-4 space-y-3">
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-important);">
-						<code class="text-xs" style="font-family: var(--font-mono);">--soft</code>: Keep changes
-						staged
+						<Code code="--soft" />: Keep changes staged
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Deletes commits but keeps changes in the Staging Area. Useful for "squashing" commits
@@ -375,8 +348,7 @@ git commit --amend`}
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-warning);">
-						<code class="text-xs" style="font-family: var(--font-mono);">--mixed</code> (default): Keep
-						changes unstaged
+						<Code code="--mixed" /> (default): Keep changes unstaged
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Deletes commits but keeps changes in the Working Directory (unstaged).
@@ -384,25 +356,20 @@ git commit --amend`}
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
-						<code class="text-xs" style="font-family: var(--font-mono);">--hard</code>: Destroy
-						everything
+						<Code code="--hard" />: Destroy everything
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Removes commits AND all code changes. Your files reset to the older commit's state —
 						including any <strong>uncommitted</strong> work sitting in your working tree, which is
 						the one thing the reflog can <em>never</em> bring back. Run
-						<code class="text-xs" style="font-family: var(--font-mono);">git status</code> first; if it
-						isn't clean, stash or commit before you reset.
+						<Code code="git status" /> first; if it isn't clean, stash or commit before you reset.
 					</p>
 				</div>
 			</div>
 
 			<Callout type="caution">
 				<strong>CRITICAL:</strong>
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
-				>
+				<Code code="git reset" />
 				rewrites history. Never use this on a branch your teammates have already pulled. This is for
 				<strong>local cleanup only</strong>.
 			</Callout>
@@ -439,18 +406,13 @@ git commit --amend`}
 
 			<Callout type="caution">
 				<strong>The Problem:</strong> You pushed a bad AI-generated commit. It's on
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>. Your teammates have already pulled it.
+				<Code code="main" />. Your teammates have already pulled it.
 			</Callout>
 
 			<p class="mb-3" style="color: var(--color-text-secondary);">
 				<strong style="color: var(--color-caution);">The WRONG Solution:</strong> You cannot use
-				<code
-					class="rounded px-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
-				>. It rewrites history that others have, causing repository divergence.
+				<Code code="git reset" />. It rewrites history that others have, causing repository
+				divergence.
 			</p>
 
 			<p class="mb-4" style="color: var(--color-text-secondary);">
@@ -479,11 +441,9 @@ git push                    # Push the revert`}
 			/>
 
 			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
-				Without <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-edit</code
-				>, Git opens your editor so you can customize the revert message — fine once you expect it,
-				startling the first time (especially if that editor turns out to be vim).
+				Without <Code code="--no-edit" />, Git opens your editor so you can customize the revert
+				message — fine once you expect it, startling the first time (especially if that editor turns
+				out to be vim).
 			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -547,17 +507,10 @@ git push                    # Push the revert`}
 
 			<Callout type="warning">
 				<strong>The Problem:</strong> You used
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git reset</code
-				>
+				<Code code="git reset" />
 				or
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git commit --amend</code
-				> on a branch you already pushed. Local and remote history have diverged. Git refuses to let you
-				push.
+				<Code code="git commit --amend" /> on a branch you already pushed. Local and remote history have
+				diverged. Git refuses to let you push.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -567,7 +520,7 @@ git push                    # Push the revert`}
 			<div class="mb-4 grid gap-3 sm:grid-cols-2">
 				<div class="rounded-lg p-4" style="background: var(--color-caution-bg);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-caution);">
-						<code class="text-xs" style="font-family: var(--font-mono);">git push --force</code>
+						<Code code="git push --force" />
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Replaces the server unconditionally. If a teammate pushed in the last 5 minutes, you
@@ -576,9 +529,7 @@ git push                    # Push the revert`}
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-tip-bg);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-tip);">
-						<code class="text-xs" style="font-family: var(--font-mono);"
-							>git push --force-with-lease</code
-						>
+						<Code code="git push --force-with-lease" />
 					</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
 						Conditional force push. Only succeeds if the remote branch hasn't changed since your
@@ -592,43 +543,28 @@ git push                    # Push the revert`}
 					style="color: var(--color-text);">what you last fetched</strong
 				>
 				— so run
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git fetch</code
-				> first, review what changed on the remote, and only then push.
+				<Code code="git fetch" /> first, review what changed on the remote, and only then push.
 			</p>
 
 			<Callout type="caution">
 				<strong>And one trap:</strong> anything that fetches in the background quietly renews the
-				lease. VS Code's autofetch (<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git.autofetch</code
-				>), GitLens, and other IDE tooling can fetch every minute — after which
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>--force-with-lease</code
-				>
+				lease. VS Code's autofetch (<Code code="git.autofetch" />), GitLens, and other IDE tooling
+				can fetch every minute — after which
+				<Code code="--force-with-lease" />
 				passes even though you never <em>looked</em> at what arrived. The lease proves the remote hasn't
 				changed since the last fetch — it can't prove you reviewed it. Fetch, read, then push.
 			</Callout>
 			<Callout type="caution">
 				<strong>What does the error look like?</strong> When you try to push after rewriting
 				history, Git will reject it with:
-				<code
-					class="mt-1 block rounded px-2 py-1 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>! [rejected] (non-fast-forward) — hint: Updates were rejected because the tip of your
-					current branch is behind</code
-				>
+				<Code
+					code="! [rejected] (non-fast-forward) — hint: Updates were rejected because the tip of your current branch is behind"
+				/>
 				This is Git protecting you. But careful — the full hint goes on to suggest
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git pull</code
-				>, and after a deliberate amend or reset that's exactly wrong: pulling merges the old commit
-				right back in, recreating the mess you just cleaned up. When <em>you</em> rewrote the history
-				on purpose, the answer is the lease push, not a pull. Try it yourself below:
+				<Code code="git pull" />, and after a deliberate amend or reset that's exactly wrong:
+				pulling merges the old commit right back in, recreating the mess you just cleaned up. When
+				<em>you</em> rewrote the history on purpose, the answer is the lease push, not a pull. Try it
+				yourself below:
 			</Callout>
 
 			<h4
@@ -639,11 +575,11 @@ git push                    # Push the revert`}
 				Try It: Reset and Force Push
 			</h4>
 			<PlaygroundNote>
-				Your feature branch has two bad commits already pushed. Use <code
-					>git reset --hard HEAD~2</code
-				>
-				to go back, watch a plain <code>git push</code> get rejected, then overwrite the remote with
-				<code>git push --force-with-lease</code>. Never do this on shared branches!
+				Your feature branch has two bad commits already pushed. Use <Code
+					code="git reset --hard HEAD~2"
+				/>
+				to go back, watch a plain <Code code="git push" /> get rejected, then overwrite the remote with
+				<Code code="git push --force-with-lease" />. Never do this on shared branches!
 			</PlaygroundNote>
 			<LessonActivity title="Reset and Force Push" scenarioId="force-push" id="force-push" />
 
@@ -701,9 +637,7 @@ git push                    # Push the revert`}
 					<tbody style="color: var(--color-text-secondary);">
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">AI's change is bad, not committed</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git restore .</code></td
-							>
+							<td class="px-3 py-2"><Code code="git restore ." /></td>
 							<td class="px-3 py-2"
 								>Discards edits to tracked files (new untracked files survive — see git clean)</td
 							>
@@ -712,11 +646,7 @@ git push                    # Push the revert`}
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">One file broke several commits ago</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);"
-									>git restore --source=HEAD~3 &lt;file&gt;</code
-								></td
-							>
+							<td class="px-3 py-2"><Code code="git restore --source=HEAD~3 <file>" /></td>
 							<td class="px-3 py-2"
 								>Brings back that file's old content; history and other files untouched</td
 							>
@@ -725,20 +655,14 @@ git push                    # Push the revert`}
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">File staged by accident</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);"
-									>git restore --staged &lt;file&gt;</code
-								></td
-							>
+							<td class="px-3 py-2"><Code code="git restore --staged <file>" /></td>
 							<td class="px-3 py-2">Unstages a file, moving it from Staging back to Changes</td>
 							<td class="px-3 py-2"><span style="color: var(--color-tip);">Safe (Local)</span></td>
 							<td class="px-3 py-2">Right-click staged file → "Unstage Changes"</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Typo in last commit message</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git commit --amend</code></td
-							>
+							<td class="px-3 py-2"><Code code="git commit --amend" /></td>
 							<td class="px-3 py-2">Edits the message of the most recent commit</td>
 							<td class="px-3 py-2"
 								><span style="color: var(--color-tip);">Safe (if not pushed yet)</span></td
@@ -748,9 +672,9 @@ git push                    # Push the revert`}
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Forgot a file in last commit</td>
 							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git add &lt;file&gt;</code><br /><code
-									style="font-family: var(--font-mono);">git commit --amend --no-edit</code
-								></td
+								><Code code="git add <file>" /><br /><Code
+									code="git commit --amend --no-edit"
+								/></td
 							>
 							<td class="px-3 py-2">Adds new files to the most recent commit</td>
 							<td class="px-3 py-2"
@@ -760,9 +684,7 @@ git push                    # Push the revert`}
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Last 3 local commits are bad</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git reset --hard HEAD~3</code></td
-							>
+							<td class="px-3 py-2"><Code code="git reset --hard HEAD~3" /></td>
 							<td class="px-3 py-2"
 								>Removes the last 3 commits and all their code changes (reflog can recover the
 								commits)</td
@@ -776,9 +698,9 @@ git push                    # Push the revert`}
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Commits "vanished" after a hard reset</td>
 							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git reflog</code><br /><code
-									style="font-family: var(--font-mono);">git reset --hard HEAD@&#123;1&#125;</code
-								></td
+								><Code code="git reflog" /><br /><Code
+									code="git reset --hard HEAD@&#123;1&#125;"
+								/></td
 							>
 							<td class="px-3 py-2"
 								>Finds the lost commit in the reflog and moves the branch back</td
@@ -788,9 +710,7 @@ git push                    # Push the revert`}
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Pushed a bug to the team</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git revert &lt;hash&gt;</code></td
-							>
+							<td class="px-3 py-2"><Code code="git revert <hash>" /></td>
 							<td class="px-3 py-2">Creates a new commit that is the inverse of the bad one</td>
 							<td class="px-3 py-2"
 								><span style="color: var(--color-tip);">100% Safe (Public)</span></td
@@ -799,9 +719,7 @@ git push                    # Push the revert`}
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Reset a public branch, need to push</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git push --force-with-lease</code></td
-							>
+							<td class="px-3 py-2"><Code code="git push --force-with-lease" /></td>
 							<td class="px-3 py-2">Forcefully overwrites remote, only if no one else pushed</td>
 							<td class="px-3 py-2"
 								><span style="color: var(--color-caution);">Enterprise "Break Glass"</span></td
@@ -811,9 +729,7 @@ git push                    # Push the revert`}
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Stuck in "detached HEAD"</td>
 							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git switch main</code><br /><code
-									style="font-family: var(--font-mono);">git switch -c keep-this</code
-								></td
+								><Code code="git switch main" /><br /><Code code="git switch -c keep-this" /></td
 							>
 							<td class="px-3 py-2"
 								>Reattaches HEAD to a branch — create one first if you made commits to keep (see
@@ -834,17 +750,10 @@ git push                    # Push the revert`}
 				Try It: The Undo Toolkit
 			</h4>
 			<PlaygroundNote>
-				The playground includes <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git revert HEAD</code
-				>
+				The playground includes <Code code="git revert HEAD" />
 				and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git commit --amend</code
-				>. Try reverting the pushed bad commit, then amending after staging a fix.
+				<Code code="git commit --amend" />. Try reverting the pushed bad commit, then amending after
+				staging a fix.
 			</PlaygroundNote>
 			<LessonActivity title="Undo Operations" scenarioId="undo" id="undo" />
 		</div>
@@ -854,7 +763,7 @@ git push                    # Push the revert`}
 			<SectionHeader
 				level="section"
 				icon={Compass}
-				title="4.8 Detached HEAD — Time Travel Safely"
+				title="4.8 Detached `HEAD` — Time Travel Safely"
 				color="var(--color-primary)"
 			/>
 
@@ -875,18 +784,10 @@ git push                    # Push the revert`}
 
 			<Callout type="note">
 				<strong>The Problem:</strong> You ran
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git checkout a1b2c3d</code
-				>
+				<Code code="git checkout a1b2c3d" />
 				(or
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git checkout HEAD~2</code
-				>) to inspect an old version. Git warns about a "detached HEAD" and you're not sure if you
-				broke something.
+				<Code code="git checkout HEAD~2" />) to inspect an old version. Git warns about a "detached
+				HEAD" and you're not sure if you broke something.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -909,10 +810,7 @@ cat src/app.py           # Look around — reading is 100% safe`}
 				at them anymore and they become <strong style="color: var(--color-text);">orphaned</strong>.
 				They don't disappear instantly (the reflog still remembers them — see section 4.9), but they
 				vanish from
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git log</code
-				> and real Git will eventually garbage-collect them.
+				<Code code="git log" /> and real Git will eventually garbage-collect them.
 			</p>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -931,11 +829,7 @@ git switch main`}
 			<Callout type="tip">
 				Think of detached HEAD as a <strong>read-only visit to the past</strong>. Inspect freely,
 				run things, compare files. The instant you want to keep new work, run
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git switch -c &lt;branch&gt;</code
-				> — and even if you forget, the reflog is your safety net.
+				<Code code="git switch -c <branch>" /> — and even if you forget, the reflog is your safety net.
 			</Callout>
 
 			<h4
@@ -946,9 +840,9 @@ git switch main`}
 				Try It: Time-Travel and Escape
 			</h4>
 			<PlaygroundNote>
-				Version 0.4 is misbehaving. Use <code>git checkout HEAD~2</code> to visit version 0.2,
-				inspect <code>src/app.py</code>, then escape — <code>git switch -c inspect-v02</code> to
-				keep a foothold, or <code>git switch main</code> to return to the present.
+				Version 0.4 is misbehaving. Use <Code code="git checkout HEAD~2" /> to visit version 0.2, inspect
+				<Code code="src/app.py" />, then escape — <Code code="git switch -c inspect-v02" /> to keep a
+				foothold, or <Code code="git switch main" /> to return to the present.
 			</PlaygroundNote>
 			<LessonActivity
 				title="Try it: Time-travel and escape"
@@ -974,11 +868,7 @@ git switch main`}
 			/>
 
 			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				The agent ran <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git reset --hard</code
-				>
+				The agent ran <Code code="git reset --hard" />
 				and the log now looks like two days of work never happened. Before you panic: those commits are
 				<strong style="color: var(--color-text);">not gone</strong>. Git keeps a private journal of
 				every place HEAD has ever been — the
@@ -996,17 +886,11 @@ git switch main`}
 			<Callout type="note">
 				<strong>The Problem:</strong> A hard reset (or a botched rebase, or an agent gone rogue)
 				erased commits from
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git log</code
-				>. You need them back.
+				<Code code="git log" />. You need them back.
 			</Callout>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git log</code
-				>
+				<Code code="git log" />
 				only shows commits <strong style="color: var(--color-text);">reachable</strong> from your
 				branches. The reflog shows
 				<strong style="color: var(--color-text);">everywhere HEAD has moved</strong>, reachable or
@@ -1024,24 +908,12 @@ a9f8e21 HEAD@{0}: reset: moving to HEAD~2         <- where you are NOW
 			/>
 
 			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>{'HEAD@{n}'}</code
-				>
+				<Code code={'HEAD@{n}'} />
 				means "where HEAD was <em>n</em> moves ago" —
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>{'HEAD@{0}'}</code
-				>
+				<Code code={'HEAD@{0}'} />
 				is now,
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>{'HEAD@{1}'}</code
-				> is one move back. Each line also shows the short hash, so you have two ways to name any point
-				in time. Pick your recovery recipe:
+				<Code code={'HEAD@{1}'} /> is one move back. Each line also shows the short hash, so you have
+				two ways to name any point in time. Pick your recovery recipe:
 			</p>
 
 			<CodeBlock
@@ -1066,25 +938,15 @@ git switch -c rescue 4c7d3b9`}
 			</Callout>
 
 			<Callout type="tip">
-				This completes the undo toolkit from the recovery matrix in section 4.7: <code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">restore</code
-				>
+				This completes the undo toolkit from the recovery matrix in section 4.7: <Code
+					code="restore"
+				/>
 				for the working directory,
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">revert</code
-				>
+				<Code code="revert" />
 				for public history,
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">reset</code
-				>
+				<Code code="reset" />
 				for local history — and
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">reflog</code
-				> when a reset itself was the mistake.
+				<Code code="reflog" /> when a reset itself was the mistake.
 			</Callout>
 
 			<h4
@@ -1095,9 +957,9 @@ git switch -c rescue 4c7d3b9`}
 				Try It: Rescue Lost Commits
 			</h4>
 			<PlaygroundNote>
-				An agent ran <code>git reset --hard HEAD~2</code> and two commits vanished. Run
-				<code>git reflog</code>
-				to find where HEAD was before the reset, then <code>{'git reset --hard HEAD@{1}'}</code> to bring
+				An agent ran <Code code="git reset --hard HEAD~2" /> and two commits vanished. Run
+				<Code code="git reflog" />
+				to find where HEAD was before the reset, then <Code code={'git reset --hard HEAD@{1}'} /> to bring
 				everything back.
 			</PlaygroundNote>
 			<LessonActivity
@@ -1116,10 +978,7 @@ git switch -c rescue 4c7d3b9`}
 			<p class="mt-8 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				The reflog answers "where did my commits <em>go</em>?" Its sibling question — "which commit
 				<em>broke</em> this?" — has its own tool:
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git bisect</code
-				>
+				<Code code="git bisect" />
 				binary-searches your history. Mark one commit as bad and one as good, and Git checks out midpoints
 				for you to test — 1,000 commits take ten rounds, not a thousand. In the agent era this is the
 				tool for "somewhere in the bot's forty commits, the tests started failing."
@@ -1133,9 +992,10 @@ git switch -c rescue 4c7d3b9`}
 				Try It: Find the Bad Commit
 			</h4>
 			<PlaygroundNote>
-				The tests fail on <code>main</code> but passed at <code>v1.0</code>, eight commits ago. Use
-				<code>git bisect</code> plus the <code>run-tests</code> command to pin down the culprit in three
-				rounds instead of eight.
+				The tests fail on <Code code="main" /> but passed at <Code code="v1.0" />, eight commits
+				ago. Use
+				<Code code="git bisect" /> plus the <Code code="run-tests" /> command to pin down the culprit
+				in three rounds instead of eight.
 			</PlaygroundNote>
 			<LessonActivity title="Bisect: Binary-Search the History" scenarioId="bisect" id="bisect" />
 

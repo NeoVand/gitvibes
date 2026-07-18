@@ -1,10 +1,19 @@
 <script lang="ts">
-	import { Gamepad2, ScrollText, Download, FolderGit2, HelpCircle, History } from 'lucide-svelte';
+	import {
+		Gamepad2,
+		ScrollText,
+		Download,
+		FolderGit2,
+		HelpCircle,
+		History,
+		Terminal
+	} from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import Callout from '../ui/Callout.svelte';
+	import Code from '../ui/Code.svelte';
 
 	let {
 		onOpenPlayground
@@ -13,6 +22,8 @@
 	} = $props();
 
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
+
+	const stats = ['9 parts', '22 playgrounds', '100% free', 'No signup'];
 
 	const gitTimeline = [
 		{
@@ -63,6 +74,17 @@
 			hands-on. Two companions will follow you through all nine parts:
 		</p>
 
+		<div class="mb-5 flex flex-wrap gap-2">
+			{#each stats as stat (stat)}
+				<span
+					class="rounded-full px-3.5 py-1.5 text-[12px] font-semibold"
+					style="background: var(--color-surface); color: var(--color-primary-text); border: 1px solid var(--color-border);"
+				>
+					{stat}
+				</span>
+			{/each}
+		</div>
+
 		<div class="space-y-3">
 			<div
 				class="flex items-start gap-3 rounded-lg px-5 py-4 text-left"
@@ -101,6 +123,26 @@
 					to search, or open the
 					<strong style="color: var(--color-text);">Git Cheat Sheet</strong>
 					from the header for a complete command reference.
+				</p>
+			</div>
+
+			<div
+				class="flex items-start gap-3 rounded-lg px-5 py-4 text-left"
+				style="background: var(--color-note-bg);"
+			>
+				<Terminal size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-note);" />
+				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
+					<strong style="color: var(--color-text);">New to the terminal?</strong> This guide only
+					assumes you can open one and type a command. If even that feels foreign,
+					<a
+						href="https://neovand.github.io/terminalvibes/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="font-medium underline underline-offset-2"
+						style="color: var(--color-note);">TerminalVibes</a
+					>
+					— GitVibes' sister course — teaches the command line from zero, in the same style with the same
+					in-browser playgrounds. Start there, then come back; Git lives in the terminal.
 				</p>
 			</div>
 		</div>
@@ -334,10 +376,9 @@
 					title="Install via winget"
 				/>
 				<p class="text-[14px]" style="color: var(--color-text-secondary);">
-					After installation, restart your terminal (or VS Code) so it picks up the new <code
-						class="rounded px-1.5 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">git</code
-					> command.
+					After installation, restart your terminal (or VS Code) so it picks up the new <Code
+						code="git"
+					/> command.
 				</p>
 			{:else}
 				<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -382,10 +423,8 @@ sudo pacman -S git`}
 		<p class="mb-4 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 			A <strong style="color: var(--color-text);">repository</strong> (or "repo") is simply a
 			project folder that Git is tracking. Inside it, Git maintains a hidden
-			<code
-				class="rounded px-1.5 py-0.5 text-xs"
-				style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
-			> folder that stores the entire history of every file — every change, by whom, and when.
+			<Code code=".git" /> folder that stores the entire history of every file — every change, by whom,
+			and when.
 		</p>
 
 		<div class="my-6">

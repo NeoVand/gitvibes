@@ -7,6 +7,7 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-7" class="py-10">
@@ -84,9 +85,8 @@
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Changes</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
-						Your working directory (<code class="text-xs" style="font-family: var(--font-mono);"
-							>git status</code
-						>). Modified and untracked files appear here.
+						Your working directory (<Code code="git status" />). Modified and untracked files appear
+						here.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
@@ -100,9 +100,8 @@
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">
 					<p class="mb-1 text-[13px] font-semibold" style="color: var(--color-text);">Commit Box</p>
 					<p class="text-xs" style="color: var(--color-text-secondary);">
-						Your <code class="text-xs" style="font-family: var(--font-mono);"
-							>git commit -m "..."</code
-						>. Type the message and click the checkmark.
+						Your <Code code="git commit -m &quot;...&quot;" />. Type the message and click the
+						checkmark.
 					</p>
 				</div>
 				<div class="rounded-lg p-4" style="background: var(--color-bg-secondary);">

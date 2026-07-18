@@ -7,6 +7,7 @@
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 </script>
 
 <section id="part-1" class="py-10">
@@ -22,20 +23,14 @@
 			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
 			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
 		>
-			"Every great journey begins with a single <code
-				class="rounded px-1.5 py-0.5 text-sm not-italic"
-				style="background: var(--color-code-bg); font-family: var(--font-mono);">git clone</code
-			>."
+			"Every great journey begins with a single <Code code="git clone" />."
 		</blockquote>
 
 		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
 			Before you write your first line of code — or prompt your first AI — you need Git set up and
 			talking to your team's repository. This is a one-time ritual: configure your identity,
 			authenticate, and clone. Do it once and it mostly stays done (expiring tokens are the one
-			exception — SSH keys and <code
-				class="rounded px-1.5 py-0.5 text-sm"
-				style="background: var(--color-code-bg); font-family: var(--font-mono);">gh</code
-			> sign-in are the true set-and-forget paths).
+			exception — SSH keys and <Code code="gh" /> sign-in are the true set-and-forget paths).
 		</p>
 
 		<!-- 1.1 Git Config -->
@@ -78,10 +73,8 @@ git config --global user.email "your-enterprise-email@company.com"`}
 			/>
 
 			<Callout type="tip">
-				The <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">--global</code
-				> flag saves this for every Git repository on your computer. You only need to do this once.
+				The <Code code="--global" /> flag saves this for every Git repository on your computer. You only
+				need to do this once.
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -189,10 +182,7 @@ git config --global pull.rebase true`}
 				</li>
 				<li>
 					Under <strong>Permissions</strong>, set
-					<code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);">Contents</code
-					>
+					<Code code="Contents" />
 					to <strong>Read and write</strong>
 				</li>
 				<li>
@@ -203,16 +193,10 @@ git config --global pull.rebase true`}
 			<Callout type="note">
 				Some organizations still use the older <strong>classic tokens</strong> (same page, under
 				"Tokens (classic)" — select the
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">repo</code
-				>
+				<Code code="repo" />
 				scope; add
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">read:org</code
-				> only if you'll also sign in the gh CLI with it). If your team tells you to use one, the rest
-				of the workflow is identical.
+				<Code code="read:org" /> only if you'll also sign in the gh CLI with it). If your team tells you
+				to use one, the rest of the workflow is identical.
 			</Callout>
 
 			<CodeBlock
@@ -245,14 +229,8 @@ git config --global credential.helper cache`}
 				On macOS and Windows a helper is usually <em>already configured</em> by the installer — run
 				these only if Git keeps re-prompting for your token. On Linux there's no default: install
 				<strong>Git Credential Manager</strong> (or use
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">cache</code
-				>). You may see older guides suggest
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">libsecret</code
-				>
+				<Code code="cache" />). You may see older guides suggest
+				<Code code="libsecret" />
 				— on Debian/Ubuntu that helper ships as source code you'd have to compile first, so it fails out
 				of the box. Once a helper is set, Git prompts you once and saves the credentials.
 			</Callout>
@@ -289,16 +267,9 @@ ssh-add ~/.ssh/id_ed25519`}
 			<Callout type="caution">
 				<strong>Make it survive a reboot (macOS):</strong> without a config file, the agent forgets
 				your key when you restart — and SSH auth mysteriously breaks days later. Create
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>~/.ssh/config</code
-				>
+				<Code code="~/.ssh/config" />
 				with the lines below (on Linux, drop the
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">UseKeychain</code
-				> line):
+				<Code code="UseKeychain" /> line):
 			</Callout>
 
 			<CodeBlock
@@ -333,11 +304,8 @@ cat ~/.ssh/id_ed25519.pub`}
 			/>
 
 			<Callout type="important">
-				Only ever share the <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.pub</code
-				> file. The private key (the one without an extension) must never leave your machine — treat it
-				like the master key to your accounts.
+				Only ever share the <Code code=".pub" /> file. The private key (the one without an extension)
+				must never leave your machine — treat it like the master key to your accounts.
 			</Callout>
 
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -371,19 +339,10 @@ cat ~/.ssh/id_ed25519.pub`}
 			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
 				In practice, many developers today never copy a token at all. The <strong>GitHub CLI</strong
 				>
-				(<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">gh</code
-				>) is GitHub's official command-line tool. Where
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git</code
-				>
+				(<Code code="gh" />) is GitHub's official command-line tool. Where
+				<Code code="git" />
 				talks to the repository,
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">gh</code
-				>
+				<Code code="gh" />
 				talks to GitHub itself — authentication, pull requests, issues, releases — all without leaving
 				your terminal. Download it from
 				<a
@@ -419,30 +378,13 @@ winget install --id GitHub.cli
 			/>
 
 			<Callout type="tip">
-				Once <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>gh auth login</code
-				>
+				Once <Code code="gh auth login" />
 				succeeds, every
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git clone</code
-				>,
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">pull</code
-				>, and
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">push</code
-				>
+				<Code code="git clone" />,
+				<Code code="pull" />, and
+				<Code code="push" />
 				just works — and you get bonus commands like
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>gh pr create</code
-				> to open a pull request straight from your terminal.
+				<Code code="gh pr create" /> to open a pull request straight from your terminal.
 			</Callout>
 
 			<p class="mt-5 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
@@ -462,20 +404,12 @@ winget install --id GitHub.cli
 				Enterprise Cloud, a working token or SSH key is <em>not enough</em> — it must also be
 				explicitly <strong>authorized for your organization</strong>, or every clone fails with the
 				famously misleading
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>repository not found</code
-				>
+				<Code code="repository not found" />
 				(the repo exists; your credential just isn't SSO-blessed). The fix takes ten seconds: GitHub →
 				<strong>Settings</strong>
 				→ your token or SSH key → <strong>"Configure SSO"</strong> → Authorize for your org. If day
 				one at a new job ends in
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>ERROR: Repository not found</code
-				>, check this before anything else.
+				<Code code="ERROR: Repository not found" />, check this before anything else.
 			</Callout>
 
 			<VibeBox
@@ -526,21 +460,12 @@ cd your-project   # The clone lands in a NEW folder named after the repo`}
 
 			<p class="mt-3 mb-3 text-[13px]" style="color: var(--color-text-secondary);">
 				That new folder <em>is</em> the repository — specifically, the hidden
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
-				>
+				<Code code=".git" />
 				directory inside it holds the entire history, every branch, all of it. Delete
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">.git</code
-				>
+				<Code code=".git" />
 				and you're left with an ordinary folder of files. (And the #1 "Git is broken!" beginner moment:
 				running git commands from the <em>parent</em> folder — check you actually
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">cd</code
-				>'d in.)
+				<Code code="cd" />'d in.)
 			</p>
 
 			<h4 class="mt-5 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -580,41 +505,22 @@ cd your-project   # The clone lands in a NEW folder named after the repo`}
 			</p>
 
 			<Callout type="note">
-				When you clone, you only get the default branch (e.g., <code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>) checked out. Other branches exist as remote-tracking branches until you explicitly check
-				them out.
+				When you clone, you only get the default branch (e.g., <Code code="main" />) checked out.
+				Other branches exist as remote-tracking branches until you explicitly check them out.
 			</Callout>
 
 			<Callout type="warning">
-				<strong
-					>If you see a <code
-						class="rounded px-1 py-0.5 text-xs"
-						style="background: var(--color-code-bg); font-family: var(--font-mono);"
-						>.gitmodules</code
-					> file, stop and read this.</strong
-				>
+				<strong>If you see a <Code code=".gitmodules" /> file, stop and read this.</strong>
 				The repo uses
 				<strong>submodules</strong> — other Git repositories pinned inside this one. A plain clone
 				leaves those directories <em>empty</em>; you need
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git clone --recurse-submodules &lt;url&gt;</code
-				>
+				<Code code="git clone --recurse-submodules <url>" />
 				(or, after the fact,
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git submodule update --init --recursive</code
-				>). Two rules until you've studied them properly: don't hand-edit inside a submodule
-				directory, and watch AI agents around them — a careless
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">git add .</code
-				> can silently commit a moved submodule pointer, which is a notorious way for agents to break
-				builds.
+				<Code code="git submodule update --init --recursive" />). Two rules until you've studied
+				them properly: don't hand-edit inside a submodule directory, and watch AI agents around them
+				— a careless
+				<Code code="git add ." /> can silently commit a moved submodule pointer, which is a notorious
+				way for agents to break builds.
 			</Callout>
 
 			<VibeBox

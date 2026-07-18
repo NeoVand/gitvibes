@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tokenizeCodeBlock, tokenizeGitCommand } from './git-syntax';
+import { tokenizeCodeBlock, tokenizeGitCommand, tokenizeInlineCode } from './git-syntax';
 
 describe('tokenizeGitCommand', () => {
 	it('types git subcommands, flags, and placeholders', () => {
@@ -82,6 +82,42 @@ describe('shell mode leaves non-command lines plain', () => {
 		const lines = tokenizeCodeBlock(STATUS_OUTPUT, 'shell');
 		const rebuilt = lines.map((line) => line.map((t) => t.text).join('')).join('\n');
 		expect(rebuilt).toBe(STATUS_OUTPUT);
+	});
+});
+
+describe('tokenizeInlineCode', () => {
+	it('command mentions get the full command tokenizer', () => {
+		const tokens = tokenizeInlineCode('git commit -m "msg"');
+		expect(tokens[0].type).toBe('git');
+		expect(tokens.map((t) => t.type)).toContain('flag');
+		const npm = tokenizeInlineCode('npm test');
+		expect(npm[0].type).toBe('command');
+	});
+
+	it('filenames and refs never masquerade as commands', () => {
+		expect(tokenizeInlineCode('.env')).toEqual([{ text: '.env', type: 'arg' }]);
+		expect(tokenizeInlineCode('AGENTS.md')).toEqual([{ text: 'AGENTS.md', type: 'arg' }]);
+		expect(tokenizeInlineCode('feature/payments')).toEqual([
+			{ text: 'feature/payments', type: 'arg' }
+		]);
+	});
+
+	it('flags, refs, and hashes get their classified colors', () => {
+		expect(tokenizeInlineCode('--force-with-lease')).toEqual([
+			{ text: '--force-with-lease', type: 'flag' }
+		]);
+		expect(tokenizeInlineCode('HEAD~1')[0].type).toBe('placeholder');
+		expect(tokenizeInlineCode('a1b2c3d')[0].type).toBe('hash');
+	});
+
+	it('round-trips exactly', () => {
+		for (const s of ['git push -u origin main', 'HEAD@{1}', '.gitignore', 'chore(deps):']) {
+			expect(
+				tokenizeInlineCode(s)
+					.map((t) => t.text)
+					.join('')
+			).toBe(s);
+		}
 	});
 });
 

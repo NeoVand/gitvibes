@@ -7,6 +7,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
+	import Code from '../ui/Code.svelte';
 	import { progress, toggleChecklistItem } from '$lib/data/progress';
 
 	let {
@@ -127,13 +128,9 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Branch</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							Create an isolated branch so the AI can never touch <code
-								style="font-family: var(--font-mono);">main</code
-							>
+							Create an isolated branch so the AI can never touch <Code code="main" />
 							directly.
-							<code style="font-family: var(--font-mono);"
-								>git switch -c ai-experiment/new-feature</code
-							>
+							<Code code="git switch -c ai-experiment/new-feature" />
 						</p>
 					</div>
 				</div>
@@ -145,10 +142,8 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Generate</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							Work with your AI agent to implement the change. With <code
-								style="font-family: var(--font-mono);">AGENTS.md</code
-							> and skills configured, it already knows your branch naming, commit format, and safety
-							rules.
+							Work with your AI agent to implement the change. With <Code code="AGENTS.md" /> and skills
+							configured, it already knows your branch naming, commit format, and safety rules.
 						</p>
 					</div>
 				</div>
@@ -160,8 +155,7 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Review</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							Use <code style="font-family: var(--font-mono);">git add -p</code> or VS Code "Stage Selected
-							Ranges" to review every line.
+							Use <Code code="git add -p" /> or VS Code "Stage Selected Ranges" to review every line.
 						</p>
 					</div>
 				</div>
@@ -173,9 +167,7 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Save</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							<code style="font-family: var(--font-mono);"
-								>git commit -m "feat: &lt;message&gt;"</code
-							> -- Commit small, commit often.
+							<Code code="git commit -m &quot;feat: <message>&quot;" /> -- Commit small, commit often.
 						</p>
 					</div>
 				</div>
@@ -187,8 +179,8 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sync</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							<code style="font-family: var(--font-mono);">git fetch origin</code> followed by
-							<code style="font-family: var(--font-mono);">git rebase origin/main</code>.
+							<Code code="git fetch origin" /> followed by
+							<Code code="git rebase origin/main" />.
 						</p>
 					</div>
 				</div>
@@ -200,8 +192,7 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Push</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							<code style="font-family: var(--font-mono);">git push --force-with-lease</code> if you rebased.
-							Updates remote safely.
+							<Code code="git push --force-with-lease" /> if you rebased. Updates remote safely.
 						</p>
 					</div>
 				</div>
@@ -225,9 +216,9 @@
 					<div>
 						<p class="text-[13px] font-medium" style="color: var(--color-text);">Recover</p>
 						<p class="text-xs" style="color: var(--color-text-muted);">
-							If you push a mistake, never reset a public branch. Always use <code
-								style="font-family: var(--font-mono);">git revert</code
-							>.
+							If you push a mistake, never reset a public branch. Always use <Code
+								code="git revert"
+							/>.
 						</p>
 					</div>
 				</div>
@@ -281,74 +272,52 @@
 					<tbody style="color: var(--color-text-secondary);">
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Check what changed</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git status</code></td
-							>
+							<td class="px-3 py-2"><Code code="git status" /></td>
 							<td class="px-3 py-2">Source Control panel</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Stage specific lines</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git add -p</code></td
-							>
+							<td class="px-3 py-2"><Code code="git add -p" /></td>
 							<td class="px-3 py-2">Stage Selected Ranges</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Commit changes</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git commit -m "feat: ..."</code></td
-							>
+							<td class="px-3 py-2"><Code code="git commit -m &quot;feat: ...&quot;" /></td>
 							<td class="px-3 py-2">Type message + checkmark</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Create new branch</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git switch -c feature/name</code></td
-							>
+							<td class="px-3 py-2"><Code code="git switch -c feature/name" /></td>
 							<td class="px-3 py-2">Click branch name (bottom-left)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Discard local changes</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git restore .</code></td
-							>
+							<td class="px-3 py-2"><Code code="git restore ." /></td>
 							<td class="px-3 py-2">Discard Changes</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Undo last commit (keep)</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git reset --soft HEAD~1</code></td
-							>
+							<td class="px-3 py-2"><Code code="git reset --soft HEAD~1" /></td>
 							<td class="px-3 py-2">... menu: Commit → Undo Last Commit</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Revert public commit</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git revert &lt;hash&gt;</code></td
-							>
+							<td class="px-3 py-2"><Code code="git revert <hash>" /></td>
 							<td class="px-3 py-2">Revert Commit</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Stash work in progress</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git stash push -m "message"</code></td
-							>
+							<td class="px-3 py-2"><Code code="git stash push -m &quot;message&quot;" /></td>
 							<td class="px-3 py-2">... menu: Stash</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Update branch</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);"
-									>git fetch && git rebase origin/main</code
-								></td
-							>
+							<td class="px-3 py-2"><Code code="git fetch && git rebase origin/main" /></td>
 							<td class="px-3 py-2">... menu: Pull (Rebase)</td>
 						</tr>
 						<tr style="border-top: 1px solid var(--color-border);">
 							<td class="px-3 py-2">Safe force push</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git push --force-with-lease</code></td
-							>
+							<td class="px-3 py-2"><Code code="git push --force-with-lease" /></td>
 							<td class="px-3 py-2"
 								>Git: Push (Force With Lease) — needs the git.allowForcePush setting</td
 							>
@@ -395,15 +364,9 @@
 
 			<Callout type="important">
 				<strong>Your mission:</strong> a payment feature was committed straight to
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>, a live Stripe key is sitting <em>staged</em> and one careless commit away from leaking,
-				and the cleaned-up main still needs its
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">v1.0.0</code
-				> release tag. Fix all three, in any order.
+				<Code code="main" />, a live Stripe key is sitting <em>staged</em> and one careless commit
+				away from leaking, and the cleaned-up main still needs its
+				<Code code="v1.0.0" /> release tag. Fix all three, in any order.
 			</Callout>
 
 			<h4
@@ -414,8 +377,8 @@
 				Try It: The Final Challenge
 			</h4>
 			<PlaygroundNote>
-				Start with <code>git status</code> and <code>git log --oneline</code> to survey the damage. A
-				✔ appears in the terminal when all three goals are met — no partial credit.
+				Start with <Code code="git status" /> and <Code code="git log --oneline" /> to survey the damage.
+				A ✔ appears in the terminal when all three goals are met — no partial credit.
 			</PlaygroundNote>
 			<LessonActivity title="The Final Challenge" scenarioId="capstone" id="capstone" />
 
@@ -479,6 +442,26 @@
 				/>
 			</div>
 
+			<div class="mb-5 rounded-lg p-5" style="background: var(--color-note-bg);">
+				<h4 class="mb-1 text-[14px] font-semibold">
+					<a
+						href="https://neovand.github.io/terminalvibes/"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="underline underline-offset-2"
+						style="color: var(--color-note);">TerminalVibes</a
+					>
+					<span style="color: var(--color-text);"> — the sister course</span>
+				</h4>
+				<p class="text-[13px]" style="color: var(--color-text-secondary);">
+					Git lives in the terminal, and the terminal deserves the same treatment this guide gave
+					Git. The sister course teaches bash from zero — navigating, pipes, permissions, scripts,
+					and auditing what AI agents run — with the same in-browser playgrounds and the same
+					no-signup deal. If any command line moment in this course felt shaky, this is where to
+					firm it up.
+				</p>
+			</div>
+
 			<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
 				You've practiced everything here in a real repository — but Git is deep, and the best
 				references are worth knowing by name. These six will cover you from quick lookups to true
@@ -507,11 +490,7 @@
 							style="color: var(--color-primary);">command reference</a
 						>
 						— the same pages
-						<code
-							class="rounded px-1 py-0.5 text-xs"
-							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>git help &lt;command&gt;</code
-						> shows you locally.
+						<Code code="git help <command>" /> shows you locally.
 					</p>
 				</div>
 
@@ -611,11 +590,9 @@
 					>almost nothing you learned is GitHub-specific</strong
 				>. Git itself is decentralized; every clone carries the full history, and the "forge" —
 				GitHub, or any of the sites below — is just the hosting and collaboration layer on top. Even
-				the pull request is a forge invention, not a Git feature. Switching forges is one command (<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git remote set-url origin &lt;new-url&gt;</code
-				>) and a push. The alternatives worth knowing:
+				the pull request is a forge invention, not a Git feature. Switching forges is one command (<Code
+					code="git remote set-url origin <new-url>"
+				/>) and a push. The alternatives worth knowing:
 			</p>
 
 			<div class="mb-4 space-y-3">
@@ -741,11 +718,9 @@
 				is the most credible next-generation version control tool — a Git-compatible frontend that stores
 				real Git commits, so your team never has to know you're using it. It snapshots your working copy
 				automatically (every command is undoable with
-				<code
-					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">jj undo</code
-				>), which is making it popular for agent-heavy workflows. Still pre-1.0 and evolving fast —
-				but everything you learned here transfers, because underneath, it <em>is</em> Git.
+				<Code code="jj undo" />), which is making it popular for agent-heavy workflows. Still
+				pre-1.0 and evolving fast — but everything you learned here transfers, because underneath,
+				it <em>is</em> Git.
 				<a
 					href="https://steveklabnik.github.io/jujutsu-tutorial/"
 					target="_blank"
