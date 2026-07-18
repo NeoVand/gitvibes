@@ -133,12 +133,10 @@ git config --global pull.rebase true`}
 			</p>
 
 			<PlaygroundNote>
-				Every commit records who made it. This sandbox only knows the default identity — run <code
-					>git config user.name "Your Name"</code
-				>
-				(and <code>user.email</code>), then commit the waiting file and check <code>git log</code>:
-				the save point now carries your name. A ✔ appears when the log credits someone other than
-				the default.
+				Every commit records who made it. This sandbox only knows the default identity — run
+				<Code code="git config user.name &quot;Your Name&quot;" /> (and <Code code="user.email" />),
+				then commit the waiting file and check <Code code="git log" />: the save point now carries
+				your name. A ✔ appears when the log credits someone other than the default.
 			</PlaygroundNote>
 			<LessonActivity title="Introduce Yourself to Git" scenarioId="config" id="config" />
 
