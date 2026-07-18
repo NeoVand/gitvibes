@@ -80,6 +80,47 @@ async function fileAtHead(engine: GitEngine, filepath: string): Promise<string |
 
 export const playgroundScenarios: PlaygroundScenario[] = [
 	{
+		id: 'config',
+		title: 'Introduce yourself to Git',
+		description:
+			'Your first playground! This is a real Git repository running in your browser. Every commit records WHO made it — and right now this repo only knows the sandbox default, "Vibe Coder". Set your own identity, make a commit, and watch the log credit you.',
+		hint: 'git config user.name "Your Name" and git config user.email set your identity (--global does the same across the sandbox). git config --list shows what is set. Then stage the waiting file and commit — git log shows exactly who made each save point.',
+		suggestedCommands: [
+			'git log',
+			'git config user.name "Ada Lovelace"',
+			'git config user.email "ada@example.com"',
+			'git config --list',
+			'git add notes.txt',
+			'git commit -m "chore: introduce myself"',
+			'git log'
+		],
+		seed: {
+			commits: [
+				{
+					message: 'Initial commit',
+					files: [
+						{
+							path: 'README.md',
+							content: '# my-first-repo\nA sandbox for meeting Git in person.\n'
+						}
+					]
+				}
+			],
+			workingFiles: [
+				{ path: 'notes.txt', content: 'Git records who, what, and when - for every commit.\n' }
+			]
+		},
+		goal: 'A commit in the log carries YOUR name, not the sandbox default',
+		check: async (engine) => {
+			const oid = await git
+				.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'HEAD' })
+				.catch(() => null);
+			if (!oid) return false;
+			const { commit } = await git.readCommit({ fs: engine.fs, dir: engine.dir, oid });
+			return commit.author.name !== 'Vibe Coder' && commit.author.email !== 'vibe@gitvibes.dev';
+		}
+	},
+	{
 		id: 'core-loop',
 		title: 'AI changed 4 files — review before commit',
 		description:
@@ -737,6 +778,7 @@ export async function loadScenarioSeed(
 }
 
 export const lessonScenarioIds = [
+	'config',
 	'core-loop',
 	'branching',
 	'sync-remote',
@@ -781,6 +823,7 @@ export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
   git cherry-pick <commit> [--abort|--continue]
   git bisect start | good <rev> | bad [<rev>] | reset   (+ run-tests)
   git worktree add <path> <branch> | add -b <new> <path> | list | remove | prune
+  git config [--global] <key> [<value>] | git config --list
   git tag [-a <name> -m "msg"] [<name>] [-d <name>]
   git stash [push [-u] [-m "msg"]] | pop | apply | list | drop | clear  (stash@{n} ok)
   git fetch origin [--prune] | git pull [--rebase] origin <branch>

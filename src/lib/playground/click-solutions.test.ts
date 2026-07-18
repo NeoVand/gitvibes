@@ -20,6 +20,15 @@ import {
  * clicking through them.
  */
 const CLICK_PATHS: Record<LessonScenarioId, string[]> = {
+	config: [
+		'git log',
+		'git config user.name "Ada Lovelace"',
+		'git config user.email "ada@example.com"',
+		'git config --list',
+		'git add notes.txt',
+		'git commit -m "chore: introduce myself"',
+		'git log'
+	],
 	'core-loop': [
 		'git status',
 		'git diff',

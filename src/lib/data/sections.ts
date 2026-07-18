@@ -59,6 +59,7 @@ export const sectionIds = [
  * clean, but deep links and scroll-spy treat them the same way.
  */
 export const playgroundAnchorIds = [
+	'config',
 	'core-loop',
 	'wrong-branch',
 	'sync-remote',
