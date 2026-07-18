@@ -362,6 +362,19 @@ function isCommandLine(code: string): boolean {
 }
 
 /**
+ * Tokenize an inline code mention from prose. Command mentions (`git status`,
+ * `npm test`) get the full command tokenizer so they read exactly like the
+ * terminal renders them; flags get flag color; everything else — filenames,
+ * branch names, refs — stays a single quietly-classified token, so `.env`
+ * never masquerades as a command.
+ */
+export function tokenizeInlineCode(code: string): GitToken[] {
+	if (isCommandLine(code)) return tokenizeGitCommand(code);
+	if (code.startsWith('-')) return [{ text: code, type: 'flag' }];
+	return [{ text: code, type: classifyValue(code) }];
+}
+
+/**
  * Tokenize one line of a code block. In `shell` mode the code portion is
  * highlighted as a command; in `gitignore` mode lines are ignore patterns;
  * in `plain` mode only conflict markers and `#` comments are highlighted
