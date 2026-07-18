@@ -446,6 +446,25 @@ export async function buildWorktreesRepo(engine: GitEngine): Promise<void> {
 }
 
 /** History ready for a release tag, with one previous release tagged */
+export async function buildReleaseRobotRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'README.md', content: '# Data Tools\n' },
+		{ path: 'CHANGELOG.md', content: '## 1.0.0 (2026-07-01)\n\nFirst stable release.\n' },
+		{ path: 'src/cli.py', content: 'def main():\n    pass\n' }
+	]);
+	const v1 = await engine.getCommitOid('main', 0);
+	await git.tag({ fs: engine.fs, dir: engine.dir, ref: 'v1.0.0', object: v1 });
+	await engine.commitFiles('feat: add csv export', [
+		{ path: 'src/export_csv.py', content: 'def export_csv(rows):\n    return rows\n' }
+	]);
+	await engine.commitFiles('fix: handle empty header row', [
+		{
+			path: 'src/export_csv.py',
+			content: 'def export_csv(rows):\n    return [r for r in rows if r]\n'
+		}
+	]);
+}
+
 export async function buildReleaseRepo(engine: GitEngine): Promise<void> {
 	await engine.commitFiles('Initial commit', [{ path: 'README.md', content: '# CLI Tool\n' }]);
 	await engine.commitFiles('feat: add export command', [

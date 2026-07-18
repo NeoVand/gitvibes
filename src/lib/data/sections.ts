@@ -46,7 +46,11 @@ export const sectionIds = [
 	'section-8-1',
 	'section-8-2',
 	'section-8-3',
-	'section-8-4'
+	'part-9',
+	'section-9-1',
+	'section-9-2',
+	'section-9-3',
+	'section-9-4'
 ] as const;
 
 /**
@@ -74,6 +78,8 @@ export const playgroundAnchorIds = [
 	'bisect',
 	'hooks',
 	'worktrees',
+	'bot-pr',
+	'release-robot',
 	'capstone'
 ] as const;
 

@@ -13,6 +13,7 @@
 	import Part6 from '$lib/components/sections/Part6.svelte';
 	import Part7 from '$lib/components/sections/Part7.svelte';
 	import Part8 from '$lib/components/sections/Part8.svelte';
+	import Part9 from '$lib/components/sections/Part9.svelte';
 	import { anchorIds } from '$lib/data/sections';
 	import { markSectionVisited } from '$lib/data/progress';
 	import { decodeSharedFromHash, type SharedSession } from '$lib/playground/share';
@@ -243,7 +244,7 @@
 		'@type': 'Course',
 		name: 'GitVibes — Git for Vibe Coders',
 		description:
-			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, and Git guardrails for AI agents — with 20 hands-on exercises in a real in-browser Git playground.',
+			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 22 hands-on exercises in a real in-browser Git playground.',
 		url: 'https://neovand.github.io/gitvibes/',
 		provider: {
 			'@type': 'Organization',
@@ -257,7 +258,8 @@
 			'Branching and pull requests',
 			'Undoing mistakes (restore, reset, revert, reflog)',
 			'Merge and rebase conflict resolution',
-			'Git workflows for AI coding agents (AGENTS.md, hooks, worktrees)'
+			'Git workflows for AI coding agents (AGENTS.md, hooks, worktrees)',
+			'CI/CD, dependency and security bots, and automated releases (Dependabot, CodeQL, release-please)'
 		],
 		hasCourseInstance: {
 			'@type': 'CourseInstance',
@@ -301,7 +303,8 @@
 	<Part5 />
 	<Part6 />
 	<Part7 />
-	<Part8 onOpenPlayground={openPlayground} />
+	<Part8 />
+	<Part9 onOpenPlayground={openPlayground} />
 
 	<footer class="py-10 text-center" style="border-top: 1px solid var(--color-border);">
 		<p class="text-xs" style="color: var(--color-text-muted);">
