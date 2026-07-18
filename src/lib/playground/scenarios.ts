@@ -791,4 +791,5 @@ export const PLAYGROUND_COMMANDS_HELP = `Supported commands:
   y | n | a | d | q  (responses during git add -p)
   p | s | r | d | q  (responses during git rebase -i)
 
-Other: clear, help, undo, redo, share  (share copies a link to this exact state)`;
+Other: clear, help, undo, redo, share  (share copies a link to this exact state)
+       agent "<task>"  (run the AI agent in this terminal — see the Agent panel)`;

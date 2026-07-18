@@ -1,0 +1,776 @@
+[
+	{
+		"id": "hero",
+		"part": 0,
+		"title": "Introduction",
+		"text": "Git for Vibe Coders Welcome! This guide takes you from your first commit to running AI coding agents with confidence — every concept explained visually, then practiced hands-on. Two companions will follow you through all nine parts: Try it now: Open the Git Playground — run real Git commands in your browser with live commit graphs. No install required. Quick reference: Need a command fast? Hit ⌘K / Ctrl+K to search, or open the Git Cheat Sheet from the header for a complete command reference. New to the terminal? This guide only assumes you can open one and type a command. If even that feels foreign, TerminalVibes — GitVibes' sister course — teaches the command line from zero, in the same style with the same in-browser playgrounds. Start there, then come back; Git lives in the terminal."
+	},
+	{
+		"id": "section-intro-what",
+		"part": 0,
+		"title": "Intro · What Is Git?",
+		"text": "What Is Git? Git is a version control system — software that tracks every change you make to your code and lets you travel back in time to any previous version. Think of it like an unlimited undo history for your entire project, not just a single file. If you're using AI tools like Copilot, Cursor, or Claude to write code, Git becomes even more critical. AI can generate hundreds of lines in seconds — some brilliant, some broken. Without Git, a bad AI suggestion could overwrite your working code with no way back. With Git, you can: Review every AI change before it becomes permanent Undo any mistake instantly — whether it's yours or the AI's Branch to experiment in a safe playground without risking stable code Collaborate with teammates by sharing code through a structured review process Git is used by virtually every software team in the world. Learning it is non-negotiable if you want to write code professionally — with or without AI. But where did it come from? The story is worth two minutes of your time."
+	},
+	{
+		"id": "section-intro-history",
+		"part": 0,
+		"title": "Intro · A Brief History",
+		"text": "A Brief History of Git Git was born out of a crisis. In the early 2000s the Linux kernel — one of the largest collaborative software projects on Earth — was managed with a proprietary tool called BitKeeper . In April 2005 its owner withdrew the kernel community's free license, and overnight thousands of contributors had no version control at all. Linus Torvalds , who had created Linux 14 years earlier, looked at the alternatives and found them all too slow or too centralized. So he stopped kernel work and wrote his own. Development began on April 3, 2005 — and by April 7, Git was already managing its own source code. Two months later it shipped an entire kernel release. A tool sketched out in about ten days now runs the world's software. That speed wasn't luck. Git was designed around three ideas that still define it: it had to be fast (applying hundreds of patches in seconds), distributed (every developer holds a complete copy of the history — no central server required), and tamper-evident (every commit is checksummed, so history can never change silently). In British slang, a git is an unpleasant person."
+	},
+	{
+		"id": "section-intro-history",
+		"part": 0,
+		"title": "Intro · A Brief History",
+		"text": "Linus joked: \"I'm an egotistical bastard, and I name all my projects after myself. First Linux, now Git.\" The manual page keeps the joke going — it describes Git as \"the stupid content tracker.\" Why does this history matter to you? Because Git was built to let thousands of strangers change the same codebase at once without destroying each other's work. That is exactly the problem you face when an AI assistant generates code at machine speed — Git is the safety net that was already waiting for the AI era."
+	},
+	{
+		"id": "section-intro-install",
+		"part": 0,
+		"title": "Intro · Installing Git",
+		"text": "Installing Git Before anything else, you need Git on your machine. Pick your operating system: macOS Windows Linux The easiest way is to install the Xcode Command Line Tools , which include Git. Open Terminal and run: A dialog will pop up asking you to install. Click Install and wait a few minutes. Alternatively, if you use Homebrew : Download the official installer from git-scm.com and run it. The defaults are fine for most users. Alternatively, if you use winget (built into Windows 11): After installation, restart your terminal (or VS Code) so it picks up the new command. Git is available in every major package manager. Use the one for your distribution: To confirm Git is installed, open a terminal and run: If you see a version number, you're ready to go. The exact number doesn't matter much — anything 2.30+ is fine."
+	},
+	{
+		"id": "section-intro-repo",
+		"part": 0,
+		"title": "Intro · What Is a Repository?",
+		"text": "What Is a Repository? A repository (or \"repo\") is simply a project folder that Git is tracking. Inside it, Git maintains a hidden folder that stores the entire history of every file — every change, by whom, and when. There are two kinds of repositories you'll work with: Local Repository The copy on your own computer. You make changes, stage them, and commit them here. It's completely private until you decide to share. Remote Repository A copy hosted on a service like GitHub , GitLab , or Bitbucket . This is how you share code with teammates and keep a backup in the cloud. The typical workflow is: you clone (download) a remote repo to your machine, make changes locally, then push (upload) your changes back. Git keeps both copies in sync. Every change in Git goes through three stages — your Working Directory (where you edit files), the Staging Area (where you prepare a snapshot), and the Repository (where snapshots are permanently saved as \"commits\"). Here's how they relate: You edit files in your Working Directory, stage the ones you approve, commit them as a permanent snapshot, and push to share with your team."
+	},
+	{
+		"id": "part-1",
+		"part": 1,
+		"title": "Part 1 · Enterprise Onboarding",
+		"text": "\"Every great journey begins with a single .\" Before you write your first line of code — or prompt your first AI — you need Git set up and talking to your team's repository. This is a one-time ritual: configure your identity, authenticate, and clone. Do it once and it mostly stays done (expiring tokens are the one exception — SSH keys and sign-in are the true set-and-forget paths)."
+	},
+	{
+		"id": "section-1-1",
+		"part": 1,
+		"title": "1.1 Git Configuration",
+		"text": "Every commit you make carries a name and email — your digital signature. Before anything else, Git needs to know who you are. The Problem: You have a new machine with a fresh Git installation. Before your first commit, Git requires you to set your identity -- a permanent digital signature baked into every change you make. In an enterprise, traceability is paramount. Every commit must be tied to a specific individual. Using your correct enterprise name and email is non-negotiable. The flag saves this for every Git repository on your computer. You only need to do this once. Don't want to use the terminal? No problem. VS Code will prompt you to configure your identity the first time you commit — answer the prompt and it runs those two commands for you. (There's no palette command for this; the prompt or the terminal are the two paths.) To see what's already configured — or double-check what you just set — read it back: While you're here, four more one-time settings pay for themselves many times over:"
+	},
+	{
+		"id": "section-1-2",
+		"part": 1,
+		"title": "1.2 Authentication",
+		"text": "Your company's code lives in a private repository. To access it, you need to prove you're allowed in — and GitHub removed password authentication for Git back in 2021. Today there are two ways to authenticate: over HTTPS with a token, or over SSH with a key pair. The Problem: Your company's code is in a private repository, and password authentication for Git operations no longer exists. You need either a Personal Access Token (for HTTPS) or an SSH key — and you should know which one fits your situation. Option 1: HTTPS with a Personal Access Token A Personal Access Token (PAT) is a generated secret that acts as your password, but with scoped permissions and an expiration date."
+	},
+	{
+		"id": "section-1-2",
+		"part": 1,
+		"title": "1.2 Authentication",
+		"text": "GitHub now recommends fine-grained tokens , which can be limited to specific repositories: Go to GitHub Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Fine-grained tokens Click Generate new token and name it descriptively (e.g., \"Work Laptop\") Set an expiration (90 days recommended) Under Repository access , choose Only select repositories and pick your project Under Permissions , set to Read and write Click Generate token and copy it immediately — you won't see it again Some organizations still use the older classic tokens (same page, under \"Tokens (classic)\" — select the scope; add only if you'll also sign in the gh CLI with it). If your team tells you to use one, the rest of the workflow is identical. Storing Your Credentials On macOS and Windows a helper is usually already configured by the installer — run these only if Git keeps re-prompting for your token. On Linux there's no default: install Git Credential Manager (or use ). You may see older guides suggest — on Debian/Ubuntu that helper ships as source code you'd have to compile first, so it fails out of the box. Once a helper is set, Git prompts you once and saves the credentials."
+	},
+	{
+		"id": "section-1-2",
+		"part": 1,
+		"title": "1.2 Authentication",
+		"text": "Option 2: SSH Keys SSH flips the model. Instead of pasting a secret, you generate a key pair : a private key that never leaves your machine, and a public key you upload to GitHub. Set it up once and every clone, pull, and push just works — no tokens to renew. It's the classic \"set it and forget it\" choice for a machine you develop on daily. Make it survive a reboot (macOS): without a config file, the agent forgets your key when you restart — and SSH auth mysteriously breaks days later. Create with the lines below (on Linux, drop the line): Then go to GitHub Settings &rarr; SSH and GPG keys &rarr; New SSH key , paste the key, and save. Verify the connection works: Only ever share the file. The private key (the one without an extension) must never leave your machine — treat it like the master key to your accounts. With SSH, repository URLs look different — use the SSH tab of the green Code button when copying a clone URL: Which One Should You Use? SSH if it's your own machine and you push daily — one-time setup, then it disappears from your life. A fine-grained token for scripts, CI pipelines, or short-lived access to a specific repo."
+	},
+	{
+		"id": "section-1-2",
+		"part": 1,
+		"title": "1.2 Authentication",
+		"text": "Or let a tool set one of those two up for you — browser sign-in (below) stores an HTTPS token behind the scenes, no copy-pasting required. The Modern Shortcut: GitHub CLI In practice, many developers today never copy a token at all. The GitHub CLI ( ) is GitHub's official command-line tool. Where talks to the repository, talks to GitHub itself — authentication, pull requests, issues, releases — all without leaving your terminal. Download it from cli.github.com or install it with your package manager: Then one command handles the entire authentication setup interactively — including generating and uploading an SSH key if you ask it to: Once succeeds, every , , and just works — and you get bonus commands like to open a pull request straight from your terminal. And if you're using VS Code, it handles GitHub authentication the same way — when you clone a private repo or push for the first time, it opens your browser to sign in. No tokens to generate, copy, or store: The enterprise wall: SAML SSO authorization."
+	},
+	{
+		"id": "section-1-2",
+		"part": 1,
+		"title": "1.2 Authentication",
+		"text": "In most companies on GitHub Enterprise Cloud, a working token or SSH key is not enough — it must also be explicitly authorized for your organization , or every clone fails with the famously misleading (the repo exists; your credential just isn't SSO-blessed). The fix takes ten seconds: GitHub → Settings → your token or SSH key → \"Configure SSO\" → Authorize for your org. If day one at a new job ends in , check this before anything else."
+	},
+	{
+		"id": "section-1-3",
+		"part": 1,
+		"title": "1.3 Cloning a Repo",
+		"text": "Your team's code exists on a remote server. Cloning is the act of bringing the entire project — every file, every branch, every commit in its history — right onto your machine. The Problem: The code exists on the server, but not on your machine. You need to download a complete copy (\"clone\") of the repository. To get a copy of the project on your machine, run the clone command with the repository URL your team shared with you: That new folder is the repository — specifically, the hidden directory inside it holds the entire history, every branch, all of it. Delete and you're left with an ordinary folder of files. (And the #1 \"Git is broken!\" beginner moment: running git commands from the parent folder — check you actually 'd in.) The VS Code Way Open VS Code. Click \"Clone Repository\" on the Welcome page Or use the Command Palette ( Cmd+Shift+P / Ctrl+Shift+P ) and type Git: Clone Paste the HTTPS URL. VS Code handles authentication automatically Choose a save location, then open the folder One thing to keep in mind after cloning: When you clone, you only get the default branch (e.g., ) checked out. Other branches exist as remote-tracking branches until you explicitly check them out."
+	},
+	{
+		"id": "section-1-3",
+		"part": 1,
+		"title": "1.3 Cloning a Repo",
+		"text": "If you see a file, stop and read this. The repo uses submodules — other Git repositories pinned inside this one. A plain clone leaves those directories empty ; you need \" /> (or, after the fact, ). Two rules until you've studied them properly: don't hand-edit inside a submodule directory, and watch AI agents around them — a careless can silently commit a moved submodule pointer, which is a notorious way for agents to break builds."
+	},
+	{
+		"id": "part-2",
+		"part": 2,
+		"title": "Part 2 · Core Safety Loop",
+		"text": "\"Commit early, commit often. Every save point is a universe you can return to.\" This is the heartbeat of your entire Git workflow. Every time the AI generates code, you'll follow this three-step rhythm: check what changed, approve what you trust, and freeze it in time. Master this loop and you'll never lose work again. We'll close the part with the flip side of saving: the files that should never enter history at all. The diagram above shows the full cycle you'll repeat every time you work with AI-generated code. This chapter covers the middle of the loop — discarding is Part 4's territory, and pushing comes in Part 3. Let's break it down: This is your fundamental daily workflow. It's a three-step process: the AI makes a change, you review it, and you \"save\" it. In Git, this loop is Status &rarr; Stage &rarr; Commit . For this to be an effective safety net, commit after every single logical, working change."
+	},
+	{
+		"id": "section-2-1",
+		"part": 2,
+		"title": "2.1 git status",
+		"text": "You just prompted the AI to refactor a module, and it went silent for a moment. What exactly did it touch? Before you do anything, you need situational awareness. The Problem: You prompted Copilot or Cursor to \"refactor this function.\" It applies changes across several files. What exactly did it touch? is your \"heads-up display.\" The output shows three categories: \"Changes not staged\" (Red) Files Git tracks that were modified but not yet approved for the next save. \"Untracked files\" (Red) Brand-new files the AI created that Git has never seen before. \"Changes to be committed\" (Green) Staged files — reviewed, approved, and going into the next commit. Your goal is moving the right files here. The good news? You don't actually need to type in the terminal. VS Code shows you all of this visually. Just click the Source Control icon in the Activity Bar (the branch icon on the left sidebar). The badge shows how many files changed, and each file is labeled M (modified), U (untracked), or D (deleted): You can also spot changes right in the editor without opening the Source Control panel."
+	},
+	{
+		"id": "section-2-1",
+		"part": 2,
+		"title": "2.1 git status",
+		"text": "VS Code adds colored indicators in the gutter (the narrow strip to the left of your code): green for added lines, blue for modified lines, and a red triangle for deleted lines. Click any indicator to preview the change inline:"
+	},
+	{
+		"id": "section-2-2",
+		"part": 2,
+		"title": "2.2 Staging Changes",
+		"text": "Now you know what changed. The next step is the most important one: reviewing the AI's work line by line, and only approving what you trust. This is staging — your quality gate. The Problem: shows the AI changed five files. Blindly trusting this is how bugs are introduced. You must review every line and then \"stage\" the changes you approve. Step Zero: Actually Read the Diff tells you which files changed; shows you what changed inside them — removed lines in red with a , added lines in green with a . It's the terminal twin of the VS Code Diff Editor you'll meet below, and it's the command every AI agent runs before staging (Part 6 makes it a rule). Make your ritual final check: it shows exactly — and only — what's about to be frozen into the commit. If a secret or debug print shows up there, you just caught it in time. Option 1: Stage All (the \"trusting\" add) This is fast but dangerous. If the AI added a temporary debug file or a flawed change, you just approved it without review. Option 2: Stage One File (the \"surgical\" add) Option 3: Stage Parts of a File (the \"AI-first developer's\" add) This is your single most powerful review tool."
+	},
+	{
+		"id": "section-2-2",
+		"part": 2,
+		"title": "2.2 Staging Changes",
+		"text": "The AI made multiple changes in one file, and you only want to accept some of them. walks you through every individual block of changes (\"hunk\") interactively. One blind spot: it only shows modifications to tracked files — brand-new files the AI created won't appear at all. Stage those by name with \" /> after reading them. Here's how to start an interactive staging session: For each hunk, Git asks: (stage), (skip), (split into smaller pieces), (quit). In the Try It: The Complete Loop playground (next section), is simplified to file-by-file staging — type or on the next line for each file. The VS Code Way: Visual Staging This is where VS Code really shines. Instead of typing cryptic responses in the terminal, you get a beautiful side-by-side Diff Editor. To stage an entire file, just hover over it and click the + button: When you click a file in the Changes list, VS Code opens the Diff Editor -- a side-by-side view showing the old version (left) and new version (right). This makes it easy to review exactly what changed before staging: For even more precision, click a file to open the Diff Editor, then select specific lines and right-click → \"Stage Selected Ranges\" ."
+	},
+	{
+		"id": "section-2-2",
+		"part": 2,
+		"title": "2.2 Staging Changes",
+		"text": "This is the visual equivalent of , but far easier to use: Accidentally staged everything with ? Use \" /> to unstage specific files before committing. This is especially critical if you accidentally staged files with secrets or debug files. You'll practice exactly this in the \"Unstage Secrets\" playground in section 4.2 (or right now — open the playground from the header and pick the scenario)."
+	},
+	{
+		"id": "section-2-3",
+		"part": 2,
+		"title": "2.3 Committing",
+		"text": "You've reviewed the changes and staged the ones you trust. Now it's time to freeze this moment in time — a commit is your permanent save point that you can always travel back to. The Problem: You've staged your reviewed changes. Now, bundle them into an immutable \"save point\" -- a commit . (Immutable, not untouchable: Part 4 teaches the history-editing tools. What's written can be rewritten — but never silently changed in place.) The command itself is simple, but the message you write matters more than you might think. Writing Good Commit Messages: Your code shows how a change was made; your commit message must explain the why . Use Conventional Commits format: Type When to Use Example feat: A new feature for the user feat: add login button to homepage fix: A bug fix for the user fix: resolve dimension mismatch docs: Documentation only changes docs: update API reference style: Formatting, missing semicolons, etc."
+	},
+	{
+		"id": "section-2-3",
+		"part": 2,
+		"title": "2.3 Committing",
+		"text": "style: fix indentation in utils refactor: Code change that neither fixes a bug nor adds a feature refactor: simplify form validation test: Adding or correcting tests test: add unit tests for auth chore: Build process or tools changes chore: update dependencies perf: A code change that improves performance perf: cache database queries Where the \"Why\" Actually Goes: the Body The subject line above says what changed. The \"why\" lives in the commit body — a blank line after the subject, then as many lines of context as the change deserves. Run with no and Git opens your editor (VS Code, if you set in Part 1) for exactly this: Save and close the editor tab, and the commit completes. (Changed your mind? Close it with an empty message and Git aborts the commit.) AI Integration: GitHub Copilot and Cursor can analyze your staged changes and suggest a commit message. Always verify it follows your team's standards — and remember the bar: six months from now, does this message explain why ? One last habit: prove to yourself the save point exists. Right after committing, run — one line, your hash and message."
+	},
+	{
+		"id": "section-2-3",
+		"part": 2,
+		"title": "2.3 Committing",
+		"text": "(That's also the final step Part 6 teaches agents: commit, then report the hash.) In VS Code, committing is just as simple: type your message in the input box at the top of the Source Control panel and click the Commit button (or press Cmd+Enter / Ctrl+Enter ). Notice the sparkle icon next to the input -- click it to let AI generate a commit message from your staged changes: Here's the AI commit message feature in action. After staging your changes, click the sparkle icon and Copilot will analyze your diff and write a descriptive message for you: Try It: The Complete Loop Run real Git commands in your browser. Type in the terminal for the full command list."
+	},
+	{
+		"id": "section-2-4",
+		"part": 2,
+		"title": "2.4 What NOT to Commit",
+		"text": "You asked the AI to scaffold your project, and it delivered: dependencies installed, an file holding your API keys, and a working app. Then it helpfully runs — and now your secrets, your folder, and a stray are all staged for your next commit. You just learned how permanent a commit is — before you freeze that mistake into history, you need to teach Git what to ignore. The Problem: AI agents move fast and stage everything. Without a guardrail, one can commit API keys, gigabytes of dependencies, and OS junk into a history that everyone on your team will clone. A .gitignore file is a plain text file at the root of your repository that lists patterns of files Git should pretend don't exist. Ignored files never show up as \"untracked\" in , and silently skips them. The file itself gets committed, so the whole team — and every AI agent working in the repo — shares the same guardrail. (Purely personal noise like or belongs in your global ignore file instead — see the end of this section."
+	},
+	{
+		"id": "section-2-4",
+		"part": 2,
+		"title": "2.4 What NOT to Commit",
+		"text": "And while a repo's main .gitignore lives at the root, you can drop extra ones in any subfolder to scope rules to just that corner of the project.) Pattern Syntax Essentials — a glob: matches any file ending in .log , in any directory — a trailing slash matches only directories (and everything inside them) — a leading slash anchors the pattern to the repository root — matches any depth of nested directories — a leading negates a pattern, re-including a file an earlier rule excluded (it can't re-include anything inside an excluded directory, though) The Gotcha: Already-Tracked Files Stay Tracked .gitignore only affects untracked files. If a file was already committed before you added it to .gitignore, Git keeps tracking it — and keeps committing your changes to it. To stop tracking a file without deleting it from your disk, remove it from the staging area (which Git's own messages call the index — same thing, older name): If a secret was ever committed, removing it in a new commit is not enough. The key still exists in every older commit, and anyone who clones the repository can read it."
+	},
+	{
+		"id": "section-2-4",
+		"part": 2,
+		"title": "2.4 What NOT to Commit",
+		"text": "Treat a pushed secret as compromised: rotate the credential immediately (revoke the key and issue a new one), then scrub it from history with a rewriting tool like — specialized surgery beyond this guide, but worth knowing the name. Rotation comes first; no amount of history surgery un-leaks a key that's already been seen. A Global Ignore File for OS and Editor Junk Files like (macOS) or (Windows) are about your machine , not the project. Instead of asking every repository to ignore them, configure a global ignore file that applies to all your repositories: Rule of thumb: project artifacts (builds, dependencies, secrets) go in the repository's .gitignore so the whole team is protected; personal noise (your OS, your editor) goes in your global ignore file. Line Endings: the Cross-Platform Papercut Windows ends lines with , macOS and Linux with . On a mixed team this produces the classic horror diff: every line of the file \"changed\" because a teammate's editor rewrote the endings — and AI agents reformatting files make it worse."
+	},
+	{
+		"id": "section-2-4",
+		"part": 2,
+		"title": "2.4 What NOT to Commit",
+		"text": "The team-level fix is a committed file, which overrides everyone's personal settings: (You may also see in older guides — that's the per-machine version of the same idea. Prefer : it lives in the repo, so it protects teammates and agents who never configured anything. If a diff ever claims every line changed, check line endings before anything else.)"
+	},
+	{
+		"id": "part-3",
+		"part": 3,
+		"title": "Part 3 · Branching & PRs",
+		"text": "\"A branch is a safe space to be wrong. Create one every time you have an idea.\" Branches are what make Git magical. They let you experiment freely — try a wild AI refactor, explore an alternative architecture — without ever risking the stable codebase. Think of them as parallel timelines that you can merge back or discard entirely. The most important rule in collaborative software development: you never, ever work directly on the branch . The branch represents the official, stable, production-ready code. Your work must happen in an isolated \"parallel universe\" called a branch ."
+	},
+	{
+		"id": "section-3-1",
+		"part": 3,
+		"title": "3.1 Creating Branches",
+		"text": "You have a feature idea — or maybe an ambitious AI prompt that might refactor half your codebase. Before you do anything, create a branch where it's safe to experiment. The Problem: You want to try a new feature or a massive AI-driven refactor. Before you write a single line or prompt, create a safe, isolated branch. First, make sure you're on and it's up to date. Then create your branch: In VS Code, this is even easier. Look at the bottom-left corner of your window -- you'll see the current branch name (e.g., \"main\"). Click it and you'll get a dropdown where you can switch to existing branches or select \"+ Create new branch...\" to make a new one: When you click the branch name, VS Code opens a Quick Pick menu listing all your branches. Select \"+ Create new branch...\" at the top, type a name like , and you're immediately switched to it: Your new branch starts exactly where is — but it isn't a copy of anything. A branch is just a label pointing at a commit (which is why creating one is instant, and why you can have hundreds). From here on, new commits move your label while main's stays put. If the AI destroys everything, it does not matter: discard the branch and switch back."
+	},
+	{
+		"id": "section-3-1",
+		"part": 3,
+		"title": "3.1 Creating Branches",
+		"text": "This workflow enables fearless experimentation. Common mistake — committed to main by accident? Don't panic. If you haven't pushed yet, the fix is simple: create the feature branch (your commits come with it), then switch back to main and to remove the commit from main. (Reading that address: is the commit you're standing on, and means \"one step back\" — so is the previous commit, three commits back.) You'll master in Part 4. One precondition: make sure is clean first — also wipes any uncommitted edits, and those have no undo. Try it yourself below: Try It: Oops — Committed to Main The playground starts with a payment commit on that should be on a feature branch. Create the branch, then reset with ."
+	},
+	{
+		"id": "section-3-2",
+		"part": 3,
+		"title": "3.2 Syncing Changes",
+		"text": "You're not working in a vacuum. While you've been building your feature, your teammates have been merging theirs. Staying in sync is how you avoid painful surprises later. The Problem: You've been working on your feature branch for a few days. Your teammates have merged their work into . Your branch is now \"stale.\" Before diving into the commands, here's how the three main remote operations relate to each other: Fetch downloads without merging. Pull = fetch + merge. Push uploads your commits. Option 1: The \"Safe\" Sync (fetch + merge) Option 2: The \"Easy\" Sync (pull) As a best practice, first to see what's coming before merging. is just a \"black box\" shortcut. When plain refuses to run: if your branch and the remote have both moved (you committed locally, a teammate pushed), modern Git stops with It's asking which strategy you want: (merge, like this section) or (replay your commits on top — the cleaner habit you'll learn in section 5.2). Pick a default once with and you'll never see the error again. VS Code makes syncing visual."
+	},
+	{
+		"id": "section-3-2",
+		"part": 3,
+		"title": "3.2 Syncing Changes",
+		"text": "Look at the status bar at the bottom of your window -- you'll see small arrows with numbers showing how many commits are incoming (to pull) and outgoing (to push). Click the sync icon (circular arrows) to pull and push in one step: You'll also see a prominent \"Sync Changes\" button right in the Source Control panel. It shows the exact count of incoming and outgoing commits, so you always know what's about to happen: Try It: Fetch and Merge Remote Updates The playground simulates a remote called — no real network calls. After , run to see both local and remote branches."
+	},
+	{
+		"id": "section-3-3",
+		"part": 3,
+		"title": "3.3 Pull Requests",
+		"text": "Your feature is built, tested, and committed. But you don't just push it into production — you propose it. A pull request is a conversation: \"Here's what I built. Let's review it together.\" The Problem: Your feature is complete, tested, and ready to be merged into . You do not merge it directly. You \"propose\" the change via a Pull Request (PR) . Once your feature is ready, push your branch to the remote so your teammates can see it: Then on GitHub, you'll see a yellow banner: \"feature/my-new-idea had recent pushes. Compare & pull request.\" Click it to create your PR. A Pull Request is a request for discussion. It is the formal, auditable gate where your human teammates review your AI-generated code, suggest changes, and ultimately \"sign off\" before it enters . (One vocabulary note for job interviews: \"pull request\" is the GitHub/Bitbucket name. GitLab calls the identical thing a merge request (MR) — and it's a forge feature, not a Git command. Part 9 tours the forges beyond GitHub.) The Modern PR Arc: Draft → Ready → Review → Merge Open work-in-progress as a draft PR — visible to the team, CI running, but explicitly not asking for review yet. Click \"Ready for review\" when it is."
+	},
+	{
+		"id": "section-3-3",
+		"part": 3,
+		"title": "3.3 Pull Requests",
+		"text": "Drafts stopped being a nicety in the agent era: every cloud coding agent (GitHub Copilot's coding agent, Claude, Codex, Devin) delivers its work as a draft PR for you to review — so this arc is the one you'll live in daily. Two more things you'll meet on your first real PR: The merge button is a menu. \"Merge commit\" preserves your branch's commits; \"Squash and merge\" (the most common team default) collapses the whole PR into one clean commit on main; \"Rebase and merge\" replays them individually. Squash is why messy WIP commits on your branch are fine — they vanish at the gate. An AI reviewer may get there first. Many repos auto-request a review from GitHub Copilot (or a similar bot). Read it like a helpful-but-junior teammate: it only ever leaves comments — it never counts toward the required human approval, and it's sometimes wrong. Push back when it is. Teams enforce all of this with rulesets (repo Settings → Rules) — require a PR, require passing checks, require an approval before anything reaches . If your push to main is rejected at work, that's not an error — that's the process working."
+	},
+	{
+		"id": "section-3-3",
+		"part": 3,
+		"title": "3.3 Pull Requests",
+		"text": "Writing a good PR description can feel tedious, but AI tools can help with that too: AI Integration: GitHub Copilot can write your PR descriptions by summarizing your commits. Claude Code can even automate the PR creation process. After the Merge: Leave the Campsite Clean (GitHub can auto-delete the remote branch on merge — repo Settings → General → \"Automatically delete head branches.\" Turn it on; nobody misses stale branches.) You don't even need to leave VS Code to create a PR. Install the GitHub Pull Requests extension and you can create PRs, review diffs, add comments, approve, and merge -- all without opening your browser: Try It: Branch, Commit, and Push in the playground updates a simulated remote — try to see it."
+	},
+	{
+		"id": "part-4",
+		"part": 4,
+		"title": "Part 4 · Undo Toolkit",
+		"text": "\"The AI will break things. Your job isn't to prevent that — it's to recover instantly.\" No matter how good your AI assistant is, it will occasionally hallucinate, delete the wrong file, or introduce a subtle bug. Git gives you a full spectrum of undo tools — from gentle nudges to nuclear resets. Knowing which tool to reach for in each situation is what separates a confident developer from a panicked one. This is the most critical section. The AI will misunderstand a prompt, generate buggy code, or delete something important. Your value as an engineer is your ability to recover instantly and safely ."
+	},
+	{
+		"id": "section-4-1",
+		"part": 4,
+		"title": "4.1 Discard Local",
+		"text": "The AI just rewrote half your file and it's completely wrong. You haven't committed anything yet. This is the simplest undo — just throw it all away and go back to your last save point. The Problem: The AI modified files and the result is completely wrong. You haven't staged or committed. You want to revert to your last save point. The fix is simple -- one command wipes the slate clean and takes you back to your last commit: One blind spot: only rewinds files Git already tracks. Brand-new files the AI scaffolded are untracked, so they survive it. Preview the leftovers with (a dry run), then delete them with . And one more trick for the road — restore doesn't have to stop at \"the last commit.\" The most common real-world rescue is one file, from an older commit : the AI broke three commits ago and you only just noticed. No reset, no history surgery: In VS Code, you don't need the terminal for this. In the Source Control panel, hover over the file you want to discard under \"Changes\" and click the curved arrow icon. To discard ALL changes at once, click the curved arrow next to the \"Changes\" header. You can also right-click any file and choose \"Discard Changes\" ."
+	},
+	{
+		"id": "section-4-1",
+		"part": 4,
+		"title": "4.1 Discard Local",
+		"text": "This is a \"dangerous\" command: your local changes are gone forever. But in this case, that's exactly what you want."
+	},
+	{
+		"id": "section-4-2",
+		"part": 4,
+		"title": "4.2 Unstage Files",
+		"text": "You hit a bit too quickly and staged files you didn't mean to include. No worries — unstaging is completely harmless and doesn't touch your code. The Problem: You used and accidentally staged a file with a bad AI change. You need to \"unstage\" it. No worries -- unstaging is a safe operation that simply moves a file back out of the staging area: In VS Code, this is a one-click fix. In the Source Control panel, look under \"Staged Changes\" , hover over the file you want to unstage, and click the − (minus) button. The file moves right back to \"Changes\": Try It: Unstage Dangerous Files You ran too quickly and staged with credentials and a debug file. Unstage them with before committing — then remember the permanent fix from Part 2: add them to so the next can't stage them again."
+	},
+	{
+		"id": "section-4-3",
+		"part": 4,
+		"title": "4.3 Amend Commits",
+		"text": "You just committed — and immediately realized you forgot a file, or there's a typo in the message. Instead of creating a messy \"oops\" commit, you can quietly fix the last one. The Problem: You just committed but missed a file, or there's a typo in your commit message. The commit has not been pushed yet . Instead of creating a whole new commit, you can tack the missing file onto the one you just made: In VS Code, click the dropdown arrow next to the Commit button and select \"Commit (Amend)\" . This adds your newly staged files to the last commit without needing the terminal. You can also find this under the ... menu → Commit → Commit Staged (Amend) . This rewrites your last commit. Amending is safe when nobody else could have based work on that commit — either it was never pushed, or it lives on your own personal branch and you follow up with a careful push (see section 4.6). If teammates may have pulled the commit, don't amend — revert instead."
+	},
+	{
+		"id": "section-4-4",
+		"part": 4,
+		"title": "4.4 Reset (Local)",
+		"text": "Sometimes the AI experiment was a dead end — three commits deep, and none of it is salvageable. If you haven't pushed yet, you can erase those commits entirely and start fresh. The Problem: Your last three commits were a single bad AI experiment. You have not pushed them. You want to permanently delete them. This is where the nuclear option comes in. A hard reset rolls your branch back as if those commits never happened: \"Remove,\" not quite \"delete\": the commits vanish from your branch, but Git keeps them around for ~30 days and the reflog (section 4.9) can bring them back. The truly unrecoverable loss is different — see the card below. The \"Safer\" Resets : Keep changes staged Deletes commits but keeps changes in the Staging Area. Useful for \"squashing\" commits into one. (default): Keep changes unstaged Deletes commits but keeps changes in the Working Directory (unstaged). : Destroy everything Removes commits AND all code changes. Your files reset to the older commit's state — including any uncommitted work sitting in your working tree, which is the one thing the reflog can never bring back. Run first; if it isn't clean, stash or commit before you reset. CRITICAL: rewrites history."
+	},
+	{
+		"id": "section-4-4",
+		"part": 4,
+		"title": "4.4 Reset (Local)",
+		"text": "Never use this on a branch your teammates have already pulled. This is for local cleanup only ."
+	},
+	{
+		"id": "section-4-5",
+		"part": 4,
+		"title": "4.5 Revert (Public)",
+		"text": "This is the \"oh no\" moment — you pushed a bad commit and your teammates already pulled it. You can't erase history, but you can create a new commit that perfectly reverses the damage. The Problem: You pushed a bad AI-generated commit. It's on . Your teammates have already pulled it. The WRONG Solution: You cannot use . It rewrites history that others have, causing repository divergence. The RIGHT Solution: Create a new commit that undoes the bad commit. This is a revert . Here's how to create that revert commit in the terminal: Without , Git opens your editor so you can customize the revert message — fine once you expect it, startling the first time (especially if that editor turns out to be vim). Notice that you're not erasing anything -- you're adding a new commit on top that reverses the damage: The bad commit stays in history, but a new \"revert\" commit undoes its changes. This is safe because no history is deleted . The history clearly shows: \"Feature was added\" &rarr; \"Feature was reverted.\" VS Code has this built in too. Open the ... menu in the Source Control panel -- this is your gateway to all advanced Git operations."
+	},
+	{
+		"id": "section-4-5",
+		"part": 4,
+		"title": "4.5 Revert (Public)",
+		"text": "From here you can access Commit, Changes, Pull, Push, Branch, Stash, and more: For reverting pushed commits, use the Source Control Graph : right-click any commit and select \"Revert Commit\" to create the inverse commit safely."
+	},
+	{
+		"id": "section-4-6",
+		"part": 4,
+		"title": "4.6 Force Push",
+		"text": "You rewrote local history with a reset or amend — and now Git refuses to push because local and remote have diverged. This is the emergency tool: a force push with a built-in safety net. The Problem: You used or on a branch you already pushed. Local and remote history have diverged. Git refuses to let you push. You have two flavors of force push, and picking the right one matters a lot: Replaces the server unconditionally. If a teammate pushed in the last 5 minutes, you blow their commits off the server (they survive only in that teammate's local clone). Conditional force push. Only succeeds if the remote branch hasn't changed since your last fetch. Always use this instead. One subtlety: the lease compares the remote against what you last fetched — so run first, review what changed on the remote, and only then push. And one trap: anything that fetches in the background quietly renews the lease. VS Code's autofetch ( ), GitLens, and other IDE tooling can fetch every minute — after which passes even though you never looked at what arrived. The lease proves the remote hasn't changed since the last fetch — it can't prove you reviewed it. Fetch, read, then push."
+	},
+	{
+		"id": "section-4-6",
+		"part": 4,
+		"title": "4.6 Force Push",
+		"text": "What does the error look like? When you try to push after rewriting history, Git will reject it with: This is Git protecting you. But careful — the full hint goes on to suggest , and after a deliberate amend or reset that's exactly wrong: pulling merges the old commit right back in, recreating the mess you just cleaned up. When you rewrote the history on purpose, the answer is the lease push, not a pull. Try it yourself below: Try It: Reset and Force Push Your feature branch has two bad commits already pushed. Use to go back, watch a plain get rejected, then overwrite the remote with . Never do this on shared branches!"
+	},
+	{
+		"id": "section-4-7",
+		"part": 4,
+		"title": "4.7 Recovery Matrix",
+		"text": "Before moving to advanced topics, here's a quick-reference matrix summarizing every undo technique and when to use it: Scenario Command What It Does Safe? VS Code AI's change is bad, not committed Discards edits to tracked files (new untracked files survive — see git clean) Safe (Local) Right-click file → \"Discard Changes\" One file broke several commits ago \" /> Brings back that file's old content; history and other files untouched Safe (Local) Timeline → click old commit → copy the old version File staged by accident \" /> Unstages a file, moving it from Staging back to Changes Safe (Local) Right-click staged file → \"Unstage Changes\" Typo in last commit message Edits the message of the most recent commit Safe (if not pushed yet) ... → Commit → Commit (Amend) Forgot a file in last commit \" /> Adds new files to the most recent commit Safe (if not pushed yet) Stage files → ... → Commit Staged (Amend) Last 3 local commits are bad Removes the last 3 commits and all their code changes (reflog can recover the commits) Local Only! (Rewrites history) ..."
+	},
+	{
+		"id": "section-4-7",
+		"part": 4,
+		"title": "4.7 Recovery Matrix",
+		"text": "→ Commit → Undo Last Commit (once per commit) Commits \"vanished\" after a hard reset Finds the lost commit in the reflog and moves the branch back Safe (Local) Terminal only (see section 4.9) Pushed a bug to the team \" /> Creates a new commit that is the inverse of the bad one 100% Safe (Public) Source Control Graph → Right-click commit → \"Revert Commit\" Reset a public branch, need to push Forcefully overwrites remote, only if no one else pushed Enterprise \"Break Glass\" Git: Push (Force With Lease) Stuck in \"detached HEAD\" Reattaches HEAD to a branch — create one first if you made commits to keep (see section 4.8) Safe (Local) Click the branch name in the status bar Try It: The Undo Toolkit The playground includes and . Try reverting the pushed bad commit, then amending after staging a fix."
+	},
+	{
+		"id": "section-4-8",
+		"part": 4,
+		"title": "4.8 Detached HEAD",
+		"text": "You (or the agent) checked out an old commit hash to see how the code looked before a refactor — and the terminal barks back: \"You are in 'detached HEAD' state.\" It sounds like an injury. It isn't. It's Git telling you exactly where you are: in the past. The Problem: You ran (or ) to inspect an old version. Git warns about a \"detached HEAD\" and you're not sure if you broke something. Normally, HEAD points at a branch , and the branch moves forward with every commit. When you check out a commit hash directly, HEAD points at that commit instead — no branch is along for the ride. Looking around is completely safe: The catch is committing while detached. Any commits you make there belong to no branch — the moment you switch away, nothing points at them anymore and they become orphaned . They don't disappear instantly (the reflog still remembers them — see section 4.9), but they vanish from and real Git will eventually garbage-collect them. There are exactly two escape hatches, and choosing is easy: Think of detached HEAD as a read-only visit to the past . Inspect freely, run things, compare files."
+	},
+	{
+		"id": "section-4-8",
+		"part": 4,
+		"title": "4.8 Detached HEAD",
+		"text": "The instant you want to keep new work, run \" /> — and even if you forget, the reflog is your safety net. Try It: Time-Travel and Escape Version 0.4 is misbehaving. Use to visit version 0.2, inspect , then escape — to keep a foothold, or to return to the present."
+	},
+	{
+		"id": "section-4-9",
+		"part": 4,
+		"title": "4.9 Reflog Rescue",
+		"text": "The agent ran and the log now looks like two days of work never happened. Before you panic: those commits are not gone . Git keeps a private journal of every place HEAD has ever been — the reflog — and it's about to save your week. The Problem: A hard reset (or a botched rebase, or an agent gone rogue) erased commits from . You need them back. only shows commits reachable from your branches. The reflog shows everywhere HEAD has moved , reachable or not. Here's how to read it: means \"where HEAD was n moves ago\" — is now, is one move back. Each line also shows the short hash, so you have two ways to name any point in time. Pick your recovery recipe: The reflog's limits: it is local-only — it's never pushed, and your teammates' machines each have their own. In real Git, entries expire (unreachable ones after about 30 days, the rest after about 90). And crucially: uncommitted work is NOT in the reflog — Git can only time-travel to states you committed. The real lesson of this whole part: commit early, commit often."
+	},
+	{
+		"id": "section-4-9",
+		"part": 4,
+		"title": "4.9 Reflog Rescue",
+		"text": "This completes the undo toolkit from the recovery matrix in section 4.7: for the working directory, for public history, for local history — and when a reset itself was the mistake. Try It: Rescue Lost Commits An agent ran and two commits vanished. Run to find where HEAD was before the reset, then to bring everything back. The reflog answers \"where did my commits go ?\" Its sibling question — \"which commit broke this?\" — has its own tool: binary-searches your history. Mark one commit as bad and one as good, and Git checks out midpoints for you to test — 1,000 commits take ten rounds, not a thousand. In the agent era this is the tool for \"somewhere in the bot's forty commits, the tests started failing.\" Try It: Find the Bad Commit The tests fail on but passed at , eight commits ago. Use plus the command to pin down the culprit in three rounds instead of eight."
+	},
+	{
+		"id": "part-5",
+		"part": 5,
+		"title": "Part 5 · Advanced Workflows",
+		"text": "\"Real projects are messy. Stash your work, resolve your conflicts, and keep moving.\" By now you know the fundamentals. But real-world development is rarely linear — you'll be mid-feature when a critical bug drops, your branch will diverge from a teammate's, and two files will clash during a merge. These advanced tools handle the chaos. As you grow, you'll often work on multiple tasks at once. Your AI-driven workflow will be interrupted by urgent bugs or questions. Git provides the tools to manage this context-switching seamlessly."
+	},
+	{
+		"id": "section-5-1",
+		"part": 5,
+		"title": "5.1 Git Stash",
+		"text": "You're deep in a feature branch with ten modified files when your manager says \"urgent bug on main.\" You can't commit half-finished work, and you can't lose it either. The stash is your escape hatch. The Problem: You're in the middle of a complex AI refactor with 10 modified files. Your manager says: \"Urgent bug on main!\" You can't commit half-baked work, and Git may block you from switching branches if your uncommitted changes conflict with the target branch. The stash is a temporary, private holding area for your dirty changes. The untracked-files gotcha: a plain only saves changes to tracked files. Brand-new files the AI just created — never committed, never staged — get left behind in the working tree. Add ( ) to take them along — that's also why VS Code's menu has a separate \"Stash (Include Untracked)\" item. re-applies your changes and removes them from the stash. Use to keep the stash entry for reuse. In VS Code, you can do all of this without memorizing commands. Open the ... menu in the Source Control panel -- you'll see a Stash submenu with all the options you need: Choose \"Stash (Include Untracked)\" to save all your work. When you're ready to come back, go to ..."
+	},
+	{
+		"id": "section-5-1",
+		"part": 5,
+		"title": "5.1 Git Stash",
+		"text": "→ Stash → \"Pop Latest Stash\" to restore everything exactly where you left off. Try It: The Stash Workflow You're mid-refactor on when a critical bug comes in. Stash your work, fix the bug on a hotfix branch, then come back and pop the stash."
+	},
+	{
+		"id": "section-5-2",
+		"part": 5,
+		"title": "5.2 Rebase vs Merge",
+		"text": "Your feature branch has been alive for a few days and main has moved on without you. Now you need to catch up — and Git offers two philosophies with very different trade-offs. The Problem: Your feature branch is \"stale.\" has moved on. There are two philosophies for updating it. You have two options for catching up with main, and each tells a different story in your commit history. git merge main Creates a new \"Merge Commit\" on your branch. Preserves the exact history -- messy but 100% accurate. History: \"Worked on feature... merged main... worked on feature...\" git rebase main \"Replays\" your commits on top of the latest main. Creates a clean, linear history as if you started today. The replayed commits are re-created — same changes, brand-new commit ids. History: main's commits, then copies of yours (the ' marks: same change, new id) — all in a straight line. The Golden Rule of Rebasing: Never rebase a public branch (one your team is also using). Because rebase re-creates the commits with new ids, everyone else's copy of the branch still points at the old ones — you've rewritten a history they're standing on. VS Code supports both approaches. Use the ..."
+	},
+	{
+		"id": "section-5-2",
+		"part": 5,
+		"title": "5.2 Rebase vs Merge",
+		"text": "menu in Source Control → \"Pull (Rebase)\" to rebase instead of merge when pulling. For merging, use the Command Palette ( Cmd+Shift+P / Ctrl+Shift+P ) → \"Git: Merge Branch...\" and select the branch to merge. The AI-First Developer's Choice: Since your experiment branch is your private playground, rebase is preferred to keep it clean before creating a PR. It avoids cluttering the PR with \"I merged main\" commits. The push after a rebase. If your branch was already on GitHub, the rebase just re-created commits the remote still has the old versions of — so a plain gets rejected. The correct follow-up is — the safe force from section 4.6 — and it's only OK because this is your branch. Rebase, lease-push, open the PR: that's the full ritual. One config gem while you're here: makes Git stash your uncommitted work automatically before a rebase (or ) and pop it after — dissolving the \"Git blocked my switch\" problem 5.1 opened with, for the rebase case at least. Try It: Merge vs. Rebase Your feature branch and have diverged. Try first, then reset and try to compare the resulting history."
+	},
+	{
+		"id": "section-5-2",
+		"part": 5,
+		"title": "5.2 Rebase vs Merge",
+		"text": "Rebase has one more trick: ( interactive ) lets you rewrite your own branch's history commit by commit — squash five \"wip\" commits into one, reword a sloppy message, drop an experiment entirely. It's how a messy working branch becomes a clean, reviewable PR. The Golden Rule applies double here: only ever on commits that haven't been shared. Try It: Squash the WIP Your branch works but its history is three commits. Run , reword the first commit to something worthy, and squash the other two into it."
+	},
+	{
+		"id": "section-5-3",
+		"part": 5,
+		"title": "5.3 Merge Conflicts",
+		"text": "This is the moment every developer dreads the first time — and handles calmly by the tenth. Two people changed the same lines, and Git needs a human to decide which version wins. The Problem: You run (or merge into your branch) and Git halts with . You and a teammate edited the same lines. Git needs you, the human, to resolve it. Don't panic -- conflicts look intimidating at first, but they follow a simple pattern. Git inserts special markers into your file to show you exactly where the disagreement is. The Conflict Markers Everything between and the divider is your side (here, the AI's refactor on your branch). Everything below the divider is the incoming side — the label after >>>>>>\" /> names where it came from — the branch you merged (like here; after a pull it can be a commit id or a longer label instead). Delete all the markers ( , , >>\" />) and edit the code to be the correct final version, then stage and commit. In the playground, you can write the resolved file with src/model.py\" />. Not ready to deal with it?"
+	},
+	{
+		"id": "section-5-3",
+		"part": 5,
+		"title": "5.3 Merge Conflicts",
+		"text": "There's an eject button here too: cancels the merge and returns your branch to exactly how it was before you ran — the same guilt-free escape you'll meet again with rebase (5.5) and cherry-pick (5.4). The VS Code Way (The Superior Way) Editing conflict markers by hand works, but VS Code makes the whole process much more visual and less error-prone. This is one of the best features of the IDE. Open a conflicted file and VS Code highlights each block inline, with clickable links right above it: \"Accept Current\" | \"Accept Incoming\" | \"Accept Both\" . For tangled, overlapping conflicts, click \"Resolve in Merge Editor\" to open the full 3-way view: Left Pane: \"Incoming\" (teammate's changes) Right Pane: \"Current\" (your changes) Bottom Pane: \"Result\" (what will be saved) For complex conflicts with multiple overlapping changes, click \"Resolve in Merge Editor\" to open the full 3-way view. This gives you the most control over the final result: Try It: Resolving a Merge Conflict The scenario starts mid-merge with conflict markers in . Use to overwrite the file, then and to finish."
+	},
+	{
+		"id": "section-5-4",
+		"part": 5,
+		"title": "5.4 Cherry-Pick",
+		"text": "Your AI experiment branch is a mess — half-finished rewrites, abandoned TODOs, dead ends. But buried in the middle is one brilliant commit: a currency rounding fix that actually works. You don't want the branch. You want that one commit . The Problem: An experiment branch has one valuable fix buried among junk commits. Merging would bring everything . You want to extract a single commit. copies one commit's changes onto your current branch as a new commit — same change, same message, but a brand-new hash, because it now sits on a different parent. The original commit stays untouched on its branch. For an audit trail, add : it appends \"(cherry picked from commit e4f5a6b...)\" to the message, so anyone reading main later can trace where the fix came from. Perfect for the reject-the-PR workflow below. When to prefer it over merging: merge when the whole branch is worth keeping; cherry-pick when only part of it is."
+	},
+	{
+		"id": "section-5-4",
+		"part": 5,
+		"title": "5.4 Cherry-Pick",
+		"text": "And because a cherry-picked commit replays changes onto code that may have moved on, conflicts can happen here too — the escape hatches mirror rebase exactly: The AI reviewing strategy — \"reject the PR, cherry-pick the gems\": when an agent's branch is 80% noise, don't agonize over salvaging it. Close the PR, cherry-pick the one or two commits that earned their place, and delete the branch. This pairs perfectly with the guidance in section 6.1 on teaching your AI to work in small, single-purpose commits — small commits are what make cherry-picking possible. Try It: Cherry-Pick the Gem The branch has a half-finished dashboard rewrite and one gem: a currency rounding fix. Use to find it, then it onto — and check to confirm the fix arrived."
+	},
+	{
+		"id": "section-5-5",
+		"part": 5,
+		"title": "5.5 Rebase Conflicts",
+		"text": "Section 5.2 sold you on rebase for clean history — but it skipped the scary part. Your feature branch tuned , main changed the same lines, and halfway through the rebase Git slams the brakes. Here's how to read the wreck and drive out of it. The Problem: You ran and Git stopped with . The rebase is half-done and you're not sure whether to fix it or flee. Remember what rebase does: it replays your commits one at a time on top of the latest main. If a replayed commit touches lines that main also changed, Git can't guess the winner — so it pauses mid-replay and hands you the keys. Run to see the paused state: it reports a rebase in progress and lists the conflicted files under \"unmerged paths\" . The files contain the conflict markers you learned to read in section 5.3 — with one crucial twist . The sides are swapped during a rebase. Git rebuilds your branch by standing on and replaying your commits onto it — so is main's version , and the bottom block is your own commit arriving as the \"incoming\" change. Exactly backwards from a merge. This is the single most famous rebase trap — read the labels, not the positions."
+	},
+	{
+		"id": "section-5-5",
+		"part": 5,
+		"title": "5.5 Rebase Conflicts",
+		"text": "From here, it's a three-step ritual — the same one every time: If more commits remain, Git keeps replaying — and may pause again on the next conflict. Just repeat the ritual until the rebase completes. And if at any point you're lost, confused, or late for dinner, there's a guilt-free eject button: is the reason rebasing your local branches is always safe to attempt. The rebase doesn't touch your original commits until it finishes — abort at any pause and your branch is restored exactly as it was. The Golden Rule from 5.2 still stands (never rebase shared branches), but on your own branch, the worst case is typing one command and being back where you started. Resolving the same conflict twice? Never again: turns on reuse recorded resolution — Git remembers how you resolved each conflict and replays the answer the next time the identical conflict appears. On a long-lived AI branch that gets rebased onto main every day, this is the difference between resolving the agent's conflict once and resolving it every single morning. Try It: Survive a Rebase Conflict Your branch raised the timeout in , but lowered the same line. Run , then to read the conflict markers."
+	},
+	{
+		"id": "section-5-5",
+		"part": 5,
+		"title": "5.5 Rebase Conflicts",
+		"text": "Fix the file with , then and . Try too — watch everything snap back."
+	},
+	{
+		"id": "section-5-6",
+		"part": 5,
+		"title": "5.6 Tags & Releases",
+		"text": "Branches move — every commit drags them forward. But some moments deserve a permanent name: the commit you shipped, the version that passed the audit, the last known-good state before a big AI refactor. That's what tags are: labels that stick to one commit, forever. Git has two kinds of tags, and the choice matters more than it looks: Lightweight: Just a name pointing at a commit. No author, no date, no message. Fine for private bookmarks. Annotated: A full object with author, date, and message. Always annotate releases — future-you will want to know who cut it and why. Naming convention: most projects use semantic versioning — . Bump MAJOR when you break existing users (v1.x → v2.0.0), MINOR when you add features compatibly (v1.0 → v1.1.0), and PATCH for pure bug fixes (v1.1.0 → v1.1.1). One glance at a version tells users how scared to be. One surprise: in real Git, does not send tags. You push them explicitly — for one tag, or for all of them — though beware: throws every tag at the remote, including private bookmarks like the checkpoint below."
+	},
+	{
+		"id": "section-5-6",
+		"part": 5,
+		"title": "5.6 Tags & Releases",
+		"text": "is the discerning version: it sends only annotated tags on commits you're pushing — which is exactly why this section told you to annotate releases and keep bookmarks lightweight. Need to remove a tag? deletes it locally — and if you deleted one by mistake , just re-tag the same commit (find it with , or fetch the tag back from the remote if you'd already pushed it). The AI-first habit: tag before letting an agent loose on a big refactor — . If things go sideways, a named restore point beats scrolling through the reflog trying to remember which was the good one. Try It: Cut a Release v1.0.0 shipped two commits ago and the import feature is ready. Tag the current commit with , list your tags, then use and to see what each release points at."
+	},
+	{
+		"id": "part-6",
+		"part": 6,
+		"title": "Part 6 · Git for AI Agents",
+		"text": "\"An agent with good Git habits is worth ten that just move fast.\" You now know the toolkit — the safety loop, branches, the undo arsenal, the advanced moves. This chapter turns that knowledge into a system your AI assistants follow as reliably as you do: written rules they read (AGENTS.md and skills), mechanical guardrails they cannot skip (hooks), and a layout that lets several agents work the same repository at once without stepping on each other (worktrees)."
+	},
+	{
+		"id": "section-6-1",
+		"part": 6,
+		"title": "6.1 Teaching AI Git",
+		"text": "The next level is not just using Git to manage AI — it's encoding your Git workflow so agents follow it automatically. Modern tools share a simple pattern: always-on project instructions for conventions that apply everywhere, plus skills for detailed procedures that load only when relevant. The Problem: Your agent commits straight to main, invents its own branch names, and writes messages like \"fixed stuff\" — and re-explaining your team's rules at the start of every session doesn't scale. The rules need to live in the repository, where every agent reads them automatically. Always-on instructions: AGENTS.md & friends is the cross-tool standard for project-wide rules — an open spec (now stewarded by the Linux Foundation) read by OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI, and twenty-plus other agents. In monorepos, the nearest file to the code you're editing takes precedence. The one big exception: Claude Code reads , not AGENTS.md (as of mid-2026). The documented bridge is a one-line CLAUDE.md containing — an import that pulls the shared file in — or a symlink ( ). In VS Code, add for Copilot-specific standards."
+	},
+	{
+		"id": "section-6-1",
+		"part": 6,
+		"title": "6.1 Teaching AI Git",
+		"text": "Put your team's Git constitution here: branch naming, Conventional Commits, \"never reset shared branches,\" PR expectations. Keep it concise — this loads on every session. Agent Skills (SKILL.md) Skills are the open Agent Skills format: a folder with a file (name + description in YAML frontmatter, instructions in the body). The format is portable; the folder isn't yet — each tool has its own discovery path, like for Codex and for Claude Code — so check where your agent looks. Either way they're version-controlled workflows your whole team shares. Agents discover skills at startup and load the full instructions only when a task matches — perfect for detailed Git procedures without bloating every chat. Example: a skill that walks through the full save-game ritual — branch, review, stage, commit — before every PR. VS Code: scoped rules & custom agents For rules that apply only to certain files, add files under with an glob in the frontmatter. For specialized personas, define custom agents as — YAML frontmatter sets the name, description, tools, and model; the body holds focused instructions (e.g., a \"Git Review\" agent that inspects staged diffs and suggests commit splits)."
+	},
+	{
+		"id": "section-6-1",
+		"part": 6,
+		"title": "6.1 Teaching AI Git",
+		"text": "Use or in VS Code chat to scaffold these files. CI & repository automations Repo instructions also power GitHub Copilot code review and cloud agents on pull requests. Combine with GitHub Actions to auto-review PRs, flag risky Git operations, or update docs when code changes — Git remains the audit trail even when agents operate in CI. A complete AGENTS.md you can steal Theory is nice, but what does a Git constitution actually look like? Here's a complete, copy-pastable example. Drop it in your repo root, adjust the branch prefixes and test command to match your project, and every agent that opens the repo inherits your rules. For multi-step procedures, a skill keeps the detail out of your always-on instructions. Here's a small worked example: a \"save-game checkpoint\" skill that encodes the status-review-stage-commit ritual from Part 2 so the agent runs it the same way every time. Reviewing large AI diffs Even well-instructed agents produce big diffs, and a 40-file diff read top-to-bottom is where review discipline goes to die. Triage instead: run first to see which files changed and by how much — that one screen tells you whether the change matches the task you assigned."
+	},
+	{
+		"id": "section-6-1",
+		"part": 6,
+		"title": "6.1 Teaching AI Git",
+		"text": "Then review file by file with \" />, starting with the files you'd least expect to change. When only part of the work is good, use to stage the keepers hunk by hunk and discard the rest. Reject, don't salvage. When a huge AI pull request is mostly wrong, resist the urge to edit it into shape — salvage-editing someone else's sprawling diff takes longer than redoing it and hides mistakes you didn't notice. Close the PR, the few good commits onto a fresh branch, and re-prompt for the rest with tighter scope. Cheap branches (Part 3) exist precisely so throwing work away costs nothing. Who Wrote This — You or the Machine? Six months from now, someone running will want to know whether a human decided this line or an agent generated it. Three layers of attribution, weakest to strongest: Trailers. Claude Code and Copilot append lines to their commits by default — you'll see these in your own history. Useful as a hint, but easy to strip or forget, so never treat them as a measurement of anything. Per-worktree identity. Running agents in worktrees (6.3)? Give each its own name so blame tells Agent A from Agent B: , then inside each worktree. Signing."
+	},
+	{
+		"id": "section-6-1",
+		"part": 6,
+		"title": "6.1 Teaching AI Git",
+		"text": "The strong claim runs the other way: commits you sign are verifiably yours. Modern setup is SSH-based and reuses the key from Part 1 ( + ); GitHub shows \"Verified\" badges, and its vigilant mode flags anything unsigned that claims to be you. In a world of agents committing under borrowed names, \"the human signed off here\" is worth making cryptographic."
+	},
+	{
+		"id": "section-6-2",
+		"part": 6,
+		"title": "6.2 Automating with Hooks",
+		"text": "You told your agent: \"always run the tests before committing.\" It did — for the first three commits. Then, deep in a refactor, it forgot, and a broken commit landed in history. Rules that live in a prompt are suggestions. Rules that live in Git are law. That's what hooks are for. The Problem: You can't rely on yourself — or an AI agent — to remember to lint, test, and format before every commit. You need the check to happen automatically, every time, with no memory required. A Git hook is a script that Git runs automatically at a specific moment — before a commit is created, after a merge, before a push. Hooks live in the directory of your repository, where Git puts a set of files to get you started. One crucial detail: the .git directory is never committed, so hooks are not versioned — they don't travel with a clone. We'll fix that in a moment. A Minimal pre-commit Hook The pre-commit hook runs before Git creates a commit. If the script exits with a non-zero status, the commit is blocked. Create a file named (no file extension) and make it executable: From now on, every in this repository runs your lint and test suite first."
+	},
+	{
+		"id": "section-6-2",
+		"part": 6,
+		"title": "6.2 Automating with Hooks",
+		"text": "If either fails, nothing gets committed — no exceptions, no forgetting. Enforcing Commit Message Standards The commit-msg hook receives the path to a file containing the proposed commit message. Here's a compact one that enforces Conventional Commits (messages like ): Making Hooks Shareable Since isn't versioned, your teammates (and their agents) won't get your hooks automatically. The lightweight fix is a committed hooks folder plus : In the JavaScript world, Husky is the popular tool that automates exactly this — it wires up the hooks path when anyone runs : Fine print: pre-commit hooks run against your working tree , not the staged snapshot. If you stage only part of a file with , the tests pass on code that isn't what you're committing. Tools like lint-staged exist to close exactly that gap. Hooks fire on agent commits too. When Claude Code, Cursor, or any AI agent runs , your pre-commit and commit-msg hooks run exactly as if you'd typed the command yourself. This is how you enforce standards on AI-authored code without trusting the AI to remember — the agent literally cannot commit failing code or a sloppy message."
+	},
+	{
+		"id": "section-6-2",
+		"part": 6,
+		"title": "6.2 Automating with Hooks",
+		"text": "Better yet, agents read the error output and usually fix the problem and retry on their own. One escape hatch to know about: skips the pre-commit and commit-msg hooks entirely. It exists for genuine emergencies — a broken hook blocking a critical hotfix — but use it sparingly. Every is a hole in your safety net, and it's a habit you especially don't want your agents learning. Which means: client hooks are seatbelts, not laws. Anything that can run can also run it with — and agents do learn that trick from error loops. The layer nothing can skip lives on the server : branch protection rulesets on (require a PR, require passing CI, require an approval — section 3.3). Hooks catch problems in seconds on the developer's machine; the ruleset is the law at the gate. Use both. A naming collision to keep straight: your agent tools have \"hooks\" too — Claude Code hooks, Cursor hooks, VS Code agent hooks — which fire on agent lifecycle events (before a tool runs, after an edit). Those govern the agent; the hooks in this section live in the repository and govern anyone who commits, human or machine."
+	},
+	{
+		"id": "section-6-2",
+		"part": 6,
+		"title": "6.2 Automating with Hooks",
+		"text": "They complement each other: an agent hook can stop a bad command before it runs, a Git hook stops a bad commit no matter who makes it. Try It: The Hooks Say No This repo has (simulated) husky hooks installed. An agent left a in — try to commit it and watch pre-commit block you, then get vetoed by commit-msg for a sloppy message. Fix both properly."
+	},
+	{
+		"id": "section-6-3",
+		"part": 6,
+		"title": "6.3 Parallel Agents: Worktrees",
+		"text": "Here's the endgame scenario: you want Agent A refactoring the auth module while Agent B builds the payments feature — in the same repository, at the same time. If both agents share one working directory, they'll trample each other's files, and every by one agent yanks the floor out from under the other. Worktrees solve this. A worktree is an extra working directory attached to the same repository. All worktrees share one database — same commits, same branches, same remotes — but each directory has its own checked-out branch, its own files on disk, and its own staging area. Creating one takes a second, because nothing is copied except the files of the branch you check out. If the branch doesn't exist yet, creates it in one step. Note that a branch can only be checked out in one worktree at a time — Git enforces this, which is exactly the isolation guarantee you want: two agents can never be editing the same branch's files. Every worktree commits into the same repository — the branches just live in different folders until they're merged. Why not just clone the repo twice?"
+	},
+	{
+		"id": "section-6-3",
+		"part": 6,
+		"title": "6.3 Parallel Agents: Worktrees",
+		"text": "Clones work, but worktrees are better on every axis: the object database is shared (no duplicated gigabytes), creation is instant, remotes and config come along for free, and a commit made in one worktree is immediately visible from all the others — no pushing and pulling between your own directories. When both agents are done, merging their branches is the normal PR flow from Part 3: push each branch, open a pull request, review the diff, merge. Nothing about worktrees changes how integration works. A few habits keep this tidy: name each worktree directory after its branch ( for ) so you always know which terminal belongs to which agent, and clean up when a branch merges. Two sharp edges. First, worktrees share the repository — local config ( ) and the stash list are per-repo, not per-worktree, so a made in one worktree is visible (and poppable) from all of them. Second, always create worktrees outside the main repo folder ( , not ) — a worktree nested inside the repo shows up as an untracked directory, and an agent running will sweep it up as a confusing embedded-repo pointer (Git prints a warning — which everyone ignores). The #1 practical gotcha: a fresh worktree is code-only."
+	},
+	{
+		"id": "section-6-3",
+		"part": 6,
+		"title": "6.3 Parallel Agents: Worktrees",
+		"text": "It contains the branch's tracked files and nothing else — no , no , no untracked . Agent B's first command will fail until someone runs the install step there, and two agents starting dev servers will fight over the same port. Budget one setup command per worktree (and a port per agent) into your plan — or into the agent's instructions. And a sign of how central this pattern has become: the agent tools now create worktrees for you . Claude Code has (agents get isolated worktrees under , auto-cleaned when untouched), Cursor spins up a worktree per parallel agent, and desktop agent apps do it per session. When you find a mystery directory or a branch, that's what it was — is how you audit them, and now you know how to clean them up. Checkpoints are not commits. Claude Code and Cursor both auto-checkpoint the agent's edits so you can rewind a session — genuinely useful, and genuinely not Git. Checkpoints are session-local: they don't capture what shell commands did, they can't be pushed or shared, and they expire with the session. The rule of thumb: rewind with checkpoints between commits; save with commits ."
+	},
+	{
+		"id": "section-6-3",
+		"part": 6,
+		"title": "6.3 Parallel Agents: Worktrees",
+		"text": "Anything worth keeping past the current session goes into a real commit — the durable layer this whole guide is about. Two monorepo-scale companions worth knowing by name: materializes only the directories an agent actually needs (a worktree per agent, a package per worktree, nothing else on disk), and schedules background housekeeping — worth turning on once a fleet of agents starts churning out objects faster than any human team ever did. Try It: One Repo, Three Working Directories Give Agent A and Agent B a worktree each, run into the branch-exclusivity guard on purpose, then clean up with . (The playground simulates the bookkeeping — the terminal stays in the main worktree.)"
+	},
+	{
+		"id": "part-7",
+		"part": 7,
+		"title": "Part 7 · VS Code Cockpit",
+		"text": "\"The best tools disappear into your workflow. VS Code makes Git visual, intuitive, and fast.\" Everything you've learned so far in the terminal works beautifully from VS Code's built-in Git UI. Staging, committing, branching, merging, resolving conflicts — all with rich visual feedback and just a few clicks. Let's explore the cockpit. VS Code bundles a rich set of Git tools right into the editor, so you can do almost everything without opening a terminal. While the command line is powerful, the VS Code UI is your \"cockpit.\" It provides rich, visual feedback that makes abstract Git concepts concrete."
+	},
+	{
+		"id": "section-7-1",
+		"part": 7,
+		"title": "7.1 Source Control View",
+		"text": "This single panel replaces a dozen terminal commands. Status, staging, committing, branching — it's all here in one visual interface that makes Git feel approachable. Everything you've learned maps directly to the UI: Changes Your working directory ( ). Modified and untracked files appear here. Staged Changes Your staging area. Files you've approved for the next commit. Commit Box Your . Type the message and click the checkmark. ... Menu All advanced commands, tucked into submenus: Pull, Push, Stash, Branch, and Commit (where Amend and Undo Last Commit live). Here's what it looks like in action. Press Ctrl+Shift+G to open the Source Control panel from anywhere — and yes, it's Ctrl even on a Mac (⌘⇧G is taken by search): Below the commit area, you'll find the Source Control Graph -- a visual representation of your commit history and branch structure. This is incredibly helpful for understanding how branches relate to each other:"
+	},
+	{
+		"id": "section-7-2",
+		"part": 7,
+		"title": "7.2 Timeline & GitLens",
+		"text": "When you're staring at a line of code and wondering \"who changed this, and why?\" — VS Code has the answer built right in. Timeline and GitLens turn your editor into a time machine. The Problem: An AI changed a line of code, and you have no idea why or when. Open any file, then look in the Explorer panel for the \"Timeline\" pane at the bottom. This shows the complete commit history for that specific file. Click any commit to see a diff of what it changed. The Timeline also mixes in Local History snapshots of your saves — and those entries have a right-click → \"Restore Contents\" that can rescue even changes you never committed. Here's the Timeline in action. Each entry represents a commit that touched this file -- click any entry to see exactly what changed in that commit: VS Code also has built-in Git Blame . Put your cursor on any line of code and the status bar shows who last changed it and when (an always-on inline annotation is one setting away — search Settings for \"blame\"). The GitLens extension goes deeper — rich line history, comparisons across branches and commits — though many of its advanced features now sit behind a paid Pro plan."
+	},
+	{
+		"id": "section-7-2",
+		"part": 7,
+		"title": "7.2 Timeline & GitLens",
+		"text": "Start with the built-ins; add GitLens when you hit their ceiling:"
+	},
+	{
+		"id": "section-7-3",
+		"part": 7,
+		"title": "7.3 Merge Editor",
+		"text": "We touched on merge conflicts earlier -- now let's look at the tool that makes resolving them almost enjoyable. This tool transforms merge conflicts from a terrifying, marker-filled text-editing nightmare into a visual, point-and-click process. This alone is a reason to use VS Code for Git integration. When a conflict occurs, VS Code highlights the conflicting files in the Source Control view. Clicking one opens it with the inline conflict markers you know from section 5.3 — look for the \"Resolve in Merge Editor\" button in the corner to switch to the 3-way view with three panes: Left Pane: \"Incoming\" Your teammate's changes Right Pane: \"Current\" Your local changes Bottom Pane: \"Result\" The final merged output One trap to know: those labels describe a merge . During a rebase , they swap — \"Current\" is the branch you're rebasing onto, and \"Incoming\" is your own replayed commit (the same side-flip explained in section 5.5). Read the code, not just the labels. Here's the merge editor in action."
+	},
+	{
+		"id": "section-7-3",
+		"part": 7,
+		"title": "7.3 Merge Editor",
+		"text": "Use the checkboxes next to each change to select which version you want to keep -- or manually edit the Result pane at the bottom for a custom resolution: And if you have GitHub Copilot installed, there's an even easier option. VS Code can use AI to analyze both sides of a conflict and suggest an intelligent resolution. Look for the \"Resolve with AI\" option in the merge editor:"
+	},
+	{
+		"id": "part-8",
+		"part": 8,
+		"title": "Part 8 · CI, Bots & Releases",
+		"text": "\"The robots handle the vigilance so you can spend your attention on judgment.\" Everything so far happened between you, your agent, and your repository. But open any active project on GitHub and you'll see an entourage you didn't create: green checkmarks appearing on every pull request, PRs opened by accounts named and , security scans running on a schedule, version numbers bumping themselves. None of it is magic, and none of it is optional knowledge anymore — this machinery is how modern software actually ships, and every piece of it is built from things you already know: branches, commits, PRs, and tags. One lens makes the whole chapter click: everything here is either a safety net (it catches mistakes before users see them) or a memory (it records what happened and why, for the future maintainer — usually you). CI checks are safety nets. Changelogs and releases are memories. The bots just run both without being asked."
+	},
+	{
+		"id": "section-8-1",
+		"part": 8,
+		"title": "8.1 CI & the Green Check",
+		"text": "The Problem: \"It works on my machine\" — but your machine has files that aren't committed, packages that aren't declared, and a you that forgot to run the tests. Multiply that by an AI agent pushing ten branches a day, and hoping everyone remembered to check everything stops being a plan. CI — Continuous Integration — is the fix, and the idea is almost embarrassingly simple: every time anyone pushes, a robot builds the project from scratch and runs every check against it. Not \"when someone remembers.\" Every push, every PR, every time. On GitHub the robot service is called GitHub Actions : each run spins up a runner — a fresh, disposable Linux machine in the cloud — that clones your repo, installs dependencies from the lockfile, and works through the checklist. If everything passes, your PR gets the green checkmark. If anything fails, you get a red X and a log pointing at the failure — minutes after pushing, not weeks later in production. The checklist itself is just a YAML file committed to your repo, which means it's versioned, reviewed, and branch-protected like everything else. A real, minimal one: Read it top to bottom: on these triggers, run these steps ."
+	},
+	{
+		"id": "section-8-1",
+		"part": 8,
+		"title": "8.1 CI & the Green Check",
+		"text": "That's the entire programming model. The steps are the same commands you (or your hooks from section 6.2 ) run locally — the difference is where and always . A pre-commit hook is a seatbelt you buckle on your own machine, and unbuckles it. CI runs on a machine nobody can sweet-talk. Hooks are the seatbelt; CI is the law. Branch protection (the rulesets from section 3.3 ) is what wires the checkmark to the merge button: no green, no merge — for you, your teammates, and every agent equally. The sibling acronym, CD — Continuous Delivery or Deployment — is what happens after green: code that reaches ships to users automatically. Many projects (including this site) deploy on every merge — a second workflow builds the app and publishes it the moment a PR lands. That immediacy is exactly why the gate in front of main matters: when merging is shipping, \"we'll fix it before the release\" is not a sentence that exists. Why vibe coders should care most: CI is the one reviewer that scales with your agents. You can't personally re-run the test suite for every branch three agents push in parallel — but the runner can, does, and never gets tired."
+	},
+	{
+		"id": "section-8-1",
+		"part": 8,
+		"title": "8.1 CI & the Green Check",
+		"text": "Green checks are what let you supervise outcomes instead of babysitting every command."
+	},
+	{
+		"id": "section-8-2",
+		"part": 8,
+		"title": "8.2 Dependabot & CodeQL",
+		"text": "Once CI guards the gate, something clever becomes possible: you can let robots propose changes, because no proposal — human, agent, or bot — gets through without passing the same checks. A bot's PR is a completely ordinary PR: a branch, a diff, a conversation, a checkmark. You already know how to review one. Meet the three coworkers you'll see most. Dependabot — the dependency gardener Your project stands on dozens of open-source packages, and dependencies age like food, not wine: every one has its own release stream and, occasionally, its own security holes. Dependabot watches all of them and opens PRs on your behalf — branches named with commits like . The elegant part: its PR triggers your CI. The robot proposes, your test suite disposes. If the update breaks the build, you find out in the PR — not in production. CodeQL — the code detective GitHub's code-scanning engine treats your codebase like a database and runs queries written by security researchers against it — hundreds of known-dangerous shapes, like user input flowing unsanitized into HTML (cross-site scripting) or into file paths."
+	},
+	{
+		"id": "section-8-2",
+		"part": 8,
+		"title": "8.2 Dependabot & CodeQL",
+		"text": "It runs on PRs and on a schedule, so when a new attack pattern is discovered, your old code gets re-checked too. Think of it as a security specialist who re-reads your entire repo every week and only speaks up on a match. Secret scanning — the leak alarm Remember the staged drama from section 2.4 ? GitHub runs a last line of defense: it recognizes the formats of API keys and tokens and — with push protection on — refuses the push outright. A blocked push is a gift. Treat any key that reaches a public commit as burned, and rotate it. Dependabot is configured with — you guessed it — a YAML file in the repo. The one setting worth knowing on day one is grouping , which turns thirty tiny weekly PRs into one digestible one: Two quieter pieces complete the safety net. The lockfile ( ) pins the exact version of every package and every package's packages , so your laptop, CI, and production all install byte-identical dependencies — it's why the lockfile belongs in Git even though you never edit it by hand. And supply-chain pinning : careful repos reference third-party Actions by full commit hash instead of a friendly tag."
+	},
+	{
+		"id": "section-8-2",
+		"part": 8,
+		"title": "8.2 Dependabot & CodeQL",
+		"text": "You know from section 5.6 that a tag is just a movable label — and if an attacker compromises an Action's repo, they can quietly move to malicious code. A commit hash can't be moved. Same Git concept, now a security boundary. Here's what a healthy history looks like with the robots at work — one of these commits was written by a human: Bots are agents with one narrow job. Everything Part 6 taught you about AI agents applies: read the diff before you merge, be extra awake for major version bumps (breaking changes ride in on those), and never grant a bot more permissions than its one job needs. The green check tells you the tests still pass — it cannot tell you whether the new major version quietly changed a behavior your tests never covered. Try It: Review the Robot's PR Dependabot has pushed a branch. Inspect exactly what it wants to change with , merge it, and clean up the branch — the same moves the \"Merge\" button does for you on GitHub."
+	},
+	{
+		"id": "section-8-3",
+		"part": 8,
+		"title": "8.3 Releases on Autopilot",
+		"text": "A green merge says the code is good. A release answers two different questions: what do we call this state , and what changed since the last one ? In section 5.6 you did this by hand — decided a version number, wrote an annotated tag. This lesson is about the grammar behind those version numbers, and the robot that does the paperwork. Semantic Versioning: the number is a promise A version like reads as major.minor.patch , and each position carries a promise to whoever upgrades: a patch bump (2.4.1 → 2.4.2) means \"bug fixes only, upgrade blind\"; a minor bump (2.4 → 2.5) means \"new features, nothing you rely on changed\"; a major bump (2 → 3) means \"something breaks — read the notes before touching it.\" That's why Dependabot's major-version PRs deserve your full attention while patch bumps barely need a glance: the versioning scheme is literally telling you how scared to be. Conventional Commits: the payoff Since Part 2 you've been writing and prefixes, and in section 6.2 a hook started enforcing them. Here's the payoff: those prefixes map straight onto SemVer. means the next release is at least a patch. promotes it to a minor. A or a footer forces a major."
+	},
+	{
+		"id": "section-8-3",
+		"part": 8,
+		"title": "8.3 Releases on Autopilot",
+		"text": "Your commit history stopped being prose and became data — which means a machine can read it. release-please: the release accountant release-please (Google's oddly polite release bot) watches main and keeps a running draft of the next release. It reads every conventional commit since the last tag, computes the right version bump, and opens — a pull request. The PR contains exactly two things: an updated grouping your commits into Features and Bug Fixes, and the version bump. As more commits land on main, the bot quietly amends its own PR. When you decide it's release time, you merge the PR like any other — and the bot tags the commit and publishes a GitHub Release. If you've ever wondered what a commit like is: that's someone merging the accountant's paperwork. The changelog it maintains is the memory half of this chapter at its purest — the human-readable answer to \"what changed since 1.0.0?\", assembled from messages you were already writing: A release is not a deploy. If your project deploys on every merge (8.1), users may be running code from ten minutes ago while your latest release is v1.1.0 from last week."
+	},
+	{
+		"id": "section-8-3",
+		"part": 8,
+		"title": "8.3 Releases on Autopilot",
+		"text": "Deploying is code reaching users; releasing is giving a state a name, a changelog entry, and a tag you can return to. Small tools may release without deploying anything; a website deploys constantly and releases occasionally, as a bookmark. Try It: Be release-please for a Day Two conventional commits have landed since . Do the accountant's job by hand exactly once — read the log, write the changelog, commit the paperwork, cut the tag — and you'll never wonder what the bot does again."
+	},
+	{
+		"id": "part-9",
+		"part": 9,
+		"title": "Part 9 · Conclusion",
+		"text": "\"Git isn't just version control — it's the bridge between human intent and AI capability.\" You've learned the full toolkit. Now let's put it all together into a cohesive workflow — the daily rhythm that keeps you productive, your code safe, and your AI assistants working within guardrails you control."
+	},
+	{
+		"id": "section-9-1",
+		"part": 9,
+		"title": "9.1 AI-First Workflow",
+		"text": "This is your new \"save game\" loop — the practical rhythm between you and your agent. Follow these 8 steps for every piece of work. Encode your Git conventions once in the repo (see section 6.1 ) so agents follow them automatically instead of re-explaining branch rules in every chat. And remember: you can practice any step of this loop in the Git Playground — real Git commands, right in your browser. Here's what each step looks like in practice, along with the commands you'll use. 1 Branch Create an isolated branch so the AI can never touch directly. 2 Generate Work with your AI agent to implement the change. With and skills configured, it already knows your branch naming, commit format, and safety rules. 3 Review Use or VS Code \"Stage Selected Ranges\" to review every line. 4 Save \"\" /> -- Commit small, commit often. 5 Sync followed by . 6 Push if you rebased. Updates remote safely. 7 Propose Create a Pull Request for human review. 8 Recover If you push a mistake, never reset a public branch. Always use ."
+	},
+	{
+		"id": "section-9-2",
+		"part": 9,
+		"title": "9.2 Quick Reference",
+		"text": "Keep this handy. It covers the most common Git tasks with both the terminal command and the VS Code equivalent, so you can use whichever feels more natural. Task Command VS Code Check what changed Source Control panel Stage specific lines Stage Selected Ranges Commit changes Type message + checkmark Create new branch Click branch name (bottom-left) Discard local changes Discard Changes Undo last commit (keep) ... menu: Commit → Undo Last Commit Revert public commit \" /> Revert Commit Stash work in progress ... menu: Stash Update branch ... menu: Pull (Rebase) Safe force push Git: Push (Force With Lease) — needs the git.allowForcePush setting Practice all commands Git Playground Try it yourself tabs in Parts 2–5"
+	},
+	{
+		"id": "section-9-3",
+		"part": 9,
+		"title": "9.3 Final Challenge",
+		"text": "Reading is not knowing. Here's the exam — one repository, three simultaneous messes, no step-by-step instructions. Everything you need is in Parts 2 through 5, and the playground will tell you the moment you've won. Your mission: a payment feature was committed straight to , a live Stripe key is sitting staged and one careless commit away from leaking, and the cleaned-up main still needs its release tag. Fix all three, in any order. Try It: The Final Challenge Start with and to survey the damage. A ✔ appears in the terminal when all three goals are met — no partial credit. The Skill Checklist Beyond the challenge, here's the honest self-test. Check each item only when you could do it right now, without looking anything up . (Saved locally in your browser — nobody's grading you but you.)"
+	},
+	{
+		"id": "section-9-4",
+		"part": 9,
+		"title": "9.4 Keep Learning",
+		"text": "TerminalVibes — the sister course Git lives in the terminal, and the terminal deserves the same treatment this guide gave Git. The sister course teaches bash from zero — navigating, pipes, permissions, scripts, and auditing what AI agents run — with the same in-browser playgrounds and the same no-signup deal. If any command line moment in this course felt shaky, this is where to firm it up. You've practiced everything here in a real repository — but Git is deep, and the best references are worth knowing by name. These six will cover you from quick lookups to true mastery: git-scm.com — the official Git site Downloads, release notes, and the authoritative command reference — the same pages \" /> shows you locally. Pro Git — the book, free forever The definitive deep dive, from first commit to Git internals. When you want to know why Git works the way it does, this is the answer. Learn Git Branching — branching puzzles Thirty minutes of visual rebase-and-merge puzzles. A great gym for the branch topology instincts you started building in Parts 3 and 5 — the muscle memory will save you hours."
+	},
+	{
+		"id": "section-9-4",
+		"part": 9,
+		"title": "9.4 Keep Learning",
+		"text": "GitHub Docs — the collaboration layer Pull requests, protected branches, Actions, and everything else that lives above Git itself at most workplaces. Oh Shit, Git!?! — panic-mode recipes Blunt, funny, and correct recovery recipes for the moments Part 4 trained you for. Keep it bookmarked next to your reflog. Oh My Git! — Git as a video game An open-source game that visualizes Git's internals live as you play cards and type commands. The gentlest way to make the commit graph feel physical — and genuinely fun. GitHub Is a Choice, Not a Given This guide uses GitHub because it's where most of the industry (and most of the AI-agent ecosystem) lives — but here's an honest secret: almost nothing you learned is GitHub-specific . Git itself is decentralized; every clone carries the full history, and the \"forge\" — GitHub, or any of the sites below — is just the hosting and collaboration layer on top. Even the pull request is a forge invention, not a Git feature. Switching forges is one command ( \" />) and a push. The alternatives worth knowing: GitLab — the whole-pipeline platform GitHub's biggest rival, and the one you're most likely to meet at work."
+	},
+	{
+		"id": "section-9-4",
+		"part": 9,
+		"title": "9.4 Keep Learning",
+		"text": "Pull requests are called merge requests (MRs) — same thing, different name. Its edge: one integrated application from issue to CI/CD to deployment to security scanning (it had built-in pipelines years before GitHub Actions existed), and an open-source core you can self-host for free — which is why regulated companies that can't put code on someone else's cloud often run their own GitLab. What GitHub has that it doesn't: the network — the world's largest open-source community, the Actions marketplace, and the deepest AI-agent integrations (Copilot, Agent HQ). Bitbucket — the Atlassian citizen Atlassian's forge. Its reason to exist is deep, native integration with Jira and Confluence — branch from a ticket, and the ticket tracks the PR's whole lifecycle automatically. If your company runs on Jira, you may well find your code here. Outside that ecosystem it offers little GitHub doesn't, and its open-source presence is small. Codeberg & Forgejo — the community option Codeberg is a nonprofit, donation-funded forge run for open source — no ads, no tracking, no AI training on your code, and that is the pitch."
+	},
+	{
+		"id": "section-9-4",
+		"part": 9,
+		"title": "9.4 Keep Learning",
+		"text": "It runs Forgejo, free software you can self-host yourself as a single small binary (its ancestor Gitea works the same way) — the lightweight answer when a whole GitLab is overkill. The trade-off is the same network effect in reverse: fewer eyes, fewer integrations, no agent ecosystem. SourceHut — Git the old way, on purpose A deliberately minimal, JavaScript-free forge built around Git's original collaboration model: patches reviewed over email , the way the Linux kernel still works. No pull-request button at all. Worth knowing because it proves the point above — the PR is a convention, not a law — and because some significant projects genuinely work this way. (Also out there: Azure DevOps in Microsoft-stack enterprises, and experimental peer-to-peer forges like Radicle with no central server at all. Wherever you land: same Git, same commands, same you.) And a glimpse past Git: Jujutsu (jj) is the most credible next-generation version control tool — a Git-compatible frontend that stores real Git commits, so your team never has to know you're using it."
+	},
+	{
+		"id": "section-9-4",
+		"part": 9,
+		"title": "9.4 Keep Learning",
+		"text": "It snapshots your working copy automatically (every command is undoable with ), which is making it popular for agent-heavy workflows. Still pre-1.0 and evolving fast — but everything you learned here transfers, because underneath, it is Git. Steve Klabnik's tutorial is the place to start when you're curious. Final Thoughts: Your AI assistants are powerful tools that lack context and accountability. Git is your system of accountability. It provides the immutable history, the instant \"undo\" button, and the human-in-the-loop review layer that transforms high-velocity AI coding from a risky experiment into a professional, safe, and scalable engineering discipline. Master it, and you'll transform AI-assisted coding into a superpower."
+	},
+	{
+		"id": "cheat-setup-config",
+		"part": 0,
+		"title": "Cheat Sheet · Setup & Config",
+		"text": "git init — Initialize a new local repository. Creates the hidden .git folder that will hold all history. Safe to run in a folder that already has files — nothing is tracked until you add and commit. git init <directory> — Create a new repo in the specified directory. Makes the directory (creating it if needed) and initializes it in one step — equivalent to mkdir + cd + git init. git clone <url> — Clone a remote repository to your machine. Downloads the entire history, not just the latest files, and wires up 'origin' pointing back at the source so push and pull just work. git clone --depth 1 <url> — Shallow clone with only the latest commit. Grabs only the newest snapshot — much faster for huge repos when you don't need history. Deepen later with git fetch --unshallow. git config --global user.name \"<name>\" — Set your name for all repositories. Recorded into every commit you make on this machine. Use --local inside a repo to override it for that one project (e.g. a work identity). git config --global user.email \"<email>\" — Set your email for all repositories. Match an email registered on your GitHub account or commits will not link to your profile."
+	},
+	{
+		"id": "cheat-setup-config",
+		"part": 0,
+		"title": "Cheat Sheet · Setup & Config",
+		"text": "The same --local override applies per repo. git config --global core.editor \"<editor>\" — Set default text editor for Git. The editor Git opens for commit messages, rebase plans and merges. 'code --wait' makes VS Code work — --wait keeps Git paused until you close the tab. git config --list — List all current configuration settings. Shows the merged result of system, global and local config. Add --show-origin to see which file each value comes from when settings fight. git config --global credential.helper <helper> — Store HTTPS credentials (osxkeychain, manager, libsecret). Lets HTTPS remotes remember your token so you authenticate once. macOS: osxkeychain · Windows: manager · Linux: libsecret. ssh-keygen -t ed25519 -C \"<email>\" — Generate an SSH key pair for authentication. Creates a modern key pair in ~/.ssh. Paste the .pub half into GitHub → Settings → SSH keys; the private half never leaves your machine. ssh -T git@github.com — Test your SSH connection to GitHub. Prints a greeting with your username when the key is set up. 'Permission denied (publickey)' means GitHub never saw your key — check ssh-add and the uploaded .pub."
+	},
+	{
+		"id": "cheat-setup-config",
+		"part": 0,
+		"title": "Cheat Sheet · Setup & Config",
+		"text": "gh auth login — Sign in to GitHub from the terminal (browser flow, no tokens to manage). The GitHub CLI stores credentials for both git-over-HTTPS and the API. The browser flow means no personal access token to create, scope, or rotate. git config --global core.excludesFile ~/.gitignore_global — Global ignore file for OS and editor junk. One machine-wide list for .DS_Store, Thumbs.db and editor artifacts — so each project’s .gitignore stays about the project. git config core.hooksPath .githooks — Use a versioned, shareable hooks directory. Points Git at a hooks folder that lives in the repo itself, so the whole team — and any AI agent that clones it — gets the same checks automatically."
+	},
+	{
+		"id": "cheat-basic-workflow",
+		"part": 0,
+		"title": "Cheat Sheet · Basic Workflow",
+		"text": "git status — Show the working tree status. Your home base: staged, unstaged and untracked files at a glance. It even names the exact command to undo whatever it is showing you. git add <file> — Stage a specific file for commit. Staging marks the file's CURRENT content for the next commit — edit the file again afterwards and the new edits are not included until you re-add. git add . — Stage all changes in the current directory. Convenient but indiscriminate: it grabs everything, including secrets and debug files. After an AI session, review git status first and stage selectively. git add -p — Interactively stage hunks of changes. Shows every change hunk-by-hunk and asks y/n. The single best habit for reviewing AI-generated edits before they become history. git commit -m \"<message>\" — Commit staged changes with a message. Write the subject in imperative mood ('fix login bug'), ideally under 50 characters. Conventional prefixes (feat:, fix:, chore:) make history scannable. git commit -am \"<message>\" — Stage and commit tracked files in one step. The -a stages every TRACKED file’s changes first. Brand-new files are not included — they still need an explicit git add."
+	},
+	{
+		"id": "cheat-basic-workflow",
+		"part": 0,
+		"title": "Cheat Sheet · Basic Workflow",
+		"text": "git commit --amend — Modify the most recent commit. Folds whatever is staged (or just a new message) into the previous commit. It rewrites history: safe before pushing, never after. git diff — Show unstaged changes in the working directory. The unstaged view — exactly what git restore would throw away. Narrow it to one area with a path: git diff src/. git diff --staged — Show changes staged for the next commit. Exactly what the next commit will contain — the last checkpoint before git commit. Read this instead of trusting an AI’s summary of its own changes. git rm --cached <file> — Stop tracking a file without deleting it (pair with .gitignore). The file stays on disk but leaves the index — the way out after committing something that belongs in .gitignore, like .env or node_modules. git commit --no-verify — Skip pre-commit and commit-msg hooks (use sparingly). Bypasses the checks your hooks enforce. Defensible for a WIP commit on a private branch; a red flag anywhere near main or a PR."
+	},
+	{
+		"id": "cheat-branching",
+		"part": 0,
+		"title": "Cheat Sheet · Branching",
+		"text": "git branch — List all local branches. The current branch is starred. Add -v to see each branch’s tip commit and how far ahead or behind its upstream it sits. git branch -a — List all branches including remote. The origin/* entries are your last-fetched snapshots of the server, not live views — run git fetch first for a current picture. git branch <name> — Create a new branch. Creates the branch at your current commit but stays where you are (use switch -c to also move). A branch is just a tiny pointer — make them freely. git branch -d <name> — Delete a fully merged branch. Refuses if the branch holds unmerged work — a built-in safety net. Deleting a merged branch removes only the label, never the commits. git branch -D <name> — Force delete a branch regardless of merge status. Skips the merge check; the commits become unreachable (still recoverable via reflog for a few weeks). For experiments you truly abandon. git switch <branch> — Switch to an existing branch. The modern, purpose-built half of the old checkout. It refuses to overwrite uncommitted changes — stash or commit first. git switch -c <branch> — Create and switch to a new branch. Branch and move in one step."
+	},
+	{
+		"id": "cheat-branching",
+		"part": 0,
+		"title": "Cheat Sheet · Branching",
+		"text": "Add a start point (git switch -c fix main) to branch from somewhere other than where you stand. git merge <branch> — Merge the specified branch into the current branch. Brings <branch> INTO the branch you are on — so switch to the receiving branch first. Fast-forwards when possible, otherwise creates a merge commit."
+	},
+	{
+		"id": "cheat-remote",
+		"part": 0,
+		"title": "Cheat Sheet · Remote",
+		"text": "git remote -v — List all remote connections with URLs. Two URLs per remote (fetch and push, usually identical). The fastest answer to 'where does this repo actually push to?' git remote add <name> <url> — Add a new remote repository. 'origin' is only a convention. On a fork, add the original as 'upstream' and you can pull their updates alongside your own remote. git remote remove <name> — Remove a remote connection. Deletes only the local connection and its remote-tracking branches. The repository on the server is untouched. git remote rename <old> <new> — Rename an existing remote. Renames the remote and rewrites every branch’s upstream reference to match — nothing to reconfigure afterwards. git fetch <remote> — Download objects and refs from a remote. Downloads new commits into origin/* WITHOUT touching your working files. Always safe: look first (git log origin/main), merge second. git fetch --prune — Fetch and remove stale remote-tracking branches. Also deletes local origin/* entries whose server branches are gone — the cure for a branch list full of ghosts after PRs merge. git pull <remote> <branch> — Fetch and merge changes from a remote branch. Literally fetch + merge."
+	},
+	{
+		"id": "cheat-remote",
+		"part": 0,
+		"title": "Cheat Sheet · Remote",
+		"text": "If both you and the remote have new commits it produces a merge commit — or set pull.rebase true for linear pulls. git pull --rebase — Fetch and replay your local commits on top (linear history). Replays your unpushed commits onto the incoming ones — no merge-commit noise. The tidiest way to catch up on a busy shared branch. git push <remote> <branch> — Push local commits to a remote branch. Refuses if the remote has commits you have not seen — fetch or pull first. Nothing on your machine leaves it until you push. git push -u <remote> <branch> — Push and set the upstream tracking branch. The -u links the local and remote branch once; from then on plain git push and git pull need no arguments. Use it on each branch’s first push. git push --force-with-lease — Force push, but abort if someone else pushed first (safe force). Overwrites the remote only if it still matches your last fetch — a teammate’s surprise push makes it abort. Never plain --force on shared branches."
+	},
+	{
+		"id": "cheat-stashing",
+		"part": 0,
+		"title": "Cheat Sheet · Stashing",
+		"text": "git stash — Stash tracked changes (staged and unstaged; add -u for untracked files). Sweeps uncommitted changes into a side drawer and leaves a clean tree — the escape hatch when an urgent fix interrupts messy work. git stash push -m \"<message>\" — Stash changes with a descriptive message. Unnamed stashes all look alike a week later. A message ('WIP: auth refactor') is the difference between a drawer and a junk pile. git stash list — List all stashed changesets. Shows the stack — stash@{0} is the newest. Inspect any entry’s contents with git stash show -p stash@{n} before applying it. git stash pop — Apply the latest stash and remove it from the list. Apply + drop in one step. On a conflict the stash entry is kept — resolve the files, then git stash drop it yourself. git stash apply — Apply the latest stash but keep it in the list. Applies but keeps the entry — the safer choice when you might want the same changes on another branch, or aren’t sure they fit here. git stash apply stash@{n} — Apply a specific stash by index. Stashes are not branch-bound: stash on one branch, switch, and apply somewhere else entirely. Get n from git stash list."
+	},
+	{
+		"id": "cheat-stashing",
+		"part": 0,
+		"title": "Cheat Sheet · Stashing",
+		"text": "git stash drop stash@{n} — Remove a specific stash entry. Deletes one entry and renumbers the rest. Dropped stashes are genuinely hard to recover — peek with show -p first. git stash clear — Remove all stash entries. Empties the whole stack permanently — one of the rare Git deletions with no reflog trail. Be sure before you run it."
+	},
+	{
+		"id": "cheat-undoing",
+		"part": 0,
+		"title": "Cheat Sheet · Undoing",
+		"text": "git restore <file> — Discard changes in the working directory. Overwrites the file with its last committed version — the discarded edits are gone for good. The one everyday command with no undo: git diff first. git restore --staged <file> — Unstage a file while keeping changes. Pulls a file back out of the staging area; your edits stay in the file untouched. The move when git add . grabbed something it shouldn’t have. git reset <file> — Unstage a file (same as restore --staged). Identical effect to restore --staged — the older spelling you will still meet in documentation, Stack Overflow answers and AI suggestions. git reset --soft HEAD~1 — Undo last commit but keep changes staged. Uncommits but keeps everything staged, ready to recommit. For 'right changes, wrong packaging' — reshape one commit into several, or fix the message. git reset --mixed HEAD~1 — Undo last commit and unstage changes. The default reset: uncommit and unstage, with all edits intact in your files. Good for reconsidering what the last commit should contain. git reset --hard HEAD~1 — Undo last commit and discard all changes. Erases the commit AND every uncommitted change."
+	},
+	{
+		"id": "cheat-undoing",
+		"part": 0,
+		"title": "Cheat Sheet · Undoing",
+		"text": "The commit itself is recoverable via reflog for weeks; uncommitted work lost with it is not. git revert <commit> — Create a new commit that undoes a previous commit. The pushed-history undo: adds a NEW commit containing the inverse changes. Nothing is rewritten, so shared branches stay consistent for everyone. git clean -fd — Remove untracked files and directories. Deletes untracked files — build junk, stray AI-generated files. Preview with git clean -nd first: untracked files have no history to recover from."
+	},
+	{
+		"id": "cheat-history-inspection",
+		"part": 0,
+		"title": "Cheat Sheet · History & Inspection",
+		"text": "git log — Show the full commit history. Authors, dates and full messages. Scope it to a path (git log src/auth/) to read just one area’s story. git log --oneline — Show commit history in compact format. One commit per line — the skimmable view, and usually enough to find the hash you are about to reset, revert or cherry-pick. git log --oneline --graph --all — Visualize branch history as an ASCII graph. Branches and merges drawn right in the terminal, across every branch at once — the closest thing to a commit-graph UI without leaving the shell. git log -p <file> — Show commit history with diffs for a file. Every commit that touched the file, each with its diff — the answer to 'when did this function change, and what did the change look like?' git log --author=\"<name>\" — Filter commits by author. Filter history to one committer — including isolating (or excluding) an AI agent’s commits when it commits under its own identity. git show <commit> — Display details and diff for a commit. The full story of one commit: message, author, and the complete diff. git show HEAD is a quick self-review of what you just committed. git blame <file> — Show who last modified each line of a file."
+	},
+	{
+		"id": "cheat-history-inspection",
+		"part": 0,
+		"title": "Cheat Sheet · History & Inspection",
+		"text": "The last commit to touch every line, with author and date. Feed that hash to git show to learn the WHY behind a suspicious line. git diff <branch1>..<branch2> — Show differences between two branches. What branch2 has that branch1 lacks. Run git diff main..feature before opening a PR to see the change exactly as reviewers will."
+	},
+	{
+		"id": "cheat-rebase-cherry-pick",
+		"part": 0,
+		"title": "Cheat Sheet · Rebase & Cherry-pick",
+		"text": "git rebase <branch> — Reapply commits on top of another branch. Lifts your commits and replays them onto the other branch’s tip — linear history, no merge commit. Golden rule: never rebase commits others already have. git rebase -i HEAD~n — Interactively rebase the last n commits. The history editor: reorder, reword, squash or drop the last n commits. The standard cleanup between 'wip wip wip' and a reviewable PR. git rebase --continue — Continue after resolving rebase conflicts. After fixing a conflict, git add the files and continue — no commit needed mid-rebase. Git repeats the pause for each conflicting commit. git rebase --abort — Cancel the rebase and return to original state. A guaranteed full rewind to the pre-rebase state. No shame in it: abort, breathe, then retry — or merge instead. git cherry-pick <commit> — Apply a specific commit to the current branch. Copies one commit’s changes onto your branch as a new commit. Perfect for lifting the single good fix out of an abandoned experiment. git cherry-pick <start>..<end> — Apply a range of commits (excludes <start> itself; use <start>^.. to include it). The range excludes <start> — a classic off-by-one."
+	},
+	{
+		"id": "cheat-rebase-cherry-pick",
+		"part": 0,
+		"title": "Cheat Sheet · Rebase & Cherry-pick",
+		"text": "Write <start>^..<end> when <start> itself should come along. git cherry-pick --continue — Resume a cherry-pick after resolving conflicts. Same rhythm as a conflicted rebase: fix the files, git add them, continue. The remaining commits in the range keep applying. git cherry-pick --abort — Cancel a conflicted cherry-pick and restore the branch. Cancels the pick and restores the branch to where it stood — cleanly unwinding even a half-applied multi-commit range."
+	},
+	{
+		"id": "cheat-tags",
+		"part": 0,
+		"title": "Cheat Sheet · Tags",
+		"text": "git tag — List all tags. Alphabetical list. Filter with a pattern (git tag -l 'v2.*'), or add -n to print each tag's message beside it. git tag <name> — Create a lightweight tag at the current commit. A lightweight tag is just a pointer — fine as a private bookmark, too thin for a release: no author, no date, no message. git tag -a <name> -m \"<message>\" — Create an annotated tag with a message. Annotated tags are full objects with tagger, date and message — what release tooling expects. The default choice for version numbers. git tag -a <name> <commit> — Tag a specific commit. Tags retroactively — realized v1.2.0 actually shipped three commits ago? Find the hash in git log and tag it now. git push <remote> <tag> — Push a specific tag to the remote. Tags do NOT ride along with a normal git push — each must be pushed explicitly, or see --tags for all at once. git push <remote> --tags — Push all tags to the remote. Ships every local tag in one go — including your private bookmark tags, so explicit single-tag pushes keep the remote cleaner. git tag -d <name> — Delete a local tag. Local only."
+	},
+	{
+		"id": "cheat-tags",
+		"part": 0,
+		"title": "Cheat Sheet · Tags",
+		"text": "If the tag was pushed, also run git push origin --delete <name> — and expect anyone who already fetched it to still have it."
+	},
+	{
+		"id": "cheat-advanced",
+		"part": 0,
+		"title": "Cheat Sheet · Advanced",
+		"text": "git bisect start — Begin a binary search to find a buggy commit. Mark one good and one bad commit and Git halves the suspect range each round — a thousand commits take about ten tests to narrow to one. git bisect good <commit> — Mark a commit as good during bisect. Also your answer at each checked-out midpoint when the tests pass — bare (no argument) it marks the commit you are standing on. git bisect bad <commit> — Mark a commit as bad during bisect. Bare, it marks the current checkout — so a plain git bisect bad is the usual answer when the midpoint fails your test. git bisect reset — End the bisect session and return to original HEAD. Run it even after Git names the culprit — until you do, you are still detached at the last tested commit, not back on your branch. git reflog — Show a log of all reference updates (recovery tool). Every place HEAD has been for ~90 days — it survives resets, rebases and deleted branches. The panic button when work 'disappeared'. git reset --hard HEAD@{1} — Move the branch back to where HEAD was one move ago. The standard rescue after a wrong reset: HEAD@{1} means \"wherever HEAD was one move ago\". Read git reflog to pick the right index."
+	},
+	{
+		"id": "cheat-advanced",
+		"part": 0,
+		"title": "Cheat Sheet · Advanced",
+		"text": "git submodule add <url> <path> — Add a repository as a submodule. Pins another repo at an exact commit inside yours. Powerful and famously fussy — for dependencies, a package manager is usually kinder. git submodule update --init --recursive — Initialize and update all submodules. The incantation after cloning a repo that uses submodules — until you run it, the submodule folders sit empty and builds fail mysteriously. git worktree add <path> <branch> — Create a linked working tree for a branch. A second working directory sharing the same .git — run tests on one branch while editing another, or give each AI agent its own checkout. git worktree add -b <branch> <path> — Create a new branch in its own working tree. Creates the branch and its directory in one step — the fast lane for spinning up a parallel agent workspace on fresh work. git worktree list — List all working trees for this repo. Every checkout of this repository and which branch each one holds — your fleet dashboard when several agents work in parallel. git worktree remove <path> — Remove a working tree (branch survives). Deletes the directory; the branch and its commits survive."
+	},
+	{
+		"id": "cheat-advanced",
+		"part": 0,
+		"title": "Cheat Sheet · Advanced",
+		"text": "Git refuses if uncommitted changes would be lost (--force overrides). git worktree prune — Clean up records of deleted working trees. Housekeeping for worktrees removed with plain rm -rf instead of worktree remove — clears the stale bookkeeping entries."
+	}
+]
