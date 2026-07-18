@@ -31,16 +31,16 @@ test.describe('Agent panel', () => {
 		await page.goto('/');
 
 		const agentPanel = page.locator('aside[aria-label="Agent"]');
-		const playgroundPanel = page.locator('aside[aria-label="Terminal Playground"]');
+		const playgroundPanel = page.locator('aside[aria-label="Git Playground"]');
 
-		await page.getByRole('button', { name: 'Open Terminal Playground' }).click();
+		await page.getByRole('button', { name: 'Open Git Playground' }).click();
 		await expect(playgroundPanel).toHaveAttribute('aria-hidden', 'false');
 
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		await expect(agentPanel).toHaveAttribute('aria-hidden', 'false');
 		await expect(playgroundPanel).toHaveAttribute('aria-hidden', 'true');
 
-		await page.getByRole('button', { name: 'Open Terminal Playground' }).click();
+		await page.getByRole('button', { name: 'Open Git Playground' }).click();
 		await expect(playgroundPanel).toHaveAttribute('aria-hidden', 'false');
 		await expect(agentPanel).toHaveAttribute('aria-hidden', 'true');
 	});
@@ -57,7 +57,7 @@ test.describe('Agent panel', () => {
 		).toBeVisible();
 
 		await panel.getByRole('button', { name: 'What does rebase actually do?' }).click();
-		await expect(panel.locator('[data-role="assistant"]').first()).toContainText(/pipe/i, {
+		await expect(panel.locator('[data-role="assistant"]').first()).toContainText(/rebase/i, {
 			timeout: 15000
 		});
 	});
@@ -233,7 +233,7 @@ test.describe('Agent panel', () => {
 		const answer = panel.locator('[data-role="assistant"]').first();
 		// The fenced example renders as a real code block, tokenized.
 		await expect(answer.locator('pre.agent-md-code')).toBeVisible({ timeout: 15000 });
-		await expect(answer.locator('pre.agent-md-code')).toContainText('grep ERROR');
+		await expect(answer.locator('pre.agent-md-code')).toContainText('git rebase origin/main');
 		// Citations live in the sources row, not mid-sentence.
 		await expect(answer).not.toContainText('[[section');
 		await expect(answer.locator('.agent-sources')).toContainText('Sources');

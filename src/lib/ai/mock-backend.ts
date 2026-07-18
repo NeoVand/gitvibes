@@ -148,6 +148,13 @@ const SECTION_LESSONS: Record<string, Lesson> = {
 		gotcha:
 			'`git log` shows only what is reachable; `git reflog` shows where you have BEEN. If work seems gone, check the reflog before you panic.'
 	},
+	'section-5-2': {
+		explain:
+			'`git rebase main` lifts your branch\u2019s commits off their old starting point and replays them, one by one, on top of the latest main — as if you had started your work today. History stays a straight line, unlike `git merge`, which ties the two timelines together with a merge commit. The code ends up identical either way; what differs is the shape of history.',
+		example: 'git fetch origin\ngit rebase origin/main',
+		gotcha:
+			'Rebase REWRITES your commits (new hashes), so only rebase branches you alone own — and never rewrite history that was already pushed and shared.'
+	},
 	'section-5-1': {
 		explain:
 			'`git stash` shelves your uncommitted changes so you can switch branches with a clean tree, then `git stash pop` brings them back. `-u` takes untracked files along; `-m` labels the stash so future-you knows what it holds.',
