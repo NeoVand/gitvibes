@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import {
 		GitBranch,
 		Terminal,
@@ -25,9 +25,22 @@
 	import { progress, markScenarioComplete, staleCompletions } from '$lib/data/progress';
 	import { shareUrl, type SharedSession } from '$lib/playground/share';
 	import { get } from 'svelte/store';
+	import { CliSession, type CliEvent, type CliPhase } from '$lib/ai/cli/session';
+	import {
+		parseAgentInvocation,
+		AGENT_USAGE,
+		AGENT_NO_MODEL,
+		AGENT_BUSY,
+		AGENT_WAKING,
+		AGENT_MOCK_NOTE,
+		AGENT_TRY_TASK,
+		type AgentInvocation
+	} from '$lib/ai/cli/parse';
+	import { agentRuntime } from '$lib/ai/runtime.svelte';
 
 	interface HistoryLine {
-		type: 'input' | 'output' | 'system';
+		/** 'agent' = the CLI agent's dim prose; 'agent-cmd' = a proposal. */
+		type: 'input' | 'output' | 'system' | 'agent' | 'agent-cmd';
 		text: string;
 		error?: boolean;
 		colored?: boolean;
@@ -168,6 +181,9 @@
 	onMount(() => {
 		loadScenario(getScenario(activeScenarioId));
 		onResetReady?.(resetScenario);
+		// Surface previously downloaded models (agent chip + cached warm) —
+		// idempotent, cache-only, never triggers a download.
+		agentRuntime.initLocal();
 	});
 
 	// Undo is replay-based: rebuild the seed and re-run every command except
@@ -280,8 +296,219 @@
 		}
 	}
 
+	/* ── the CLI agent: `agent "<task>"` runs the deep agent HERE ────────
+	 * The interpreter stays pure and synchronous, so `agent` is intercepted
+	 * at this layer (like undo/redo/share) before runGitCommand — the
+	 * session machine lives in $lib/ai/cli/session, this component only
+	 * renders its events and feeds it keystrokes. */
+
+	let cliSession: CliSession | null = null;
+	let cliPhase = $state<CliPhase>('idle');
+	let cliEditing = $state(false);
+	// The `agent "…"` chip appears the moment a model is available — reactively,
+	// in every playground (the runtime is one shared singleton).
+	let agentChip = $derived(agentRuntime.downloaded.length > 0);
+	let cliActive = $derived(
+		cliPhase === 'generating' || cliPhase === 'awaiting-approval' || cliPhase === 'executing'
+	);
+	/** True while the last history line is a streaming agent-prose block. */
+	let proseOpen = false;
+
+	function pushLine(line: HistoryLine) {
+		history = [...history, line];
+		scrollTerminal();
+	}
+
+	function handleCliEvent(event: CliEvent) {
+		if (event.type === 'prose') {
+			const last = history[history.length - 1];
+			if (proseOpen && last?.type === 'agent') {
+				last.text += event.text;
+				history = [...history];
+			} else {
+				proseOpen = true;
+				history = [...history, { type: 'agent', text: event.text }];
+			}
+			scrollTerminal();
+			return;
+		}
+		proseOpen = false;
+		if (event.type === 'proposal') {
+			pushLine({ type: 'agent-cmd', text: event.cmd });
+		} else if (event.type === 'verdict') {
+			if (event.decision === 'deny' && event.reason !== 'SIGINT') {
+				pushLine({ type: 'system', text: '✗ denied — the agent will adjust' });
+			}
+		} else if (event.type === 'notice') {
+			pushLine({
+				type: event.tone === 'error' ? 'output' : 'system',
+				text: event.text,
+				error: event.tone === 'error'
+			});
+		} else if (event.type === 'end') {
+			if (event.reason === 'done') {
+				if (event.ranCount > 0) {
+					pushLine({ type: 'system', text: `✔ agent: ${event.summary ?? 'done.'}` });
+				} else if (event.summary) {
+					// Nothing ran, but the agent explained why (e.g. every command was
+					// denied) — show that, no false checkmark.
+					pushLine({ type: 'system', text: `agent: ${event.summary}` });
+				} else {
+					// The model wrapped up without proposing anything — say so plainly
+					// instead of a hollow success line.
+					pushLine({
+						type: 'system',
+						text: 'agent: finished without running any commands. Try rephrasing the task, or switch to the higher-quality model in the Agent panel settings.'
+					});
+				}
+			} else if (event.reason === 'interrupted') {
+				pushLine({
+					type: 'system',
+					text: 'agent: caught SIGINT — session interrupted. (Ctrl+C stops the foreground process.)'
+				});
+			}
+		}
+	}
+
+	/** Approved commands run against THIS terminal: normal history lines,
+	 *  same repo, live commit graph, scenario checks — and into the undo log. */
+	async function runForAgent(cmd: string): Promise<{ output: string; error?: boolean }> {
+		if (!engine) return { output: 'Repository still initializing.', error: true };
+		history = [...history, { type: 'input', text: cmd }];
+		redoStack = [];
+		commandLog.push(cmd);
+		try {
+			const result = await runGitCommand(engine, cmd);
+			if (result.output === '__CLEAR__') {
+				history = [];
+			} else if (result.output) {
+				history = [
+					...history,
+					{ type: 'output', text: result.output, error: result.error, colored: result.colored }
+				];
+			}
+			await refreshDiagram();
+			await runScenarioCheck();
+			scrollTerminal();
+			return { output: result.output === '__CLEAR__' ? '' : result.output, error: result.error };
+		} catch (err) {
+			const message = err instanceof Error ? err.message : String(err);
+			history = [...history, { type: 'output', text: `error: ${message}`, error: true }];
+			scrollTerminal();
+			return { output: message, error: true };
+		}
+	}
+
+	async function handleAgentCommand(inv: AgentInvocation) {
+		if (inv.kind === 'help') {
+			pushLine({ type: 'output', text: AGENT_USAGE });
+			return;
+		}
+		if (inv.kind === 'error') {
+			pushLine({ type: 'output', text: inv.message, error: true });
+			return;
+		}
+		// Wake a previously downloaded model from cache (never a download).
+		agentRuntime.initLocal();
+		if (agentRuntime.downloaded.length === 0) {
+			pushLine({ type: 'output', text: AGENT_NO_MODEL });
+			return;
+		}
+		if (agentRuntime.localBusy) {
+			pushLine({ type: 'output', text: AGENT_WAKING });
+			return;
+		}
+		const backend = agentRuntime.backend;
+		if (!backend.generateCli) {
+			pushLine({
+				type: 'output',
+				text: 'agent: this backend cannot run CLI sessions.',
+				error: true
+			});
+			return;
+		}
+		const session = new CliSession({
+			backend,
+			run: runForAgent,
+			emit: handleCliEvent,
+			onUpdate: (s) => {
+				cliPhase = s.phase;
+				cliEditing = s.editing;
+			}
+		});
+		// One generation at a time across the chat panel and every terminal:
+		// refuse (one line) instead of queueing behind an invisible turn.
+		if (!agentRuntime.beginCliSession(() => session.interrupt())) {
+			pushLine({ type: 'output', text: AGENT_BUSY, error: true });
+			return;
+		}
+		if (backend.name === 'mock') {
+			pushLine({ type: 'system', text: AGENT_MOCK_NOTE });
+		}
+		cliSession = session;
+		proseOpen = false;
+		try {
+			await session.start(inv.task);
+		} finally {
+			agentRuntime.endCliSession();
+			cliSession = null;
+			cliEditing = false;
+			inputEl?.focus();
+		}
+	}
+
+	/** Session keystrokes: y/Enter allow · e edit · n deny · Ctrl+C/Esc SIGINT. */
+	function handleCliKey(e: KeyboardEvent): boolean {
+		const session = cliSession;
+		if (!session) return false;
+		// Ctrl+C is SIGINT — unless text is selected (then it's a copy).
+		if (e.ctrlKey && !e.metaKey && e.key.toLowerCase() === 'c') {
+			if (window.getSelection()?.toString()) return true;
+			e.preventDefault();
+			history = [...history, { type: 'output', text: '^C' }];
+			session.interrupt();
+			return true;
+		}
+		if (e.key === 'Escape') {
+			e.preventDefault();
+			session.interrupt();
+			return true;
+		}
+		if (cliEditing) return false; // normal typing; Enter submits the edit
+		if (e.metaKey || e.ctrlKey || e.altKey) return true; // browser chords pass
+		e.preventDefault(); // a foreground program owns the keyboard
+		if (cliPhase !== 'awaiting-approval') return true;
+		const key = e.key.toLowerCase();
+		if (key === 'y' || e.key === 'Enter') {
+			session.approve();
+		} else if (key === 'n') {
+			session.deny();
+		} else if (key === 'e') {
+			const cmd = session.beginEdit();
+			if (cmd !== null) {
+				input = cmd;
+				tick().then(() => {
+					inputEl?.focus();
+					inputEl?.setSelectionRange(cmd.length, cmd.length);
+				});
+			}
+		}
+		return true;
+	}
+
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
+		if (cliActive) {
+			// Enter while awaiting approval is handled in keydown (= allow);
+			// the form only submits here for the edited command.
+			if (cliEditing) {
+				const edited = input.trim();
+				if (!edited) return;
+				input = '';
+				cliSession?.submitEdit(edited);
+			}
+			return;
+		}
 		const command = input.trim();
 		if (!command) return;
 
@@ -289,12 +516,15 @@
 		input = '';
 		historyIndex = -1;
 
+		const agentInv = parseAgentInvocation(command);
 		if (command === 'undo') {
 			await handleUndo();
 		} else if (command === 'redo') {
 			await handleRedo();
 		} else if (command === 'share') {
 			handleShare();
+		} else if (agentInv) {
+			await handleAgentCommand(agentInv);
 		} else {
 			await executeCommand(command);
 		}
@@ -332,6 +562,7 @@
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
+		if (handleCliKey(e)) return;
 		if (e.key === 'ArrowUp') {
 			e.preventDefault();
 			const inputs = history.filter((h) => h.type === 'input').map((h) => h.text);
@@ -512,6 +743,13 @@
 						? 'var(--color-warning)'
 						: 'var(--color-terminal-output)'}; font-family: var(--font-mono);">{line.text}</pre>
 			{/if}
+		{:else if line.type === 'agent'}
+			<pre class="pg-agent-prose mb-1.5 whitespace-pre-wrap">{line.text}</pre>
+		{:else if line.type === 'agent-cmd'}
+			<div class="pg-agent-cmd mb-1.5" data-testid="agent-proposal">
+				<span class="pg-agent-cmd-label">agent →</span>
+				<span>{@render commandLabel(line.text)}</span>
+			</div>
 		{:else}
 			<p
 				class="mb-1.5 text-[11.5px] italic"
@@ -530,13 +768,27 @@
 
 {#snippet promptForm()}
 	<form onsubmit={handleSubmit} class="pg-prompt-line">
-		<span class="pg-prompt" aria-hidden="true">$</span>
+		{#if cliActive && !cliEditing}
+			{#if cliPhase === 'awaiting-approval'}
+				<span class="pg-cli-ask" data-testid="agent-approval"
+					>allow? <b>[y]</b> yes · <b>[e]</b> edit · <b>[n]</b> no</span
+				>
+			{:else}
+				<span class="pg-cli-busy" data-testid="agent-working"
+					>agent is working… Ctrl+C to interrupt</span
+				>
+			{/if}
+		{:else if cliActive && cliEditing}
+			<span class="pg-cli-edit" data-testid="agent-edit">edit ↵</span>
+		{:else}
+			<span class="pg-prompt" aria-hidden="true">$</span>
+		{/if}
 		<input
 			bind:this={inputEl}
 			bind:value={input}
 			onkeydown={handleKeydown}
 			disabled={loading}
-			placeholder="git status"
+			placeholder={cliActive ? '' : 'git status'}
 			class="pg-input"
 			autocomplete="off"
 			spellcheck="false"
@@ -562,6 +814,17 @@
 				<ChevronRight size={11} />
 			</button>
 		{/each}
+		{#if agentChip}
+			<button
+				type="button"
+				onclick={() => runSuggested(AGENT_TRY_TASK)}
+				class="pg-chip pg-chip-agent"
+				data-testid="agent-try-chip"
+			>
+				{@render commandLabel(AGENT_TRY_TASK)}
+				<ChevronRight size={11} />
+			</button>
+		{/if}
 	</div>
 {/snippet}
 
@@ -1039,5 +1302,68 @@
 			font-size: 10px;
 			padding: 0.2rem 0.5rem;
 		}
+	}
+
+	/* ── CLI agent session (`agent "<task>"`) ─────────────────────────── */
+
+	/* The approval prompt replaces the shell prompt — same line, same rhythm. */
+	.pg-cli-ask,
+	.pg-cli-edit {
+		flex-shrink: 0;
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		font-weight: 600;
+		color: var(--color-important);
+		user-select: none;
+	}
+
+	.pg-cli-ask b {
+		font-weight: 800;
+	}
+
+	.pg-cli-busy {
+		flex-shrink: 0;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		font-style: italic;
+		color: var(--color-text-muted);
+		user-select: none;
+	}
+
+	/* The agent's thinking-out-loud: dim, unmistakably not command output. */
+	.pg-agent-prose {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		line-height: 1.6;
+		font-style: italic;
+		color: var(--color-text-muted);
+		overflow-wrap: anywhere;
+	}
+
+	.pg-agent-cmd {
+		display: flex;
+		align-items: baseline;
+		gap: 0.6ch;
+		font-family: var(--font-mono);
+		font-size: 12.5px;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.375rem;
+		border: 1px solid color-mix(in srgb, var(--color-important) 35%, transparent);
+		background: color-mix(in srgb, var(--color-important) 6%, transparent);
+		overflow-x: auto;
+		white-space: pre;
+	}
+
+	.pg-agent-cmd-label {
+		flex-shrink: 0;
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		color: var(--color-important);
+	}
+
+	.pg-chip-agent {
+		border-color: color-mix(in srgb, var(--color-important) 45%, transparent);
+		background: color-mix(in srgb, var(--color-important) 8%, var(--color-surface));
 	}
 </style>

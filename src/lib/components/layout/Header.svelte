@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Sun, Moon, ScrollText, Github, Gamepad2, X, Linkedin } from 'lucide-svelte';
+	import { Sun, Moon, ScrollText, Github, Gamepad2, Bot, X, Linkedin } from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import Search from './Search.svelte';
 
@@ -8,12 +8,14 @@
 		onToggleTheme,
 		onToggleCheatSheet,
 		onTogglePlayground,
+		onToggleAgent,
 		onNavigate
 	}: {
 		theme: string;
 		onToggleTheme: () => void;
 		onToggleCheatSheet: () => void;
 		onTogglePlayground: () => void;
+		onToggleAgent: () => void;
 		onNavigate?: (id: string) => void;
 	} = $props();
 
@@ -59,6 +61,15 @@
 		>
 			<Gamepad2 size={16} />
 			<span class="hidden text-xs font-semibold sm:inline">Playground</span>
+		</button>
+
+		<button
+			onclick={onToggleAgent}
+			class="agent-btn flex h-8 w-8 cursor-pointer items-center justify-center gap-1.5 rounded-lg transition-all sm:w-auto sm:px-2.5"
+			aria-label="Open Agent"
+		>
+			<Bot size={16} />
+			<span class="hidden text-xs font-semibold sm:inline">Agent</span>
 		</button>
 
 		<button
@@ -185,6 +196,14 @@
 
 	.playground-btn:hover {
 		background: color-mix(in srgb, var(--color-important) 10%, transparent);
+	}
+
+	.agent-btn {
+		color: var(--color-btn-agent);
+	}
+
+	.agent-btn:hover {
+		background: color-mix(in srgb, var(--color-btn-agent) 10%, transparent);
 	}
 
 	/* Same inviting treatment as the playground button, in the cheat

@@ -20,6 +20,8 @@
 	--color-text-inverse: #ffffff;
 
 	--color-primary: #4f46e5;
+	--color-btn-agent: #9c6b10;
+	--panel-glass: color-mix(in srgb, var(--color-bg-secondary) 93%, transparent);
 	--color-primary-light: #6366f1;
 	--color-primary-dim: #eef2ff;
 	--color-primary-text: #4338ca;
@@ -97,6 +99,8 @@
 		--color-text-inverse: #0d0b17;
 
 		--color-primary: #818cf8;
+		--color-btn-agent: #f2c94c;
+		--panel-glass: color-mix(in srgb, var(--color-bg-secondary) 68%, transparent);
 		--color-primary-light: #a5b4fc;
 		--color-primary-dim: #1e1b4b;
 		--color-primary-text: #a5b4fc;
@@ -155,6 +159,8 @@
 	--color-text-muted: #9b98b0;
 	--color-text-inverse: #ffffff;
 	--color-primary: #4f46e5;
+	--color-btn-agent: #9c6b10;
+	--panel-glass: color-mix(in srgb, var(--color-bg-secondary) 93%, transparent);
 	--color-primary-light: #6366f1;
 	--color-primary-dim: #eef2ff;
 	--color-primary-text: #4338ca;
@@ -195,6 +201,8 @@
 	--color-text-muted: #625e7d;
 	--color-text-inverse: #0d0b17;
 	--color-primary: #818cf8;
+	--color-btn-agent: #f2c94c;
+	--panel-glass: color-mix(in srgb, var(--color-bg-secondary) 68%, transparent);
 	--color-primary-light: #a5b4fc;
 	--color-primary-dim: #1e1b4b;
 	--color-primary-text: #a5b4fc;

@@ -4,6 +4,7 @@
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';
+	import AgentPanel from '$lib/components/layout/AgentPanel.svelte';
 	import PlaygroundPanel from '$lib/components/layout/PlaygroundPanel.svelte';
 	import Hero from '$lib/components/sections/Hero.svelte';
 	import Part1 from '$lib/components/sections/Part1.svelte';
@@ -17,6 +18,7 @@
 	import Part9 from '$lib/components/sections/Part9.svelte';
 	import { anchorIds } from '$lib/data/sections';
 	import { markSectionVisited } from '$lib/data/progress';
+	import { readingContext } from '$lib/ai/reading-context.svelte';
 	import { decodeSharedFromHash, type SharedSession } from '$lib/playground/share';
 	import {
 		loadThemePreference,
@@ -29,10 +31,17 @@
 	let sidebarOpen = $state(false);
 	let cheatSheetOpen = $state(false);
 	let playgroundOpen = $state(false);
+	let agentOpen = $state(false);
 	let sharedSession = $state<SharedSession | null>(null);
 	let activeSection = $state('hero');
 	let theme = $state<ThemePreference>('system');
 	let navClickActive = false;
+
+	// Where the learner is reading — the agent's contextual suggestions
+	// mirror the existing scroll-spy value, no second observer.
+	$effect(() => {
+		readingContext.sectionId = activeSection;
+	});
 
 	function getEffectiveThemeLocal(): 'light' | 'dark' {
 		return getEffectiveTheme(theme);
@@ -214,17 +223,17 @@
 	// prior state is restored when the panel closes.
 	let sidebarBeforePanel = false;
 
-	/** Call BEFORE setting playgroundOpen = true. */
+	/** Call BEFORE opening a reading-mode panel. */
 	function enterReadingMode() {
-		if (!playgroundOpen) {
+		if (!playgroundOpen && !agentOpen) {
 			sidebarBeforePanel = sidebarOpen;
 			sidebarOpen = false;
 		}
 	}
 
-	/** Call AFTER setting playgroundOpen = false — restores the sidebar. */
+	/** Call AFTER closing a reading-mode panel — restores the sidebar. */
 	function maybeLeaveReadingMode() {
-		if (!playgroundOpen) {
+		if (!playgroundOpen && !agentOpen) {
 			sidebarOpen = sidebarBeforePanel;
 		}
 	}
@@ -232,6 +241,7 @@
 	function toggleCheatSheet() {
 		if (!cheatSheetOpen) {
 			playgroundOpen = false;
+			agentOpen = false;
 			maybeLeaveReadingMode();
 		}
 		cheatSheetOpen = !cheatSheetOpen;
@@ -241,16 +251,32 @@
 		if (!playgroundOpen) {
 			enterReadingMode();
 			cheatSheetOpen = false;
+			agentOpen = false;
+			playgroundOpen = true;
+		} else {
+			playgroundOpen = false;
+			maybeLeaveReadingMode();
 		}
-		playgroundOpen = !playgroundOpen;
-		if (!playgroundOpen) {
+	}
+
+	function toggleAgent() {
+		if (!agentOpen) {
+			enterReadingMode();
+			cheatSheetOpen = false;
+			playgroundOpen = false;
+			agentOpen = true;
+		} else {
+			agentOpen = false;
 			maybeLeaveReadingMode();
 		}
 	}
 
 	function openPlayground() {
-		enterReadingMode();
+		if (!playgroundOpen) {
+			enterReadingMode();
+		}
 		cheatSheetOpen = false;
+		agentOpen = false;
 		playgroundOpen = true;
 	}
 </script>
@@ -311,16 +337,18 @@
 	onToggleTheme={toggleTheme}
 	onToggleCheatSheet={toggleCheatSheet}
 	onTogglePlayground={togglePlayground}
+	onToggleAgent={toggleAgent}
 	onNavigate={handleNavigate}
 />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
 <PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} shared={sharedSession} />
+<AgentPanel open={agentOpen} onToggle={toggleAgent} onNavigate={handleNavigate} />
 
 <main
 	id="main-content"
 	class="main-content transition-[margin] duration-200 ease-out"
-	class:reading-mode={playgroundOpen}
+	class:reading-mode={playgroundOpen || agentOpen}
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen
 		? 'var(--sidebar-width)'
 		: 'var(--sidebar-collapsed-width)'};"
