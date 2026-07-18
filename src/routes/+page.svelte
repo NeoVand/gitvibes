@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import BackgroundPixels from '$lib/components/layout/BackgroundPixels.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 	import Sidebar from '$lib/components/layout/Sidebar.svelte';
 	import CheatSheet from '$lib/components/layout/CheatSheet.svelte';
@@ -302,6 +303,8 @@
 </svelte:head>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
+
+<BackgroundPixels />
 
 <Header
 	theme={getEffectiveThemeLocal()}

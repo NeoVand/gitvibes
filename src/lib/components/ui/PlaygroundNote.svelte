@@ -9,6 +9,7 @@
 </script>
 
 <div
+	data-fabric
 	class="my-4 flex items-start gap-2 rounded-lg px-4 py-3 text-[13px] leading-relaxed"
 	style="background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-secondary);"
 >

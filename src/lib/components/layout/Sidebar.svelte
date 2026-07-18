@@ -135,6 +135,7 @@
 
 <!-- ───── EXPANDED SIDEBAR ───── -->
 <aside
+	data-fabric
 	class="sidebar-expanded fixed top-0 bottom-0 left-0 z-40 flex flex-col border-r transition-all duration-200 ease-out"
 	style="width: var(--sidebar-width); padding-top: var(--header-height); border-color: var(--color-border-light);"
 	class:translate-x-0={open}
@@ -292,6 +293,7 @@
 <!-- ───── COLLAPSED ICON RAIL ───── -->
 {#if !open}
 	<aside
+		data-fabric
 		class="sidebar-collapsed fixed top-0 bottom-0 left-0 z-40 flex flex-col items-center border-r py-2"
 		style="width: var(--sidebar-collapsed-width); padding-top: calc(var(--header-height) + 8px); border-color: var(--color-border-light);"
 	>
