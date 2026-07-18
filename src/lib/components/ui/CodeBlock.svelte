@@ -9,10 +9,17 @@
 	}: { code: string; lang?: string; title?: string } = $props();
 
 	const SHELL_LANGS = ['bash', 'sh', 'shell', 'zsh'];
+	const YAML_LANGS = ['yaml', 'yml'];
 	const lines = $derived(
 		tokenizeCodeBlock(
 			code,
-			lang === 'gitignore' ? 'gitignore' : SHELL_LANGS.includes(lang) ? 'shell' : 'plain'
+			lang === 'gitignore'
+				? 'gitignore'
+				: YAML_LANGS.includes(lang)
+					? 'yaml'
+					: SHELL_LANGS.includes(lang)
+						? 'shell'
+						: 'plain'
 		)
 	);
 

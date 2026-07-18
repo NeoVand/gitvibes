@@ -207,7 +207,159 @@ function tokenizeGitignoreLine(line: string): GitToken[] {
 	return tokens;
 }
 
-export type CodeBlockMode = 'shell' | 'plain' | 'gitignore';
+export type CodeBlockMode = 'shell' | 'plain' | 'gitignore' | 'yaml';
+
+/** `key:` at the start of a YAML line (after indent/dash), colon not consumed. */
+const YAML_KEY = /^([A-Za-z0-9_.-]+):(?=\s|$)/;
+
+/** Whole-word scalars that get their own YAML color. */
+const YAML_NUMBER = /^\d+(\.\d+)*$/;
+const YAML_BOOL = /^(true|false|null|on|off|yes|no)$/;
+
+/** Classify the word-and-space runs of an unquoted YAML value chunk. */
+function yamlPlainBits(chunk: string): GitToken[] {
+	const tokens: GitToken[] = [];
+	for (const part of chunk.split(/(\s+)/)) {
+		if (!part) continue;
+		if (/^\s+$/.test(part)) tokens.push({ text: part, type: 'space' });
+		else if (YAML_NUMBER.test(part)) tokens.push({ text: part, type: 'hash' });
+		else if (YAML_BOOL.test(part)) tokens.push({ text: part, type: 'placeholder' });
+		else tokens.push({ text: part, type: 'arg' });
+	}
+	return tokens;
+}
+
+/** Classify a YAML value: quoted segments are strings, the rest plain bits. */
+function tokenizeYamlValue(value: string): GitToken[] {
+	const tokens: GitToken[] = [];
+	const quoted = /("[^"]*"|'[^']*')/g;
+	let index = 0;
+	let match;
+	while ((match = quoted.exec(value)) !== null) {
+		if (match.index > index) tokens.push(...yamlPlainBits(value.slice(index, match.index)));
+		tokens.push({ text: match[0], type: 'string' });
+		index = match.index + match[0].length;
+	}
+	if (index < value.length) tokens.push(...yamlPlainBits(value.slice(index)));
+	return tokens;
+}
+
+/**
+ * Tokenize one line of a YAML file (the teaching subset used by the CI and
+ * Dependabot examples): indentation, `-` list markers, `key:` names, quoted
+ * strings, numbers and booleans. Values of `run:` keys are shell commands
+ * and get the full command tokenizer, so workflow steps read like every
+ * other command on the site.
+ */
+function tokenizeYamlLine(line: string): GitToken[] {
+	const commentStart = findCommentStart(line);
+	const code = commentStart === -1 ? line : line.slice(0, commentStart);
+	const tokens: GitToken[] = [];
+
+	if (code) {
+		let rest = code;
+		const indent = rest.match(/^\s*/)![0];
+		if (indent) {
+			tokens.push({ text: indent, type: 'space' });
+			rest = rest.slice(indent.length);
+		}
+		if (rest.startsWith('- ') || rest === '-') {
+			tokens.push({ text: '-', type: 'flag' });
+			rest = rest.slice(1);
+			const gap = rest.match(/^\s*/)![0];
+			if (gap) {
+				tokens.push({ text: gap, type: 'space' });
+				rest = rest.slice(gap.length);
+			}
+		}
+		const key = rest.match(YAML_KEY);
+		if (key) {
+			tokens.push({ text: key[1], type: 'subcommand' });
+			tokens.push({ text: ':', type: 'text' });
+			rest = rest.slice(key[1].length + 1);
+			const gap = rest.match(/^\s*/)![0];
+			if (gap) {
+				tokens.push({ text: gap, type: 'space' });
+				rest = rest.slice(gap.length);
+			}
+			if (rest) {
+				if (key[1] === 'run') tokens.push(...tokenizeGitCommand(rest));
+				else tokens.push(...tokenizeYamlValue(rest));
+			}
+		} else if (rest) {
+			tokens.push(...tokenizeYamlValue(rest));
+		}
+	}
+
+	if (commentStart !== -1) {
+		tokens.push({ text: line.slice(commentStart), type: 'comment' });
+	}
+	return tokens;
+}
+
+/**
+ * Words that can begin a command line in the guide's shell blocks. Shell
+ * blocks freely mix commands with their output and with file contents
+ * (git status output, reflog listings, ssh config), and highlighting an
+ * output line as if it were something to type is exactly the kind of
+ * confusion this site's audience doesn't need. Only lines starting with
+ * one of these words are tokenized as commands; everything else stays
+ * plain. Unknown-but-real commands degrade to plain text, which is the
+ * safe direction — add them here as the course needs them.
+ */
+const LINE_STARTING_COMMANDS = new Set([
+	'git',
+	'sudo',
+	'brew',
+	'winget',
+	'apt',
+	'apt-get',
+	'dnf',
+	'pacman',
+	'xcode-select',
+	'gh',
+	'ssh',
+	'ssh-keygen',
+	'ssh-add',
+	'ssh-agent',
+	'eval',
+	'pbcopy',
+	'cd',
+	'ls',
+	'cat',
+	'echo',
+	'mkdir',
+	'touch',
+	'rm',
+	'cp',
+	'mv',
+	'grep',
+	'chmod',
+	'curl',
+	'code',
+	'npm',
+	'npx',
+	'node',
+	'exit',
+	'source',
+	'export',
+	'set',
+	'if',
+	'then',
+	'else',
+	'elif',
+	'fi',
+	'for',
+	'while',
+	'do',
+	'done'
+]);
+
+/** True when a shell-block line starts with a command we should highlight. */
+function isCommandLine(code: string): boolean {
+	const first = code.trimStart().split(/\s/, 1)[0];
+	return LINE_STARTING_COMMANDS.has(first);
+}
 
 /**
  * Tokenize one line of a code block. In `shell` mode the code portion is
@@ -220,6 +372,10 @@ function tokenizeLine(line: string, mode: CodeBlockMode): GitToken[] {
 		return tokenizeGitignoreLine(line);
 	}
 
+	if (mode === 'yaml') {
+		return tokenizeYamlLine(line);
+	}
+
 	if (CONFLICT_MARKER.test(line)) {
 		return [{ text: line, type: 'conflict' }];
 	}
@@ -229,7 +385,7 @@ function tokenizeLine(line: string, mode: CodeBlockMode): GitToken[] {
 	const tokens: GitToken[] = [];
 
 	if (code) {
-		if (mode === 'shell') {
+		if (mode === 'shell' && isCommandLine(code)) {
 			tokens.push(...tokenizeGitCommand(code));
 		} else {
 			tokens.push({ text: code, type: 'text' });
