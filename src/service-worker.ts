@@ -28,7 +28,16 @@ sw.addEventListener('activate', (event) => {
 		caches
 			.keys()
 			.then((keys) =>
-				Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))
+				Promise.all(
+					keys
+						// Prune ONLY our own versioned caches. Other caches on this
+						// origin are not ours to clear — in particular the Agent
+						// panel's transformers-cache holds hundreds of MB of model
+						// weights that must survive every deploy (and is shared
+						// with the sister course on the same origin).
+						.filter((key) => key.startsWith('gitvibes-') && key !== CACHE)
+						.map((key) => caches.delete(key))
+				)
 			)
 			.then(() => sw.clients.claim())
 	);

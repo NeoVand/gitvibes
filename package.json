@@ -14,7 +14,8 @@
 		"format": "prettier --write .",
 		"test:e2e": "playwright test",
 		"test:unit": "vitest run",
-		"test": "npm run test:unit && npm run test:e2e"
+		"test": "npm run test:unit && npm run test:e2e",
+		"build:index": "node scripts/build-course-index.mjs"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.2",
@@ -47,10 +48,14 @@
 		"vitest": "^4.1.9"
 	},
 	"dependencies": {
+		"@huggingface/transformers": "^4.2.0",
 		"@isomorphic-git/lightning-fs": "^4.6.2",
+		"@langchain/core": "^1.2.3",
+		"@langchain/langgraph": "^1.4.8",
 		"buffer": "^6.0.3",
 		"isomorphic-git": "^1.38.1",
 		"lucide-svelte": "^0.577.0",
-		"mermaid": "^11.13.0"
+		"mermaid": "^11.13.0",
+		"zod": "^4.4.3"
 	}
 }
