@@ -242,9 +242,16 @@ html {
 	scroll-padding-top: calc(var(--header-height) + 24px);
 }
 
+html {
+	/* The page color lives on <html>; <body> stays transparent so the fixed
+	   BackgroundPixels canvas (z-index -1) shows through wherever content
+	   doesn't paint its own surface. */
+	background-color: var(--color-bg);
+}
+
 body {
 	font-family: var(--font-sans);
-	background-color: var(--color-bg);
+	background-color: transparent;
 	color: var(--color-text);
 	line-height: 1.7;
 	-webkit-font-smoothing: antialiased;

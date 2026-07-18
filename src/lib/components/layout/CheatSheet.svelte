@@ -172,6 +172,7 @@
 
 <!-- Right-side sliding panel -->
 <aside
+	data-fabric
 	class="cheat-panel fixed top-0 right-0 bottom-0 z-40 flex w-84 flex-col border-l transition-transform duration-200 ease-out"
 	style="padding-top: var(--header-height); border-color: var(--color-border);"
 	class:translate-x-0={open}

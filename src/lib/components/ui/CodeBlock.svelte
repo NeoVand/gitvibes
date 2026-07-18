@@ -40,6 +40,7 @@
 </script>
 
 <div
+	data-fabric
 	class="group relative my-4 overflow-hidden rounded-lg"
 	style="background: var(--color-terminal-bg);"
 >

@@ -53,7 +53,7 @@
 	const c = $derived(config[type]);
 </script>
 
-<div class="my-5 rounded-lg px-5 py-4" style="background: {c.bg};">
+<div data-fabric class="my-5 rounded-lg px-5 py-4" style="background: {c.bg};">
 	<div
 		class="mb-2.5 flex items-center gap-2 text-sm font-bold tracking-wide uppercase"
 		style="color: {c.color}; font-family: var(--font-heading); letter-spacing: 0.08em;"
