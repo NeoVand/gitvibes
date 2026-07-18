@@ -64,10 +64,10 @@ function resolveSectionId(command: string, category: string): string {
 		'History & Inspection': 'section-7-2',
 		'Rebase & Cherry-pick': 'section-5-2',
 		Tags: 'section-5-6',
-		Advanced: 'section-8-2'
+		Advanced: 'section-9-2'
 	};
 
-	return categoryFallback[category] ?? 'section-8-2';
+	return categoryFallback[category] ?? 'section-9-2';
 }
 
 function slugify(value: string): string {
@@ -310,8 +310,80 @@ const topicEntries: SearchEntry[] = [
 		kind: 'topic'
 	},
 	{
-		id: 'topic-capstone',
+		id: 'topic-ci',
+		sectionId: 'section-8-1',
+		title: 'CI — where the green checkmark comes from',
+		part: 'CI, Bots & Releases',
+		description:
+			'Every push gets a fresh runner: lint, tests, build. GitHub Actions, workflows, and why the merge button waits for green.',
+		keywords: [
+			'ci',
+			'cd',
+			'continuous integration',
+			'continuous deployment',
+			'github actions',
+			'workflow',
+			'runner',
+			'checks',
+			'green check',
+			'checkmark',
+			'red x',
+			'pipeline',
+			'build failed',
+			'status checks'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-bots',
+		sectionId: 'section-8-2',
+		title: 'Dependabot, CodeQL & secret scanning',
+		part: 'CI, Bots & Releases',
+		description:
+			'The robot coworkers: dependency-update PRs, security scanning, leaked-key protection, lockfiles, and pinning actions by hash.',
+		keywords: [
+			'dependabot',
+			'codeql',
+			'secret scanning',
+			'push protection',
+			'security',
+			'vulnerability',
+			'dependency update',
+			'bump',
+			'lockfile',
+			'package-lock',
+			'supply chain',
+			'pinned actions',
+			'bot pr'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-release-automation',
 		sectionId: 'section-8-3',
+		title: 'SemVer, Conventional Commits & release-please',
+		part: 'CI, Bots & Releases',
+		description:
+			'major.minor.patch as a promise, feat:/fix: as machine-readable data, and the bot that turns commits into changelogs and version tags.',
+		keywords: [
+			'semver',
+			'semantic versioning',
+			'release-please',
+			'release please',
+			'changelog',
+			'version bump',
+			'conventional commits',
+			'feat',
+			'fix',
+			'breaking change',
+			'release vs deploy',
+			'version number'
+		],
+		kind: 'topic'
+	},
+	{
+		id: 'topic-capstone',
+		sectionId: 'section-9-3',
 		title: 'The Final Challenge',
 		part: 'Conclusion',
 		description: 'One repo, three messes — the capstone exercise that proves you can do it.',
@@ -320,7 +392,7 @@ const topicEntries: SearchEntry[] = [
 	},
 	{
 		id: 'topic-forges',
-		sectionId: 'section-8-4',
+		sectionId: 'section-9-4',
 		title: 'Beyond GitHub: GitLab, Bitbucket & friends',
 		part: 'Conclusion',
 		description:

@@ -174,6 +174,21 @@ const CLICK_PATHS: Record<LessonScenarioId, string[]> = {
 		'git worktree remove ../proj-auth',
 		'git worktree list'
 	],
+	'bot-pr': [
+		'git log --oneline --all',
+		'git diff main..dependabot/npm-lodash-4.17.21',
+		'git merge dependabot/npm-lodash-4.17.21',
+		'git branch -d dependabot/npm-lodash-4.17.21',
+		'git log --oneline'
+	],
+	'release-robot': [
+		'git log --oneline',
+		"echo '## 1.1.0 - csv export + fixes' > CHANGELOG.md",
+		'git add CHANGELOG.md',
+		'git commit -m "chore(main): release 1.1.0"',
+		'git tag -a v1.1.0 -m "Release 1.1.0"',
+		'git log --oneline'
+	],
 	capstone: [
 		'git status',
 		'git log --oneline',

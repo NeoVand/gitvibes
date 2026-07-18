@@ -33,22 +33,23 @@ Every lesson opens with an original piece of banner art — all **40** of them, 
 
 ### Curriculum
 
-| Part                         | Topics                                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------- |
-| **Introduction**             | What Git is, installing Git, what a repository is                                                       |
-| **1. Enterprise Onboarding** | Git config, authentication, cloning                                                                     |
-| **2. Core Safety Loop**      | `git status` → stage → commit, reviewing AI changes, `.gitignore` & secrets hygiene                     |
-| **3. Branching & PRs**       | Branches, fetch/pull/push, pull requests                                                                |
-| **4. Undo Toolkit**          | Restore, unstage, amend, reset, revert, force-with-lease, recovery matrix, detached HEAD, reflog rescue |
-| **5. Advanced Workflows**    | Stash, rebase vs merge, merge conflicts, cherry-pick, rebase conflict recovery, tags & releases         |
-| **6. Git for AI Agents**     | Teaching agents Git (`AGENTS.md`, skills), enforcing standards with hooks, parallel agents w/ worktrees |
-| **7. VS Code Cockpit**       | Source Control, Timeline & GitLens, 3-way merge editor                                                  |
-| **8. Conclusion**            | The AI-first workflow, quick reference card, the Final Challenge, the forges beyond GitHub              |
+| Part                                | Topics                                                                                                  |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Introduction**                    | What Git is, installing Git, what a repository is                                                       |
+| **1. Enterprise Onboarding**        | Git config, authentication, cloning                                                                     |
+| **2. Core Safety Loop**             | `git status` → stage → commit, reviewing AI changes, `.gitignore` & secrets hygiene                     |
+| **3. Branching & PRs**              | Branches, fetch/pull/push, pull requests                                                                |
+| **4. Undo Toolkit**                 | Restore, unstage, amend, reset, revert, force-with-lease, recovery matrix, detached HEAD, reflog rescue |
+| **5. Advanced Workflows**           | Stash, rebase vs merge, merge conflicts, cherry-pick, rebase conflict recovery, tags & releases         |
+| **6. Git for AI Agents**            | Teaching agents Git (`AGENTS.md`, skills), enforcing standards with hooks, parallel agents w/ worktrees |
+| **7. VS Code Cockpit**              | Source Control, Timeline & GitLens, 3-way merge editor                                                  |
+| **8. Ship It: CI, Bots & Releases** | CI & the green checkmark, Dependabot & CodeQL, SemVer + Conventional Commits + release-please           |
+| **9. Conclusion**                   | The AI-first workflow, quick reference card, the Final Challenge, the forges beyond GitHub              |
 
 ### Features
 
 - **Git Playground** — run real Git commands in the browser (isomorphic-git), opened as a sidebar panel from anywhere on the site
-- **20 hands-on exercises** with live success detection — a ✔ fires the moment the repo reaches the goal state, from the core loop to `bisect`, interactive rebase, hook guardrails, worktree fleets, and a three-messes-at-once capstone
+- **22 hands-on exercises** with live success detection — a ✔ fires the moment the repo reaches the goal state, from the core loop to `bisect`, interactive rebase, hook guardrails, worktree fleets, and a three-messes-at-once capstone
 - **A truthful commit graph** — real fork points, real merge edges, tags, remote-tracking positions, and detached-HEAD markers, redrawn after every command
 - **`undo` / `redo` / `share`** in every terminal — share serializes your exact session into a link anyone can replay
 - **Progress that persists** — sections read, exercises completed, a self-assessed skill checklist, and spaced-repetition refresher nudges (all localStorage; no accounts, no backend)

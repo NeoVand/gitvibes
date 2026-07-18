@@ -107,6 +107,22 @@ const CASES: { id: string; solution: string[] }[] = [
 		solution: ['git tag -a v1.1.0 -m "Release: import support"']
 	},
 	{
+		id: 'bot-pr',
+		solution: [
+			'git merge dependabot/npm-lodash-4.17.21',
+			'git branch -d dependabot/npm-lodash-4.17.21'
+		]
+	},
+	{
+		id: 'release-robot',
+		solution: [
+			"echo '## 1.1.0 - csv export + fixes' > CHANGELOG.md",
+			'git add CHANGELOG.md',
+			'git commit -m "chore(main): release 1.1.0"',
+			'git tag -a v1.1.0 -m "Release 1.1.0"'
+		]
+	},
+	{
 		id: 'capstone',
 		solution: [
 			'git restore --staged .env',

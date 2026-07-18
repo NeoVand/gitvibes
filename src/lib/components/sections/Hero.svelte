@@ -60,7 +60,7 @@
 		<p class="mb-5 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
 			<strong style="color: var(--color-text);">Welcome!</strong> This guide takes you from your first
 			commit to running AI coding agents with confidence — every concept explained visually, then practiced
-			hands-on. Two companions will follow you through all eight parts:
+			hands-on. Two companions will follow you through all nine parts:
 		</p>
 
 		<div class="space-y-3">

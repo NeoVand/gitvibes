@@ -15,6 +15,7 @@ import {
 	buildRebaseConflictRepo,
 	buildReflogRescueRepo,
 	buildReleaseRepo,
+	buildReleaseRobotRepo,
 	buildSyncRemoteRepo,
 	buildUndoRepo,
 	buildWrongBranchRepo,
@@ -562,6 +563,93 @@ export const playgroundScenarios: PlaygroundScenario[] = [
 			engine.worktreeHighWater >= 2 && engine.worktrees.length < engine.worktreeHighWater
 	},
 	{
+		id: 'bot-pr',
+		title: "Review the robot's PR — merge the bot branch",
+		description:
+			'A branch named dependabot/npm-lodash-4.17.21 appeared: the dependency bot proposing an upgrade. Review exactly what it changes, merge it into main, and clean up the branch — the same moves the Merge button makes on GitHub.',
+		hint: 'git log --oneline --all shows the bot branch. git diff main..dependabot/npm-lodash-4.17.21 shows its exact change — read it like any diff. Merge it into main (you are already on main), then delete the merged branch with git branch -d (the safe -d refuses if work is unmerged).',
+		suggestedCommands: [
+			'git log --oneline --all',
+			'git diff main..dependabot/npm-lodash-4.17.21',
+			'git merge dependabot/npm-lodash-4.17.21',
+			'git branch -d dependabot/npm-lodash-4.17.21',
+			'git log --oneline'
+		],
+		seed: {
+			commits: [
+				{
+					message: 'Initial commit',
+					files: [
+						{
+							path: 'package.json',
+							content: '{\n  "dependencies": {\n    "lodash": "4.17.20"\n  }\n}\n'
+						},
+						{ path: 'src/app.js', content: 'const _ = require("lodash");\n' }
+					]
+				},
+				{
+					message: 'feat: add search endpoint',
+					files: [{ path: 'src/search.js', content: 'module.exports = (q) => q.trim();\n' }]
+				}
+			],
+			branches: [
+				{
+					name: 'dependabot/npm-lodash-4.17.21',
+					commits: [
+						{
+							message: 'chore(deps): bump lodash from 4.17.20 to 4.17.21',
+							files: [
+								{
+									path: 'package.json',
+									content: '{\n  "dependencies": {\n    "lodash": "4.17.21"\n  }\n}\n'
+								}
+							]
+						}
+					]
+				}
+			],
+			branch: 'main'
+		},
+		goal: "The bot's bump is on main and the merged branch is cleaned up",
+		check: async (engine) => {
+			if (!(await logContains(engine, 'main', 'chore(deps): bump lodash'))) return false;
+			const branches = await git.listBranches({ fs: engine.fs, dir: engine.dir });
+			return !branches.some((b) => b.startsWith('dependabot/'));
+		}
+	},
+	{
+		id: 'release-robot',
+		title: 'Be release-please for a day',
+		description:
+			"Since v1.0.0, main has gained a feat and a fix. Do the release bot's bookkeeping by hand: read the log, decide the next version, update the changelog, commit the paperwork, and cut the annotated tag.",
+		hint: 'git log --oneline shows the conventional commits since the v1.0.0 tag — a feat: means the next release is a MINOR bump: v1.1.0. Rewrite CHANGELOG.md with echo, commit it as "chore(main): release 1.1.0", then git tag -a v1.1.0 -m "Release 1.1.0". (Real release-please prepends to the changelog; the playground keeps it to one line.)',
+		suggestedCommands: [
+			'git log --oneline',
+			"echo '## 1.1.0 - csv export + fixes' > CHANGELOG.md",
+			'git add CHANGELOG.md',
+			'git commit -m "chore(main): release 1.1.0"',
+			'git tag -a v1.1.0 -m "Release 1.1.0"',
+			'git log --oneline'
+		],
+		seedFn: buildReleaseRobotRepo,
+		goal: 'Changelog committed and v1.1.0 tagged (annotated) at the release commit',
+		check: async (engine) => {
+			const tagOid = await git
+				.resolveRef({ fs: engine.fs, dir: engine.dir, ref: 'refs/tags/v1.1.0' })
+				.catch(() => null);
+			if (!tagOid) return false;
+			const tag = await git
+				.readTag({ fs: engine.fs, dir: engine.dir, oid: tagOid })
+				.catch(() => null);
+			if (!tag) return false;
+			if ((await engine.peelTag(tagOid)) !== (await tipOid(engine, 'main'))) return false;
+			const msg = await tipMessage(engine, 'main');
+			if (!msg?.startsWith('chore')) return false;
+			const changelog = await fileAtHead(engine, 'CHANGELOG.md');
+			return changelog !== null && changelog.includes('1.1.0');
+		}
+	},
+	{
 		id: 'capstone',
 		title: 'The Final Challenge — three messes, one repo',
 		description:
@@ -668,6 +756,8 @@ export const lessonScenarioIds = [
 	'bisect',
 	'hooks',
 	'worktrees',
+	'bot-pr',
+	'release-robot',
 	'capstone'
 ] as const;
 

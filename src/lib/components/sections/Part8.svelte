@@ -1,64 +1,22 @@
 <script lang="ts">
-	import { BookOpen, Library, Workflow, Table, Trophy } from 'lucide-svelte';
+	import { Ship, BadgeCheck, ShieldCheck, PackageCheck } from 'lucide-svelte';
 	import { base } from '$app/paths';
-	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import Callout from '../ui/Callout.svelte';
+	import CodeBlock from '../ui/CodeBlock.svelte';
+	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
+	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
-	import { progress, toggleChecklistItem } from '$lib/data/progress';
-
-	let {
-		onOpenPlayground
-	}: {
-		onOpenPlayground?: () => void;
-	} = $props();
-
-	const SKILL_CHECKLIST = [
-		{ id: 'three-areas', label: 'I can explain working directory vs staging area vs repository.' },
-		{
-			id: 'review-diff',
-			label: 'I review AI diffs before staging: status → diff → add -p, never blind git add .'
-		},
-		{
-			id: 'commit-body',
-			label: 'I can write a Conventional Commit with a body that explains why.'
-		},
-		{
-			id: 'branch-push',
-			label: 'I can create a branch, push it with tracking, and open a draft PR.'
-		},
-		{
-			id: 'unstage-discard',
-			label: 'I know restore vs restore --staged vs commit --amend without checking.'
-		},
-		{
-			id: 'revert',
-			label: 'I can undo a pushed commit safely with revert (and know why not reset).'
-		},
-		{ id: 'reflog', label: 'I can recover "lost" commits with the reflog.' },
-		{
-			id: 'conflicts',
-			label: 'I can resolve a merge conflict AND a rebase conflict — and I know whose side HEAD is.'
-		},
-		{
-			id: 'lease-push',
-			label: 'I know when force-with-lease is safe and what the lease actually checks.'
-		},
-		{
-			id: 'agent-guardrails',
-			label: 'I can set up AGENTS.md, a pre-commit hook, and branch protection for an AI agent.'
-		}
-	];
 </script>
 
 <section id="part-8" class="py-10">
 	<div class="mx-auto max-w-4xl px-6">
 		<SectionHeader
-			icon={BookOpen}
+			icon={Ship}
 			partLabel="Part 8"
-			title="Conclusion: Best Practices for AI-Augmented Teams"
+			title="Ship It: CI, Bots, and Releases"
 			color="var(--color-primary)"
 		/>
 
@@ -66,700 +24,520 @@
 			class="my-8 border-l-4 py-1 pl-5 text-lg italic"
 			style="color: var(--color-text-secondary); border-color: var(--color-primary); font-family: var(--font-heading);"
 		>
-			"Git isn't just version control — it's the bridge between human intent and AI capability."
+			"The robots handle the vigilance so you can spend your attention on judgment."
 		</blockquote>
 
-		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
-			You've learned the full toolkit. Now let's put it all together into a cohesive workflow — the
-			daily rhythm that keeps you productive, your code safe, and your AI assistants working within
-			guardrails you control.
+		<p class="mb-4 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			Everything so far happened between you, your agent, and your repository. But open any active
+			project on GitHub and you'll see an entourage you didn't create: green checkmarks appearing on
+			every pull request, PRs opened by accounts named <code style="font-family: var(--font-mono);"
+				>dependabot</code
+			>
+			and
+			<code style="font-family: var(--font-mono);">release-please</code>, security scans running on
+			a schedule, version numbers bumping themselves. None of it is magic, and none of it is
+			optional knowledge anymore — this machinery is how modern software actually ships, and every
+			piece of it is built from things you already know: branches, commits, PRs, and tags.
 		</p>
 
-		<!-- 8.1 AI-First Workflow -->
+		<p class="mb-8 text-[15px] leading-relaxed" style="color: var(--color-text-secondary);">
+			One lens makes the whole chapter click: everything here is either a <strong
+				style="color: var(--color-text);">safety net</strong
+			>
+			(it catches mistakes before users see them) or a
+			<strong style="color: var(--color-text);">memory</strong> (it records what happened and why, for
+			the future maintainer — usually you). CI checks are safety nets. Changelogs and releases are memories.
+			The bots just run both without being asked.
+		</p>
+
+		<!-- 8.1 CI: The Green Checkmark -->
 		<div id="section-8-1" class="mb-14">
 			<SectionHeader
 				level="section"
-				icon={Workflow}
-				title="8.1 The AI-First Workflow (Summary)"
+				icon={BadgeCheck}
+				title="8.1 CI — Where the Green Checkmark Comes From"
 				color="var(--color-primary)"
 			/>
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/save-game-loop.webp"
-					alt="The Save Game Loop — 8-step AI-first Git workflow from branch to recover"
-					caption="The complete 8-step AI-first Git workflow — your daily rhythm"
+					src="{base}/images/ci-pipeline.webp"
+					alt="CI pipeline — a push triggers a fresh runner that lints, tests, and builds before the merge gate opens"
+					caption="Every push gets a fresh machine and the full gauntlet — green means the gate opens"
 				/>
 			</div>
 
-			<p class="mb-6" style="color: var(--color-text-secondary);">
-				This is your new "save game" loop — the practical rhythm between you and your agent. Follow
-				these 8 steps for every piece of work. Encode your Git conventions once in the repo (see
+			<Callout type="note">
+				<strong>The Problem:</strong> "It works on my machine" — but your machine has files that aren't
+				committed, packages that aren't declared, and a you that forgot to run the tests. Multiply that
+				by an AI agent pushing ten branches a day, and hoping everyone remembered to check everything
+				stops being a plan.
+			</Callout>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				<strong style="color: var(--color-text);">CI — Continuous Integration</strong> — is the fix,
+				and the idea is almost embarrassingly simple: every time anyone pushes, a robot builds the
+				project from scratch and runs every check against it. Not "when someone remembers." Every
+				push, every PR, every time. On GitHub the robot service is called
+				<strong style="color: var(--color-text);">GitHub Actions</strong>: each run spins up a
+				<em>runner</em> — a fresh, disposable Linux machine in the cloud — that clones your repo, installs
+				dependencies from the lockfile, and works through the checklist. If everything passes, your PR
+				gets the green checkmark. If anything fails, you get a red X and a log pointing at the failure
+				— minutes after pushing, not weeks later in production.
+			</p>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				The checklist itself is just a YAML file committed to your repo, which means it's versioned,
+				reviewed, and branch-protected like everything else. A real, minimal one:
+			</p>
+
+			<CodeBlock
+				lang="yaml"
+				title=".github/workflows/ci.yml"
+				code={`name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci        # install EXACTLY the lockfile versions
+      - run: npm run lint  # style + suspicious patterns
+      - run: npm test      # the whole suite, every time
+      - run: npm run build # prove a production build works`}
+			/>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Read it top to bottom: <em>on these triggers, run these steps</em>. That's the entire
+				programming model. The steps are the same commands you (or your hooks from
 				<a
-					href="#section-6-1"
+					href="#section-6-2"
 					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 6.1</a
-				>) so agents follow them automatically instead of re-explaining branch rules in every chat.
-				And remember: you can practice any step of this loop in the
-				<button
-					type="button"
-					onclick={onOpenPlayground}
-					class="cursor-pointer underline underline-offset-2"
-					style="color: var(--color-primary);">Git Playground</button
-				> — real Git commands, right in your browser.
+					style="color: var(--color-primary);">section 6.2</a
+				>) run locally — the difference is <em>where</em> and <em>always</em>. A pre-commit hook is
+				a seatbelt you buckle on your own machine, and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">--no-verify</code
+				> unbuckles it. CI runs on a machine nobody can sweet-talk. Hooks are the seatbelt; CI is the
+				law.
 			</p>
 
-			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Here's what each step looks like in practice, along with the commands you'll use.
+			<MermaidDiagram
+				definition={`graph TD
+  P([git push or open a PR]) --> R[fresh cloud runner]
+  R --> L[lint and format]
+  R --> T[types and tests]
+  R --> B[production build]
+  L --> G{all green?}
+  T --> G
+  B --> G
+  G -->|yes| M([merge button unlocks])
+  G -->|no| F([red X — fix and push again])`}
+				id="ci-pipeline-flow"
+			/>
+			<p class="mt-2 px-1 text-xs" style="color: var(--color-text-muted);">
+				Branch protection (the rulesets from <a
+					href="#section-3-3"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">section 3.3</a
+				>) is what wires the checkmark to the merge button: no green, no merge — for you, your
+				teammates, and every agent equally.
 			</p>
 
-			<div class="mt-6 space-y-3">
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">1</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Branch</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							Create an isolated branch so the AI can never touch <code
-								style="font-family: var(--font-mono);">main</code
-							>
-							directly.
-							<code style="font-family: var(--font-mono);"
-								>git switch -c ai-experiment/new-feature</code
-							>
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">2</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Generate</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							Work with your AI agent to implement the change. With <code
-								style="font-family: var(--font-mono);">AGENTS.md</code
-							> and skills configured, it already knows your branch naming, commit format, and safety
-							rules.
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">3</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Review</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							Use <code style="font-family: var(--font-mono);">git add -p</code> or VS Code "Stage Selected
-							Ranges" to review every line.
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">4</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Save</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							<code style="font-family: var(--font-mono);"
-								>git commit -m "feat: &lt;message&gt;"</code
-							> -- Commit small, commit often.
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">5</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Sync</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							<code style="font-family: var(--font-mono);">git fetch origin</code> followed by
-							<code style="font-family: var(--font-mono);">git rebase origin/main</code>.
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">6</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Push</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							<code style="font-family: var(--font-mono);">git push --force-with-lease</code> if you rebased.
-							Updates remote safely.
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">7</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Propose</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							Create a Pull Request for human review.
-						</p>
-					</div>
-				</div>
-				<div class="flex gap-3 rounded-lg p-3" style="background: var(--color-bg-secondary);">
-					<span
-						class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold"
-						style="background: var(--color-primary); color: white;">8</span
-					>
-					<div>
-						<p class="text-[13px] font-medium" style="color: var(--color-text);">Recover</p>
-						<p class="text-xs" style="color: var(--color-text-muted);">
-							If you push a mistake, never reset a public branch. Always use <code
-								style="font-family: var(--font-mono);">git revert</code
-							>.
-						</p>
-					</div>
-				</div>
-			</div>
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				The sibling acronym, <strong style="color: var(--color-text);">CD</strong> — Continuous
+				Delivery or Deployment — is what happens <em>after</em> green: code that reaches
+				<code style="font-family: var(--font-mono);">main</code> ships to users automatically. Many
+				projects (including this site) deploy on every merge — a second workflow builds the app and
+				publishes it the moment a PR lands. That immediacy is exactly why the gate in front of main
+				matters: when merging
+				<em>is</em> shipping, "we'll fix it before the release" is not a sentence that exists.
+			</p>
+
+			<Callout type="tip">
+				<strong>Why vibe coders should care most:</strong> CI is the one reviewer that scales with
+				your agents. You can't personally re-run the test suite for every branch three agents push
+				in parallel — but the runner can, does, and never gets tired. Green checks are what let you
+				supervise
+				<em>outcomes</em> instead of babysitting every command.
+			</Callout>
 
 			<VibeBox
 				prompts={[
-					'Walk me through the full Git workflow for starting a new feature from scratch',
-					'I just finished coding — what Git steps should I follow before creating a PR?'
+					'Add a GitHub Actions workflow to my repo that runs lint, tests, and a build on every pull request',
+					'My tests pass locally but fail in CI — walk me through the usual suspects (lockfile, node version, environment)'
 				]}
 			/>
 		</div>
 
-		<!-- 8.2 Quick Reference -->
-		<div id="section-8-2" class="mb-8">
+		<!-- 8.2 The Robot Coworkers -->
+		<div id="section-8-2" class="mb-14">
 			<SectionHeader
 				level="section"
-				icon={Table}
-				title="8.2 Quick Reference Card"
+				icon={ShieldCheck}
+				title="8.2 The Robot Coworkers: Dependabot, CodeQL & Friends"
 				color="var(--color-primary)"
 			/>
 
 			<div class="my-6">
 				<ExpandableImage
-					src="{base}/images/quick-reference.webp"
-					alt="Quick Reference Card — Git tasks with terminal commands and VS Code equivalents"
-					caption="Keep this cheat sheet handy — terminal commands and their VS Code equivalents"
+					src="{base}/images/robot-coworkers.webp"
+					alt="Robot coworkers — bots opening dependency and security PRs that flow through the same CI gate"
+					caption="Bots open PRs like everyone else — and face the same green-check gate"
 				/>
 			</div>
 
-			<p class="mt-4 mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Keep this handy. It covers the most common Git tasks with both the terminal command and the
-				VS Code equivalent, so you can use whichever feels more natural.
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Once CI guards the gate, something clever becomes possible: you can let robots <em
+					>propose</em
+				>
+				changes, because no proposal — human, agent, or bot — gets through without passing the same checks.
+				A bot's PR is a completely ordinary PR: a branch, a diff, a conversation, a checkmark. You already
+				know how to review one. Meet the three coworkers you'll see most.
 			</p>
 
-			<div class="overflow-x-auto rounded-lg" style="background: var(--color-bg-secondary);">
-				<table class="w-full text-xs">
-					<thead>
-						<tr style="background: var(--color-bg-tertiary);">
-							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);"
-								>Task</th
-							>
-							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);"
-								>Command</th
-							>
-							<th class="px-3 py-2.5 text-left font-semibold" style="color: var(--color-text);"
-								>VS Code</th
-							>
-						</tr>
-					</thead>
-					<tbody style="color: var(--color-text-secondary);">
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Check what changed</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git status</code></td
-							>
-							<td class="px-3 py-2">Source Control panel</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Stage specific lines</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git add -p</code></td
-							>
-							<td class="px-3 py-2">Stage Selected Ranges</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Commit changes</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git commit -m "feat: ..."</code></td
-							>
-							<td class="px-3 py-2">Type message + checkmark</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Create new branch</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git switch -c feature/name</code></td
-							>
-							<td class="px-3 py-2">Click branch name (bottom-left)</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Discard local changes</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git restore .</code></td
-							>
-							<td class="px-3 py-2">Discard Changes</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Undo last commit (keep)</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git reset --soft HEAD~1</code></td
-							>
-							<td class="px-3 py-2">... menu: Commit → Undo Last Commit</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Revert public commit</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git revert &lt;hash&gt;</code></td
-							>
-							<td class="px-3 py-2">Revert Commit</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Stash work in progress</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git stash push -m "message"</code></td
-							>
-							<td class="px-3 py-2">... menu: Stash</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Update branch</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);"
-									>git fetch && git rebase origin/main</code
-								></td
-							>
-							<td class="px-3 py-2">... menu: Pull (Rebase)</td>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Safe force push</td>
-							<td class="px-3 py-2"
-								><code style="font-family: var(--font-mono);">git push --force-with-lease</code></td
-							>
-							<td class="px-3 py-2"
-								>Git: Push (Force With Lease) — needs the git.allowForcePush setting</td
-							>
-						</tr>
-						<tr style="border-top: 1px solid var(--color-border);">
-							<td class="px-3 py-2">Practice all commands</td>
-							<td class="px-3 py-2">
-								<button
-									type="button"
-									onclick={onOpenPlayground}
-									class="cursor-pointer underline underline-offset-2"
-									style="color: var(--color-primary);">Git Playground</button
-								>
-							</td>
-							<td class="px-3 py-2">Try it yourself tabs in Parts 2–5</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-		<!-- 8.3 The Final Challenge -->
-		<div id="section-8-3" class="mb-14">
-			<SectionHeader
-				level="section"
-				icon={Trophy}
-				title="8.3 The Final Challenge"
-				color="var(--color-primary)"
-			/>
-
-			<p class="mb-4 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
-				Reading is not knowing. Here's the exam — one repository, three simultaneous messes, no
-				step-by-step instructions. Everything you need is in Parts 2 through 5, and the playground
-				will tell you the moment you've won.
-			</p>
-
-			<div class="my-6">
-				<ExpandableImage
-					src="{base}/images/final-challenge.webp"
-					alt="The Final Challenge — three messes, one repo, no instructions"
-					caption="Three simultaneous messes, one repository — everything from Parts 2–5 at once"
-				/>
-			</div>
-
-			<Callout type="important">
-				<strong>Your mission:</strong> a payment feature was committed straight to
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">main</code
-				>, a live Stripe key is sitting <em>staged</em> and one careless commit away from leaking,
-				and the cleaned-up main still needs its
-				<code
-					class="rounded px-1.5 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">v1.0.0</code
-				> release tag. Fix all three, in any order.
-			</Callout>
-
-			<h4
-				id="capstone"
-				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
-				style="color: var(--color-text);"
-			>
-				Try It: The Final Challenge
-			</h4>
-			<PlaygroundNote>
-				Start with <code>git status</code> and <code>git log --oneline</code> to survey the damage. A
-				✔ appears in the terminal when all three goals are met — no partial credit.
-			</PlaygroundNote>
-			<LessonActivity title="The Final Challenge" scenarioId="capstone" id="capstone" />
-
-			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-				The Skill Checklist
-			</h4>
-
-			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				Beyond the challenge, here's the honest self-test. Check each item only when you could do it
-				<em>right now, without looking anything up</em>. (Saved locally in your browser — nobody's
-				grading you but you.)
-			</p>
-
-			<div class="mb-4 space-y-1.5">
-				{#each SKILL_CHECKLIST as item (item.id)}
-					<button
-						type="button"
-						onclick={() => toggleChecklistItem(item.id)}
-						class="flex w-full cursor-pointer items-start gap-3 rounded-lg p-3 text-left transition-opacity hover:opacity-80"
-						style="background: var(--color-bg-secondary);"
-					>
-						<span
-							class="mt-0.5 flex h-4.5 w-4.5 flex-shrink-0 items-center justify-center rounded border text-[11px] font-bold"
-							style="border-color: {$progress.checklist[item.id]
-								? 'var(--color-tip)'
-								: 'var(--color-border)'}; color: var(--color-tip); background: {$progress.checklist[
-								item.id
-							]
-								? 'color-mix(in srgb, var(--color-tip) 15%, transparent)'
-								: 'transparent'};"
-						>
-							{$progress.checklist[item.id] ? '✔' : ''}
-						</span>
-						<span
-							class="text-[13px]"
-							style="color: {$progress.checklist[item.id]
-								? 'var(--color-text-muted)'
-								: 'var(--color-text-secondary)'};"
-						>
-							{item.label}
-						</span>
-					</button>
-				{/each}
-			</div>
-		</div>
-
-		<!-- 8.4 Keep Learning -->
-		<div id="section-8-4" class="mb-14">
-			<SectionHeader
-				level="section"
-				icon={Library}
-				title="8.4 Keep Learning — The References That Matter"
-				color="var(--color-primary)"
-			/>
-
-			<div class="mb-6">
-				<ExpandableImage
-					src="{base}/images/keep-learning.webp"
-					alt="Keep learning — a doorway opening onto a constellation of branching paths"
-					caption="This guide ends here — the history graph keeps going"
-				/>
-			</div>
-
-			<p class="mb-5 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
-				You've practiced everything here in a real repository — but Git is deep, and the best
-				references are worth knowing by name. These six will cover you from quick lookups to true
-				mastery:
-			</p>
-
-			<div class="mb-4 space-y-3">
+			<div class="mb-6 space-y-3">
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://git-scm.com"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">git-scm.com</a
-						>
-						<span style="color: var(--color-text);"> — the official Git site</span>
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						Dependabot — the dependency gardener
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Downloads, release notes, and the authoritative
-						<a
-							href="https://git-scm.com/docs"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">command reference</a
+						Your project stands on dozens of open-source packages, and dependencies age like food,
+						not wine: every one has its own release stream and, occasionally, its own security
+						holes. Dependabot watches all of them and opens PRs on your behalf — branches named <code
+							class="rounded px-1 py-0.5 text-xs"
+							style="background: var(--color-code-bg); font-family: var(--font-mono);"
+							>dependabot/npm_and_yarn/...</code
 						>
-						— the same pages
+						with commits like
 						<code
 							class="rounded px-1 py-0.5 text-xs"
 							style="background: var(--color-code-bg); font-family: var(--font-mono);"
-							>git help &lt;command&gt;</code
-						> shows you locally.
+							>chore(deps): bump lodash from 4.17.20 to 4.17.21</code
+						>. The elegant part: its PR triggers <em>your</em> CI. The robot proposes, your test suite
+						disposes. If the update breaks the build, you find out in the PR — not in production.
 					</p>
 				</div>
-
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://git-scm.com/book"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">Pro Git</a
-						>
-						<span style="color: var(--color-text);"> — the book, free forever</span>
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						CodeQL — the code detective
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						The definitive deep dive, from first commit to Git internals. When you want to know
-						<em>why</em> Git works the way it does, this is the answer.
+						GitHub's code-scanning engine treats your codebase like a database and runs queries
+						written by security researchers against it — hundreds of known-dangerous shapes, like
+						user input flowing unsanitized into HTML (cross-site scripting) or into file paths. It
+						runs on PRs <em>and</em> on a schedule, so when a new attack pattern is discovered, your
+						<em>old</em> code gets re-checked too. Think of it as a security specialist who re-reads your
+						entire repo every week and only speaks up on a match.
 					</p>
 				</div>
-
 				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://learngitbranching.js.org"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">Learn Git Branching</a
-						>
-						<span style="color: var(--color-text);"> — branching puzzles</span>
+					<h4 class="mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+						Secret scanning — the leak alarm
 					</h4>
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Thirty minutes of visual rebase-and-merge puzzles. A great gym for the branch topology
-						instincts you started building in Parts 3 and 5 — the muscle memory will save you hours.
-					</p>
-				</div>
-
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://docs.github.com"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">GitHub Docs</a
+						Remember the staged <code
+							class="rounded px-1 py-0.5 text-xs"
+							style="background: var(--color-code-bg); font-family: var(--font-mono);">.env</code
 						>
-						<span style="color: var(--color-text);"> — the collaboration layer</span>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Pull requests, protected branches, Actions, and everything else that lives above Git
-						itself at most workplaces.
-					</p>
-				</div>
-
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
+						drama from
 						<a
-							href="https://ohshitgit.com"
-							target="_blank"
-							rel="noopener noreferrer"
+							href="#section-2-4"
 							class="underline underline-offset-2"
-							style="color: var(--color-primary);">Oh Shit, Git!?!</a
-						>
-						<span style="color: var(--color-text);"> — panic-mode recipes</span>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Blunt, funny, and correct recovery recipes for the moments Part 4 trained you for. Keep
-						it bookmarked next to your reflog.
-					</p>
-				</div>
-
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://ohmygit.org"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">Oh My Git!</a
-						>
-						<span style="color: var(--color-text);"> — Git as a video game</span>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						An open-source game that visualizes Git's internals live as you play cards and type
-						commands. The gentlest way to make the commit graph feel physical — and genuinely fun.
+							style="color: var(--color-primary);">section 2.4</a
+						>? GitHub runs a last line of defense: it recognizes the formats of API keys and tokens
+						and — with push protection on — refuses the push outright. A blocked push is a gift.
+						Treat any key that reaches a public commit as burned, and rotate it.
 					</p>
 				</div>
 			</div>
 
-			<h4 class="mt-8 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
-				GitHub Is a Choice, Not a Given
-			</h4>
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Dependabot is configured with — you guessed it — a YAML file in the repo. The one setting
+				worth knowing on day one is <em>grouping</em>, which turns thirty tiny weekly PRs into one
+				digestible one:
+			</p>
 
-			<p class="mb-3 text-[14px]" style="color: var(--color-text-secondary);">
-				This guide uses GitHub because it's where most of the industry (and most of the AI-agent
-				ecosystem) lives — but here's an honest secret: <strong style="color: var(--color-text);"
-					>almost nothing you learned is GitHub-specific</strong
-				>. Git itself is decentralized; every clone carries the full history, and the "forge" —
-				GitHub, or any of the sites below — is just the hosting and collaboration layer on top. Even
-				the pull request is a forge invention, not a Git feature. Switching forges is one command (<code
+			<CodeBlock
+				lang="yaml"
+				title=".github/dependabot.yml"
+				code={`version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+        # major bumps stay separate — those need real review`}
+			/>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Two quieter pieces complete the safety net. The <strong style="color: var(--color-text);"
+					>lockfile</strong
+				>
+				(<code
 					class="rounded px-1 py-0.5 text-xs"
 					style="background: var(--color-code-bg); font-family: var(--font-mono);"
-					>git remote set-url origin &lt;new-url&gt;</code
-				>) and a push. The alternatives worth knowing:
-			</p>
-
-			<div class="mb-4 space-y-3">
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://about.gitlab.com"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">GitLab</a
-						>
-						<span style="color: var(--color-text);"> — the whole-pipeline platform</span>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						GitHub's biggest rival, and the one you're most likely to meet at work. Pull requests
-						are called <strong>merge requests (MRs)</strong> — same thing, different name. Its edge:
-						one integrated application from issue to CI/CD to deployment to security scanning (it
-						had built-in pipelines years before GitHub Actions existed), and an open-source core you
-						can <strong>self-host for free</strong> — which is why regulated companies that can't put
-						code on someone else's cloud often run their own GitLab. What GitHub has that it doesn't:
-						the network — the world's largest open-source community, the Actions marketplace, and the
-						deepest AI-agent integrations (Copilot, Agent HQ).
-					</p>
-				</div>
-
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://bitbucket.org"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">Bitbucket</a
-						>
-						<span style="color: var(--color-text);"> — the Atlassian citizen</span>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Atlassian's forge. Its reason to exist is deep, native integration with Jira and
-						Confluence — branch from a ticket, and the ticket tracks the PR's whole lifecycle
-						automatically. If your company runs on Jira, you may well find your code here. Outside
-						that ecosystem it offers little GitHub doesn't, and its open-source presence is small.
-					</p>
-				</div>
-
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://codeberg.org"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">Codeberg</a
-						>
-						<span style="color: var(--color-text);">
-							&
-							<a
-								href="https://forgejo.org"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="underline underline-offset-2"
-								style="color: var(--color-primary);">Forgejo</a
-							> — the community option</span
-						>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						Codeberg is a nonprofit, donation-funded forge run for open source — no ads, no
-						tracking, no AI training on your code, and that <em>is</em> the pitch. It runs Forgejo, free
-						software you can self-host yourself as a single small binary (its ancestor Gitea works the
-						same way) — the lightweight answer when a whole GitLab is overkill. The trade-off is the same
-						network effect in reverse: fewer eyes, fewer integrations, no agent ecosystem.
-					</p>
-				</div>
-
-				<div class="rounded-lg p-5" style="background: var(--color-bg-secondary);">
-					<h4 class="mb-1 text-[14px] font-semibold">
-						<a
-							href="https://sourcehut.org"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">SourceHut</a
-						>
-						<span style="color: var(--color-text);"> — Git the old way, on purpose</span>
-					</h4>
-					<p class="text-[13px]" style="color: var(--color-text-secondary);">
-						A deliberately minimal, JavaScript-free forge built around Git's original collaboration
-						model: patches reviewed over <strong>email</strong>, the way the Linux kernel still
-						works. No pull-request button at all. Worth knowing because it proves the point above —
-						the PR is a convention, not a law — and because some significant projects genuinely work
-						this way.
-					</p>
-				</div>
-			</div>
-
-			<p class="mb-4 text-[13px]" style="color: var(--color-text-secondary);">
-				(Also out there: <a
-					href="https://azure.microsoft.com/en-us/products/devops"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">Azure DevOps</a
-				>
-				in Microsoft-stack enterprises, and experimental peer-to-peer forges like
+					>package-lock.json</code
+				>) pins the exact version of every package <em>and every package's packages</em>, so your
+				laptop, CI, and production all install byte-identical dependencies — it's why the lockfile
+				belongs in Git even though you never edit it by hand. And
+				<strong style="color: var(--color-text);">supply-chain pinning</strong>: careful repos
+				reference third-party Actions by full commit hash instead of a friendly tag. You know from
 				<a
-					href="https://radicle.xyz"
-					target="_blank"
-					rel="noopener noreferrer"
+					href="#section-5-6"
 					class="underline underline-offset-2"
-					style="color: var(--color-primary);">Radicle</a
-				> with no central server at all. Wherever you land: same Git, same commands, same you.)
-			</p>
-
-			<Callout type="note">
-				<strong>And a glimpse past Git:</strong>
-				<a
-					href="https://github.com/jj-vcs/jj"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">Jujutsu (jj)</a
+					style="color: var(--color-primary);">section 5.6</a
 				>
-				is the most credible next-generation version control tool — a Git-compatible frontend that stores
-				real Git commits, so your team never has to know you're using it. It snapshots your working copy
-				automatically (every command is undoable with
+				that a tag is just a movable label — and if an attacker compromises an Action's repo, they can
+				quietly move
 				<code
 					class="rounded px-1 py-0.5 text-xs"
-					style="background: var(--color-code-bg); font-family: var(--font-mono);">jj undo</code
-				>), which is making it popular for agent-heavy workflows. Still pre-1.0 and evolving fast —
-				but everything you learned here transfers, because underneath, it <em>is</em> Git.
-				<a
-					href="https://steveklabnik.github.io/jujutsu-tutorial/"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">Steve Klabnik's tutorial</a
-				> is the place to start when you're curious.
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">v4</code
+				> to malicious code. A commit hash can't be moved. Same Git concept, now a security boundary.
+			</p>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Here's what a healthy history looks like with the robots at work — one of these commits was
+				written by a human:
+			</p>
+
+			<CodeBlock
+				title="git log on a well-tended repo"
+				code={`git log --oneline -n 4
+e4f5a6b feat: add csv export
+b7c8d9e chore(deps): bump the npm group with 3 updates
+a1b2c3d chore(main): release 1.4.2 (#118)
+9f8e7d6 fix: handle empty header row`}
+			/>
+
+			<Callout type="warning">
+				<strong>Bots are agents with one narrow job.</strong> Everything Part 6 taught you about AI
+				agents applies: read the diff before you merge, be extra awake for <em>major</em> version bumps
+				(breaking changes ride in on those), and never grant a bot more permissions than its one job needs.
+				The green check tells you the tests still pass — it cannot tell you whether the new major version
+				quietly changed a behavior your tests never covered.
 			</Callout>
+
+			<h4
+				id="bot-pr"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Review the Robot's PR
+			</h4>
+			<PlaygroundNote>
+				Dependabot has pushed a branch. Inspect exactly what it wants to change with <code
+					>git diff</code
+				>, merge it, and clean up the branch — the same moves the "Merge" button does for you on
+				GitHub.
+			</PlaygroundNote>
+			<LessonActivity title="Review the Robot's PR" scenarioId="bot-pr" id="bot-pr" />
+
+			<VibeBox
+				prompts={[
+					'Set up Dependabot for my repo with weekly, grouped minor/patch updates',
+					'Dependabot opened a major-version bump PR — read the changelog of the dependency and tell me what could break'
+				]}
+			/>
 		</div>
 
-		<!-- Final Thoughts -->
-		<div class="mb-8">
-			<Callout type="important">
-				<strong>Final Thoughts:</strong> Your AI assistants are powerful tools that lack context and accountability.
-				Git is your system of accountability. It provides the immutable history, the instant "undo" button,
-				and the human-in-the-loop review layer that transforms high-velocity AI coding from a risky experiment
-				into a professional, safe, and scalable engineering discipline. Master it, and you'll transform
-				AI-assisted coding into a superpower.
+		<!-- 8.3 Releases on Autopilot -->
+		<div id="section-8-3" class="mb-14">
+			<SectionHeader
+				level="section"
+				icon={PackageCheck}
+				title="8.3 Releases on Autopilot: SemVer, Conventional Commits, release-please"
+				color="var(--color-primary)"
+			/>
+
+			<div class="my-6">
+				<ExpandableImage
+					src="{base}/images/release-autopilot.webp"
+					alt="Release autopilot — conventional commits feeding a changelog, a version bump, and a tagged release"
+					caption="Structured commit messages are the fuel — the changelog and version number write themselves"
+				/>
+			</div>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				A green merge says the code is good. A <strong style="color: var(--color-text);"
+					>release</strong
+				>
+				answers two different questions: <em>what do we call this state</em>, and
+				<em>what changed since the last one</em>? In
+				<a
+					href="#section-5-6"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">section 5.6</a
+				> you did this by hand — decided a version number, wrote an annotated tag. This lesson is about
+				the grammar behind those version numbers, and the robot that does the paperwork.
+			</p>
+
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Semantic Versioning: the number is a promise
+			</h4>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				A version like <code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">2.4.1</code
+				>
+				reads as
+				<strong style="color: var(--color-text);">major.minor.patch</strong>, and each position
+				carries a promise to whoever upgrades: a <em>patch</em> bump (2.4.1 → 2.4.2) means "bug
+				fixes only, upgrade blind"; a <em>minor</em> bump (2.4 → 2.5) means "new features, nothing
+				you rely on changed"; a <em>major</em> bump (2 → 3) means "something breaks — read the notes before
+				touching it." That's why Dependabot's major-version PRs deserve your full attention while patch
+				bumps barely need a glance: the versioning scheme is literally telling you how scared to be.
+			</p>
+
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				Conventional Commits: the payoff
+			</h4>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				Since <a
+					href="#section-2-3"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">Part 2</a
+				>
+				you've been writing
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">feat:</code
+				>
+				and
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">fix:</code
+				>
+				prefixes, and in
+				<a
+					href="#section-6-2"
+					class="underline underline-offset-2"
+					style="color: var(--color-primary);">section 6.2</a
+				>
+				a hook started enforcing them. Here's the payoff: those prefixes map straight onto SemVer.
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">fix:</code
+				>
+				means the next release is at least a patch.
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">feat:</code
+				>
+				promotes it to a minor. A
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);">feat!:</code
+				>
+				or a
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>BREAKING CHANGE:</code
+				>
+				footer forces a major. Your commit history stopped being prose and became data — which means a
+				machine can read it.
+			</p>
+
+			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
+				release-please: the release accountant
+			</h4>
+
+			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				<strong style="color: var(--color-text);">release-please</strong> (Google's oddly polite
+				release bot) watches main and keeps a running draft of the next release. It reads every
+				conventional commit since the last tag, computes the right version bump, and opens — a pull
+				request. The PR contains exactly two things: an updated
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>CHANGELOG.md</code
+				>
+				grouping your commits into Features and Bug Fixes, and the version bump. As more commits land
+				on main, the bot quietly amends its own PR. When you decide it's release time, you merge the PR
+				like any other — and the bot tags the commit and publishes a GitHub Release. If you've ever wondered
+				what a commit like
+				<code
+					class="rounded px-1 py-0.5 text-xs"
+					style="background: var(--color-code-bg); font-family: var(--font-mono);"
+					>chore(main): release 1.1.0 (#42)</code
+				> is: that's someone merging the accountant's paperwork.
+			</p>
+
+			<MermaidDiagram
+				definition={`graph TD
+  C1["feat: add csv export"] --> RP[release-please reads main]
+  C2["fix: handle empty rows"] --> RP
+  RP --> PR([release PR: CHANGELOG + bump to v1.1.0])
+  PR -->|you merge it| T[tag v1.1.0 + GitHub Release]
+  T --> A([a named point to announce, compare, or roll back to])`}
+				id="release-please-flow"
+			/>
+
+			<p class="mt-4 mb-4 text-[14px]" style="color: var(--color-text-secondary);">
+				The changelog it maintains is the <em>memory</em> half of this chapter at its purest — the human-readable
+				answer to "what changed since 1.0.0?", assembled from messages you were already writing:
+			</p>
+
+			<CodeBlock
+				lang="markdown"
+				title="CHANGELOG.md — written by the robot, from your commits"
+				code={`## 1.1.0 (2026-07-17)
+
+### Features
+
+* add csv export (#31)
+
+### Bug Fixes
+
+* handle empty header row (#33)`}
+			/>
+
+			<Callout type="note">
+				<strong>A release is not a deploy.</strong> If your project deploys on every merge (8.1),
+				users may be running code from ten minutes ago while your latest <em>release</em> is v1.1.0 from
+				last week. Deploying is code reaching users; releasing is giving a state a name, a changelog entry,
+				and a tag you can return to. Small tools may release without deploying anything; a website deploys
+				constantly and releases occasionally, as a bookmark.
 			</Callout>
+
+			<h4
+				id="release-robot"
+				class="mt-6 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Be release-please for a Day
+			</h4>
+			<PlaygroundNote>
+				Two conventional commits have landed since <code>v1.0.0</code>. Do the accountant's job by
+				hand exactly once — read the log, write the changelog, commit the paperwork, cut the tag —
+				and you'll never wonder what the bot does again.
+			</PlaygroundNote>
+			<LessonActivity
+				title="Be release-please for a Day"
+				scenarioId="release-robot"
+				id="release-robot"
+			/>
+
+			<VibeBox
+				prompts={[
+					'Set up release-please for my repository and explain what its first PR will contain',
+					'Read my commits since the last tag and tell me the next version number — and why'
+				]}
+			/>
 		</div>
 	</div>
 </section>

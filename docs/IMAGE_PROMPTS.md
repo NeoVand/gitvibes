@@ -671,7 +671,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 
 ## Missing banners batch (July 2026)
 
-**Numbering note:** the curriculum was renumbered in July 2026 — the "Part 6: VS Code Git Integration" prompts above correspond to today's **Part 7**, and "Part 7: Conclusion" corresponds to today's **Part 8**. The entries below use current section ids and supersede any older prompt with the same topic.
+**Numbering note:** the curriculum was renumbered in July 2026 — the "Part 6: VS Code Git Integration" prompts above correspond to today's **Part 7**. A second renumbering (late July 2026) inserted **Part 8: Ship It — CI, Bots & Releases** before the Conclusion, which is now **Part 9** — older "Part 7: Conclusion" prompts correspond to it. The entries below use current section ids and supersede any older prompt with the same topic.
 
 **Palette note (bake into every render):** these accents come straight from the app's dark theme so banners sit naturally in the page — indigo `#818cf8` (primary), pink-rose `#f472b6` (the "main" branch color in the commit graphs), emerald `#a6e3a1` (terminal green / success), amber `#d97706` (warning warmth), cyan `#0284c7` (info). Background stays `#0f1117` to match the existing banner series. Use at most two or three accents per image, always as localized glow on a mostly dark frame.
 
@@ -745,7 +745,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 >
 > AVOID: literal VS Code chrome, labeled panes, AI sparkle badges, tug-of-war imagery, red anywhere. Three planes, one undecided line, quiet resolution. 16:9 aspect ratio.
 
-### section-8-3 — The Final Challenge → `final-challenge.png`
+### section-9-3 — The Final Challenge → `final-challenge.png`
 
 > Create a cinematic editorial poster for **the capstone exam** — one repository, three messes, no instructions.
 >
@@ -759,7 +759,7 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 >
 > AVOID: trophies, medals, confetti, checklists, countdown timers, red alarms. Three quiet faults, one capable atmosphere. 16:9 aspect ratio.
 
-### section-8-4 — Keep Learning → `keep-learning.png`
+### section-9-4 — Keep Learning → `keep-learning.png`
 
 > Create a cinematic editorial poster about **the path continuing** — graduation from this guide into the wider Git world.
 >
@@ -772,3 +772,53 @@ Each prompt below is self-contained. Copy and paste directly into your image mod
 > STYLE: Dark navy background (#0f1117), soft film grain, paper texture on the workbook. Doorway light warm and restrained; constellation nodes in sparse indigo (#818cf8), emerald (#a6e3a1), and amber (#d97706) glints. Vast negative space in the sky.
 >
 > AVOID: graduation caps, diplomas, literal book covers with titles, brand logos, signposts with labels, rocket ships. One doorway, one path, one field of possibilities. 16:9 aspect ratio.
+
+---
+
+## Part 8: Ship It — CI, Bots & Releases (July 2026)
+
+Each prompt below is fully self-contained — copy one blockquote and paste it as-is; the palette, mood, and legibility rules are already inside it.
+
+### section-8-1 — CI & the Green Checkmark → `ci-pipeline.png`
+
+> Create a poster that is equal parts cinematic art and readable diagram. Topic: **continuous integration (CI)** — every code push travels through automated checks before it is allowed to merge.
+>
+> LAYOUT (follow precisely, 16:9 landscape): The upper-left quadrant holds only the title. The lower two-thirds of the frame holds ONE horizontal glowing pipeline running left to right across the full width — drawn flat and graphic like a premium illuminated metro-map line on a dark blueprint floor, seen straight on. No 3D scene, no perspective machinery.
+>
+> THE PIPELINE, left to right: (1) a small bright orb entering the line at the far left — a fresh code push; (2) three evenly spaced station rings on the line — thin elegant brass circles — each with one clean monospace label on a small dark plaque directly beneath it, in this exact order: `lint`, then `test`, then `build`; a small emerald (#a6e3a1) checkmark floats just above the `lint` and `test` stations (already passed); (3) the line ends at the far right in one larger ring holding a bold emerald checkmark, labeled `merge` beneath — the destination. One thin rose (#f472b6) branch line splits off between `build` and `merge`, curving down toward the bottom edge, ending in a small rose X mark with the label `fix & push again` beside it.
+>
+> TEXT — exactly these six strings appear, and NOTHING else readable anywhere in the image: the title **"CI — every push, every time"** in large, sharp, clean typewriter monospace, pale lavender-ivory (#e5e7eb), upper left; and the five small labels `lint`, `test`, `build`, `merge`, `fix & push again`. Every string crisp, high-contrast, perfectly spelled. No invented words, no pseudo-code, no tiny gibberish text in the background.
+>
+> MOOD: Calm night-shift precision — a machine that checks everything so you don't have to. Methodical, trustworthy, quietly beautiful.
+>
+> STYLE: Premium developer-tooling campaign poster — cinematic, editorial, slightly aged, generous negative space. Background near-black navy (#0f1117) with a faint etched blueprint grid and soft film grain. **The whole frame glows bluish-purple — this is the series signature**: the pipeline line, the station rings' light, and the ambient haze are all indigo/violet (#818cf8), and indigo is unmistakably the dominant color. Emerald appears only in the three small checkmarks; rose only on the failure branch. Mostly dark and desaturated, with the light concentrated on the line — but every label stays fully readable; this is a teaching poster, not a mood piece.
+>
+> AVOID: 3D factories, assembly lines, arches, vault doors, gears, robots, conveyor belts, boxes-and-arrows flowcharts, YAML or code text, GitHub logos, any text beyond the six quoted strings, distressed or blurry lettering, green as the dominant color, clutter. One line, four labeled stops, one labeled failure branch. 16:9 aspect ratio.
+
+### section-8-2 — Dependabot, CodeQL & Friends → `robot-coworkers.png`
+
+> Create a cinematic **teaching poster** about **the robot coworkers** — bots that propose changes which face the same review gate as everyone else. It must be beautiful AND informative: each bot is named and its job stated in legible text.
+>
+> CONCEPT: A night mail-room review counter bathed in **indigo** lamplight, slightly asymmetrical. Two small, endearing-but-geometric automatons (vintage scientific-instrument aesthetic — brass, glass, one lens-eye each; NOT humanoid) wait in line, each holding up a proposal card the viewer can actually read: the first card shows, in crisp monospace, `chore(deps): bump lodash` with `4.17.20 → 4.17.21` on the line beneath; the second card shows a small etched magnifier over three abstract code lines with the legible caption `scanning for known attack shapes`. Under each automaton, a small brass nameplate in fully legible monospace — exactly: `Dependabot — keeps dependencies fresh` and `CodeQL — security scans on a schedule`. On the counter sits a rubber stamp whose face glows a small emerald (#a6e3a1) checkmark — the approval both cards still await. At the frame's right edge, a third sealed envelope is stopped at a tiny barrier with an amber (#d97706) glint and the legible caption `secret scanning: push blocked`.
+>
+> TEXT (all crisp and fully legible, high contrast): Upper left title in clean serif, light lavender-ivory (#e5e7eb): **"The Robot Coworkers"**. Beneath it, smaller muted indigo monospace: **"they propose · your checks dispose"**. Only the strings quoted in this prompt may be readable.
+>
+> MOOD: Trust through process, not through faith — a well-run night post office where even the machines wait in line. Warm, wry, orderly.
+>
+> STYLE: Premium developer-tooling campaign poster — cinematic, editorial, slightly aged; asymmetric composition with generous negative space. Dark navy background (#0f1117), soft film grain, brass-and-paper texture on the automatons and envelopes. **Dominant bluish-purple cast — the series signature**: the counter lamp, ambient haze, and pigeonhole-shelf glints behind the counter all glow indigo/violet (#818cf8), and indigo must be the frame's main light. Emerald (#a6e3a1) appears ONLY on the small stamp checkmark; amber (#d97706) only on the blocked envelope. About 85% of the frame dark and desaturated with localized glow — but every quoted label stays crisp and readable; this is a teaching poster, not a mood piece.
+>
+> AVOID: humanoid robots, evil-robot tropes, red alarms, GitHub octopus imagery, walls of readable code beyond the quoted strings, green as the dominant light, illegible lettering. Two named automatons, one stamp, one blocked envelope. 16:9 aspect ratio.
+
+### section-8-3 — Releases on Autopilot → `release-autopilot.png`
+
+> Create a cinematic **teaching poster** about **automated releases** — structured commit messages becoming a changelog, a version, and a tag. It must be beautiful AND informative: the viewer should be able to trace commit → changelog group → version number in readable text.
+>
+> CONCEPT: An accountant's-desk composition at night under an **indigo** lamp, slightly asymmetrical. Lower left: two commit-slips on a dark ledger desk, each fully legible in crisp monospace — exactly: `feat: add csv export` (its `feat:` prefix tinted emerald #a6e3a1) and `fix: empty header row` (its `fix:` prefix tinted cyan #0284c7). A graceful thread of indigo light gathers the slips up and to the right into a floating bound ledger page titled, legibly, `CHANGELOG.md` — on the page, two readable ruled headings, `Features` and `Bug Fixes`, with each slip's text settled neatly under its heading. Clipped to the ledger's corner: one brass release tag stamped `v1.1.0` in clean monospace, glowing soft indigo (#818cf8), with a hairline ribbon down to a single node on a thin timeline etched along the desk's edge. Near the thread's midpoint, a small brass accountant's stamp reads, legibly, `release-please`.
+>
+> TEXT (all crisp and fully legible, high contrast): Upper right title in clean serif, light lavender-ivory (#e5e7eb): **"the changelog writes itself"**. Beneath it, in slightly larger muted monospace than usual because it is the teaching line: `feat → minor · fix → patch`. Only the strings quoted in this prompt may be readable.
+>
+> MOOD: A meticulous night accountant closing the books — satisfying order emerging from small honest entries. Quiet ceremony, no fireworks.
+>
+> STYLE: Premium developer-tooling campaign poster — cinematic, editorial, slightly aged; asymmetric composition with generous negative space. Dark navy background (#0f1117), soft film grain, heavy ledger-paper texture on the changelog page. **Dominant bluish-purple cast — the series signature**: desk lamp, gathering thread, tag glow, and ambient haze all indigo/violet (#818cf8), and indigo must be the frame's main light. Emerald (#a6e3a1) and cyan (#0284c7) appear only as the small prefix tints on the slips. About 85% of the frame dark and desaturated with localized glow — but every quoted label stays crisp and readable; this is a teaching poster, not a mood piece.
+>
+> AVOID: rockets, confetti, champagne, calendar icons, pie charts, robot mascots, paragraph text beyond the quoted strings, green as the dominant light, illegible lettering. Slips, ledger, stamp, tag — one traceable flow. 16:9 aspect ratio.

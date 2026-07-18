@@ -1,6 +1,7 @@
 import {
 	AlertTriangle,
 	Archive,
+	BadgeCheck,
 	BookOpen,
 	Library,
 	Bot,
@@ -26,6 +27,7 @@ import {
 	Layout,
 	MinusCircle,
 	Monitor,
+	PackageCheck,
 	PenLine,
 	RefreshCcw,
 	RefreshCw,
@@ -33,6 +35,8 @@ import {
 	RotateCcw,
 	Save,
 	ShieldAlert,
+	ShieldCheck,
+	Ship,
 	Sparkles,
 	Table,
 	Tag,
@@ -169,14 +173,26 @@ export const sidebarNav: NavSection[] = [
 	},
 	{
 		id: 'part-8',
+		label: 'CI, Bots & Releases',
+		icon: Ship,
+		children: [
+			{ id: 'section-8-1', label: 'CI & the Green Check', icon: BadgeCheck },
+			{ id: 'section-8-2', label: 'Dependabot & CodeQL', icon: ShieldCheck },
+			{ id: 'bot-pr', label: "Review the Robot's PR", icon: Gamepad2, isPlayground: true },
+			{ id: 'section-8-3', label: 'Releases on Autopilot', icon: PackageCheck },
+			{ id: 'release-robot', label: 'Be release-please', icon: Gamepad2, isPlayground: true }
+		]
+	},
+	{
+		id: 'part-9',
 		label: 'Conclusion',
 		icon: BookOpen,
 		children: [
-			{ id: 'section-8-1', label: 'AI-First Workflow', icon: Workflow },
-			{ id: 'section-8-2', label: 'Quick Reference', icon: Table },
-			{ id: 'section-8-3', label: 'Final Challenge', icon: Trophy },
+			{ id: 'section-9-1', label: 'AI-First Workflow', icon: Workflow },
+			{ id: 'section-9-2', label: 'Quick Reference', icon: Table },
+			{ id: 'section-9-3', label: 'Final Challenge', icon: Trophy },
 			{ id: 'capstone', label: 'Three Messes, One Repo', icon: Gamepad2, isPlayground: true },
-			{ id: 'section-8-4', label: 'Keep Learning', icon: Library }
+			{ id: 'section-9-4', label: 'Keep Learning', icon: Library }
 		]
 	}
 ];
