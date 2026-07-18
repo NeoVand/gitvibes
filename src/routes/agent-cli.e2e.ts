@@ -31,7 +31,7 @@ test.describe('CLI agent in the playground terminal', () => {
 	test('bare `agent` teaches usage; a task without a model teaches the download path', async ({
 		page
 	}) => {
-		const { terminal, input } = await openPanelPlayground(page);
+		const { panel, terminal, input } = await openPanelPlayground(page);
 
 		await input.fill('agent');
 		await input.press('Enter');
@@ -43,7 +43,7 @@ test.describe('CLI agent in the playground terminal', () => {
 		await expect(terminal).toContainText('no local model is downloaded yet');
 		await expect(terminal).toContainText('Agent panel');
 		// Never auto-downloads: no session started, prompt is a normal shell.
-		await expect(terminal.getByTestId('agent-approval')).toHaveCount(0);
+		await expect(panel.getByTestId('agent-approval')).toHaveCount(0);
 	});
 
 	test('`agent` is a first-class citizen: help lists it', async ({ page }) => {
@@ -73,7 +73,7 @@ test.describe('CLI agent in the playground terminal', () => {
 		await expect(proposal.first()).toContainText("echo 'agent was here' > agent-notes.md", {
 			timeout: 15000
 		});
-		await expect(terminal.getByTestId('agent-approval')).toContainText('[y] yes');
+		await expect(panel.getByTestId('agent-approval')).toContainText('[y] yes');
 
 		await input.press('y');
 		await expect(proposal.nth(1)).toContainText('git add agent-notes.md', { timeout: 15000 });
@@ -101,7 +101,7 @@ test.describe('CLI agent in the playground terminal', () => {
 
 		await input.fill(COMMIT_TASK);
 		await input.press('Enter');
-		await expect(terminal.getByTestId('agent-approval')).toBeVisible({ timeout: 15000 });
+		await expect(panel.getByTestId('agent-approval')).toBeVisible({ timeout: 15000 });
 
 		await input.press('n');
 		await expect(terminal).toContainText('skipping', { timeout: 15000 });
@@ -111,10 +111,10 @@ test.describe('CLI agent in the playground terminal', () => {
 		await input.press('n');
 
 		await expect(terminal).toContainText('Nothing was run', { timeout: 15000 });
-		// Denied commands never touched the repo.
-		await input.fill('git log --oneline');
+		// Denied commands never touched the repo: the file was never written.
+		await input.fill('cat agent-notes.md');
 		await input.press('Enter');
-		await expect(terminal).not.toContainText('docs: add agent notes');
+		await expect(terminal).toContainText('No such file');
 		void panel;
 	});
 
@@ -124,11 +124,11 @@ test.describe('CLI agent in the playground terminal', () => {
 
 		await input.fill(COMMIT_TASK);
 		await input.press('Enter');
-		await expect(terminal.getByTestId('agent-approval')).toBeVisible({ timeout: 15000 });
+		await expect(panel.getByTestId('agent-approval')).toBeVisible({ timeout: 15000 });
 
 		await input.press('e');
 		await expect(input).toHaveValue("echo 'agent was here' > agent-notes.md");
-		await expect(terminal.getByTestId('agent-edit')).toBeVisible();
+		await expect(panel.getByTestId('agent-edit')).toBeVisible();
 		await input.fill("echo 'agent was here' > visit-log.md");
 		await input.press('Enter');
 
@@ -146,11 +146,12 @@ test.describe('CLI agent in the playground terminal', () => {
 
 	test('Ctrl+C interrupts the session with ^C and a SIGINT notice', async ({ page }) => {
 		await markModelDownloaded(page);
-		const { terminal, input } = await openPanelPlayground(page);
+		const { panel, terminal, input } = await openPanelPlayground(page);
+		void panel;
 
 		await input.fill(COMMIT_TASK);
 		await input.press('Enter');
-		await expect(terminal.getByTestId('agent-approval')).toBeVisible({ timeout: 15000 });
+		await expect(panel.getByTestId('agent-approval')).toBeVisible({ timeout: 15000 });
 
 		await input.press('Control+c');
 		await expect(terminal).toContainText('^C');
