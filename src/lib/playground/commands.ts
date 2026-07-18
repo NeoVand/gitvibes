@@ -20,6 +20,23 @@ export interface CommandResult {
 
 const AUTHOR = { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' };
 
+/**
+ * The identity new commits are recorded under: whatever `git config` set.
+ * The engine seeds user.name/user.email with the sandbox default, so until
+ * the learner introduces themselves the log credits Vibe Coder — and after
+ * `git config user.name "..."`, it credits THEM.
+ */
+async function authorFor(
+	fs: GitEngine['fs'],
+	dir: string
+): Promise<{ name: string; email: string }> {
+	const [name, email] = await Promise.all([
+		git.getConfig({ fs, dir, path: 'user.name' }),
+		git.getConfig({ fs, dir, path: 'user.email' })
+	]);
+	return { name: name ?? AUTHOR.name, email: email ?? AUTHOR.email };
+}
+
 function esc(s: string): string {
 	return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
@@ -446,7 +463,13 @@ async function replayCommits(
 		try {
 			// abortOnConflict: false leaves real conflict markers in the
 			// working tree and index — the learner needs something to read.
-			await git.cherryPick({ fs, dir, oid: entry.oid, committer: AUTHOR, abortOnConflict: false });
+			await git.cherryPick({
+				fs,
+				dir,
+				oid: entry.oid,
+				committer: await authorFor(fs, dir),
+				abortOnConflict: false
+			});
 			const newTip = await git.resolveRef({ fs, dir, ref: 'HEAD' });
 			engine.recordReflog(newTip, `${kind}: ${entry.message.split('\n')[0]}`);
 		} catch (err) {
@@ -512,7 +535,12 @@ async function runReplayContinue(engine: GitEngine, kind: 'rebase' | 'cherry-pic
 		};
 	}
 
-	const oid = await git.commit({ fs, dir, message: state.current.message, author: AUTHOR });
+	const oid = await git.commit({
+		fs,
+		dir,
+		message: state.current.message,
+		author: await authorFor(fs, dir)
+	});
 	engine.recordReflog(oid, `${kind}: ${state.current.message.split('\n')[0]}`);
 
 	const { branch, originalOid, remaining } = state;
@@ -622,7 +650,7 @@ async function runMerge(engine: GitEngine, branch: string): Promise<CommandResul
 			dir,
 			ours: current,
 			theirs: branch,
-			author: AUTHOR,
+			author: await authorFor(fs, dir),
 			abortOnConflict: false
 		});
 		engine.mergeState = null;
@@ -958,7 +986,7 @@ async function runRevert(engine: GitEngine, ref: string): Promise<CommandResult>
 	}
 
 	const message = `Revert "${commit.message.split('\n')[0]}"`;
-	const newOid = await git.commit({ fs, dir, message, author: AUTHOR });
+	const newOid = await git.commit({ fs, dir, message, author: await authorFor(fs, dir) });
 	engine.recordReflog(newOid, `revert: ${commit.message.split('\n')[0]}`);
 	const branch = (await git.currentBranch({ fs, dir })) ?? 'HEAD';
 	return { output: `[${branch} ${shortOid(newOid)}] ${message}` };
@@ -1059,7 +1087,7 @@ async function runTag(engine: GitEngine, restJoined: string): Promise<CommandRes
 			ref: name,
 			object: oid,
 			message: annotatedMessage,
-			tagger: AUTHOR
+			tagger: await authorFor(fs, dir)
 		});
 	} else {
 		await git.tag({ fs, dir, ref: name, object: oid });
@@ -1496,6 +1524,45 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 				return { output: colorizeStatus(raw), colored: true };
 			}
 
+			case 'config': {
+				// One repo in the sandbox, so --global and --local land in the
+				// same place — the lesson is the key/value model, not file layout.
+				const tail = args.replace(/^config\s*/, '').replace(/--(?:global|local)\s*/g, '');
+				if (/^(--list|-l)\s*$/.test(tail)) {
+					const raw = await engine.readFile('.git/config');
+					const entries: string[] = [];
+					let section = '';
+					for (const line of (raw ?? '').split('\n')) {
+						const sec = line.match(/^\s*\[([^\]"]+)(?:\s+"([^"]+)")?\]/);
+						if (sec) {
+							section = sec[2] ? `${sec[1]}.${sec[2]}` : sec[1];
+							continue;
+						}
+						const kv = line.match(/^\s*([\w-]+)\s*=\s*(.*)$/);
+						if (kv && section) entries.push(`${section}.${kv[1]}=${kv[2]}`);
+					}
+					return { output: entries.join('\n') || '(no configuration set)' };
+				}
+				const keyMatch = tail.match(/^([A-Za-z][\w-]*(?:\.[\w-]+)+)\s*(.*)$/);
+				if (!keyMatch) {
+					return {
+						output:
+							'usage: git config [--global] <key> [<value>]\n       git config --list\n\nexamples:\n  git config user.name "Ada Lovelace"\n  git config user.email "ada@example.com"',
+						error: tail.trim().length > 0
+					};
+				}
+				const key = keyMatch[1];
+				const rawValue = keyMatch[2].trim();
+				if (!rawValue) {
+					const value = await git.getConfig({ fs: engine.fs, dir: engine.dir, path: key });
+					if (value === undefined) return { output: '', error: true };
+					return { output: String(value) };
+				}
+				const value = rawValue.replace(/^(["'])(.*)\1$/, '$2');
+				await git.setConfig({ fs: engine.fs, dir: engine.dir, path: key, value });
+				return { output: '' };
+			}
+
 			case 'add': {
 				if (rest.includes('-p') || rest.includes('--patch')) {
 					const target = rest.filter((a) => !a.startsWith('-')).join(' ') || undefined;
@@ -1579,7 +1646,7 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						fs: engine.fs,
 						dir: engine.dir,
 						message: message ?? undefined,
-						author: AUTHOR,
+						author: await authorFor(engine.fs, engine.dir),
 						amend: true
 					});
 					// Without -m, isomorphic-git reuses the previous message —
@@ -1612,7 +1679,7 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 						fs: engine.fs,
 						dir: engine.dir,
 						message: mergeMessage,
-						author: AUTHOR,
+						author: await authorFor(engine.fs, engine.dir),
 						parent: [ourHead, mergeState.theirsOid]
 					});
 					engine.mergeState = null;
@@ -1629,7 +1696,12 @@ async function runSingleCommand(engine: GitEngine, input: string): Promise<Comma
 					};
 				}
 
-				const oid = await git.commit({ fs: engine.fs, dir: engine.dir, message, author: AUTHOR });
+				const oid = await git.commit({
+					fs: engine.fs,
+					dir: engine.dir,
+					message,
+					author: await authorFor(engine.fs, engine.dir)
+				});
 				engine.recordReflog(oid, `commit: ${message.split('\n')[0]}`);
 				const branch = (await git.currentBranch({ fs: engine.fs, dir: engine.dir })) ?? 'main';
 				return { output: `[${branch} ${shortOid(oid)}] ${message}` };

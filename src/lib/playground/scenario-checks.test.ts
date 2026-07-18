@@ -32,6 +32,15 @@ async function run(commands: string[]) {
  */
 const CASES: { id: string; solution: string[] }[] = [
 	{
+		id: 'config',
+		solution: [
+			'git config user.name "Ada Lovelace"',
+			'git config user.email "ada@example.com"',
+			'git add notes.txt',
+			'git commit -m "chore: introduce myself"'
+		]
+	},
+	{
 		id: 'core-loop',
 		solution: ['git add src/auth.py', 'git commit -m "feat: add user authentication"']
 	},

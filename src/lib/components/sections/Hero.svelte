@@ -23,7 +23,7 @@
 
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
 
-	const stats = ['9 parts', '22 playgrounds', '100% free', 'No signup'];
+	const stats = ['9 parts', '23 playgrounds', '100% free', 'No signup'];
 
 	const gitTimeline = [
 		{

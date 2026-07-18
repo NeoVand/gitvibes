@@ -297,7 +297,7 @@
 		'@type': 'Course',
 		name: 'GitVibes — Git for Vibe Coders',
 		description:
-			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 22 hands-on exercises in a real in-browser Git playground.',
+			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 23 hands-on exercises in a real in-browser Git playground.',
 		url: 'https://neovand.github.io/gitvibes/',
 		provider: {
 			'@type': 'Organization',

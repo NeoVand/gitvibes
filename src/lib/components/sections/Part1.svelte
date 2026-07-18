@@ -8,6 +8,8 @@
 	import SectionHeader from '../ui/SectionHeader.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
+	import LessonActivity from '../ui/LessonActivity.svelte';
+	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 </script>
 
 <section id="part-1" class="py-10">
@@ -113,6 +115,32 @@ git config --global push.autoSetupRemote true
 # (you'll meet the alternative in Part 3)
 git config --global pull.rebase true`}
 			/>
+
+			<h4
+				id="config"
+				class="mt-8 mb-3 scroll-mt-20 text-lg font-semibold"
+				style="color: var(--color-text);"
+			>
+				Try It: Introduce Yourself to Git
+			</h4>
+
+			<p class="mb-3 text-[14px] leading-relaxed" style="color: var(--color-text-secondary);">
+				Meet your constant companion for the rest of this course: the
+				<strong style="color: var(--color-text);">Git Playground</strong> — a real Git repository running
+				entirely in your browser. Nothing you type here can touch your actual machine, and most lessons
+				from here on end with one of these, so you can practice each concept the moment you learn it.
+				First exercise: the config commands you just read.
+			</p>
+
+			<PlaygroundNote>
+				Every commit records who made it. This sandbox only knows the default identity — run <code
+					>git config user.name "Your Name"</code
+				>
+				(and <code>user.email</code>), then commit the waiting file and check <code>git log</code>:
+				the save point now carries your name. A ✔ appears when the log credits someone other than
+				the default.
+			</PlaygroundNote>
+			<LessonActivity title="Introduce Yourself to Git" scenarioId="config" id="config" />
 
 			<VibeBox
 				prompts={[

@@ -78,6 +78,7 @@ export const sidebarNav: NavSection[] = [
 		icon: Laptop,
 		children: [
 			{ id: 'section-1-1', label: 'Git Configuration', icon: UserCheck },
+			{ id: 'config', label: 'Introduce Yourself', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-1-2', label: 'Authentication', icon: KeyRound },
 			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download }
 		]
