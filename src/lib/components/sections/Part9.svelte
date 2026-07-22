@@ -10,6 +10,7 @@
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 	import { progress, toggleChecklistItem } from '$lib/data/progress';
+	import CourseLink from '../ui/CourseLink.svelte';
 
 	let {
 		onOpenPlayground
@@ -102,12 +103,9 @@
 			<p class="mb-6" style="color: var(--color-text-secondary);">
 				This is your new "save game" loop — the practical rhythm between you and your agent. Follow
 				these 8 steps for every piece of work. Encode your Git conventions once in the repo (see
-				<a
-					href="#section-6-1"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 6.1</a
-				>) so agents follow them automatically instead of re-explaining branch rules in every chat.
-				And remember: you can practice any step of this loop in the
+				<CourseLink to="section-6-1" />) so agents follow them automatically instead of
+				re-explaining branch rules in every chat. And remember: you can practice any step of this
+				loop in the
 				<button
 					type="button"
 					onclick={onOpenPlayground}

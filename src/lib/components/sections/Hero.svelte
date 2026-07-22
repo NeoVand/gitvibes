@@ -6,7 +6,8 @@
 		FolderGit2,
 		HelpCircle,
 		History,
-		Terminal
+		Terminal,
+		Bot
 	} from 'lucide-svelte';
 	import { base } from '$app/paths';
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
@@ -14,16 +15,19 @@
 	import CodeBlock from '../ui/CodeBlock.svelte';
 	import Callout from '../ui/Callout.svelte';
 	import Code from '../ui/Code.svelte';
+	import CourseMap from '../ui/CourseMap.svelte';
 
 	let {
-		onOpenPlayground
+		onOpenPlayground,
+		onOpenAgent
 	}: {
 		onOpenPlayground?: () => void;
+		onOpenAgent?: () => void;
 	} = $props();
 
 	let activeTab = $state<'mac' | 'windows' | 'linux'>('mac');
 
-	const stats = ['9 parts', '23 playgrounds', '100% free', 'No signup'];
+	const stats = ['9 parts', '23 playgrounds', '9 challenges', '100% free'];
 
 	const gitTimeline = [
 		{
@@ -71,7 +75,7 @@
 		<p class="mb-5 text-[14.5px] leading-relaxed" style="color: var(--color-text-secondary);">
 			<strong style="color: var(--color-text);">Welcome!</strong> This guide takes you from your first
 			commit to running AI coding agents with confidence — every concept explained visually, then practiced
-			hands-on. Two companions will follow you through all nine parts:
+			hands-on. Three companions will follow you through all nine parts:
 		</p>
 
 		<div class="mb-5 flex flex-wrap gap-2">
@@ -126,6 +130,28 @@
 				</p>
 			</div>
 
+			<!-- The tutor sits between the other two so no adjacent pair shares a
+			     hue family; all three accents are brightness-matched, because a
+			     companion that shouts reads as the only one that matters. -->
+			<div
+				class="flex items-start gap-3 rounded-lg px-5 py-4 text-left"
+				style="background: color-mix(in srgb, var(--color-btn-agent) 12%, transparent);"
+			>
+				<Bot size={18} class="mt-0.5 flex-shrink-0" style="color: var(--color-btn-agent);" />
+				<p class="text-[13px] leading-relaxed" style="color: var(--color-text-secondary);">
+					<strong style="color: var(--color-text);">Stuck on a passage?</strong> The
+					<button
+						type="button"
+						onclick={onOpenAgent}
+						class="cursor-pointer font-medium underline underline-offset-2"
+						style="color: var(--color-btn-agent);">AI tutor</button
+					>
+					in the header answers from this course and cites the section it drew on. It works the way the
+					rest of the course asks you to work: it proposes a command, you approve it, and only then does
+					it run.
+				</p>
+			</div>
+
 			<div
 				class="flex items-start gap-3 rounded-lg px-5 py-4 text-left"
 				style="background: var(--color-note-bg);"
@@ -145,6 +171,13 @@
 					in-browser playgrounds. Start there, then come back; Git lives in the terminal.
 				</p>
 			</div>
+		</div>
+
+		<!-- Offered after the companions rather than before: it answers "what
+		     order, and what can I skip?", which is a question you only have once
+		     you have decided to start. -->
+		<div class="mt-6">
+			<CourseMap />
 		</div>
 	</div>
 

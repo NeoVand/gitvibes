@@ -247,3 +247,45 @@ export const sidebarNav: NavSection[] = [
 		]
 	}
 ];
+
+export interface NavEntry {
+	label: string;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	icon: any;
+}
+
+const byId = new Map<string, NavEntry>();
+for (const section of sidebarNav) {
+	byId.set(section.id, { label: section.label, icon: section.icon });
+	for (const child of section.children ?? []) {
+		byId.set(child.id, { label: child.label, icon: child.icon });
+	}
+}
+
+/**
+ * Label + icon for any part or section anchor. Cross-references in the prose
+ * resolve through this, so renaming a part in the sidebar renames it
+ * everywhere it is mentioned — which is the whole reason references name a
+ * part instead of numbering it. This curriculum has been renumbered once
+ * already, and every hard-coded "Part 8" silently became wrong.
+ */
+export function courseEntry(id: string): NavEntry | null {
+	return byId.get(id) ?? null;
+}
+
+const partOf = new Map<string, string>();
+for (const section of sidebarNav) {
+	partOf.set(section.id, section.id);
+	for (const child of section.children ?? []) {
+		partOf.set(child.id, section.id);
+	}
+}
+
+/**
+ * The `part-N` (or `hero`) section that owns an anchor. The standalone
+ * /parts/<slug> pages use this to decide whether a cross-reference stays a
+ * same-page hash or has to travel back to the full course page.
+ */
+export function partIdOf(id: string): string | null {
+	return partOf.get(id) ?? null;
+}

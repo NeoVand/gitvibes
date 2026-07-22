@@ -16,7 +16,10 @@
 	import Part7 from '$lib/components/sections/Part7.svelte';
 	import Part8 from '$lib/components/sections/Part8.svelte';
 	import Part9 from '$lib/components/sections/Part9.svelte';
+	import { resolve } from '$app/paths';
 	import { anchorIds } from '$lib/data/sections';
+	import { partPages } from '$lib/data/part-pages';
+	import { courseEntry } from '$lib/data/sidebar-nav';
 	import { markSectionVisited } from '$lib/data/progress';
 	import { createProgressSets, timelineManifest } from '$lib/timeline/state.svelte';
 	import { createReflowWatcher, measureOffsets, scrollFraction } from '$lib/timeline/measure';
@@ -326,6 +329,11 @@
 		agentOpen = false;
 		playgroundOpen = true;
 	}
+
+	/** Open the tutor from the prose, without closing it if it is already up. */
+	function openAgent() {
+		if (!agentOpen) toggleAgent();
+	}
 </script>
 
 <svelte:head>
@@ -335,6 +343,31 @@
 		content="An interactive guide to Git for developers using AI tools. Learn version control as your safety net for AI-assisted coding."
 	/>
 	<link rel="canonical" href="https://neovand.github.io/gitvibes/" />
+	<!-- The social card lives here rather than in app.html: a crawler honours
+	     the first og:* it meets, and the nine part pages each need their own. -->
+	<meta property="og:title" content="GitVibes — Git for Vibe Coders" />
+	<meta
+		property="og:description"
+		content="An interactive, visual Git tutorial for AI-assisted developers. Learn branching, staging, undoing mistakes, and VS Code workflows."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://neovand.github.io/gitvibes/" />
+	<meta property="og:image" content="https://neovand.github.io/gitvibes/og-image.png" />
+	<meta
+		property="og:image:alt"
+		content="Git for Vibe Coders — your safety net for AI-assisted coding"
+	/>
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="GitVibes — Git for Vibe Coders" />
+	<meta
+		name="twitter:description"
+		content="An interactive, visual Git tutorial for AI-assisted developers."
+	/>
+	<meta name="twitter:image" content="https://neovand.github.io/gitvibes/og-image.png" />
+	<meta
+		name="twitter:image:alt"
+		content="Git for Vibe Coders — your safety net for AI-assisted coding"
+	/>
 	<!-- Safe {@html}: the payload is JSON.stringify of a static literal — no
 	     user input can reach it. It exists only to emit the JSON-LD script tag,
 	     which Svelte cannot render any other way. -->
@@ -404,7 +437,7 @@
 		? 'var(--sidebar-width)'
 		: 'var(--sidebar-collapsed-width)'};"
 >
-	<Hero onOpenPlayground={openPlayground} />
+	<Hero onOpenPlayground={openPlayground} onOpenAgent={openAgent} />
 	<Part1 />
 	<Part2 />
 	<Part3 />
@@ -415,8 +448,39 @@
 	<Part8 />
 	<Part9 onOpenPlayground={openPlayground} />
 
-	<footer class="py-10 text-center" style="border-top: 1px solid var(--color-border);">
-		<p class="text-xs" style="color: var(--color-text-muted);">
+	<footer class="py-10" style="border-top: 1px solid var(--color-border);">
+		<!-- Every part also stands alone at its own URL. This index is how those
+		     pages are reachable — by a reader who wants to link one chapter to a
+		     colleague, and by a crawler, which will not find a page nothing
+		     links to. -->
+		<nav class="mx-auto max-w-4xl px-6" aria-label="Parts of this course">
+			<h2
+				class="mb-3 text-xs font-bold tracking-widest uppercase"
+				style="color: var(--color-text-muted); font-family: var(--font-heading); letter-spacing: 0.14em;"
+			>
+				Every part, on its own page
+			</h2>
+			<ul class="part-index grid gap-1.5">
+				{#each partPages as part (part.id)}
+					{@const entry = courseEntry(part.id)}
+					{@const Icon = entry?.icon}
+					<li>
+						<a
+							href={resolve('/parts/[slug]', { slug: part.slug })}
+							class="part-index-link flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px]"
+							style="color: var(--color-text-secondary);"
+						>
+							{#if Icon}
+								<Icon size={14} style="color: var(--color-primary); flex-shrink: 0;" />
+							{/if}
+							<span class="truncate">{entry?.label ?? part.title}</span>
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</nav>
+
+		<p class="mt-8 text-center text-xs" style="color: var(--color-text-muted);">
 			Built for the vibe coding generation.
 		</p>
 	</footer>

@@ -11,6 +11,7 @@
 	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
+	import CourseLink from '../ui/CourseLink.svelte';
 </script>
 
 <section id="part-8" class="py-10">
@@ -116,13 +117,9 @@ jobs:
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
 				Read it top to bottom: <em>on these triggers, run these steps</em>. That's the entire
-				programming model. The steps are the same commands you (or your hooks from
-				<a
-					href="#section-6-2"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 6.2</a
-				>) run locally — the difference is <em>where</em> and <em>always</em>. A pre-commit hook is
-				a seatbelt you buckle on your own machine, and
+				programming model. The steps are the same commands you (or the hooks you wrote in
+				<CourseLink to="section-6-2" />) run locally — the difference is <em>where</em> and
+				<em>always</em>. A pre-commit hook is a seatbelt you buckle on your own machine, and
 				<Code code="--no-verify" /> unbuckles it. CI runs on a machine nobody can sweet-talk. Hooks are
 				the seatbelt; CI is the law.
 			</p>
@@ -141,12 +138,9 @@ jobs:
 				id="ci-pipeline-flow"
 			/>
 			<p class="mt-2 px-1 text-xs" style="color: var(--color-text-muted);">
-				Branch protection (the rulesets from <a
-					href="#section-3-3"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 3.3</a
-				>) is what wires the checkmark to the merge button: no green, no merge — for you, your
-				teammates, and every agent equally.
+				Branch protection (the rulesets from <CourseLink to="section-3-3" />) is what wires the
+				checkmark to the merge button: no green, no merge — for you, your teammates, and every agent
+				equally.
 			</p>
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
@@ -237,13 +231,10 @@ jobs:
 					<p class="text-[13px]" style="color: var(--color-text-secondary);">
 						Remember the staged <Code code=".env" />
 						drama from
-						<a
-							href="#section-2-4"
-							class="underline underline-offset-2"
-							style="color: var(--color-primary);">section 2.4</a
-						>? GitHub runs a last line of defense: it recognizes the formats of API keys and tokens
-						and — with push protection on — refuses the push outright. A blocked push is a gift.
-						Treat any key that reaches a public commit as burned, and rotate it.
+						<CourseLink to="section-2-4" />? GitHub runs a last line of defense: it recognizes the
+						formats of API keys and tokens and — with push protection on — refuses the push
+						outright. A blocked push is a gift. Treat any key that reaches a public commit as
+						burned, and rotate it.
 					</p>
 				</div>
 			</div>
@@ -279,11 +270,7 @@ updates:
 				edit it by hand. And
 				<strong style="color: var(--color-text);">supply-chain pinning</strong>: careful repos
 				reference third-party Actions by full commit hash instead of a friendly tag. You know from
-				<a
-					href="#section-5-6"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 5.6</a
-				>
+				<CourseLink to="section-5-6" />
 				that a tag is just a movable label — and if an attacker compromises an Action's repo, they can
 				quietly move
 				<Code code="v4" /> to malicious code. A commit hash can't be moved. Same Git concept, now a security
@@ -358,12 +345,9 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 				>
 				answers two different questions: <em>what do we call this state</em>, and
 				<em>what changed since the last one</em>? In
-				<a
-					href="#section-5-6"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 5.6</a
-				> you did this by hand — decided a version number, wrote an annotated tag. This lesson is about
-				the grammar behind those version numbers, and the robot that does the paperwork.
+				<CourseLink to="section-5-6" /> you did this by hand — decided a version number, wrote an annotated
+				tag. This lesson is about the grammar behind those version numbers, and the robot that does the
+				paperwork.
 			</p>
 
 			<h4 class="mt-6 mb-2 text-[14px] font-semibold" style="color: var(--color-text);">
@@ -386,21 +370,13 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 			</h4>
 
 			<p class="mb-4 text-[14px]" style="color: var(--color-text-secondary);">
-				Since <a
-					href="#section-2-3"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">Part 2</a
-				>
+				Since <CourseLink to="section-2-3" />
 				you've been writing
 				<Code code="feat:" />
 				and
 				<Code code="fix:" />
 				prefixes, and in
-				<a
-					href="#section-6-2"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 6.2</a
-				>
+				<CourseLink to="section-6-2" />
 				a hook started enforcing them. Here's the payoff: those prefixes map straight onto SemVer.
 				<Code code="fix:" />
 				means the next release is at least a patch.
