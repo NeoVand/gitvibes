@@ -27,9 +27,12 @@ describe('summary denominators', () => {
 		expect(TOTAL_SECTIONS).toBe(42);
 		expect(TOTAL_PLAYGROUNDS).toBe(23);
 		expect(readableIds.length + playgroundIds.length).toBe(65);
-		// The whole manifest is 75: 65 content anchors and 10 part headers
-		// (hero + nine parts). Challenges join this arithmetic when they land.
-		expect(items.length).toBe(75);
+		// The whole manifest is 84: 65 content anchors, 10 part headers (hero
+		// plus nine parts) and the nine challenges. The challenges are counted
+		// here and NOWHERE in the two denominators above — a challenge is a
+		// part's closing exam, not another exercise to tick off, and folding it
+		// into TOTAL_PLAYGROUNDS would silently move every reader's percentage.
+		expect(items.length).toBe(84);
 	});
 
 	/**

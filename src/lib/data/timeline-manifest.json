@@ -90,6 +90,15 @@
 		"comp": "Part1"
 	},
 	{
+		"id": "ch-1-sign-your-work",
+		"kind": "challenge",
+		"title": "Sign Your Work",
+		"image": "git-clone.webp",
+		"thumb": "section-1-3",
+		"inherited": true,
+		"comp": "Part1"
+	},
+	{
 		"id": "part-2",
 		"kind": "part",
 		"title": "The Core Safety Loop: Your \"Save Game\" for AI Coding",
@@ -141,6 +150,15 @@
 		"image": "gitignore.webp",
 		"thumb": "section-2-4",
 		"inherited": false,
+		"comp": "Part2"
+	},
+	{
+		"id": "ch-2-stage-what-you-trust",
+		"kind": "challenge",
+		"title": "Stage Only What You Trust",
+		"image": "gitignore.webp",
+		"thumb": "section-2-4",
+		"inherited": true,
 		"comp": "Part2"
 	},
 	{
@@ -201,6 +219,15 @@
 		"id": "branching",
 		"kind": "playground",
 		"title": "Branching Workflow",
+		"image": "pull-request.webp",
+		"thumb": "section-3-3",
+		"inherited": true,
+		"comp": "Part3"
+	},
+	{
+		"id": "ch-3-branch-first",
+		"kind": "challenge",
+		"title": "Branch Before You Build",
 		"image": "pull-request.webp",
 		"thumb": "section-3-3",
 		"inherited": true,
@@ -351,6 +378,15 @@
 		"comp": "Part4"
 	},
 	{
+		"id": "ch-4-pick-your-undo",
+		"kind": "challenge",
+		"title": "Pick the Right Undo",
+		"image": "git-reflog.webp",
+		"thumb": "section-4-9",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
 		"id": "part-5",
 		"kind": "part",
 		"title": "Advanced Scenarios: Managing a Multi-Branch Workflow",
@@ -477,6 +513,15 @@
 		"comp": "Part5"
 	},
 	{
+		"id": "ch-5-rescue-the-fix",
+		"kind": "challenge",
+		"title": "Rescue the Buried Fix",
+		"image": "git-tags.webp",
+		"thumb": "section-5-6",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
 		"id": "part-6",
 		"kind": "part",
 		"title": "Git for AI Agents: Rules, Guardrails, and Scale",
@@ -531,6 +576,15 @@
 		"comp": "Part6"
 	},
 	{
+		"id": "ch-6-read-the-gate",
+		"kind": "challenge",
+		"title": "Read the Gate First",
+		"image": "git-worktrees.webp",
+		"thumb": "section-6-3",
+		"inherited": true,
+		"comp": "Part6"
+	},
+	{
 		"id": "part-7",
 		"kind": "part",
 		"title": "Your AI-Assisted Cockpit: Mastering Git in VS Code",
@@ -564,6 +618,15 @@
 		"image": "merge-editor.webp",
 		"thumb": "section-7-3",
 		"inherited": false,
+		"comp": "Part7"
+	},
+	{
+		"id": "ch-7-cockpit-by-hand",
+		"kind": "challenge",
+		"title": "The Cockpit, By Hand",
+		"image": "merge-editor.webp",
+		"thumb": "section-7-3",
+		"inherited": true,
 		"comp": "Part7"
 	},
 	{
@@ -621,6 +684,15 @@
 		"comp": "Part8"
 	},
 	{
+		"id": "ch-8-review-the-robot",
+		"kind": "challenge",
+		"title": "Review the Robot",
+		"image": "release-autopilot.webp",
+		"thumb": "section-8-3",
+		"inherited": true,
+		"comp": "Part8"
+	},
+	{
 		"id": "part-9",
 		"kind": "part",
 		"title": "Conclusion: Best Practices for AI-Augmented Teams",
@@ -672,6 +744,15 @@
 		"image": "keep-learning.webp",
 		"thumb": "section-9-4",
 		"inherited": false,
+		"comp": "Part9"
+	},
+	{
+		"id": "ch-9-three-messes",
+		"kind": "challenge",
+		"title": "Three Messes, No Hints",
+		"image": "keep-learning.webp",
+		"thumb": "section-9-4",
+		"inherited": true,
 		"comp": "Part9"
 	}
 ]

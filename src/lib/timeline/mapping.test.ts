@@ -339,9 +339,15 @@ describe('the sweep — the property the whole rail stands on', () => {
 
 		   Measured at the fixture in force when these were set:
 
-		     sections[0]     6.65  (section-4-2)   median 11.78
-		     playgrounds[0]  4.56  (`undo`)        median  5.51
-		     parts[0]        2.09  (part-6)        median  2.85
+		     sections[0]     6.46  (section-4-2)   median 11.21
+		     playgrounds[0]  4.37  (`undo`)        median  5.13
+		     parts[0]        1.90  (part-6)        median  2.85
+		     challenges[0]   3.61  (ch-2-stage-what-you-trust)
+
+		   Nine challenge anchors joined the manifest after these were first
+		   set, which cost every lane 3-5% of its travel — the rail is the same
+		   length and now folds 84 anchors into it. That is a content change,
+		   not a tuning regression, so the floors move with it.
 
 		   Pinned a hair under measurement so a CONTENT edit that legitimately
 		   remeasures the fixture has breathing room, while a tuning regression —
@@ -349,11 +355,11 @@ describe('the sweep — the property the whole rail stands on', () => {
 		   tightest, and that costs nothing in practice: the chapter lane is
 		   hit-tested over the FOLDED part span (partAt), an order of magnitude
 		   wider than the raw anchor span measured here. */
-		expect(sections[0]).toBeGreaterThanOrEqual(6.5);
-		expect(median(sections)).toBeGreaterThanOrEqual(11.5);
-		expect(playgrounds[0]).toBeGreaterThanOrEqual(4.4);
-		expect(median(playgrounds)).toBeGreaterThanOrEqual(5.4);
-		expect(parts[0]).toBeGreaterThanOrEqual(2.0);
+		expect(sections[0]).toBeGreaterThanOrEqual(6.3);
+		expect(median(sections)).toBeGreaterThanOrEqual(11.0);
+		expect(playgrounds[0]).toBeGreaterThanOrEqual(4.2);
+		expect(median(playgrounds)).toBeGreaterThanOrEqual(5.0);
+		expect(parts[0]).toBeGreaterThanOrEqual(1.8);
 		expect(median(parts)).toBeGreaterThanOrEqual(2.7);
 	});
 });
@@ -393,10 +399,10 @@ describe('hit testing', () => {
 		const travel = model.pgs
 			.map((f) => ((counts.get(f.item.id) ?? 0) / SWEEP) * RAIL_W)
 			.sort((a, b) => a - b);
-		// Measured 10.45 / 15.58 on the committed fixture; content, unlike
+		// Measured 10.07 / 15.20 on the committed fixture; content, unlike
 		// tuning, may legitimately move these — see the travel floors above.
-		expect(travel[0]).toBeGreaterThanOrEqual(10.2);
-		expect(travel[Math.floor(travel.length / 2)]).toBeGreaterThanOrEqual(15.2);
+		expect(travel[0]).toBeGreaterThanOrEqual(9.9);
+		expect(travel[Math.floor(travel.length / 2)]).toBeGreaterThanOrEqual(15.0);
 	});
 
 	it('routes the low lane to chapters and the mid lane to sections', () => {
@@ -454,8 +460,8 @@ describe('mark layout', () => {
 			}
 			if (bd < 8) minDiamond = Math.min(minDiamond, out.pgs[bj].size);
 		}
-		// Measured 18.03 / 9.36 on the committed fixture.
-		expect(minW).toBeGreaterThanOrEqual(17.7);
+		// Measured 17.14 / 9.36 on the committed fixture.
+		expect(minW).toBeGreaterThanOrEqual(16.9);
 		expect(minDiamond).toBeGreaterThanOrEqual(9.3);
 	});
 
