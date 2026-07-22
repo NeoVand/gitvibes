@@ -116,13 +116,19 @@
 		margin-bottom: 1.5pt;
 	}
 
+	/* The command column's `code` is a block — one command per line is the
+	   whole point there. A mention inside a sentence has to opt back out, or
+	   every chip breaks its own line and the sentence arrives in pieces. */
 	.legend code,
 	.inline-code {
+		display: inline;
 		font-family: var(--font-mono);
 		font-size: 6.8pt;
 		background: #e2e8f0;
+		border: 0;
 		border-radius: 2pt;
 		padding: 0 2pt;
+		white-space: nowrap;
 	}
 
 	.masthead {
