@@ -764,18 +764,19 @@
 		     a future denominator could round the first read section to 0 and hide
 		     the block just as the learner earns it.
 
-		     Two renderings of "how far along am I", one per width, on the rail's
-		     own `wide`. Above the breakpoint the header rail carries the live
-		     per-section story, so the sidebar keeps only its plain fill bar; the
-		     reset lives up there too. Below it the rail does not exist, so the
-		     sidebar's copy graduates to the mini timeline — per-part heat and
-		     activity marks — and carries the only reset on screen.
+		     Below the rail's breakpoint only. Above it the header rail already
+		     tells this story in far more detail — per section, with heat and
+		     activity marks — and a bar plus a percentage underneath it was the
+		     same answer given twice, in the narrower place, competing with the
+		     nav it sits on top of. Below the breakpoint the rail does not exist,
+		     so the sidebar carries the whole account: the mini timeline, the
+		     counts, and the only reset on screen.
 
 		     It REVEALS rather than mounts, on the same 0fr→1fr as a part's
 		     children — otherwise opening the sidebar would insert 40px above the
 		     nav and shove the whole icon column down in one frame. Growing it on
 		     the morph clock makes that displacement part of the gesture. -->
-		{#if sectionsRead > 0 || doneCount > 0}
+		{#if !wide && (sectionsRead > 0 || doneCount > 0)}
 			<div class="reveal" class:is-shown={open}>
 				<div class="reveal-inner">
 					<div class="pr-[9.5px] pb-2 pl-4" title={progressLabel}>
@@ -785,33 +786,19 @@
 						     nav went symmetric. -->
 						<div class="flex items-center">
 							<div class="min-w-0 flex-1">
-								{#if wide}
-									<div
-										class="h-1 flex-1 overflow-hidden rounded-full"
-										style="background: var(--color-border);"
-									>
-										<div
-											class="h-full rounded-full transition-all duration-500"
-											style="width: {readPct}%; background: var(--color-primary);"
-										></div>
-									</div>
-								{:else}
-									{@render miniTimeline()}
-								{/if}
+								{@render miniTimeline()}
 							</div>
-							{#if !wide}
-								<button
-									onclick={handleResetProgress}
-									class="mr-1 ml-2 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-all hover:opacity-100"
-									style="color: {resetArmed
-										? 'var(--color-warning)'
-										: 'var(--color-text-muted)'}; opacity: {resetArmed ? '1' : '0.6'};"
-									aria-label={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
-									title={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
-								>
-									<RotateCcw size={11} />
-								</button>
-							{/if}
+							<button
+								onclick={handleResetProgress}
+								class="mr-1 ml-2 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-all hover:opacity-100"
+								style="color: {resetArmed
+									? 'var(--color-warning)'
+									: 'var(--color-text-muted)'}; opacity: {resetArmed ? '1' : '0.6'};"
+								aria-label={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
+								title={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
+							>
+								<RotateCcw size={11} />
+							</button>
 						</div>
 						<p class="mt-1 text-[10.5px]" style="color: var(--color-text-muted);">
 							{@render progressCounts()}

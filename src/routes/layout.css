@@ -115,20 +115,23 @@
 	--sidebar-width: 249.5px;
 	--sidebar-collapsed-width: 52px;
 	--header-height: 48px;
-	--panel-reading-width: min(50vw, 44rem);
-	/* The cheat sheet is a narrower reading-mode panel: wide enough for every
-	   command on one line, no wider — it shares the viewport with an exercise.
-	   The ruler is the longest row (`git config --global core.excludesFile
-	   ~/.gitignore_global`: 57 chars at 11px, which every monospace renders at
-	   ~376px) plus the list's 40px of gutters and the border.
-
-	   The rest pays for the scrollbar and for being wrong about it. macOS
-	   overlays its scrollbar and costs the content nothing, so a width tuned
-	   there is tuned without a gutter; Linux and Windows take ~10-15px out of
-	   the same box and wrap the longest row. `scrollbar-gutter: stable` does
-	   not level this — on overlay scrollbars it still reserves nothing — so
-	   the width simply has to carry the gutter it cannot see, plus slack. */
-	--cheatsheet-width: 29rem;
+	/* ONE width for the playground and the tutor. They used to differ — 44rem
+	   against 40rem — while the content margin was pinned to the wider of the
+	   two, so opening the tutor left a 4rem strip of nothing down the right of
+	   the page. Splitting the difference costs the playground a little room and
+	   makes both panels sit flush against the text. Any panel that reads beside
+	   the content must use this token for its width AND for the margin, or the
+	   gap comes back. */
+	--panel-reading-width: min(46vw, 42rem);
+	/* The cheat sheet reads BESIDE an exercise, so its width is bounded by what
+	   it takes away from the text, not by the longest string in it. A handful of
+	   the longest commands wrap onto a second line here, and that is the cheaper
+	   trade: sizing the panel to fit `git config --global core.excludesFile
+	   ~/.gitignore_global` on one line cost nearly six rems that every other row
+	   paid for. Wrapping is at spaces, so a wrapped row still reads as one
+	   command. Note the usable width is ~15px less on platforms that put a real
+	   scrollbar inside the box (Linux, Windows) than on ones that overlay it. */
+	--cheatsheet-width: 23.5rem;
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 	--font-heading: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;

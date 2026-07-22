@@ -74,8 +74,8 @@
 	   When the learner is AT a playground or challenge — the scroll-spy
 	   anchor resolves to one, or the panel opened on one — the sheet can
 	   narrow itself to the commands that exercise actually reaches for.
-	   The ListFilter toggle in the toolbar turns it off and on; it only
-	   appears while there is an exercise to focus on.
+	   The ListFilter toggle in the toolbar turns it off and on, and stays in
+	   the toolbar even when there is nothing to focus on, disabled.
 
 	   The exercise registries include the nine challenge modules, which the
 	   rest of the page keeps out of the entry bundle on purpose (the seeds
@@ -172,26 +172,30 @@
 <svelte:window onkeydown={handleKeydown} />
 
 {#snippet focusToggle()}
-	<!-- Only rendered while an exercise is in view AND the sheet has rows for
-	     it — a filter that could only produce an empty list never appears. -->
-	{#if exercise && focusedCategories}
-		<button
-			onclick={() => (focusEnabled = !focusEnabled)}
-			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
-			style="color: {focusActive
-				? focusAccent
-				: 'var(--color-text-muted)'}; background: {focusActive
-				? `color-mix(in srgb, ${focusAccent} 14%, transparent)`
-				: 'transparent'};"
-			aria-pressed={focusActive}
-			aria-label="Show only this exercise's commands"
-			title={focusActive
+	<!-- Always present, so the control is somewhere you can learn rather than
+	     something that appears and vanishes as you scroll. It reports three
+	     states: filtering, not filtering, and nothing nearby to filter by —
+	     the last one disabled, because a reader who cannot find the button
+	     assumes the feature is broken, while a greyed one explains itself. -->
+	{@const canFocus = Boolean(exercise && focusedCategories)}
+	<button
+		onclick={() => (focusEnabled = !focusEnabled)}
+		disabled={!canFocus}
+		class="flex h-7 w-7 items-center justify-center rounded-md transition-colors"
+		class:cursor-pointer={canFocus}
+		style="color: {focusActive ? focusAccent : 'var(--color-text-muted)'}; background: {focusActive
+			? `color-mix(in srgb, ${focusAccent} 14%, transparent)`
+			: 'transparent'}; opacity: {canFocus ? 1 : 0.35};"
+		aria-pressed={focusActive}
+		aria-label="Show only this exercise's commands"
+		title={!canFocus
+			? 'Scroll to a playground or a challenge to filter by it'
+			: focusActive
 				? 'Showing this exercise’s commands — click for all'
 				: 'Show only this exercise’s commands'}
-		>
-			<ListFilter size={14} />
-		</button>
-	{/if}
+	>
+		<ListFilter size={14} />
+	</button>
 {/snippet}
 
 {#snippet focusStrip()}
@@ -257,7 +261,7 @@
 		title="Click to copy"
 	>
 		<code
-			class="block w-fit max-w-full rounded px-1 py-0.5 text-[11px] leading-relaxed break-all"
+			class="cs-cmd block w-fit max-w-full rounded px-1 py-0.5 text-[11px] leading-relaxed"
 			style="background: var(--color-code-bg); color: var(--color-code-text); font-family: var(--font-mono);"
 			>{#each tokenizeGitCommand(cmd.command) as token, ti (ti)}<span class="tok tok-{token.type}"
 					>{token.text}</span
@@ -535,6 +539,16 @@
 	   scrollbars wraps its longest command everywhere else. */
 	.cheat-list {
 		scrollbar-gutter: stable;
+	}
+
+	/* The few longest commands wrap rather than widen the whole panel. Break at
+	   spaces, never inside a flag or a path: `--force-with-lease` split across
+	   two lines stops looking like one token, which is the only thing the row
+	   is trying to teach. `anywhere` is the fallback for a single word that is
+	   genuinely wider than the column. */
+	.cs-cmd {
+		overflow-wrap: anywhere;
+		word-break: normal;
 	}
 
 	/* A command mentioned inside prose — narrower than a command-column chip,
