@@ -91,7 +91,28 @@
 	--color-vibe-text: #7c3aed;
 	--color-vibe-bg: #f5f3ff;
 
-	--sidebar-width: 280px;
+	/* The quiet hairline hanging a part's children off its icon in the
+	   sidebar. A neutral wash of the text ink rather than --color-border:
+	   the border tokens are tuned for card edges on the surface colour, and
+	   on the sidebar's translucent fabric they read either invisible or
+	   like chrome. Dark lifts it — the same 10% of a light ink on a dark
+	   ground disappears. */
+	--thread-lit: color-mix(in srgb, var(--color-text) 10%, transparent);
+
+	/* 249.5, not the round 280 it used to be — measured, then padded, never
+	   eyeballed. A part row is 5.5 (nav pad) + 12 (row pad) + 17 (icon) + 10
+	   (gap) + label + 10 (gap) + 20 (caret) − 4 (its -mr-1) + 12 (row pad) +
+	   5.5 (nav pad) = label + 88, and the widest label in the nav
+	   ("Enterprise Onboarding" at its active weight 700) renders at 155.5px,
+	   so the rows need 243.5. The deepest child row ("Parallel Agents:
+	   Worktrees") needs 241.5 by the same walk. 6px on top absorbs
+	   platform-to-platform font rasterisation drift — the labels are
+	   `white-space: nowrap`, so a flush width would clip, not wrap, on any
+	   machine that draws them a hair wider. Everything past that was dead
+	   space to the right of every hover pill. The left 5.5 is fixed by the
+	   26px icon column (see Sidebar.svelte), so the trim comes off the
+	   right. */
+	--sidebar-width: 249.5px;
 	--sidebar-collapsed-width: 52px;
 	--header-height: 48px;
 	--panel-reading-width: min(50vw, 44rem);
@@ -168,6 +189,8 @@
 		--color-vibe: #a78bfa;
 		--color-vibe-text: #c4b5fd;
 		--color-vibe-bg: #160f2e;
+
+		--thread-lit: color-mix(in srgb, var(--color-text) 15%, transparent);
 	}
 }
 
@@ -214,6 +237,7 @@
 	--color-diff-hunk: #1d4ed8;
 	--color-diff-hash: #92400e;
 	--color-diff-meta: #166534;
+	--thread-lit: color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
 :root.dark {
@@ -270,6 +294,7 @@
 	--color-vibe: #a78bfa;
 	--color-vibe-text: #c4b5fd;
 	--color-vibe-bg: #160f2e;
+	--thread-lit: color-mix(in srgb, var(--color-text) 15%, transparent);
 }
 
 * {
@@ -323,7 +348,12 @@ strong {
 		/* Reading mode is desktop-only: below 1024px panels overlay the page. */
 		margin-right: 0 !important;
 	}
-	.sidebar-drawer {
+	/* Below 1024px the open sidebar overlays the article instead of pushing
+	   it (see the margin-left above), and the panel's normal fabric is a 55%
+	   wash of --color-bg, so body text showed through the contents list.
+	   Opaque while it is an overlay, translucent when it is an edge — hence
+	   `.is-open`, which is the only state that overlays. */
+	.sidebar-panel.is-open {
 		background: var(--color-bg) !important;
 	}
 }
