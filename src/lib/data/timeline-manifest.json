@@ -1,0 +1,677 @@
+[
+	{
+		"id": "hero",
+		"kind": "part",
+		"title": "hero",
+		"image": "Hero.webp",
+		"thumb": "hero",
+		"inherited": false,
+		"comp": "Hero"
+	},
+	{
+		"id": "section-intro-what",
+		"kind": "section",
+		"title": "What Is Git?",
+		"image": "what-is-git.webp",
+		"thumb": "section-intro-what",
+		"inherited": false,
+		"comp": "Hero"
+	},
+	{
+		"id": "section-intro-history",
+		"kind": "section",
+		"title": "A Brief History of Git",
+		"image": "what-is-git.webp",
+		"thumb": "section-intro-what",
+		"inherited": true,
+		"comp": "Hero"
+	},
+	{
+		"id": "section-intro-install",
+		"kind": "section",
+		"title": "Installing Git",
+		"image": "install-git.webp",
+		"thumb": "section-intro-install",
+		"inherited": false,
+		"comp": "Hero"
+	},
+	{
+		"id": "section-intro-repo",
+		"kind": "section",
+		"title": "What Is a Repository?",
+		"image": "what-is-a-repo.webp",
+		"thumb": "section-intro-repo",
+		"inherited": false,
+		"comp": "Hero"
+	},
+	{
+		"id": "part-1",
+		"kind": "part",
+		"title": "Enterprise Onboarding: Connecting to Your Codebase",
+		"image": "P1.Section1-git-config.webp",
+		"thumb": "section-1-1",
+		"inherited": true,
+		"comp": "Part1"
+	},
+	{
+		"id": "section-1-1",
+		"kind": "section",
+		"title": "1.1 First-Time Local Configuration",
+		"image": "P1.Section1-git-config.webp",
+		"thumb": "section-1-1",
+		"inherited": false,
+		"comp": "Part1"
+	},
+	{
+		"id": "config",
+		"kind": "playground",
+		"title": "Introduce Yourself to Git",
+		"image": "P1.Section1-git-config.webp",
+		"thumb": "section-1-1",
+		"inherited": true,
+		"comp": "Part1"
+	},
+	{
+		"id": "section-1-2",
+		"kind": "section",
+		"title": "1.2 Authentication: Tokens & SSH Keys",
+		"image": "personal-access-token.webp",
+		"thumb": "section-1-2",
+		"inherited": false,
+		"comp": "Part1"
+	},
+	{
+		"id": "section-1-3",
+		"kind": "section",
+		"title": "1.3 Getting the Code (Cloning the Repository)",
+		"image": "git-clone.webp",
+		"thumb": "section-1-3",
+		"inherited": false,
+		"comp": "Part1"
+	},
+	{
+		"id": "part-2",
+		"kind": "part",
+		"title": "The Core Safety Loop: Your \"Save Game\" for AI Coding",
+		"image": "git-status.webp",
+		"thumb": "section-2-1",
+		"inherited": true,
+		"comp": "Part2"
+	},
+	{
+		"id": "section-2-1",
+		"kind": "section",
+		"title": "2.1 \"What Did the AI Just Do?\"",
+		"image": "git-status.webp",
+		"thumb": "section-2-1",
+		"inherited": false,
+		"comp": "Part2"
+	},
+	{
+		"id": "section-2-2",
+		"kind": "section",
+		"title": "2.2 Reviewing and Staging the AI's Work",
+		"image": "git-add-p.webp",
+		"thumb": "section-2-2",
+		"inherited": false,
+		"comp": "Part2"
+	},
+	{
+		"id": "section-2-3",
+		"kind": "section",
+		"title": "2.3 Creating the Save Point",
+		"image": "git-commit.webp",
+		"thumb": "section-2-3",
+		"inherited": false,
+		"comp": "Part2"
+	},
+	{
+		"id": "core-loop",
+		"kind": "playground",
+		"title": "The Core Safety Loop",
+		"image": "git-commit.webp",
+		"thumb": "section-2-3",
+		"inherited": true,
+		"comp": "Part2"
+	},
+	{
+		"id": "section-2-4",
+		"kind": "section",
+		"title": "2.4 What NOT to Commit (.gitignore)",
+		"image": "gitignore.webp",
+		"thumb": "section-2-4",
+		"inherited": false,
+		"comp": "Part2"
+	},
+	{
+		"id": "part-3",
+		"kind": "part",
+		"title": "Parallel Universes: Branching for AI Experiments",
+		"image": "git-branch.webp",
+		"thumb": "section-3-1",
+		"inherited": true,
+		"comp": "Part3"
+	},
+	{
+		"id": "section-3-1",
+		"kind": "section",
+		"title": "3.1 \"I Have a New Idea (or AI Prompt)\"",
+		"image": "git-branch.webp",
+		"thumb": "section-3-1",
+		"inherited": false,
+		"comp": "Part3"
+	},
+	{
+		"id": "wrong-branch",
+		"kind": "playground",
+		"title": "Move Commit to Feature Branch",
+		"image": "git-branch.webp",
+		"thumb": "section-3-1",
+		"inherited": true,
+		"comp": "Part3"
+	},
+	{
+		"id": "section-3-2",
+		"kind": "section",
+		"title": "3.2 \"My Teammate Pushed Updates\" (Syncing)",
+		"image": "fetch-pull-push.webp",
+		"thumb": "section-3-2",
+		"inherited": false,
+		"comp": "Part3"
+	},
+	{
+		"id": "sync-remote",
+		"kind": "playground",
+		"title": "Sync with Remote",
+		"image": "fetch-pull-push.webp",
+		"thumb": "section-3-2",
+		"inherited": true,
+		"comp": "Part3"
+	},
+	{
+		"id": "section-3-3",
+		"kind": "section",
+		"title": "3.3 \"My AI-Generated Feature is Ready\" (The Pull Request)",
+		"image": "pull-request.webp",
+		"thumb": "section-3-3",
+		"inherited": false,
+		"comp": "Part3"
+	},
+	{
+		"id": "branching",
+		"kind": "playground",
+		"title": "Branching Workflow",
+		"image": "pull-request.webp",
+		"thumb": "section-3-3",
+		"inherited": true,
+		"comp": "Part3"
+	},
+	{
+		"id": "part-4",
+		"kind": "part",
+		"title": "The \"Undo\" Toolkit: Reversing AI Mistakes",
+		"image": "undo.webp",
+		"thumb": "part-4",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-1",
+		"kind": "section",
+		"title": "4.1 \"Discard This Mess\" (Local, Not Committed)",
+		"image": "git-restore.webp",
+		"thumb": "section-4-1",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-2",
+		"kind": "section",
+		"title": "4.2 \"I Staged This by Accident\" (Staged, Not Committed)",
+		"image": "git-restore-staged.webp",
+		"thumb": "section-4-2",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "accidental-stage",
+		"kind": "playground",
+		"title": "Unstage Secrets & Debug Files",
+		"image": "git-restore-staged.webp",
+		"thumb": "section-4-2",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-3",
+		"kind": "section",
+		"title": "4.3 \"I Forgot a File in My Last Commit\"",
+		"image": "git-amend.webp",
+		"thumb": "section-4-3",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-4",
+		"kind": "section",
+		"title": "4.4 \"Nuke This Whole Feature\" (Locally, Committed)",
+		"image": "git-reset.webp",
+		"thumb": "section-4-4",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-5",
+		"kind": "section",
+		"title": "4.5 \"I Pushed a Bug to the Team!\" (Public, Pushed)",
+		"image": "git-revert.webp",
+		"thumb": "section-4-5",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-6",
+		"kind": "section",
+		"title": "4.6 The \"Break Glass\" Command",
+		"image": "force-with-lease.webp",
+		"thumb": "section-4-6",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "force-push",
+		"kind": "playground",
+		"title": "Reset and Force Push",
+		"image": "force-with-lease.webp",
+		"thumb": "section-4-6",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-7",
+		"kind": "section",
+		"title": "4.7 The Git \"Undo\" Recovery Matrix",
+		"image": "recovery-matrix.webp",
+		"thumb": "section-4-7",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "undo",
+		"kind": "playground",
+		"title": "Undo Operations",
+		"image": "recovery-matrix.webp",
+		"thumb": "section-4-7",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-8",
+		"kind": "section",
+		"title": "4.8 Detached HEAD — Time Travel Safely",
+		"image": "detached-head.webp",
+		"thumb": "section-4-8",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "detached-head",
+		"kind": "playground",
+		"title": "Try it: Time-travel and escape",
+		"image": "detached-head.webp",
+		"thumb": "section-4-8",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
+		"id": "section-4-9",
+		"kind": "section",
+		"title": "4.9 The Reflog — Your Time Machine",
+		"image": "git-reflog.webp",
+		"thumb": "section-4-9",
+		"inherited": false,
+		"comp": "Part4"
+	},
+	{
+		"id": "reflog-rescue",
+		"kind": "playground",
+		"title": "Try it: Rescue lost commits",
+		"image": "git-reflog.webp",
+		"thumb": "section-4-9",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
+		"id": "bisect",
+		"kind": "playground",
+		"title": "Bisect: Binary-Search the History",
+		"image": "git-reflog.webp",
+		"thumb": "section-4-9",
+		"inherited": true,
+		"comp": "Part4"
+	},
+	{
+		"id": "part-5",
+		"kind": "part",
+		"title": "Advanced Scenarios: Managing a Multi-Branch Workflow",
+		"image": "git-stash.webp",
+		"thumb": "section-5-1",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "section-5-1",
+		"kind": "section",
+		"title": "5.1 \"I Need to Switch Branches, but My Work Isn't Ready\"",
+		"image": "git-stash.webp",
+		"thumb": "section-5-1",
+		"inherited": false,
+		"comp": "Part5"
+	},
+	{
+		"id": "stash",
+		"kind": "playground",
+		"title": "Stash: Context-Switch Safely",
+		"image": "git-stash.webp",
+		"thumb": "section-5-1",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "section-5-2",
+		"kind": "section",
+		"title": "5.2 \"My Branch is Out of Date\" (Rebase vs. Merge)",
+		"image": "merge-rebase.webp",
+		"thumb": "section-5-2",
+		"inherited": false,
+		"comp": "Part5"
+	},
+	{
+		"id": "rebase-merge",
+		"kind": "playground",
+		"title": "Merge vs. Rebase",
+		"image": "merge-rebase.webp",
+		"thumb": "section-5-2",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "interactive-rebase",
+		"kind": "playground",
+		"title": "Interactive Rebase: Clean the History",
+		"image": "merge-rebase.webp",
+		"thumb": "section-5-2",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "section-5-3",
+		"kind": "section",
+		"title": "5.3 \"We Both Edited the Same File\" (Merge Conflicts)",
+		"image": "merge-conflict.webp",
+		"thumb": "section-5-3",
+		"inherited": false,
+		"comp": "Part5"
+	},
+	{
+		"id": "conflicts",
+		"kind": "playground",
+		"title": "Merge Conflict Resolution",
+		"image": "merge-conflict.webp",
+		"thumb": "section-5-3",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "section-5-4",
+		"kind": "section",
+		"title": "5.4 Cherry-Pick — Take Only the Gems",
+		"image": "cherry-pick.webp",
+		"thumb": "section-5-4",
+		"inherited": false,
+		"comp": "Part5"
+	},
+	{
+		"id": "cherry-pick",
+		"kind": "playground",
+		"title": "Cherry-Pick: Take Only the Gem",
+		"image": "cherry-pick.webp",
+		"thumb": "section-5-4",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "section-5-5",
+		"kind": "section",
+		"title": "5.5 When Rebase Goes Wrong — Conflicts, Continue, Abort",
+		"image": "rebase-conflict.webp",
+		"thumb": "section-5-5",
+		"inherited": false,
+		"comp": "Part5"
+	},
+	{
+		"id": "rebase-conflict",
+		"kind": "playground",
+		"title": "Rebase: Resolve, Continue, or Abort",
+		"image": "rebase-conflict.webp",
+		"thumb": "section-5-5",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "section-5-6",
+		"kind": "section",
+		"title": "5.6 Tags & Releases — Naming Your Milestones",
+		"image": "git-tags.webp",
+		"thumb": "section-5-6",
+		"inherited": false,
+		"comp": "Part5"
+	},
+	{
+		"id": "release-tags",
+		"kind": "playground",
+		"title": "Tags: Cut a Release",
+		"image": "git-tags.webp",
+		"thumb": "section-5-6",
+		"inherited": true,
+		"comp": "Part5"
+	},
+	{
+		"id": "part-6",
+		"kind": "part",
+		"title": "Git for AI Agents: Rules, Guardrails, and Scale",
+		"image": "configure-once.webp",
+		"thumb": "section-6-1",
+		"inherited": true,
+		"comp": "Part6"
+	},
+	{
+		"id": "section-6-1",
+		"kind": "section",
+		"title": "6.1 Teaching Your AI to Use Git",
+		"image": "configure-once.webp",
+		"thumb": "section-6-1",
+		"inherited": false,
+		"comp": "Part6"
+	},
+	{
+		"id": "section-6-2",
+		"kind": "section",
+		"title": "6.2 Automating Quality with Git Hooks",
+		"image": "git-hooks.webp",
+		"thumb": "section-6-2",
+		"inherited": false,
+		"comp": "Part6"
+	},
+	{
+		"id": "hooks",
+		"kind": "playground",
+		"title": "Hooks: Mechanical Guardrails",
+		"image": "git-hooks.webp",
+		"thumb": "section-6-2",
+		"inherited": true,
+		"comp": "Part6"
+	},
+	{
+		"id": "section-6-3",
+		"kind": "section",
+		"title": "6.3 Parallel Agents with Git Worktrees",
+		"image": "git-worktrees.webp",
+		"thumb": "section-6-3",
+		"inherited": false,
+		"comp": "Part6"
+	},
+	{
+		"id": "worktrees",
+		"kind": "playground",
+		"title": "Worktrees: Parallel Agents",
+		"image": "git-worktrees.webp",
+		"thumb": "section-6-3",
+		"inherited": true,
+		"comp": "Part6"
+	},
+	{
+		"id": "part-7",
+		"kind": "part",
+		"title": "Your AI-Assisted Cockpit: Mastering Git in VS Code",
+		"image": "source-control.webp",
+		"thumb": "section-7-1",
+		"inherited": true,
+		"comp": "Part7"
+	},
+	{
+		"id": "section-7-1",
+		"kind": "section",
+		"title": "7.1 The Source Control View",
+		"image": "source-control.webp",
+		"thumb": "section-7-1",
+		"inherited": false,
+		"comp": "Part7"
+	},
+	{
+		"id": "section-7-2",
+		"kind": "section",
+		"title": "7.2 The Timeline View & GitLens",
+		"image": "timeline-gitlens.webp",
+		"thumb": "section-7-2",
+		"inherited": false,
+		"comp": "Part7"
+	},
+	{
+		"id": "section-7-3",
+		"kind": "section",
+		"title": "7.3 The 3-Way Merge Editor",
+		"image": "merge-editor.webp",
+		"thumb": "section-7-3",
+		"inherited": false,
+		"comp": "Part7"
+	},
+	{
+		"id": "part-8",
+		"kind": "part",
+		"title": "Ship It: CI, Bots, and Releases",
+		"image": "ci-pipeline.webp",
+		"thumb": "section-8-1",
+		"inherited": true,
+		"comp": "Part8"
+	},
+	{
+		"id": "section-8-1",
+		"kind": "section",
+		"title": "8.1 CI — Where the Green Checkmark Comes From",
+		"image": "ci-pipeline.webp",
+		"thumb": "section-8-1",
+		"inherited": false,
+		"comp": "Part8"
+	},
+	{
+		"id": "section-8-2",
+		"kind": "section",
+		"title": "8.2 The Robot Coworkers: Dependabot, CodeQL & Friends",
+		"image": "robot-coworkers.webp",
+		"thumb": "section-8-2",
+		"inherited": false,
+		"comp": "Part8"
+	},
+	{
+		"id": "bot-pr",
+		"kind": "playground",
+		"title": "Review the Robot's PR",
+		"image": "robot-coworkers.webp",
+		"thumb": "section-8-2",
+		"inherited": true,
+		"comp": "Part8"
+	},
+	{
+		"id": "section-8-3",
+		"kind": "section",
+		"title": "8.3 Releases on Autopilot: SemVer, Conventional Commits, release-please",
+		"image": "release-autopilot.webp",
+		"thumb": "section-8-3",
+		"inherited": false,
+		"comp": "Part8"
+	},
+	{
+		"id": "release-robot",
+		"kind": "playground",
+		"title": "Be release-please for a Day",
+		"image": "release-autopilot.webp",
+		"thumb": "section-8-3",
+		"inherited": true,
+		"comp": "Part8"
+	},
+	{
+		"id": "part-9",
+		"kind": "part",
+		"title": "Conclusion: Best Practices for AI-Augmented Teams",
+		"image": "save-game-loop.webp",
+		"thumb": "section-9-1",
+		"inherited": true,
+		"comp": "Part9"
+	},
+	{
+		"id": "section-9-1",
+		"kind": "section",
+		"title": "9.1 The AI-First Workflow (Summary)",
+		"image": "save-game-loop.webp",
+		"thumb": "section-9-1",
+		"inherited": false,
+		"comp": "Part9"
+	},
+	{
+		"id": "section-9-2",
+		"kind": "section",
+		"title": "9.2 Quick Reference Card",
+		"image": "quick-reference.webp",
+		"thumb": "section-9-2",
+		"inherited": false,
+		"comp": "Part9"
+	},
+	{
+		"id": "section-9-3",
+		"kind": "section",
+		"title": "9.3 The Final Challenge",
+		"image": "final-challenge.webp",
+		"thumb": "section-9-3",
+		"inherited": false,
+		"comp": "Part9"
+	},
+	{
+		"id": "capstone",
+		"kind": "playground",
+		"title": "The Final Challenge",
+		"image": "final-challenge.webp",
+		"thumb": "section-9-3",
+		"inherited": true,
+		"comp": "Part9"
+	},
+	{
+		"id": "section-9-4",
+		"kind": "section",
+		"title": "9.4 Keep Learning — The References That Matter",
+		"image": "keep-learning.webp",
+		"thumb": "section-9-4",
+		"inherited": false,
+		"comp": "Part9"
+	}
+]
