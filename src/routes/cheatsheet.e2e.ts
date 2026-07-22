@@ -51,19 +51,42 @@ test.describe('Cheat sheet', () => {
 					'.cheat-panel button[title="Click to copy"] > code'
 				)
 			];
-			const offenders: { text: string; over: number }[] = [];
+			// `scrollWidth` reports the longest LINE, so once a row has wrapped it
+			// reads as comfortably inside its box — the one measurement that
+			// cannot answer "how much wider did this need to be?". Measure the
+			// unwrapped width instead, off-screen, with the chip's own type.
+			const ruler = document.createElement('span');
+			ruler.style.cssText =
+				'position:absolute;left:-9999px;top:0;white-space:pre;visibility:hidden';
+			document.body.appendChild(ruler);
+
+			const offenders: { text: string; needs: number; has: number }[] = [];
 			let wrapped = 0;
 			let tightest = Infinity;
 			for (const chip of chips) {
-				const lineHeight = parseFloat(getComputedStyle(chip).lineHeight);
+				const cs = getComputedStyle(chip);
+				const lineHeight = parseFloat(cs.lineHeight);
 				const available = (chip.parentElement as HTMLElement).clientWidth;
-				const slack = available - chip.scrollWidth;
+
+				ruler.style.font = cs.font;
+				ruler.style.letterSpacing = cs.letterSpacing;
+				ruler.textContent = chip.textContent;
+				const needs =
+					ruler.getBoundingClientRect().width +
+					parseFloat(cs.paddingLeft) +
+					parseFloat(cs.paddingRight);
+
 				if (chip.getBoundingClientRect().height > lineHeight * 1.5) {
 					wrapped++;
-					offenders.push({ text: chip.textContent!.trim(), over: Math.round(-slack) });
+					offenders.push({
+						text: chip.textContent!.trim(),
+						needs: Math.round(needs),
+						has: Math.round(available)
+					});
 				}
-				tightest = Math.min(tightest, slack);
+				tightest = Math.min(tightest, available - needs);
 			}
+			ruler.remove();
 			const list = document.querySelector('.cheat-list') as HTMLElement | null;
 			return {
 				wrapped,
@@ -80,9 +103,10 @@ test.describe('Cheat sheet', () => {
 		console.log('cheat sheet fit:', JSON.stringify(fit));
 		expect(fit.chips).toBeGreaterThan(50);
 		expect(fit.wrapped).toBe(0);
-		// Enough room left over to absorb a scrollbar gutter or a slightly
-		// wider fallback face, rather than fitting by luck.
-		expect(fit.tightest).toBeGreaterThanOrEqual(12);
+		// Enough room left over to absorb a platform scrollbar gutter that this
+		// machine may not draw, rather than fitting by luck. macOS reports ~10px
+		// more list width than Linux for the same panel.
+		expect(fit.tightest).toBeGreaterThanOrEqual(20);
 
 		// Closing restores the sidebar and the margin.
 		await page.getByRole('button', { name: 'Git Cheat Sheet' }).click();

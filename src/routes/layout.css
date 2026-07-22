@@ -122,13 +122,13 @@
 	   ~/.gitignore_global`: 57 chars at 11px, which every monospace renders at
 	   ~376px) plus the list's 40px of gutters and the border.
 
-	   The extra rem over that sum pays for the scrollbar. macOS overlays its
-	   scrollbar and costs the content nothing; Linux and Windows reserve a
-	   real ~15px gutter inside the scroll container, which is enough to wrap
-	   the longest row on a width tuned against overlay scrollbars alone. The
-	   list sets `scrollbar-gutter: stable` so both platforms lose the same
-	   space and this number means the same thing everywhere. */
-	--cheatsheet-width: 27.5rem;
+	   The rest pays for the scrollbar and for being wrong about it. macOS
+	   overlays its scrollbar and costs the content nothing, so a width tuned
+	   there is tuned without a gutter; Linux and Windows take ~10-15px out of
+	   the same box and wrap the longest row. `scrollbar-gutter: stable` does
+	   not level this — on overlay scrollbars it still reserves nothing — so
+	   the width simply has to carry the gutter it cannot see, plus slack. */
+	--cheatsheet-width: 29rem;
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 	--font-heading: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
