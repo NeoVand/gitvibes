@@ -9,6 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
@@ -780,6 +781,12 @@ echo "Thumbs.db" >> ~/.gitignore_global`}
 					'Write a .gitignore for this project — look at my stack and include editor and OS artifacts',
 					"Check my repo for tracked files that look like secrets or build artifacts that shouldn't be committed"
 				]}
+			/>
+
+			<ChallengeActivity
+				title="Stage Only What You Trust"
+				part={2}
+				id="ch-2-stage-what-you-trust"
 			/>
 		</div>
 	</div>

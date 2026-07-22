@@ -59,6 +59,23 @@
 	--color-playground-border: #ee92c6;
 	--color-playground-header: #f9e0ee;
 
+	/* Challenges — the graded sibling of the playground, in fired-clay
+	   terracotta. The card chrome is indigo and the playground accent is the
+	   --color-important pink, so the challenge family had to be warm and
+	   unmistakably neither: terracotta sits far from indigo on hue, and it is
+	   darker and browner than the pink, the amber --color-warning, and the
+	   signal-red --color-caution — a challenge is a test, not a hazard.
+
+	   The -bright variants are the COMPLETED lift: the same hue with
+	   lightness and chroma raised, used only where a solved mark sits next
+	   to an unsolved one. Completion must read as a brightness/fill change —
+	   under deuteranopia the hue axis cannot be trusted to carry it, the
+	   lightness axis can. --color-earned-bright is the matching lift for the
+	   success-green family, for the solved tick beside a challenge row. */
+	--color-challenge: #a2401f;
+	--color-challenge-bright: #d1490f;
+	--color-earned-bright: #12923f;
+
 	--color-diff-add: #166534;
 	--color-diff-add-bg: rgba(22, 101, 52, 0.08);
 	--color-diff-del: #b91c1c;
@@ -129,6 +146,14 @@
 		--color-playground-border: #532a44;
 		--color-playground-header: #170c12;
 
+		/* Dark keeps the same three challenge roles; the base terracotta rises
+		   to stay readable on near-black, and the -bright lifts rise with it
+		   so the solved/unsolved gap survives (lightness, not hue, carries
+		   completion — see the light block's note). */
+		--color-challenge: #e0784f;
+		--color-challenge-bright: #ff9b66;
+		--color-earned-bright: #4ade80;
+
 		--color-diff-add: #a6e3a1;
 		--color-diff-add-bg: rgba(166, 227, 161, 0.1);
 		--color-diff-del: #f38ba8;
@@ -179,6 +204,9 @@
 	--color-vibe: #8b5cf6;
 	--color-vibe-text: #7c3aed;
 	--color-vibe-bg: #f5f3ff;
+	--color-challenge: #a2401f;
+	--color-challenge-bright: #d1490f;
+	--color-earned-bright: #12923f;
 	--color-diff-add: #166534;
 	--color-diff-add-bg: rgba(22, 101, 52, 0.08);
 	--color-diff-del: #b91c1c;
@@ -227,6 +255,9 @@
 	--color-playground-bg: #1e1019;
 	--color-playground-border: #532a44;
 	--color-playground-header: #170c12;
+	--color-challenge: #e0784f;
+	--color-challenge-bright: #ff9b66;
+	--color-earned-bright: #4ade80;
 	--color-diff-add: #a6e3a1;
 	--color-diff-add-bg: rgba(166, 227, 161, 0.1);
 	--color-diff-del: #f38ba8;

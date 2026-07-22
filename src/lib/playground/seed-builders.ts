@@ -308,6 +308,148 @@ export async function buildCapstoneRepo(engine: GitEngine): Promise<void> {
 	// Mess 3 isn't a mess yet — it's the missing v1.0.0 tag on the clean main
 }
 
+/**
+ * Three agent messes in one local repo: a "checkpoint" commit that must not
+ * ship, a scribbled working file, and a staged debug script. Nothing is
+ * pushed, so the whole pile is one hard reset away from clean — that gap
+ * between the one-move fix and the tool-by-tool cleanup is what the Part 4
+ * challenge grades.
+ */
+export async function buildAgentCheckpointRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'README.md', content: '# Importer\n' },
+		{ path: 'src/app.py', content: 'def app():\n    return run()\n' }
+	]);
+	await engine.commitFiles('feat: add csv parser', [
+		{ path: 'src/parser.py', content: 'def parse(row):\n    return row.split(",")\n' }
+	]);
+
+	// The commit that must not ship — the agent "saved its place" on main
+	await engine.commitFiles('chore: agent checkpoint - do not ship', [
+		{ path: 'src/app.py', content: 'def app():\n    return run()\n# CHECKPOINT: half-done\n' }
+	]);
+
+	// The working-tree scribble on top of it
+	await engine.writeFile('src/app.py', 'def app():\n    return run()\n# CHECKPOINT: retry #2\n');
+
+	// And a debug script, already staged
+	await engine.writeFile('src/debug.py', 'import pdb; pdb.set_trace()\n');
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: 'src/debug.py' });
+}
+
+/**
+ * An experiment branch whose one good commit sits UNDER a junk tip. The tip
+ * is deliberately not the gem: grabbing `experiment` brings the junk, so the
+ * only clean route is addressing the commit below it — the Part 5 challenge
+ * is about aiming cherry-pick, not remembering it exists.
+ */
+export async function buildBuriedFixRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/config.py', content: 'ROUND_CENTS = False\n' },
+		{ path: 'src/billing.py', content: 'def total(items):\n    return sum(items)\n' }
+	]);
+
+	await git.branch({ fs: engine.fs, dir: engine.dir, ref: 'experiment', checkout: true });
+	await engine.commitFiles('fix: round currency to cents', [
+		{ path: 'src/config.py', content: 'ROUND_CENTS = True\n' }
+	]);
+	await engine.commitFiles('wip: dashboard rewrite', [
+		{ path: 'src/dashboard.py', content: '# TODO: everything\n' }
+	]);
+
+	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main' });
+}
+
+/**
+ * The hooks stand between an agent's leftovers and the history: pre-commit
+ * vetoes while the debug dump is in the code, commit-msg insists on
+ * Conventional Commits. Same enforcement as the Part 6 lesson repo, fresh
+ * mess — the challenge grades whether you read the gate before paying tolls
+ * at it.
+ */
+export async function buildHookGateRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{ path: 'src/run.py', content: 'def run(b):\n    return transform(b)\n' },
+		{
+			path: 'package.json',
+			content: '{\n  "scripts": { "lint": "ruff check .", "test": "pytest" }\n}\n'
+		}
+	]);
+
+	await engine.writeFile(
+		'.husky/pre-commit',
+		'#!/bin/sh\nnpm run lint || exit 1\nnpm test || exit 1\n'
+	);
+	await engine.writeFile(
+		'.husky/commit-msg',
+		`#!/bin/sh\ngrep -qE '^(Merge|Revert)' "$1" && exit 0\nif ! grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\\(.+\\))?!?: .+' "$1"; then\n  echo "Commit message must follow Conventional Commits" >&2\n  exit 1\nfi\n`
+	);
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: '.husky/pre-commit' });
+	await git.add({ fs: engine.fs, dir: engine.dir, filepath: '.husky/commit-msg' });
+	await git.commit({
+		fs: engine.fs,
+		dir: engine.dir,
+		message: 'chore: install husky hooks',
+		author: { name: 'Vibe Coder', email: 'vibe@gitvibes.dev' }
+	});
+
+	engine.hooks = {
+		preCommit: {
+			file: 'src/run.py',
+			marker: 'DEBUG_DUMP',
+			error: "ruff: src/run.py:2: leftover debugging statement ('DEBUG_DUMP')"
+		},
+		commitMsg: {
+			pattern:
+				/^(Merge|Revert)|^(feat|fix|docs|style|refactor|perf|test|build|ci|chore)(\(.+\))?!?: .+/,
+			error: "Commit message must follow Conventional Commits, e.g. 'fix: remove debug statement'"
+		}
+	};
+
+	// The agent's leftover: a dump call in the pipeline entrypoint
+	await engine.writeFile('src/run.py', 'def run(b):\n    DEBUG_DUMP(b)\n    return transform(b)\n');
+}
+
+/**
+ * A dependency bot's proposal, waiting for its human: main released at
+ * v1.2.0, and a dependabot/* branch holds exactly one chore(deps) commit.
+ * The Part 8 challenge grades the review-merge-cleanup-release loop — and
+ * whether the reviewer inspects the branch with a diff instead of a field
+ * trip.
+ */
+export async function buildBotBumpRepo(engine: GitEngine): Promise<void> {
+	await engine.commitFiles('Initial commit', [
+		{
+			path: 'package.json',
+			content: '{\n  "dependencies": {\n    "axios": "1.7.0"\n  }\n}\n'
+		},
+		{ path: 'src/http.js', content: 'const axios = require("axios");\n' }
+	]);
+	await engine.commitFiles('feat: retry failed requests', [
+		{
+			path: 'src/http.js',
+			content: 'const axios = require("axios");\nmodule.exports.retries = 3;\n'
+		}
+	]);
+	const released = await engine.getCommitOid('main', 0);
+	await git.tag({ fs: engine.fs, dir: engine.dir, ref: 'v1.2.0', object: released });
+
+	await git.branch({
+		fs: engine.fs,
+		dir: engine.dir,
+		ref: 'dependabot/npm-axios-1.7.4',
+		checkout: true
+	});
+	await engine.commitFiles('chore(deps): bump axios from 1.7.0 to 1.7.4', [
+		{
+			path: 'package.json',
+			content: '{\n  "dependencies": {\n    "axios": "1.7.4"\n  }\n}\n'
+		}
+	]);
+
+	await git.checkout({ fs: engine.fs, dir: engine.dir, ref: 'main' });
+}
+
 const PRICING_OK =
 	'def total(price, qty, discount):\n    return round(price * qty * (1 - discount), 2)\n';
 const PRICING_BUG =

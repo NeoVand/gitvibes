@@ -5,6 +5,7 @@
 		Terminal,
 		RotateCcw,
 		Lightbulb,
+		Puzzle,
 		ChevronRight,
 		ChevronDown,
 		X,
@@ -23,7 +24,13 @@
 		loadScenarioSeed,
 		type PlaygroundScenario
 	} from '$lib/playground/scenarios';
-	import { progress, markScenarioComplete, staleCompletions } from '$lib/data/progress';
+	import {
+		progress,
+		markScenarioAttempted,
+		markScenarioComplete,
+		staleCompletions
+	} from '$lib/data/progress';
+	import { activityKindOf, type ActivityKind } from '$lib/data/sidebar-nav';
 	import { shareUrl, type SharedSession } from '$lib/playground/share';
 	import { get } from 'svelte/store';
 	import { CliSession, type CliEvent, type CliPhase } from '$lib/ai/cli/session';
@@ -56,7 +63,10 @@
 		onClose,
 		onResetReady,
 		id = 'playground',
-		shared = null
+		shared = null,
+		kind,
+		customScenario = null,
+		onProgress
 	}: {
 		scenarioId?: string;
 		embedded?: boolean;
@@ -67,6 +77,21 @@
 		onResetReady?: (reset: () => void) => void;
 		id?: string;
 		shared?: SharedSession | null;
+		kind?: ActivityKind;
+		/**
+		 * Run a scenario OBJECT rather than an id from `playgroundScenarios`.
+		 * Challenges live in their own registry and reach the UI through
+		 * `toScenario()`, so there is nothing for `getScenario` to look up.
+		 */
+		customScenario?: PlaygroundScenario | null;
+		/**
+		 * Fired after every command (and once per load/reset) with the engine's
+		 * durable history and whether `check()` currently passes.
+		 * ChallengeActivity scores off this; it is the only way out of the
+		 * sandbox, and it is read-only — the caller cannot steer the terminal
+		 * with it.
+		 */
+		onProgress?: (state: { history: readonly string[]; solved: boolean }) => void;
 	} = $props();
 
 	// One-shot: a shared session (from a #pg= link) replays once on first load.
@@ -91,10 +116,33 @@
 	let inputEl: HTMLInputElement | undefined = $state(undefined);
 	let terminalEl: HTMLDivElement | undefined = $state(undefined);
 
-	let scenario = $derived(getScenario(activeScenarioId));
+	let scenario = $derived(customScenario ?? getScenario(activeScenarioId));
+
+	/* ── what kind of activity is this card? ────────────────────────────────
+	   The slot above the terminal used to be "the hint", marked with a
+	   lightbulb. It is now the activity's TYPE marker, because the two kinds
+	   of card put different things in it: a playground shows a hint that
+	   walks you toward the answer, a challenge shows its brief — the whole of
+	   what the learner gets — and a lightbulb over a challenge brief would
+	   promise help that is deliberately not coming. Same icon as the sidebar
+	   row, so card and TOC agree on what a thing is. */
+	const activityKind = $derived<ActivityKind>(kind ?? activityKindOf(activeScenarioId));
+	const isChallenge = $derived(activityKind === 'challenge');
+	const TypeIcon = $derived(isChallenge ? Puzzle : Lightbulb);
+	/** Challenge terracotta; playgrounds keep the card's existing accent. */
+	const typeAccent = $derived(isChallenge ? 'var(--color-challenge)' : 'var(--color-important)');
+	const typeLabel = $derived(isChallenge ? 'Challenge brief:' : 'Playground hint:');
+	/* A playground's chips are a walkthrough — clicked in order they reach
+	   the answer, and "Try these commands" is the honest name for that. A
+	   challenge's pool is overcomplete and salted: some of these chips are
+	   wrong, and saying so is the difference between offering a kit and
+	   offering a solution. */
+	const chipsLabel = $derived(
+		isChallenge ? 'Your kit — more than you need, and not all of it right' : 'Try these commands'
+	);
 
 	$effect(() => {
-		if (scenarioId !== activeScenarioId && embedded) {
+		if (!customScenario && scenarioId !== activeScenarioId && embedded) {
 			activeScenarioId = scenarioId;
 			loadScenario(getScenario(scenarioId));
 		}
@@ -122,9 +170,18 @@
 			checkArmed = true;
 			commandLog = [];
 			redoStack = [];
+			// A fresh seed is a fresh attempt: tell the caller so a frozen grade
+			// from the previous run can be cleared. An empty history IS the signal.
+			onProgress?.({ history: [], solved: false });
+			// A CHALLENGE'S BRIEF IS PRINTED ONCE, and the slot above the terminal
+			// is where it is printed (see the `TypeIcon` note). Echoing
+			// `description` into the scrollback as well put the same paragraph on
+			// screen twice, a few pixels apart — so a challenge opens on the
+			// how-to-drive line alone. A playground's `description` is a different
+			// string from its hint, so it still earns its line.
 			history = embedded
 				? [
-						{ type: 'system', text: next.description },
+						...(isChallenge ? [] : [{ type: 'system' as const, text: next.description }]),
 						{
 							type: 'system',
 							text: 'Type git commands below. Enter "help" for supported commands.'
@@ -180,7 +237,7 @@
 	}
 
 	onMount(() => {
-		loadScenario(getScenario(activeScenarioId));
+		loadScenario(customScenario ?? getScenario(activeScenarioId));
 		onResetReady?.(resetScenario);
 		// Surface previously downloaded models (agent chip + cached warm) —
 		// idempotent, cache-only, never triggers a download.
@@ -513,6 +570,14 @@
 		const command = input.trim();
 		if (!command) return;
 
+		// ENGAGEMENT, recorded at the one place every learner-submitted command
+		// passes through — including undo/redo/share and `agent "…"`, all of
+		// which are the learner doing something in this scenario. Not recorded
+		// for the #pg= shared-session replay, which runs commands through the
+		// engine directly and, for the same reason it earns no completion, is
+		// not this learner's work.
+		markScenarioAttempted(scenario.id);
+
 		history = [...history, { type: 'input', text: command }];
 		input = '';
 		historyIndex = -1;
@@ -537,14 +602,18 @@
 	let checkArmed = $state(true);
 
 	async function runScenarioCheck() {
-		if (!engine || !checkArmed || !scenario.check) return;
+		if (!engine || !scenario.check) return;
+		// Without a listener there is nothing to report, so keep the original
+		// short-circuit: a disarmed check must not re-run every command.
+		if (!checkArmed && !onProgress) return;
 		let passed = false;
 		try {
 			passed = await scenario.check(engine);
 		} catch {
 			passed = false;
 		}
-		if (!passed) return;
+		onProgress?.({ history: [...engine.historyLog], solved: passed });
+		if (!passed || !checkArmed) return;
 		checkArmed = false;
 		markScenarioComplete(scenario.id);
 		history = [
@@ -664,7 +733,7 @@
 	}
 
 	async function resetScenario() {
-		await loadScenario(getScenario(activeScenarioId));
+		await loadScenario(customScenario ?? getScenario(activeScenarioId));
 	}
 
 	/**
@@ -691,6 +760,9 @@
 	}
 
 	function runSuggested(command: string) {
+		// A chip click is engagement too — it is the mildest real interaction
+		// an activity has, and exactly what the attempted state exists to see.
+		markScenarioAttempted(scenario.id);
 		input = command;
 		inputEl?.focus();
 	}
@@ -973,10 +1045,10 @@
 
 		<div
 			class="flex items-start gap-2 px-5 py-2.5 text-xs"
-			style="background: color-mix(in srgb, var(--color-important) 5%, var(--color-bg-secondary)); border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary);"
+			style="background: color-mix(in srgb, {typeAccent} 5%, var(--color-bg-secondary)); border-bottom: 1px solid var(--color-border); color: var(--color-text-secondary);"
 		>
-			<Lightbulb size={14} class="mt-0.5 flex-shrink-0" style="color: var(--color-important);" />
-			<span><RichHint text={scenario.hint} /></span>
+			<TypeIcon size={14} class="mt-0.5 flex-shrink-0" style="color: {typeAccent};" />
+			<span><span class="sr-only">{typeLabel}</span><RichHint text={scenario.hint} /></span>
 		</div>
 
 		<div
@@ -1028,7 +1100,7 @@
 
 		<div class="px-5 py-3" style="border-top: 1px solid var(--color-border);">
 			<p class="mb-2 text-xs font-medium" style="color: var(--color-text-muted);">
-				Try these commands
+				{chipsLabel}
 			</p>
 			<div class="flex flex-wrap gap-2">
 				{#each scenario.suggestedCommands as command, i (i)}

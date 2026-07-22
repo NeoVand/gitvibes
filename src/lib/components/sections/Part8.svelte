@@ -8,6 +8,7 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 </script>
@@ -490,6 +491,8 @@ a1b2c3d chore(main): release 1.4.2 (#118)
 					'Read my commits since the last tag and tell me the next version number — and why'
 				]}
 			/>
+
+			<ChallengeActivity title="Review the Robot" part={8} id="ch-8-review-the-robot" />
 		</div>
 	</div>
 </section>

@@ -29,6 +29,7 @@ import {
 	Monitor,
 	PackageCheck,
 	PenLine,
+	Puzzle,
 	RefreshCcw,
 	RefreshCw,
 	Rocket,
@@ -54,11 +55,46 @@ export interface NavItem {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	icon: any;
 	isPlayground?: boolean;
+	/**
+	 * The graded counterpart of a playground — one per Part, always the last
+	 * child. Rendered in the challenge terracotta with `Puzzle`, and, like
+	 * `isPlayground`, at the smaller activity row size.
+	 */
+	isChallenge?: boolean;
+}
+
+/** Both flags mean "an activity, not prose", which is what row styling keys on. */
+export function isActivity(item: NavItem): boolean {
+	return Boolean(item.isPlayground || item.isChallenge);
+}
+
+/**
+ * The two kinds of hands-on activity. It lives here, next to the flags it
+ * mirrors, so the sidebar row and the activity card name the same two things
+ * from one definition rather than each declaring its own string union.
+ */
+export type ActivityKind = 'playground' | 'challenge';
+
+/**
+ * Challenge anchors are `ch-<part>-<slug>` (see challenges.ts). This is the
+ * fallback for callers that render a card without saying which kind it is —
+ * the explicit `kind` prop always wins, and importing challenges.ts here just
+ * to test membership would pull all nine sandbox seeds into the nav bundle.
+ */
+export function activityKindOf(id: string): ActivityKind {
+	return /^ch-\d+-/.test(id) ? 'challenge' : 'playground';
 }
 
 export interface NavSection extends NavItem {
 	children?: NavItem[];
 }
+
+/* One challenge closes each Part (src/lib/playground/challenges.ts owns the
+   ids and the order), so each is the LAST child of its part-N below, flagged
+   `isChallenge: true` with lucide's `Puzzle`. Every id here must also appear
+   in `challengeAnchorIds` (src/lib/data/sections.ts) and be rendered by a
+   <ChallengeActivity> in the matching Part component — keys.test.ts protects
+   the first pairing, and a row without a real anchor scrolls nowhere. */
 
 export const sidebarNav: NavSection[] = [
 	{
@@ -80,7 +116,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-1-1', label: 'Git Configuration', icon: UserCheck },
 			{ id: 'config', label: 'Introduce Yourself', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-1-2', label: 'Authentication', icon: KeyRound },
-			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download }
+			{ id: 'section-1-3', label: 'Cloning a Repo', icon: Download },
+			{ id: 'ch-1-sign-your-work', label: 'Sign Your Work', icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -92,7 +129,13 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-2-2', label: 'Staging Changes', icon: FolderPlus },
 			{ id: 'section-2-3', label: 'Committing', icon: Save },
 			{ id: 'core-loop', label: 'Core Safety Loop', icon: Gamepad2, isPlayground: true },
-			{ id: 'section-2-4', label: 'What NOT to Commit', icon: EyeOff }
+			{ id: 'section-2-4', label: 'What NOT to Commit', icon: EyeOff },
+			{
+				id: 'ch-2-stage-what-you-trust',
+				label: 'Stage Only What You Trust',
+				icon: Puzzle,
+				isChallenge: true
+			}
 		]
 	},
 	{
@@ -105,7 +148,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-3-2', label: 'Syncing Changes', icon: RefreshCcw },
 			{ id: 'sync-remote', label: 'Sync with Remote', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-3-3', label: 'Pull Requests', icon: GitPullRequest },
-			{ id: 'branching', label: 'Branching Workflow', icon: Gamepad2, isPlayground: true }
+			{ id: 'branching', label: 'Branching Workflow', icon: Gamepad2, isPlayground: true },
+			{ id: 'ch-3-branch-first', label: 'Branch Before You Build', icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -127,7 +171,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'detached-head', label: 'Time Travel', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-4-9', label: 'Reflog Rescue', icon: History },
 			{ id: 'reflog-rescue', label: 'Rescue Lost Commits', icon: Gamepad2, isPlayground: true },
-			{ id: 'bisect', label: 'Find the Bad Commit', icon: Gamepad2, isPlayground: true }
+			{ id: 'bisect', label: 'Find the Bad Commit', icon: Gamepad2, isPlayground: true },
+			{ id: 'ch-4-pick-your-undo', label: 'Pick the Right Undo', icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -147,7 +192,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-5-5', label: 'Rebase Conflicts', icon: ShieldAlert },
 			{ id: 'rebase-conflict', label: 'Rebase Rescue', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-5-6', label: 'Tags & Releases', icon: Tag },
-			{ id: 'release-tags', label: 'Cut a Release', icon: Gamepad2, isPlayground: true }
+			{ id: 'release-tags', label: 'Cut a Release', icon: Gamepad2, isPlayground: true },
+			{ id: 'ch-5-rescue-the-fix', label: 'Rescue the Buried Fix', icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -159,7 +205,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-6-2', label: 'Automating with Hooks', icon: Webhook },
 			{ id: 'hooks', label: 'The Hooks Say No', icon: Gamepad2, isPlayground: true },
 			{ id: 'section-6-3', label: 'Parallel Agents: Worktrees', icon: FolderGit2 },
-			{ id: 'worktrees', label: 'Worktree Fleet', icon: Gamepad2, isPlayground: true }
+			{ id: 'worktrees', label: 'Worktree Fleet', icon: Gamepad2, isPlayground: true },
+			{ id: 'ch-6-read-the-gate', label: 'Read the Gate First', icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -169,7 +216,8 @@ export const sidebarNav: NavSection[] = [
 		children: [
 			{ id: 'section-7-1', label: 'Source Control View', icon: Layout },
 			{ id: 'section-7-2', label: 'Timeline & GitLens', icon: Clock },
-			{ id: 'section-7-3', label: 'Merge Editor', icon: Columns }
+			{ id: 'section-7-3', label: 'Merge Editor', icon: Columns },
+			{ id: 'ch-7-cockpit-by-hand', label: 'The Cockpit, By Hand', icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -181,7 +229,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-8-2', label: 'Dependabot & CodeQL', icon: ShieldCheck },
 			{ id: 'bot-pr', label: "Review the Robot's PR", icon: Gamepad2, isPlayground: true },
 			{ id: 'section-8-3', label: 'Releases on Autopilot', icon: PackageCheck },
-			{ id: 'release-robot', label: 'Be release-please', icon: Gamepad2, isPlayground: true }
+			{ id: 'release-robot', label: 'Be release-please', icon: Gamepad2, isPlayground: true },
+			{ id: 'ch-8-review-the-robot', label: "Land the Bot's Bump", icon: Puzzle, isChallenge: true }
 		]
 	},
 	{
@@ -193,7 +242,8 @@ export const sidebarNav: NavSection[] = [
 			{ id: 'section-9-2', label: 'Quick Reference', icon: Table },
 			{ id: 'section-9-3', label: 'Final Challenge', icon: Trophy },
 			{ id: 'capstone', label: 'Three Messes, One Repo', icon: Gamepad2, isPlayground: true },
-			{ id: 'section-9-4', label: 'Keep Learning', icon: Library }
+			{ id: 'section-9-4', label: 'Keep Learning', icon: Library },
+			{ id: 'ch-9-three-messes', label: 'Three Messes, No Hints', icon: Puzzle, isChallenge: true }
 		]
 	}
 ];

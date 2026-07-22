@@ -6,6 +6,7 @@
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 </script>
@@ -346,6 +347,8 @@
 					'Accept the incoming changes for all conflicts in this file'
 				]}
 			/>
+
+			<ChallengeActivity title="The Cockpit, By Hand" part={7} id="ch-7-cockpit-by-hand" />
 		</div>
 	</div>
 </section>

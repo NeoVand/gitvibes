@@ -2,7 +2,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import { ChevronRight, PanelLeftClose, PanelLeft, RotateCcw } from 'lucide-svelte';
 	import { autohideScroll } from '$lib/actions/autohide-scroll';
-	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
+	import { isActivity, sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
 	import { sectionIds } from '$lib/data/sections';
 	import { progress, resetProgress } from '$lib/data/progress';
 	import { lessonScenarioIds } from '$lib/playground/scenarios';
@@ -30,6 +30,24 @@
 		(lessonScenarioIds as readonly string[]).filter((id) => $progress.scenarios[id]).length
 	);
 	const isDone = (id: string) => Boolean($progress.scenarios[id]);
+
+	/**
+	 * Activity rows carry their family's accent: playgrounds the pink the
+	 * cards use, challenges the terracotta. A SOLVED challenge lifts to the
+	 * -bright variant — same hue, more light — so completion reads as a
+	 * brightness change rather than a hue swap (the one channel that
+	 * survives color blindness).
+	 */
+	function activityColor(child: NavItem, done: boolean): string | undefined {
+		if (child.isChallenge) return done ? 'var(--color-challenge-bright)' : 'var(--color-challenge)';
+		if (child.isPlayground) return 'var(--color-important)';
+		return undefined;
+	}
+
+	/** The solved tick: lifted green beside a challenge, the usual tip blue elsewhere. */
+	function tickColor(child: NavItem): string {
+		return child.isChallenge ? 'var(--color-earned-bright)' : 'var(--color-tip)';
+	}
 
 	const expandedSections = new SvelteSet<string>();
 	const manuallyExpanded = new SvelteSet<string>();
@@ -259,26 +277,26 @@
 					>
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
-							{@const playgroundColor = child.isPlayground ? 'var(--color-important)' : undefined}
+							{@const accentColor = activityColor(child, isDone(child.id))}
 							<button
 								onclick={() => scrollTo(child.id)}
 								class="nav-child-item relative flex w-full cursor-pointer items-center gap-2 py-1.5 text-left text-[13px] transition-all"
-								class:pl-5={child.isPlayground}
-								class:px-2.5={!child.isPlayground}
-								style="color: {playgroundColor ??
+								class:pl-5={isActivity(child)}
+								class:px-2.5={!isActivity(child)}
+								style="color: {accentColor ??
 									(childActive
 										? 'var(--color-primary)'
 										: 'var(--color-text-muted)')}; font-weight: {childActive
 									? '600'
-									: '400'}; opacity: {child.isPlayground && !childActive
+									: '400'}; opacity: {isActivity(child) && !childActive
 									? '0.7'
-									: '1'}; font-size: {child.isPlayground ? '12px' : '13px'};"
+									: '1'}; font-size: {isActivity(child) ? '12px' : '13px'};"
 							>
-								{@render navIcon(child, childActive, child.isPlayground ? 11 : 13)}
+								{@render navIcon(child, childActive, isActivity(child) ? 11 : 13)}
 								<span
-									>{child.label}{#if child.isPlayground && isDone(child.id)}<span
+									>{child.label}{#if isActivity(child) && isDone(child.id)}<span
 											class="ml-1"
-											style="color: var(--color-tip);">✔</span
+											style="color: {tickColor(child)};">✔</span
 										>{/if}</span
 								>
 							</button>
@@ -366,26 +384,26 @@
 					<div class="px-1.5 py-1.5">
 						{#each section.children as child (child.id)}
 							{@const childActive = activeSection === child.id}
-							{@const playgroundColor = child.isPlayground ? 'var(--color-important)' : undefined}
+							{@const accentColor = activityColor(child, isDone(child.id))}
 							<button
 								onclick={() => handleFlyoutNavigate(child.id)}
 								class="flyout-child flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 text-left transition-all"
-								class:pl-5={child.isPlayground}
-								class:px-2.5={!child.isPlayground}
-								style="color: {playgroundColor ??
+								class:pl-5={isActivity(child)}
+								class:px-2.5={!isActivity(child)}
+								style="color: {accentColor ??
 									(childActive
 										? 'var(--color-primary)'
 										: 'var(--color-text-secondary)')}; font-weight: {childActive
 									? '600'
-									: '400'}; opacity: {child.isPlayground && !childActive
+									: '400'}; opacity: {isActivity(child) && !childActive
 									? '0.7'
-									: '1'}; font-size: {child.isPlayground ? '11px' : '12px'};"
+									: '1'}; font-size: {isActivity(child) ? '11px' : '12px'};"
 							>
-								{@render navIcon(child, childActive, child.isPlayground ? 10 : 12)}
+								{@render navIcon(child, childActive, isActivity(child) ? 10 : 12)}
 								<span
-									>{child.label}{#if child.isPlayground && isDone(child.id)}<span
+									>{child.label}{#if isActivity(child) && isDone(child.id)}<span
 											class="ml-1"
-											style="color: var(--color-tip);">✔</span
+											style="color: {tickColor(child)};">✔</span
 										>{/if}</span
 								>
 							</button>

@@ -6,6 +6,7 @@
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 	import { progress, toggleChecklistItem } from '$lib/data/progress';
@@ -740,6 +741,8 @@
 				into a professional, safe, and scalable engineering discipline. Master it, and you'll transform
 				AI-assisted coding into a superpower.
 			</Callout>
+
+			<ChallengeActivity title="Three Messes, No Hints" part={9} id="ch-9-three-messes" />
 		</div>
 	</div>
 </section>
