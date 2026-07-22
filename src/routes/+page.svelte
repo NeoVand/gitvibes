@@ -424,12 +424,18 @@
 	{scrollPosition}
 	readIds={progressSets.readIds}
 	doneIds={progressSets.doneIds}
+	{cheatSheetOpen}
+	{playgroundOpen}
+	{agentOpen}
 />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
 <PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} shared={sharedSession} />
 <AgentPanel open={agentOpen} onToggle={toggleAgent} onNavigate={handleNavigate} />
 
+<!-- duration-200 is MORPH_MS in Sidebar.svelte: the sidebar's right edge and
+     this margin are the same moving line, so they share one clock — change
+     one and the page body visibly lags the panel. -->
 <main
 	id="main-content"
 	class="main-content transition-[margin] duration-200 ease-out"

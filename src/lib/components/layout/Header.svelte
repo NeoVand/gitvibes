@@ -28,7 +28,10 @@
 		timelineItems = [],
 		scrollPosition = 0,
 		readIds = new Set<string>(),
-		doneIds = new Set<string>()
+		doneIds = new Set<string>(),
+		cheatSheetOpen = false,
+		playgroundOpen = false,
+		agentOpen = false
 	}: {
 		theme: string;
 		onToggleTheme: () => void;
@@ -41,6 +44,14 @@
 		scrollPosition?: number;
 		readIds?: Set<string>;
 		doneIds?: Set<string>;
+		/* Whether each button's panel is currently on screen. The buttons are
+		   toggles that leave no other trace in the header once their panel
+		   covers the far side of the viewport, so they wear the state
+		   themselves: a steadier wash than hover, plus aria-pressed so the
+		   state is spoken, not just painted. */
+		cheatSheetOpen?: boolean;
+		playgroundOpen?: boolean;
+		agentOpen?: boolean;
 	} = $props();
 
 	let aboutOpen = $state(false);
@@ -178,6 +189,8 @@
 		<button
 			onclick={onTogglePlayground}
 			class="playground-btn labelled-btn flex h-8 w-8 cursor-pointer items-center justify-center gap-1.5 rounded-lg transition-all"
+			class:is-active={playgroundOpen}
+			aria-pressed={playgroundOpen}
 			aria-label="Open Git Playground"
 		>
 			<Gamepad2 size={16} />
@@ -187,6 +200,8 @@
 		<button
 			onclick={onToggleAgent}
 			class="agent-btn labelled-btn flex h-8 w-8 cursor-pointer items-center justify-center gap-1.5 rounded-lg transition-all"
+			class:is-active={agentOpen}
+			aria-pressed={agentOpen}
 			aria-label="Open Agent"
 		>
 			<Bot size={16} />
@@ -196,6 +211,8 @@
 		<button
 			onclick={onToggleCheatSheet}
 			class="cheatsheet-btn flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg transition-all"
+			class:is-active={cheatSheetOpen}
+			aria-pressed={cheatSheetOpen}
 			aria-label="Git Cheat Sheet"
 		>
 			<ScrollText size={16} />
@@ -444,12 +461,21 @@
 		background: color-mix(in srgb, var(--color-warning) 12%, transparent);
 	}
 
+	/* Each panel button keeps its 10% hover wash and gains a steadier 16%
+	   while its panel is open, so the header always says which surface is on
+	   screen. The is-active rules sit AFTER the hover rules on purpose: same
+	   specificity, so source order is what keeps an open button's wash from
+	   dimming under the pointer. */
 	.playground-btn {
 		color: var(--color-important);
 	}
 
 	.playground-btn:hover {
 		background: color-mix(in srgb, var(--color-important) 10%, transparent);
+	}
+
+	.playground-btn.is-active {
+		background: color-mix(in srgb, var(--color-important) 16%, transparent);
 	}
 
 	.agent-btn {
@@ -460,6 +486,10 @@
 		background: color-mix(in srgb, var(--color-btn-agent) 10%, transparent);
 	}
 
+	.agent-btn.is-active {
+		background: color-mix(in srgb, var(--color-btn-agent) 16%, transparent);
+	}
+
 	/* Same inviting treatment as the playground button, in the cheat
 	   sheet's accent — matching its "Quick reference" callout on the page */
 	.cheatsheet-btn {
@@ -468,5 +498,9 @@
 
 	.cheatsheet-btn:hover {
 		background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+	}
+
+	.cheatsheet-btn.is-active {
+		background: color-mix(in srgb, var(--color-primary) 16%, transparent);
 	}
 </style>
