@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { cheatSheet } from './cheat-sheet';
 import { searchIndex } from './search-index';
 import { anchorIds } from './sections';
+import { courseGraph, prerequisitesOf } from './course-map';
 
 /**
  * sidebar-nav.ts imports lucide components, which this node-environment test
@@ -73,5 +74,43 @@ describe('nav and anchors agree', () => {
 			.filter((entry) => !known.has(entry.sectionId))
 			.map((entry) => `${entry.id} → ${entry.sectionId}`);
 		expect(broken).toEqual([]);
+	});
+});
+
+describe('course map', () => {
+	it('every node id and prerequisite is a real anchor', () => {
+		const known = new Set(anchorIds);
+		const ids = courseGraph.map((n) => n.id);
+		expect(ids.filter((id) => !known.has(id))).toEqual([]);
+		expect(courseGraph.flatMap((n) => n.needs).filter((id) => !known.has(id))).toEqual([]);
+	});
+
+	it('covers every part exactly once, in reading order', () => {
+		const parts = [...anchorIds].filter((id) => /^part-\d+$/.test(id));
+		const mapped = courseGraph.map((n) => n.id).filter((id) => /^part-\d+$/.test(id));
+		expect(mapped).toEqual(parts);
+	});
+
+	it('prerequisites always point backwards — no cycles, nothing forward', () => {
+		const order = courseGraph.map((n) => n.id);
+		for (const node of courseGraph) {
+			for (const need of node.needs) {
+				expect(
+					order.indexOf(need),
+					`${node.id} needs ${need}, which does not come before it`
+				).toBeLessThan(order.indexOf(node.id));
+			}
+		}
+	});
+
+	it('every node is present in the sidebar, so it can resolve a label', () => {
+		const navSource = readFileSync('src/lib/data/sidebar-nav.ts', 'utf8');
+		for (const node of courseGraph) {
+			expect(navSource.includes(`id: '${node.id}'`), `${node.id} is not in the sidebar`).toBe(true);
+		}
+	});
+
+	it('transitive prerequisites of the last part reach back to the start', () => {
+		expect(prerequisitesOf('part-9')).toContain('part-1');
 	});
 });
