@@ -374,7 +374,7 @@
 	<!-- Scrollable command list. The legend rests while the sheet is focused
 	     on an exercise: a learner mid-exercise is copying commands, not
 	     decoding notation, and the short list should read at a glance. -->
-	<div class="flex-1 overflow-y-auto px-2 py-2.5" use:autohideScroll>
+	<div class="cheat-list flex-1 overflow-y-auto px-2 py-2.5" use:autohideScroll>
 		{#if filteredCategories.length > 0 && !focusActive}
 			{@render legend()}
 		{/if}
@@ -529,6 +529,14 @@
 {/if}
 
 <style>
+	/* Reserve the scrollbar's gutter whether or not the platform draws one
+	   inside the box. Without this the list is ~15px narrower on Linux and
+	   Windows than on macOS, and a panel width chosen against overlay
+	   scrollbars wraps its longest command everywhere else. */
+	.cheat-list {
+		scrollbar-gutter: stable;
+	}
+
 	/* A command mentioned inside prose — narrower than a command-column chip,
 	   so it sits in a sentence without breaking the line rhythm. */
 	.cs-ic {

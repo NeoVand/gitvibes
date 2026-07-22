@@ -40,18 +40,32 @@ test.describe('Cheat sheet', () => {
 
 		// Every command chip fits on one line at this width — the whole point
 		// of the panel being exactly as wide as it is.
-		const wrapped = await page.evaluate(() => {
-			const chips = document.querySelectorAll<HTMLElement>(
-				'.cheat-panel button[title="Click to copy"] > code'
-			);
-			let count = 0;
+		//
+		// The margin is reported alongside the count, because a width that fits
+		// with a pixel to spare passes here and wraps on the next machine: this
+		// assertion first failed on CI, where a classic scrollbar takes its
+		// gutter out of the content box that macOS leaves untouched.
+		const fit = await page.evaluate(() => {
+			const chips = [
+				...document.querySelectorAll<HTMLElement>(
+					'.cheat-panel button[title="Click to copy"] > code'
+				)
+			];
+			let wrapped = 0;
+			let tightest = Infinity;
 			for (const chip of chips) {
 				const lineHeight = parseFloat(getComputedStyle(chip).lineHeight);
-				if (chip.getBoundingClientRect().height > lineHeight * 1.5) count++;
+				if (chip.getBoundingClientRect().height > lineHeight * 1.5) wrapped++;
+				const available = (chip.parentElement as HTMLElement).clientWidth;
+				tightest = Math.min(tightest, available - chip.scrollWidth);
 			}
-			return count;
+			return { wrapped, tightest, chips: chips.length };
 		});
-		expect(wrapped).toBe(0);
+		expect(fit.chips).toBeGreaterThan(50);
+		expect(fit.wrapped).toBe(0);
+		// Enough room left over to absorb a scrollbar gutter or a slightly
+		// wider fallback face, rather than fitting by luck.
+		expect(fit.tightest).toBeGreaterThanOrEqual(12);
 
 		// Closing restores the sidebar and the margin.
 		await page.getByRole('button', { name: 'Git Cheat Sheet' }).click();

@@ -119,9 +119,16 @@
 	/* The cheat sheet is a narrower reading-mode panel: wide enough for every
 	   command on one line, no wider — it shares the viewport with an exercise.
 	   The ruler is the longest row (`git config --global core.excludesFile
-	   ~/.gitignore_global`: 57 chars of 11px JetBrains Mono ≈ 376px) plus the
-	   list's 40px of gutters and the border. */
-	--cheatsheet-width: 26.5rem;
+	   ~/.gitignore_global`: 57 chars at 11px, which every monospace renders at
+	   ~376px) plus the list's 40px of gutters and the border.
+
+	   The extra rem over that sum pays for the scrollbar. macOS overlays its
+	   scrollbar and costs the content nothing; Linux and Windows reserve a
+	   real ~15px gutter inside the scroll container, which is enough to wrap
+	   the longest row on a width tuned against overlay scrollbars alone. The
+	   list sets `scrollbar-gutter: stable` so both platforms lose the same
+	   space and this number means the same thing everywhere. */
+	--cheatsheet-width: 27.5rem;
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 	--font-heading: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
