@@ -18,6 +18,9 @@
 	import Part9 from '$lib/components/sections/Part9.svelte';
 	import { anchorIds } from '$lib/data/sections';
 	import { markSectionVisited } from '$lib/data/progress';
+	import { createProgressSets, timelineManifest } from '$lib/timeline/state.svelte';
+	import { createReflowWatcher, measureOffsets, scrollFraction } from '$lib/timeline/measure';
+	import type { PlacedItem } from '$lib/timeline/mapping';
 	import { readingContext } from '$lib/ai/reading-context.svelte';
 	import { decodeSharedFromHash, type SharedSession } from '$lib/playground/share';
 	import {
@@ -36,6 +39,25 @@
 	let activeSection = $state('hero');
 	let theme = $state<ThemePreference>('system');
 	let navClickActive = false;
+
+	/* ---- the header's Thread rail --------------------------------------
+	   Three small additions, no restructuring. `activeSection` is a DISCRETE
+	   id and is not enough for the rail: its reading head and its per-bar
+	   fill are continuous, so it needs the scroll FRACTION as well. That is
+	   computed inside the existing rAF-throttled scroll handler — there is
+	   no second scroll listener. */
+	let scrollPosition = $state(0);
+	let timelineItems = $state<PlacedItem[]>([]);
+	const progressSets = createProgressSets();
+	const manifestIds = timelineManifest.map((it) => it.id);
+
+	function remeasureTimeline() {
+		const { f } = measureOffsets(manifestIds);
+		timelineItems = timelineManifest
+			.filter((it) => f.has(it.id))
+			.map((it) => ({ ...it, f: f.get(it.id)! }));
+		scrollPosition = scrollFraction();
+	}
 
 	// Where the learner is reading — the agent's contextual suggestions
 	// mirror the existing scroll-spy value, no second observer.
@@ -122,11 +144,22 @@
 			});
 		}
 
+		// `anchorIds` is sectionIds ++ playgroundAnchorIds, which is NOT document
+		// order — every playground sits after every section in the list. The
+		// scan below walks forward and breaks at the first anchor still below
+		// the fold, which is only correct on a document-ordered list. Unsorted,
+		// it breaks at the first section past the fold and never examines a
+		// single playground: scrolling onto one highlights its parent part
+		// instead, and markSectionVisited() never fires for playground anchors.
 		const sectionEls = anchorIds
 			.map((id) => document.getElementById(id))
-			.filter((el): el is HTMLElement => el !== null);
+			.filter((el): el is HTMLElement => el !== null)
+			.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
 
 		function updateActiveSection() {
+			// The rail's reading head is continuous and must track the scroll even
+			// while a nav click is settling, so it updates before the early return.
+			scrollPosition = scrollFraction();
 			if (navClickActive) return;
 			const offset = window.innerHeight * 0.2;
 			let best: string | null = null;
@@ -195,12 +228,26 @@
 			heading.appendChild(anchor);
 		}
 
+		// Measure the rail's anchors after the first paint, then keep them honest.
+		// This page reflows for the whole session — mermaid diagrams and lesson
+		// playgrounds are lazily rendered behind IntersectionObservers, so it
+		// grows as the reader scrolls, not just at load. createReflowWatcher
+		// debounces all of it behind one ResizeObserver on <main>.
+		requestAnimationFrame(remeasureTimeline);
+		const stopWatcher = createReflowWatcher({
+			target: document.getElementById('main-content'),
+			onReflow: remeasureTimeline,
+			onResize: remeasureTimeline
+		});
+
 		return () => {
 			window.removeEventListener('scroll', onScroll);
 			cancelAnimationFrame(rafId);
 			clearTimeout(scrollbarTimer);
 			window.removeEventListener('wheel', clearNavClick);
 			window.removeEventListener('touchmove', clearNavClick);
+			stopWatcher();
+			progressSets.destroy();
 		};
 	});
 
@@ -339,6 +386,10 @@
 	onTogglePlayground={togglePlayground}
 	onToggleAgent={toggleAgent}
 	onNavigate={handleNavigate}
+	{timelineItems}
+	{scrollPosition}
+	readIds={progressSets.readIds}
+	doneIds={progressSets.doneIds}
 />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />

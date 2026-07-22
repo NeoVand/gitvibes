@@ -2,11 +2,24 @@
 	import { Search, X } from 'lucide-svelte';
 	import { searchEntries, type SearchEntry } from '$lib/data/search-index';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
+	import { searchHits } from '$lib/timeline/search-hits.svelte';
 
 	let {
-		onNavigate
+		onNavigate,
+		onExpandedChange
 	}: {
 		onNavigate?: (id: string) => void;
+		/**
+		 * Fired when the box takes or loses focus, which is the same thing as it
+		 * expanding or collapsing — `:focus-within` is what drives the width.
+		 *
+		 * The header needs this as a fact in JS, not only in CSS: while the box
+		 * is open it suspends the Thread rail's minimum width, and that floor is
+		 * declared on an ancestor of this component. Reaching it from here with
+		 * `:has()` would mean poking a `:global` selector through the component
+		 * boundary at exactly the layout rule that most needs to stay legible.
+		 */
+		onExpandedChange?: (expanded: boolean) => void;
 	} = $props();
 
 	let query = $state('');
@@ -14,6 +27,7 @@
 	let selectedIndex = $state(0);
 	let inputEl: HTMLInputElement | undefined = $state(undefined);
 	let containerEl: HTMLDivElement | undefined = $state(undefined);
+	let wrapperEl: HTMLDivElement | undefined = $state(undefined);
 
 	const filtered = $derived.by(() => searchEntries(query));
 
@@ -82,6 +96,60 @@
 		}
 	}
 
+	// Mirror the visible result set onto the Thread rail, which lights each
+	// matching anchor. Keyed off `isVisible` rather than off `filtered`, so the
+	// rail's points and the dropdown are the same statement: close the dropdown,
+	// clear the query, or press Escape, and the points go out with it.
+	$effect(() => {
+		if (isVisible) searchHits.set(filtered.map((e) => e.sectionId));
+		else searchHits.clear();
+	});
+
+	// The rune module outlives this component, so hand the rail a clean slate on
+	// unmount rather than leaving the last query's points burning on the rail.
+	$effect(() => {
+		return () => searchHits.clear();
+	});
+
+	/* In compact mode the box is a 32px magnifier and the input inside it has no
+	   width to be clicked. Focusing from the wrapper is what turns the whole
+	   icon into the "open the search" target — and because the box expands on
+	   :focus-within, focusing IS opening. One state, not two: there is no
+	   separate "expanded" flag that could disagree with where focus actually
+	   is, and Escape/blur closes it by the path that already existed.
+
+	   Registered here rather than as an onclick attribute so the wrapper stays
+	   a plain div: the input is the interactive element, and this is only an
+	   enlarged hit area for it. */
+	$effect(() => {
+		const el = wrapperEl;
+		if (!el) return;
+		const focusInput = () => inputEl?.focus();
+		el.addEventListener('click', focusInput);
+		return () => el.removeEventListener('click', focusInput);
+	});
+
+	/* Report expansion from focusin/focusout on the WRAPPER rather than from the
+	   input's own focus handlers: the clear button lives inside the box too, and
+	   clicking it must not read as the box collapsing. focusout fires before the
+	   new focus target is settled, so `relatedTarget` is what distinguishes
+	   "moved to the clear button" from "left the box entirely". */
+	$effect(() => {
+		const el = wrapperEl;
+		if (!el) return;
+		const onIn = () => onExpandedChange?.(true);
+		const onOut = (e: FocusEvent) => {
+			if (!el.contains(e.relatedTarget as Node | null)) onExpandedChange?.(false);
+		};
+		el.addEventListener('focusin', onIn);
+		el.addEventListener('focusout', onOut);
+		return () => {
+			el.removeEventListener('focusin', onIn);
+			el.removeEventListener('focusout', onOut);
+			onExpandedChange?.(false);
+		};
+	});
+
 	$effect(() => {
 		document.addEventListener('click', handleClickOutside);
 		document.addEventListener('keydown', handleGlobalKeydown);
@@ -93,31 +161,34 @@
 </script>
 
 <div class="search-container" bind:this={containerEl}>
-	<div class="search-input-wrapper">
-		<Search size={15} class="search-icon" />
-		<input
-			bind:this={inputEl}
-			bind:value={query}
-			oninput={handleInput}
-			onfocus={handleFocus}
-			onkeydown={handleKeydown}
-			type="text"
-			placeholder="Search commands..."
-			class="search-input"
-			autocomplete="off"
-			spellcheck="false"
-		/>
-		{#if query}
-			<button class="clear-btn" onclick={close} aria-label="Clear search">
-				<X size={14} />
-			</button>
-		{:else}
-			<kbd class="shortcut-hint hidden sm:inline">⌘K</kbd>
-		{/if}
+	<div class="search-box">
+		<div class="search-input-wrapper" bind:this={wrapperEl}>
+			<Search size={15} class="search-icon" />
+			<input
+				bind:this={inputEl}
+				bind:value={query}
+				oninput={handleInput}
+				onfocus={handleFocus}
+				onkeydown={handleKeydown}
+				type="text"
+				placeholder="Search commands..."
+				class="search-input"
+				aria-label="Search commands"
+				autocomplete="off"
+				spellcheck="false"
+			/>
+			{#if query}
+				<button class="clear-btn" onclick={close} aria-label="Clear search">
+					<X size={14} />
+				</button>
+			{:else}
+				<kbd class="shortcut-hint">⌘K</kbd>
+			{/if}
+		</div>
 	</div>
 
 	{#if isVisible}
-		<div class="search-dropdown" role="listbox">
+		<div class="search-dropdown" role="listbox" aria-label="Search results">
 			{#each filtered as entry, i (entry.id)}
 				<button
 					class="search-result"
@@ -155,23 +226,116 @@
 		position: relative;
 	}
 
+	/* Every width change here comes straight out of the flex-1 cell beside it —
+	   which is where the Thread rail lives. That is deliberate: the rail is
+	   meant to run all the way up to the search box and yield when it opens.
+	   The only obligation is to make the change an ANIMATION rather than a
+	   step — a snapped width would re-lay-out the rail's 100+ marks in a
+	   single frame and read as the rail jumping. */
+
+	/* ── COMPACT is the default; the full box is what gets added back ────────
+	   Below 1120px the box is its own magnifier and nothing else, because the
+	   resting search field is the single largest thing the header can hand
+	   back to the Thread rail (see the ladder in Header.svelte). Clicking it
+	   focuses the input, :focus-within widens the box, and the rail — the
+	   flex-1 cell to its LEFT — gives up exactly that many pixels.
+
+	   `justify-content: flex-end` is what makes the growth happen leftward:
+	   the box is pinned to its right edge and every pixel it gains is taken
+	   from the rail rather than from the controls beside it. */
+	.search-box {
+		display: flex;
+		justify-content: flex-end;
+		width: 32px;
+		max-width: 32px;
+		transition:
+			width 200ms ease,
+			max-width 200ms ease;
+	}
+
+	.search-box:focus-within {
+		width: 240px;
+		max-width: 240px;
+	}
+
 	.search-input-wrapper {
 		display: flex;
 		align-items: center;
-		gap: 6px;
+		justify-content: center;
+		gap: 0;
 		background: transparent;
 		border: none;
 		border-radius: 8px;
-		padding: 0 10px;
+		padding: 0;
 		height: 32px;
 		width: 100%;
-		max-width: 260px;
-		transition: all 0.2s ease;
+		cursor: text;
+		overflow: hidden;
+		transition:
+			gap 200ms ease,
+			padding 200ms ease,
+			background 200ms ease;
 	}
 
 	.search-input-wrapper:focus-within {
-		max-width: 320px;
+		justify-content: flex-start;
+		gap: 6px;
+		padding: 0 10px;
 		background: var(--color-bg-tertiary);
+	}
+
+	/* Collapsed, the field has no width to show and no room for the hint. They
+	   are not `display: none` — the input must stay focusable, and staying in
+	   the layout at zero width is what lets it animate open rather than pop. */
+	.search-box:not(:focus-within) .search-input {
+		width: 0;
+		flex: 0 0 0;
+	}
+
+	.search-box:not(:focus-within) .shortcut-hint {
+		display: none;
+	}
+
+	/* ── the full resting box, where the rail can spare it ────────────────── */
+	@media (min-width: 1120px) {
+		/* 240px at rest: enough for the full placeholder at 13px without an
+		   ellipsis. Focus still opens to 320px and takes those pixels from the
+		   rail leftward, so the widest field is one click away whenever it is
+		   actually being used. */
+		.search-box {
+			width: 240px;
+			max-width: 240px;
+		}
+
+		.search-box:focus-within {
+			width: 320px;
+			max-width: 320px;
+		}
+
+		.search-input-wrapper {
+			justify-content: flex-start;
+			gap: 6px;
+			padding: 0 10px;
+		}
+
+		.search-box:not(:focus-within) .search-input {
+			width: auto;
+			flex: 1;
+		}
+
+		.search-box:not(:focus-within) .shortcut-hint {
+			display: inline;
+		}
+	}
+
+	/* The width change moves the rail beside it, so it is real motion on a
+	   large surface, not just a box growing. Drop it for readers who asked for
+	   less; the rail's own animations are already gated the same way. */
+	@media (prefers-reduced-motion: reduce) {
+		.search-box,
+		.search-input-wrapper {
+			transition-duration: 1ms;
+		}
 	}
 
 	.search-input-wrapper :global(.search-icon) {
@@ -253,8 +417,8 @@
 		.search-dropdown {
 			position: absolute;
 			top: calc(100% + 6px);
-			left: 0;
-			right: auto;
+			left: auto;
+			right: 0;
 			min-width: 360px;
 		}
 	}

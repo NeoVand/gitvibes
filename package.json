@@ -15,7 +15,8 @@
 		"test:e2e": "playwright test",
 		"test:unit": "vitest run",
 		"test": "npm run test:unit && npm run test:e2e",
-		"build:index": "node scripts/build-course-index.mjs"
+		"build:index": "node scripts/build-course-index.mjs",
+		"build:timeline": "node scripts/build-timeline.mjs && node scripts/build-timeline-thumbs.mjs && node scripts/build-dwell-calibration.mjs"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.0.2",

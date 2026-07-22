@@ -4,8 +4,9 @@
 	import { autohideScroll } from '$lib/actions/autohide-scroll';
 	import { sidebarNav, type NavItem } from '$lib/data/sidebar-nav';
 	import { sectionIds } from '$lib/data/sections';
-	import { progress, resetProgress } from '$lib/data/progress';
+	import { progress, resetAllLearningState } from '$lib/data/progress';
 	import { lessonScenarioIds } from '$lib/playground/scenarios';
+	import { watchRailBreakpoint } from '$lib/timeline/breakpoint';
 
 	let {
 		open = false,
@@ -36,6 +37,13 @@
 	let flyoutSection = $state<string | null>(null);
 	let flyoutY = $state(0);
 
+	// At rail widths the header owns the reset — it sits beside the timeline it
+	// wipes, and it can unmount the live dwell tracker across the call, which
+	// this sidebar cannot. Gating on the same breakpoint keeps exactly one
+	// reset control rendered at every width, never two and never zero.
+	let wide = $state(false);
+	$effect(() => watchRailBreakpoint((m) => (wide = m)));
+
 	// Resetting wipes every recording (bar, ✔ ticks, checklist) — ask twice.
 	let resetArmed = $state(false);
 	let resetTimer: ReturnType<typeof setTimeout> | undefined;
@@ -49,7 +57,10 @@
 		}
 		clearTimeout(resetTimer);
 		resetArmed = false;
-		resetProgress();
+		// The full wipe, dwell heat included. Below the rail breakpoint no
+		// tracker is running, so there is no live buffer to drop first — the
+		// dance the header performs is unnecessary here by construction.
+		resetAllLearningState();
 	}
 
 	function toggleSection(id: string) {
@@ -175,17 +186,19 @@
 						style="width: {readPct}%; background: var(--color-primary);"
 					></div>
 				</div>
-				<button
-					onclick={handleResetProgress}
-					class="mr-1 ml-2 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-all hover:opacity-100"
-					style="color: {resetArmed
-						? 'var(--color-warning)'
-						: 'var(--color-text-muted)'}; opacity: {resetArmed ? '1' : '0.6'};"
-					aria-label={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
-					title={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
-				>
-					<RotateCcw size={11} />
-				</button>
+				{#if !wide}
+					<button
+						onclick={handleResetProgress}
+						class="mr-1 ml-2 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center rounded transition-all hover:opacity-100"
+						style="color: {resetArmed
+							? 'var(--color-warning)'
+							: 'var(--color-text-muted)'}; opacity: {resetArmed ? '1' : '0.6'};"
+						aria-label={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
+						title={resetArmed ? 'Click again to reset all progress' : 'Reset progress'}
+					>
+						<RotateCcw size={11} />
+					</button>
+				{/if}
 			</div>
 			<p class="mt-1 text-[10.5px]" style="color: var(--color-text-muted);">
 				{#if resetArmed}

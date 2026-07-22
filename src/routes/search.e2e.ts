@@ -8,9 +8,13 @@ test.describe('Command search', () => {
 		await search.focus();
 		await search.fill('git stash');
 
-		await expect(page.getByRole('option', { name: /git stash/i }).first()).toBeVisible();
-		await expect(page.getByRole('option', { name: /Advanced Workflows$/ })).toHaveCount(0);
-		await expect(page.getByRole('option', { name: /Core Safety Loop/ })).toHaveCount(0);
+		// Scoped to the dropdown: the header's course timeline is a listbox too,
+		// and its marks legitimately carry chapter and playground names — the
+		// claim under test is about what SEARCH returns, not the whole header.
+		const results = page.locator('.search-dropdown');
+		await expect(results.getByRole('option', { name: /git stash/i }).first()).toBeVisible();
+		await expect(results.getByRole('option', { name: /Advanced Workflows$/ })).toHaveCount(0);
+		await expect(results.getByRole('option', { name: /Core Safety Loop/ })).toHaveCount(0);
 	});
 
 	test('navigates to the stash lesson from search', async ({ page }) => {
