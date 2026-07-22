@@ -50,6 +50,8 @@ Every lesson opens with an original piece of banner art — all **40** of them, 
 
 ### Features
 
+- **Course timeline** — a fisheye rail across the header with a mark for every anchor in the course. Hover one to see that section's banner and title; the reading head tracks your scroll, time spent paints reading heat onto the bars, and unread stretches stay hatched
+- **Nine challenges, one closing each part** — no walkthrough and no hint: a goal, a kit of commands that is larger than you need and not all of it right, and a grade based on what you actually ran. Looking is free, acting costs
 - **Git Playground** — run real Git commands in the browser (isomorphic-git), opened as a sidebar panel from anywhere on the site
 - **Agent panel** — an AI tutor that runs a real language model _entirely in your browser_ (WebGPU, no signup, no server): course-grounded answers with section citations, contextual suggested questions for whatever you're reading, and its own gated demo terminal where every command waits for your approval. Ships with a scripted mock guide before any model is downloaded
 - **CLI agent** — type `agent "commit a note about your visit"` in any playground terminal and the model works toward the goal by proposing git commands one at a time, gated by single-keystroke `[y]/[e]/[n]` approvals — the permission-prompt lesson, made real
@@ -64,6 +66,8 @@ Every lesson opens with an original piece of banner art — all **40** of them, 
 - **Search** — `⌘K` / `Ctrl+K` command palette with panic-query aliases ("oops", "undo reset --hard", "wrong branch")
 - **Cheat sheet** — quick command reference from the header, expandable into a full-screen three-column view, downloadable as a typeset PDF
 - **Light / dark theme**, installable as a PWA, works offline after one visit
+- **A page per part** — every part also stands alone at its own crawlable URL with its own title, blurb and social card, so you can send someone one chapter instead of the whole course
+- **A map of the course** — what each part gives you and which earlier parts it actually leans on, for readers who would rather navigate by goal than by running order
 - **Fully static** — no backend; deploys to GitHub Pages
 
 ## How the Git Playground works
@@ -149,6 +153,11 @@ Open [http://localhost:5173](http://localhost:5173).
 | `npm run check`   | Type-check                         |
 | `npm run lint`    | Prettier + ESLint                  |
 | `npm run test`    | Vitest unit + Playwright e2e tests |
+
+`npm run build:timeline` regenerates the course timeline's committed artifacts — the anchor
+manifest, the hover thumbnails, and the dwell calibration. Run it after adding or moving a
+section, then re-measure scroll offsets with `node scripts/measure-offsets.mjs <url>` against a
+running dev server. CI never rebuilds these; they are committed on purpose.
 
 ## Assets
 

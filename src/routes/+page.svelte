@@ -377,7 +377,7 @@
 		'@type': 'Course',
 		name: 'GitVibes — Git for Vibe Coders',
 		description:
-			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 23 hands-on exercises in a real in-browser Git playground.',
+			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 23 hands-on exercises and nine graded challenges in a real in-browser Git playground.',
 		url: 'https://neovand.github.io/gitvibes/',
 		provider: {
 			'@type': 'Organization',
@@ -392,7 +392,8 @@
 			'Undoing mistakes (restore, reset, revert, reflog)',
 			'Merge and rebase conflict resolution',
 			'Git workflows for AI coding agents (AGENTS.md, hooks, worktrees)',
-			'CI/CD, dependency and security bots, and automated releases (Dependabot, CodeQL, release-please)'
+			'CI/CD, dependency and security bots, and automated releases (Dependabot, CodeQL, release-please)',
+			'Auditing and undoing the Git operations an AI agent performs on your repository'
 		],
 		hasCourseInstance: {
 			'@type': 'CourseInstance',
