@@ -14,6 +14,9 @@ export default defineConfig(
 	includeIgnoreFile(gitignorePath),
 	// Vendored agent skills are third-party code with their own conventions
 	{ ignores: ['.agents/**'] },
+	// A git worktree checked out under .claude/ is a second full copy of this
+	// repo. Linting it reports every finding twice and buries the real ones.
+	{ ignores: ['.claude/**'] },
 	js.configs.recommended,
 	ts.configs.recommended,
 	svelte.configs.recommended,

@@ -14,3 +14,6 @@ bun.lockb
 
 # Playwright artifacts
 /test-results/
+
+# A git worktree checked out under .claude/ is a second copy of the repo
+.claude/
