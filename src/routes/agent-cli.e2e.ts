@@ -10,8 +10,17 @@ import { expect, test, type Page } from '@playwright/test';
 const COMMIT_TASK = 'agent "commit a note about your visit"';
 const DOWNLOADED_FLAG = ['LiquidAI/LFM2.5-1.2B-Instruct-ONNX'];
 
+// The header buttons are server-rendered, so a fast worker can click them
+// BEFORE hydration attaches their handlers — the click lands, nothing opens,
+// and the test times out. The heading anchors are created in +page's onMount,
+// so their presence proves the page's interactivity is live.
+async function gotoHydrated(page: Page, path = '/') {
+	await page.goto(path);
+	await page.locator('.heading-anchor').first().waitFor({ state: 'attached' });
+}
+
 async function openPanelPlayground(page: Page) {
-	await page.goto('/');
+	await gotoHydrated(page);
 	await page.getByRole('button', { name: 'Open Git Playground' }).click();
 	const panel = page.locator('aside[aria-label="Git Playground"]');
 	await expect(panel).toHaveAttribute('aria-hidden', 'false');

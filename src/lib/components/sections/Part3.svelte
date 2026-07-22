@@ -9,6 +9,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
@@ -459,6 +460,8 @@ git fetch --prune         # Drop tracking refs for branches deleted on GitHub`}
 					'Create a PR from this branch to main, summarizing all the changes we made'
 				]}
 			/>
+
+			<ChallengeActivity title="Branch Before You Build" part={3} id="ch-3-branch-first" />
 		</div>
 	</div>
 </section>

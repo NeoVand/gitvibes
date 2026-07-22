@@ -59,6 +59,23 @@
 	--color-playground-border: #ee92c6;
 	--color-playground-header: #f9e0ee;
 
+	/* Challenges — the graded sibling of the playground, in fired-clay
+	   terracotta. The card chrome is indigo and the playground accent is the
+	   --color-important pink, so the challenge family had to be warm and
+	   unmistakably neither: terracotta sits far from indigo on hue, and it is
+	   darker and browner than the pink, the amber --color-warning, and the
+	   signal-red --color-caution — a challenge is a test, not a hazard.
+
+	   The -bright variants are the COMPLETED lift: the same hue with
+	   lightness and chroma raised, used only where a solved mark sits next
+	   to an unsolved one. Completion must read as a brightness/fill change —
+	   under deuteranopia the hue axis cannot be trusted to carry it, the
+	   lightness axis can. --color-earned-bright is the matching lift for the
+	   success-green family, for the solved tick beside a challenge row. */
+	--color-challenge: #a2401f;
+	--color-challenge-bright: #d1490f;
+	--color-earned-bright: #12923f;
+
 	--color-diff-add: #166534;
 	--color-diff-add-bg: rgba(22, 101, 52, 0.08);
 	--color-diff-del: #b91c1c;
@@ -74,10 +91,44 @@
 	--color-vibe-text: #7c3aed;
 	--color-vibe-bg: #f5f3ff;
 
-	--sidebar-width: 280px;
+	/* The quiet hairline hanging a part's children off its icon in the
+	   sidebar. A neutral wash of the text ink rather than --color-border:
+	   the border tokens are tuned for card edges on the surface colour, and
+	   on the sidebar's translucent fabric they read either invisible or
+	   like chrome. Dark lifts it — the same 10% of a light ink on a dark
+	   ground disappears. */
+	--thread-lit: color-mix(in srgb, var(--color-text) 10%, transparent);
+
+	/* 249.5, not the round 280 it used to be — measured, then padded, never
+	   eyeballed. A part row is 5.5 (nav pad) + 12 (row pad) + 17 (icon) + 10
+	   (gap) + label + 10 (gap) + 20 (caret) − 4 (its -mr-1) + 12 (row pad) +
+	   5.5 (nav pad) = label + 88, and the widest label in the nav
+	   ("Enterprise Onboarding" at its active weight 700) renders at 155.5px,
+	   so the rows need 243.5. The deepest child row ("Parallel Agents:
+	   Worktrees") needs 241.5 by the same walk. 6px on top absorbs
+	   platform-to-platform font rasterisation drift — the labels are
+	   `white-space: nowrap`, so a flush width would clip, not wrap, on any
+	   machine that draws them a hair wider. Everything past that was dead
+	   space to the right of every hover pill. The left 5.5 is fixed by the
+	   26px icon column (see Sidebar.svelte), so the trim comes off the
+	   right. */
+	--sidebar-width: 249.5px;
 	--sidebar-collapsed-width: 52px;
 	--header-height: 48px;
 	--panel-reading-width: min(50vw, 44rem);
+	/* The cheat sheet is a narrower reading-mode panel: wide enough for every
+	   command on one line, no wider — it shares the viewport with an exercise.
+	   The ruler is the longest row (`git config --global core.excludesFile
+	   ~/.gitignore_global`: 57 chars at 11px, which every monospace renders at
+	   ~376px) plus the list's 40px of gutters and the border.
+
+	   The rest pays for the scrollbar and for being wrong about it. macOS
+	   overlays its scrollbar and costs the content nothing, so a width tuned
+	   there is tuned without a gutter; Linux and Windows take ~10-15px out of
+	   the same box and wrap the longest row. `scrollbar-gutter: stable` does
+	   not level this — on overlay scrollbars it still reserves nothing — so
+	   the width simply has to carry the gutter it cannot see, plus slack. */
+	--cheatsheet-width: 29rem;
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 	--font-heading: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -129,6 +180,14 @@
 		--color-playground-border: #532a44;
 		--color-playground-header: #170c12;
 
+		/* Dark keeps the same three challenge roles; the base terracotta rises
+		   to stay readable on near-black, and the -bright lifts rise with it
+		   so the solved/unsolved gap survives (lightness, not hue, carries
+		   completion — see the light block's note). */
+		--color-challenge: #e0784f;
+		--color-challenge-bright: #ff9b66;
+		--color-earned-bright: #4ade80;
+
 		--color-diff-add: #a6e3a1;
 		--color-diff-add-bg: rgba(166, 227, 161, 0.1);
 		--color-diff-del: #f38ba8;
@@ -143,6 +202,8 @@
 		--color-vibe: #a78bfa;
 		--color-vibe-text: #c4b5fd;
 		--color-vibe-bg: #160f2e;
+
+		--thread-lit: color-mix(in srgb, var(--color-text) 15%, transparent);
 	}
 }
 
@@ -179,6 +240,9 @@
 	--color-vibe: #8b5cf6;
 	--color-vibe-text: #7c3aed;
 	--color-vibe-bg: #f5f3ff;
+	--color-challenge: #a2401f;
+	--color-challenge-bright: #d1490f;
+	--color-earned-bright: #12923f;
 	--color-diff-add: #166534;
 	--color-diff-add-bg: rgba(22, 101, 52, 0.08);
 	--color-diff-del: #b91c1c;
@@ -186,6 +250,7 @@
 	--color-diff-hunk: #1d4ed8;
 	--color-diff-hash: #92400e;
 	--color-diff-meta: #166534;
+	--thread-lit: color-mix(in srgb, var(--color-text) 10%, transparent);
 }
 
 :root.dark {
@@ -227,6 +292,9 @@
 	--color-playground-bg: #1e1019;
 	--color-playground-border: #532a44;
 	--color-playground-header: #170c12;
+	--color-challenge: #e0784f;
+	--color-challenge-bright: #ff9b66;
+	--color-earned-bright: #4ade80;
 	--color-diff-add: #a6e3a1;
 	--color-diff-add-bg: rgba(166, 227, 161, 0.1);
 	--color-diff-del: #f38ba8;
@@ -239,6 +307,7 @@
 	--color-vibe: #a78bfa;
 	--color-vibe-text: #c4b5fd;
 	--color-vibe-bg: #160f2e;
+	--thread-lit: color-mix(in srgb, var(--color-text) 15%, transparent);
 }
 
 * {
@@ -292,17 +361,27 @@ strong {
 		/* Reading mode is desktop-only: below 1024px panels overlay the page. */
 		margin-right: 0 !important;
 	}
-	.sidebar-drawer {
+	/* Below 1024px the open sidebar overlays the article instead of pushing
+	   it (see the margin-left above), and the panel's normal fabric is a 55%
+	   wash of --color-bg, so body text showed through the contents list.
+	   Opaque while it is an overlay, translucent when it is an edge — hence
+	   `.is-open`, which is the only state that overlays. */
+	.sidebar-panel.is-open {
 		background: var(--color-bg) !important;
 	}
 }
 
-/* Desktop reading mode: an open playground panel RESHAPES the page — the
-   course text reflows into the remaining column instead of being covered,
-   so learners read and practice side by side. */
+/* Desktop reading mode: an open side panel RESHAPES the page — the course
+   text reflows into the remaining column instead of being covered, so
+   learners read beside the Agent, the Playground, or the cheat sheet. */
 @media (min-width: 1024px) {
 	.main-content.reading-mode {
 		margin-right: var(--panel-reading-width);
+	}
+
+	/* The cheat sheet is the narrow one; the content keeps the difference. */
+	.main-content.reading-mode.cheat-mode {
+		margin-right: var(--cheatsheet-width);
 	}
 
 	/* Tighter section gutters while sharing the viewport with a panel. */

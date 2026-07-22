@@ -15,6 +15,48 @@ export interface CheatSheetCategory {
 	commands: CheatSheetCommand[];
 }
 
+export interface CheatSheetLegendEntry {
+	/** The notation as it appears in the command column */
+	notation: string;
+	meaning: string;
+}
+
+export interface CheatSheetLegend {
+	lead: string;
+	entries: CheatSheetLegendEntry[];
+}
+
+/**
+ * Placeholder notation used throughout the commands below. Rendered above the
+ * list everywhere the cheat sheet appears — panel, expanded modal, and the
+ * printed PDF — because a beginner who types the angle brackets gets an error
+ * that names a path they never wrote.
+ *
+ * In `description`/`detail`/`meaning` strings, command mentions sit in
+ * `backticks`; every surface renders those segments as syntax-highlighted
+ * chips, the same treatment the command column gets.
+ */
+export const cheatSheetLegend: CheatSheetLegend = {
+	lead: 'Some of these commands have a blank to fill in. Three notations mark one:',
+	entries: [
+		{
+			notation: '<branch> <file> <url>',
+			meaning:
+				'Your own word goes here — `git switch <branch>` means `git switch main`. Never type the angle brackets.'
+		},
+		{
+			notation: '<commit>',
+			meaning:
+				'Any way of naming one commit: a hash like `a1b2c3d`, a branch or tag name, or a walk back from where you are — `HEAD~2` is "two commits before HEAD".'
+		},
+		{
+			notation: '<remote>',
+			meaning:
+				'The nickname for a repository elsewhere. It is almost always `origin`, the one `git clone` sets up for you.'
+		}
+	]
+};
+
 export const cheatSheet: CheatSheetCategory[] = [
 	{
 		label: 'Setup & Config',

@@ -8,6 +8,7 @@
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
@@ -826,6 +827,8 @@ git show v1.0.0                                  # Inspect what a release points
 					'Before you start the refactor, create an annotated tag so we can get back to this exact state'
 				]}
 			/>
+
+			<ChallengeActivity title="Rescue the Buried Fix" part={5} id="ch-5-rescue-the-fix" />
 		</div>
 	</div>
 </section>

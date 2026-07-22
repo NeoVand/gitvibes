@@ -1,4 +1,12 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+// The header buttons are server-rendered, so a fast worker can click them
+// BEFORE hydration attaches their handlers — the click lands, nothing opens,
+// and the test times out. The heading anchors are created in +page's onMount,
+// so their presence proves the page's interactivity is live.
+async function gotoHydrated(page: Page, path = '/') {
+	await page.goto(path);
+	await page.locator('.heading-anchor').first().waitFor({ state: 'attached' });
+}
 
 async function runCommand(
 	page: import('@playwright/test').Page,
@@ -10,7 +18,7 @@ async function runCommand(
 }
 
 async function openPlaygroundPanel(page: import('@playwright/test').Page) {
-	await page.goto('/');
+	await gotoHydrated(page);
 	await page.getByLabel('Open Git Playground').click();
 	await expect(page.getByRole('complementary', { name: 'Git Playground' })).toBeVisible();
 }
@@ -124,19 +132,19 @@ test.describe('Git Playground', () => {
 
 test.describe('Tutorial', () => {
 	test('homepage loads with hero', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		await expect(
 			page.getByRole('heading', { name: 'Git for Vibe Coders', level: 1 })
 		).toBeVisible();
 	});
 
 	test('playground link in header', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		await expect(page.getByLabel('Open Git Playground')).toBeVisible();
 	});
 
 	test('hash deep link scrolls to section', async ({ page }) => {
-		await page.goto('/#part-2');
+		await gotoHydrated(page, '/#part-2');
 		await expect(page.locator('#part-2')).toBeInViewport({ timeout: 5000 });
 	});
 
@@ -154,7 +162,7 @@ test.describe('Tutorial', () => {
 	}
 
 	test('lesson activity loads embedded playground', async ({ page }) => {
-		await page.goto('/#section-2-3');
+		await gotoHydrated(page, '/#section-2-3');
 		const activity = page.locator('[data-lesson-activity="core-loop"]');
 		const input = activity.locator('input[placeholder="git status"]');
 		await scrollActivityIntoView(activity, input);
@@ -164,7 +172,7 @@ test.describe('Tutorial', () => {
 	});
 
 	test('sync-remote lesson activity loads in part 3', async ({ page }) => {
-		await page.goto('/#section-3-2');
+		await gotoHydrated(page, '/#section-3-2');
 		const activity = page.locator('[data-lesson-activity="sync-remote"]');
 		const input = activity.locator('input[placeholder="git status"]');
 		await scrollActivityIntoView(activity, input);

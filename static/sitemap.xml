@@ -5,4 +5,49 @@
 		<changefreq>monthly</changefreq>
 		<priority>1.0</priority>
 	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/setup-and-cloning</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/core-safety-loop</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/branching-and-pull-requests</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/undo-toolkit</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/advanced-workflows</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/git-for-ai-agents</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/vs-code-cockpit</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/ci-bots-and-releases</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
+	<url>
+		<loc>https://neovand.github.io/gitvibes/parts/conclusion</loc>
+		<changefreq>monthly</changefreq>
+		<priority>0.8</priority>
+	</url>
 </urlset>

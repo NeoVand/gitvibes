@@ -8,6 +8,7 @@
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 </script>
@@ -672,6 +673,8 @@ git worktree prune`}
 					'List all worktrees in this repo, and remove any whose branches are already merged into main'
 				]}
 			/>
+
+			<ChallengeActivity title="Read the Gate First" part={6} id="ch-6-read-the-gate" />
 		</div>
 	</div>
 </section>

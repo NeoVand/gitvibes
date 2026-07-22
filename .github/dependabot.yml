@@ -1,0 +1,75 @@
+version: 2
+
+updates:
+  # npm dependencies. ci.yml runs lint, types, unit tests and Playwright on
+  # every pull request, so an update that breaks the site fails a check before
+  # it can merge — which is what makes weekly, mostly-unattended bumps safe
+  # here. Without that PR gate the tests would only run post-merge, in
+  # deploy.yml, where a bad bump blocks the deploy instead of the merge.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/London
+    # A low limit doesn't mean a short queue — it hides one. At 5, three open
+    # security PRs were the only thing visible; merging them released six more
+    # that had been waiting. Prefer seeing the real backlog.
+    open-pull-requests-limit: 10
+    labels:
+      - dependencies
+    commit-message:
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(dev-deps)'
+    groups:
+      # Both groups are deliberately minor+patch only. Grouping exists to keep
+      # routine noise in one PR, and a major is not routine — bundled into a
+      # 15-package "dev-tooling" PR it reads as noise and gets waved through.
+      # Majors match no group, so Dependabot opens one PR per package: each
+      # migration then arrives named, isolated, and mergeable on its own.
+      dev-tooling:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+        patterns:
+          - '@sveltejs/*'
+          - 'vite'
+          - 'vitest'
+          - '@vitest/*'
+          - 'eslint*'
+          - '@eslint/*'
+          - 'typescript*'
+          - 'prettier*'
+          - '@playwright/*'
+          - 'svelte-check'
+      runtime-minor-patch:
+        dependency-type: production
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Svelte 5 and Tailwind 4 are load-bearing for this codebase: a major
+      # bump is a migration, not a dependency update. Surface those manually.
+      # Everything else major still gets a PR — see the note on groups above.
+      # Ignores apply to security updates too, so if an advisory ever needs a
+      # major bump of one of these, it arrives as an alert, not a PR.
+      - dependency-name: svelte
+        update-types: [version-update:semver-major]
+      - dependency-name: tailwindcss
+        update-types: [version-update:semver-major]
+
+  # The workflows pin actions by major version; this keeps those current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: Europe/London
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: 'chore(ci)'

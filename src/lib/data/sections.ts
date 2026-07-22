@@ -84,5 +84,28 @@ export const playgroundAnchorIds = [
 	'capstone'
 ] as const;
 
+/**
+ * Anchor ids of the graded challenges — one per part, in course order.
+ * challenges.test.ts cross-checks this list against the challenge registry
+ * (src/lib/playground/challenges.ts), order included; it is duplicated here
+ * as plain strings so the nav and deep-link code never has to import the
+ * challenge modules (and their nine sandbox seeds).
+ */
+export const challengeAnchorIds = [
+	'ch-1-sign-your-work',
+	'ch-2-stage-what-you-trust',
+	'ch-3-branch-first',
+	'ch-4-pick-your-undo',
+	'ch-5-rescue-the-fix',
+	'ch-6-read-the-gate',
+	'ch-7-cockpit-by-hand',
+	'ch-8-review-the-robot',
+	'ch-9-three-messes'
+] as const;
+
 /** Every id that can appear in the URL hash and the sidebar scroll-spy. */
-export const anchorIds: readonly string[] = [...sectionIds, ...playgroundAnchorIds];
+export const anchorIds: readonly string[] = [
+	...sectionIds,
+	...playgroundAnchorIds,
+	...challengeAnchorIds
+];

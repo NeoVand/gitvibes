@@ -149,6 +149,14 @@ export class GitEngine {
 	 * movements itself. Newest entry first (index 0 == HEAD@{0}).
 	 */
 	reflog: ReflogEntry[] = [];
+	/**
+	 * Every command line the runner executed against this engine, in order —
+	 * one trimmed entry per run, recorded before execution, failures included.
+	 * This is the durable record challenge scoring reads (scoreHistory), and it
+	 * is deliberately separate from the component-level undo/share log: undo
+	 * REWRITES that log, while a reseed simply starts this one over.
+	 */
+	historyLog: string[] = [];
 	replayState: ReplayState | null = null;
 	/**
 	 * Non-null exactly while a conflicted merge is in progress (isomorphic-git
@@ -185,6 +193,7 @@ export class GitEngine {
 		this.patchSession = null;
 		this.rebaseISession = null;
 		this.reflog = [];
+		this.historyLog = [];
 		this.replayState = null;
 		this.mergeState = null;
 		this.previousBranch = null;

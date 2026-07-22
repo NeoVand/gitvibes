@@ -6,6 +6,7 @@
 	import ExpandableImage from '../ui/ExpandableImage.svelte';
 	import VsCodeScreenshot from '../ui/VsCodeScreenshot.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 	import LessonActivity from '../ui/LessonActivity.svelte';
@@ -555,6 +556,8 @@ cd your-project   # The clone lands in a NEW folder named after the repo`}
 					'Clone this repository and set up the development environment'
 				]}
 			/>
+
+			<ChallengeActivity title="Sign Your Work" part={1} id="ch-1-sign-your-work" />
 		</div>
 	</div>
 </section>

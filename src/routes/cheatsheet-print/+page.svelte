@@ -1,8 +1,18 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { cheatSheet } from '$lib/data/cheat-sheet';
+	import { cheatSheet, cheatSheetLegend } from '$lib/data/cheat-sheet';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
 </script>
+
+{#snippet chipText(text: string)}
+	<!-- Command mentions sit in `backticks` in the data; on paper they get the
+	     same monospace treatment as the command column. -->
+	{#each text.split('`') as seg, si (si)}{#if si % 2 === 1}<code class="inline-code"
+				>{#each tokenizeGitCommand(seg) as token, ti (ti)}<span class="tok tok-{token.type}"
+						>{token.text}</span
+					>{/each}</code
+			>{:else}{seg}{/if}{/each}
+{/snippet}
 
 <!-- Print-only source page for static/gitvibes-cheatsheet.pdf.
      Not linked from the site; regenerate the PDF with
@@ -25,6 +35,15 @@
 		</div>
 	</div>
 
+	<div class="legend">
+		<p class="legend-lead">{cheatSheetLegend.lead}</p>
+		<ul>
+			{#each cheatSheetLegend.entries as entry (entry.notation)}
+				<li><code>{entry.notation}</code> {@render chipText(entry.meaning)}</li>
+			{/each}
+		</ul>
+	</div>
+
 	<div class="columns">
 		{#each cheatSheet as category (category.label)}
 			<section class="category">
@@ -37,9 +56,9 @@
 										class="tok tok-{token.type}">{token.text}</span
 									>{/each}</code
 							>
-							<p>{cmd.description}</p>
+							<p>{@render chipText(cmd.description)}</p>
 							{#if cmd.detail}
-								<p class="detail">{cmd.detail}</p>
+								<p class="detail">{@render chipText(cmd.detail)}</p>
 							{/if}
 						</li>
 					{/each}
@@ -65,6 +84,51 @@
 		font-family: var(--font-sans);
 		print-color-adjust: exact;
 		-webkit-print-color-adjust: exact;
+	}
+
+	/* The placeholder key reads before the commands do, so it spans the full
+	   width above the columns rather than joining the flow. */
+	.legend {
+		border: 1px solid #cbd5e1;
+		border-radius: 3pt;
+		padding: 5pt 7pt;
+		margin-bottom: 7pt;
+		background: #f8fafc;
+	}
+
+	.legend-lead {
+		font-size: 7.5pt;
+		font-weight: 600;
+		color: #334155;
+		margin: 0 0 3pt;
+	}
+
+	.legend ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.legend li {
+		font-size: 7pt;
+		line-height: 1.45;
+		color: #475569;
+		margin-bottom: 1.5pt;
+	}
+
+	/* The command column's `code` is a block — one command per line is the
+	   whole point there. A mention inside a sentence has to opt back out, or
+	   every chip breaks its own line and the sentence arrives in pieces. */
+	.legend code,
+	.inline-code {
+		display: inline;
+		font-family: var(--font-mono);
+		font-size: 6.8pt;
+		background: #e2e8f0;
+		border: 0;
+		border-radius: 2pt;
+		padding: 0 2pt;
+		white-space: nowrap;
 	}
 
 	.masthead {

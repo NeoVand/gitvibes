@@ -6,9 +6,11 @@
 	import LessonActivity from '../ui/LessonActivity.svelte';
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
 	import { progress, toggleChecklistItem } from '$lib/data/progress';
+	import CourseLink from '../ui/CourseLink.svelte';
 
 	let {
 		onOpenPlayground
@@ -101,12 +103,9 @@
 			<p class="mb-6" style="color: var(--color-text-secondary);">
 				This is your new "save game" loop — the practical rhythm between you and your agent. Follow
 				these 8 steps for every piece of work. Encode your Git conventions once in the repo (see
-				<a
-					href="#section-6-1"
-					class="underline underline-offset-2"
-					style="color: var(--color-primary);">section 6.1</a
-				>) so agents follow them automatically instead of re-explaining branch rules in every chat.
-				And remember: you can practice any step of this loop in the
+				<CourseLink to="section-6-1" />) so agents follow them automatically instead of
+				re-explaining branch rules in every chat. And remember: you can practice any step of this
+				loop in the
 				<button
 					type="button"
 					onclick={onOpenPlayground}
@@ -740,6 +739,8 @@
 				into a professional, safe, and scalable engineering discipline. Master it, and you'll transform
 				AI-assisted coding into a superpower.
 			</Callout>
+
+			<ChallengeActivity title="Three Messes, No Hints" part={9} id="ch-9-three-messes" />
 		</div>
 	</div>
 </section>

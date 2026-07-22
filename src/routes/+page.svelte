@@ -16,8 +16,14 @@
 	import Part7 from '$lib/components/sections/Part7.svelte';
 	import Part8 from '$lib/components/sections/Part8.svelte';
 	import Part9 from '$lib/components/sections/Part9.svelte';
+	import { resolve } from '$app/paths';
 	import { anchorIds } from '$lib/data/sections';
+	import { partPages } from '$lib/data/part-pages';
+	import { courseEntry } from '$lib/data/sidebar-nav';
 	import { markSectionVisited } from '$lib/data/progress';
+	import { createProgressSets, timelineManifest } from '$lib/timeline/state.svelte';
+	import { createReflowWatcher, measureOffsets, scrollFraction } from '$lib/timeline/measure';
+	import type { PlacedItem } from '$lib/timeline/mapping';
 	import { readingContext } from '$lib/ai/reading-context.svelte';
 	import { decodeSharedFromHash, type SharedSession } from '$lib/playground/share';
 	import {
@@ -36,6 +42,25 @@
 	let activeSection = $state('hero');
 	let theme = $state<ThemePreference>('system');
 	let navClickActive = false;
+
+	/* ---- the header's Thread rail --------------------------------------
+	   Three small additions, no restructuring. `activeSection` is a DISCRETE
+	   id and is not enough for the rail: its reading head and its per-bar
+	   fill are continuous, so it needs the scroll FRACTION as well. That is
+	   computed inside the existing rAF-throttled scroll handler — there is
+	   no second scroll listener. */
+	let scrollPosition = $state(0);
+	let timelineItems = $state<PlacedItem[]>([]);
+	const progressSets = createProgressSets();
+	const manifestIds = timelineManifest.map((it) => it.id);
+
+	function remeasureTimeline() {
+		const { f } = measureOffsets(manifestIds);
+		timelineItems = timelineManifest
+			.filter((it) => f.has(it.id))
+			.map((it) => ({ ...it, f: f.get(it.id)! }));
+		scrollPosition = scrollFraction();
+	}
 
 	// Where the learner is reading — the agent's contextual suggestions
 	// mirror the existing scroll-spy value, no second observer.
@@ -122,11 +147,22 @@
 			});
 		}
 
+		// `anchorIds` is sectionIds ++ playgroundAnchorIds, which is NOT document
+		// order — every playground sits after every section in the list. The
+		// scan below walks forward and breaks at the first anchor still below
+		// the fold, which is only correct on a document-ordered list. Unsorted,
+		// it breaks at the first section past the fold and never examines a
+		// single playground: scrolling onto one highlights its parent part
+		// instead, and markSectionVisited() never fires for playground anchors.
 		const sectionEls = anchorIds
 			.map((id) => document.getElementById(id))
-			.filter((el): el is HTMLElement => el !== null);
+			.filter((el): el is HTMLElement => el !== null)
+			.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
 
 		function updateActiveSection() {
+			// The rail's reading head is continuous and must track the scroll even
+			// while a nav click is settling, so it updates before the early return.
+			scrollPosition = scrollFraction();
 			if (navClickActive) return;
 			const offset = window.innerHeight * 0.2;
 			let best: string | null = null;
@@ -195,12 +231,26 @@
 			heading.appendChild(anchor);
 		}
 
+		// Measure the rail's anchors after the first paint, then keep them honest.
+		// This page reflows for the whole session — mermaid diagrams and lesson
+		// playgrounds are lazily rendered behind IntersectionObservers, so it
+		// grows as the reader scrolls, not just at load. createReflowWatcher
+		// debounces all of it behind one ResizeObserver on <main>.
+		requestAnimationFrame(remeasureTimeline);
+		const stopWatcher = createReflowWatcher({
+			target: document.getElementById('main-content'),
+			onReflow: remeasureTimeline,
+			onResize: remeasureTimeline
+		});
+
 		return () => {
 			window.removeEventListener('scroll', onScroll);
 			cancelAnimationFrame(rafId);
 			clearTimeout(scrollbarTimer);
 			window.removeEventListener('wheel', clearNavClick);
 			window.removeEventListener('touchmove', clearNavClick);
+			stopWatcher();
+			progressSets.destroy();
 		};
 	});
 
@@ -218,33 +268,37 @@
 		sidebarOpen = !sidebarOpen;
 	}
 
-	// Opening the playground panel enters desktop "reading mode": the sidebar
-	// auto-collapses and the content reflows beside the panel. The sidebar's
-	// prior state is restored when the panel closes.
+	// The three header panels are mutually exclusive: opening one closes
+	// the others. Each enters desktop "reading mode": the sidebar
+	// auto-collapses and the content reflows beside the panel — the
+	// sidebar's prior state is restored when all of them are closed.
 	let sidebarBeforePanel = false;
 
-	/** Call BEFORE opening a reading-mode panel. */
+	/** Call BEFORE mutating any open flags when a side panel is opening. */
 	function enterReadingMode() {
-		if (!playgroundOpen && !agentOpen) {
+		if (!playgroundOpen && !agentOpen && !cheatSheetOpen) {
 			sidebarBeforePanel = sidebarOpen;
 			sidebarOpen = false;
 		}
 	}
 
-	/** Call AFTER closing a reading-mode panel — restores the sidebar. */
+	/** Call AFTER mutating flags — restores the sidebar once all are closed. */
 	function maybeLeaveReadingMode() {
-		if (!playgroundOpen && !agentOpen) {
+		if (!playgroundOpen && !agentOpen && !cheatSheetOpen) {
 			sidebarOpen = sidebarBeforePanel;
 		}
 	}
 
 	function toggleCheatSheet() {
 		if (!cheatSheetOpen) {
+			enterReadingMode();
 			playgroundOpen = false;
 			agentOpen = false;
+			cheatSheetOpen = true;
+		} else {
+			cheatSheetOpen = false;
 			maybeLeaveReadingMode();
 		}
-		cheatSheetOpen = !cheatSheetOpen;
 	}
 
 	function togglePlayground() {
@@ -279,6 +333,11 @@
 		agentOpen = false;
 		playgroundOpen = true;
 	}
+
+	/** Open the tutor from the prose, without closing it if it is already up. */
+	function openAgent() {
+		if (!agentOpen) toggleAgent();
+	}
 </script>
 
 <svelte:head>
@@ -288,6 +347,31 @@
 		content="An interactive guide to Git for developers using AI tools. Learn version control as your safety net for AI-assisted coding."
 	/>
 	<link rel="canonical" href="https://neovand.github.io/gitvibes/" />
+	<!-- The social card lives here rather than in app.html: a crawler honours
+	     the first og:* it meets, and the nine part pages each need their own. -->
+	<meta property="og:title" content="GitVibes — Git for Vibe Coders" />
+	<meta
+		property="og:description"
+		content="An interactive, visual Git tutorial for AI-assisted developers. Learn branching, staging, undoing mistakes, and VS Code workflows."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://neovand.github.io/gitvibes/" />
+	<meta property="og:image" content="https://neovand.github.io/gitvibes/og-image.png" />
+	<meta
+		property="og:image:alt"
+		content="Git for Vibe Coders — your safety net for AI-assisted coding"
+	/>
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="GitVibes — Git for Vibe Coders" />
+	<meta
+		name="twitter:description"
+		content="An interactive, visual Git tutorial for AI-assisted developers."
+	/>
+	<meta name="twitter:image" content="https://neovand.github.io/gitvibes/og-image.png" />
+	<meta
+		name="twitter:image:alt"
+		content="Git for Vibe Coders — your safety net for AI-assisted coding"
+	/>
 	<!-- Safe {@html}: the payload is JSON.stringify of a static literal — no
 	     user input can reach it. It exists only to emit the JSON-LD script tag,
 	     which Svelte cannot render any other way. -->
@@ -297,7 +381,7 @@
 		'@type': 'Course',
 		name: 'GitVibes — Git for Vibe Coders',
 		description:
-			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 23 hands-on exercises in a real in-browser Git playground.',
+			'A free, interactive Git course for developers who work with AI coding agents: the core safety loop, branching and PRs, the undo toolkit, advanced workflows, Git guardrails for AI agents, and how modern software ships (CI, bots, releases) — with 23 hands-on exercises and nine graded challenges in a real in-browser Git playground.',
 		url: 'https://neovand.github.io/gitvibes/',
 		provider: {
 			'@type': 'Organization',
@@ -312,7 +396,8 @@
 			'Undoing mistakes (restore, reset, revert, reflog)',
 			'Merge and rebase conflict resolution',
 			'Git workflows for AI coding agents (AGENTS.md, hooks, worktrees)',
-			'CI/CD, dependency and security bots, and automated releases (Dependabot, CodeQL, release-please)'
+			'CI/CD, dependency and security bots, and automated releases (Dependabot, CodeQL, release-please)',
+			'Auditing and undoing the Git operations an AI agent performs on your repository'
 		],
 		hasCourseInstance: {
 			'@type': 'CourseInstance',
@@ -339,21 +424,32 @@
 	onTogglePlayground={togglePlayground}
 	onToggleAgent={toggleAgent}
 	onNavigate={handleNavigate}
+	{timelineItems}
+	{scrollPosition}
+	readIds={progressSets.readIds}
+	doneIds={progressSets.doneIds}
+	{cheatSheetOpen}
+	{playgroundOpen}
+	{agentOpen}
 />
 <Sidebar open={sidebarOpen} {activeSection} onToggle={toggleSidebar} onNavigate={handleNavigate} />
 <CheatSheet open={cheatSheetOpen} onToggle={toggleCheatSheet} />
 <PlaygroundPanel open={playgroundOpen} onToggle={togglePlayground} shared={sharedSession} />
 <AgentPanel open={agentOpen} onToggle={toggleAgent} onNavigate={handleNavigate} />
 
+<!-- duration-200 is MORPH_MS in Sidebar.svelte: the sidebar's right edge and
+     this margin are the same moving line, so they share one clock — change
+     one and the page body visibly lags the panel. -->
 <main
 	id="main-content"
 	class="main-content transition-[margin] duration-200 ease-out"
-	class:reading-mode={playgroundOpen || agentOpen}
+	class:reading-mode={playgroundOpen || agentOpen || cheatSheetOpen}
+	class:cheat-mode={cheatSheetOpen}
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen
 		? 'var(--sidebar-width)'
 		: 'var(--sidebar-collapsed-width)'};"
 >
-	<Hero onOpenPlayground={openPlayground} />
+	<Hero onOpenPlayground={openPlayground} onOpenAgent={openAgent} />
 	<Part1 />
 	<Part2 />
 	<Part3 />
@@ -364,8 +460,39 @@
 	<Part8 />
 	<Part9 onOpenPlayground={openPlayground} />
 
-	<footer class="py-10 text-center" style="border-top: 1px solid var(--color-border);">
-		<p class="text-xs" style="color: var(--color-text-muted);">
+	<footer class="py-10" style="border-top: 1px solid var(--color-border);">
+		<!-- Every part also stands alone at its own URL. This index is how those
+		     pages are reachable — by a reader who wants to link one chapter to a
+		     colleague, and by a crawler, which will not find a page nothing
+		     links to. -->
+		<nav class="mx-auto max-w-4xl px-6" aria-label="Parts of this course">
+			<h2
+				class="mb-3 text-xs font-bold tracking-widest uppercase"
+				style="color: var(--color-text-muted); font-family: var(--font-heading); letter-spacing: 0.14em;"
+			>
+				Every part, on its own page
+			</h2>
+			<ul class="part-index grid gap-1.5">
+				{#each partPages as part (part.id)}
+					{@const entry = courseEntry(part.id)}
+					{@const Icon = entry?.icon}
+					<li>
+						<a
+							href={resolve('/parts/[slug]', { slug: part.slug })}
+							class="part-index-link flex items-center gap-2 rounded-md px-2 py-1.5 text-[13px]"
+							style="color: var(--color-text-secondary);"
+						>
+							{#if Icon}
+								<Icon size={14} style="color: var(--color-primary); flex-shrink: 0;" />
+							{/if}
+							<span class="truncate">{entry?.label ?? part.title}</span>
+						</a>
+					</li>
+				{/each}
+			</ul>
+		</nav>
+
+		<p class="mt-8 text-center text-xs" style="color: var(--color-text-muted);">
 			Built for the vibe coding generation.
 		</p>
 	</footer>

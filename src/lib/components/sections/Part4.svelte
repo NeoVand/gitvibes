@@ -19,6 +19,7 @@
 	import PlaygroundNote from '../ui/PlaygroundNote.svelte';
 	import MermaidDiagram from '../ui/MermaidDiagram.svelte';
 	import SectionHeader from '../ui/SectionHeader.svelte';
+	import ChallengeActivity from '../ui/ChallengeActivity.svelte';
 
 	import VibeBox from '../ui/VibeBox.svelte';
 	import Code from '../ui/Code.svelte';
@@ -1005,6 +1006,8 @@ git switch -c rescue 4c7d3b9`}
 					'Run git bisect to find which of your last 20 commits broke the login flow'
 				]}
 			/>
+
+			<ChallengeActivity title="Pick the Right Undo" part={4} id="ch-4-pick-your-undo" />
 		</div>
 	</div>
 </section>

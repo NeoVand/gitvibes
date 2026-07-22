@@ -1451,6 +1451,13 @@ export async function runGitCommand(engine: GitEngine, rawInput: string): Promis
 	const input = rawInput.trim();
 	if (!input) return { output: '' };
 
+	// The durable record of the attempt: one entry per executed line, pushed
+	// BEFORE execution so failed commands are on the record too — a wrong run
+	// costs exactly as much as a right one, and challenge scoring depends on
+	// that. (Reseeding the engine clears it; the component-level undo/share
+	// log is a separate mechanism and stays untouched.)
+	engine.historyLog.push(input);
+
 	if (engine.patchSession) {
 		return { output: colorizeDiff(await handlePatchAnswer(engine, input)), colored: true };
 	}

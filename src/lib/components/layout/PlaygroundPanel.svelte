@@ -1,5 +1,6 @@
 <script lang="ts">
 	import GitPlayground from '$lib/components/playground/GitPlayground.svelte';
+	import { readingContext } from '$lib/ai/reading-context.svelte';
 	import type { SharedSession } from '$lib/playground/share';
 
 	let {
@@ -18,6 +19,14 @@
 		if (open) {
 			hasOpened = true;
 		}
+	});
+
+	// While the panel is open, "where the learner is" means the scenario it
+	// opened on (the panel's own prop — in-panel scenario switches stay
+	// internal to GitPlayground). Cleared on close so the scroll-spy section
+	// takes back over.
+	$effect(() => {
+		readingContext.scenarioId = open ? (shared?.scenarioId ?? 'core-loop') : null;
 	});
 
 	function handleKeydown(e: KeyboardEvent) {
