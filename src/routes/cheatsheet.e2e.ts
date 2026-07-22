@@ -27,9 +27,11 @@ test.describe('Cheat sheet', () => {
 		await expect(page.getByRole('button', { name: 'Expand sidebar' })).toBeVisible();
 		await expect
 			.poll(async () => main.evaluate((el) => parseFloat(getComputedStyle(el).marginRight)))
-			.toBeGreaterThan(380);
+			.toBeGreaterThan(300);
+		// Upper bound is the point: this panel reads BESIDE an exercise, so it
+		// must stay well inside the width the playground and tutor take.
 		expect(await main.evaluate((el) => parseFloat(getComputedStyle(el).marginRight))).toBeLessThan(
-			500
+			420
 		);
 
 		// The course text reflows — no horizontal overflow anywhere.
@@ -38,75 +40,34 @@ test.describe('Cheat sheet', () => {
 		);
 		expect(overflow).toBeLessThanOrEqual(0);
 
-		// Every command chip fits on one line at this width — the whole point
-		// of the panel being exactly as wide as it is.
+		// Almost every command fits on one line. A couple of outliers are allowed
+		// to wrap, because sizing the panel to the single longest string in it —
+		// `git config --global core.excludesFile ~/.gitignore_global` — cost
+		// nearly six rems that all ninety-odd other rows paid for, on a panel
+		// whose whole job is to leave room for the text beside it.
 		//
-		// The margin is reported alongside the count, because a width that fits
-		// with a pixel to spare passes here and wraps on the next machine: this
-		// assertion first failed on CI, where a classic scrollbar takes its
-		// gutter out of the content box that macOS leaves untouched.
+		// The numbers are printed because this runs on a machine that is not the
+		// one it fails on: a platform that puts a real scrollbar inside the box
+		// has ~15px less to work with than one that overlays it.
 		const fit = await page.evaluate(() => {
 			const chips = [
 				...document.querySelectorAll<HTMLElement>(
 					'.cheat-panel button[title="Click to copy"] > code'
 				)
 			];
-			// `scrollWidth` reports the longest LINE, so once a row has wrapped it
-			// reads as comfortably inside its box — the one measurement that
-			// cannot answer "how much wider did this need to be?". Measure the
-			// unwrapped width instead, off-screen, with the chip's own type.
-			const ruler = document.createElement('span');
-			ruler.style.cssText =
-				'position:absolute;left:-9999px;top:0;white-space:pre;visibility:hidden';
-			document.body.appendChild(ruler);
-
-			const offenders: { text: string; needs: number; has: number }[] = [];
-			let wrapped = 0;
-			let tightest = Infinity;
+			const wrapped: string[] = [];
 			for (const chip of chips) {
-				const cs = getComputedStyle(chip);
-				const lineHeight = parseFloat(cs.lineHeight);
-				const available = (chip.parentElement as HTMLElement).clientWidth;
-
-				ruler.style.font = cs.font;
-				ruler.style.letterSpacing = cs.letterSpacing;
-				ruler.textContent = chip.textContent;
-				const needs =
-					ruler.getBoundingClientRect().width +
-					parseFloat(cs.paddingLeft) +
-					parseFloat(cs.paddingRight);
-
+				const lineHeight = parseFloat(getComputedStyle(chip).lineHeight);
 				if (chip.getBoundingClientRect().height > lineHeight * 1.5) {
-					wrapped++;
-					offenders.push({
-						text: chip.textContent!.trim(),
-						needs: Math.round(needs),
-						has: Math.round(available)
-					});
+					wrapped.push(chip.textContent!.trim());
 				}
-				tightest = Math.min(tightest, available - needs);
 			}
-			ruler.remove();
 			const list = document.querySelector('.cheat-list') as HTMLElement | null;
-			return {
-				wrapped,
-				tightest: Math.round(tightest),
-				chips: chips.length,
-				listWidth: list?.clientWidth ?? null,
-				font: getComputedStyle(chips[0]).fontFamily,
-				fontSize: getComputedStyle(chips[0]).fontSize,
-				offenders: offenders.slice(0, 4)
-			};
+			return { chips: chips.length, wrapped, listWidth: list?.clientWidth ?? null };
 		});
-		// Printed unconditionally: when this fails it fails on a machine that is
-		// not the one running it, so the numbers have to travel with the result.
 		console.log('cheat sheet fit:', JSON.stringify(fit));
 		expect(fit.chips).toBeGreaterThan(50);
-		expect(fit.wrapped).toBe(0);
-		// Enough room left over to absorb a platform scrollbar gutter that this
-		// machine may not draw, rather than fitting by luck. macOS reports ~10px
-		// more list width than Linux for the same panel.
-		expect(fit.tightest).toBeGreaterThanOrEqual(20);
+		expect(fit.wrapped.length).toBeLessThanOrEqual(3);
 
 		// Closing restores the sidebar and the margin.
 		await page.getByRole('button', { name: 'Git Cheat Sheet' }).click();
@@ -161,16 +122,47 @@ test.describe('Cheat sheet', () => {
 		await expect(panel.getByText('Stashing')).toBeVisible();
 	});
 
-	test('exercise focus: never offered on ordinary prose sections', async ({ page }) => {
+	/**
+	 * The control stays in the toolbar at all times and reports that it has
+	 * nothing to filter by, rather than appearing and vanishing with the
+	 * scroll position — a button you cannot find when you go looking for it
+	 * reads as a broken feature, not an absent one.
+	 */
+	test('exercise focus: offered but disabled on ordinary prose sections', async ({ page }) => {
 		await gotoHydrated(page, '/#section-1-2');
 		await page.getByRole('button', { name: 'Git Cheat Sheet' }).click();
 
 		const panel = page.locator('.cheat-panel');
 		await expect(panel.getByText('Setup & Config')).toBeVisible();
-		await expect(
-			panel.getByRole('button', { name: "Show only this exercise's commands" })
-		).toHaveCount(0);
-		// The full sheet keeps its legend.
+
+		const toggle = panel.getByRole('button', { name: "Show only this exercise's commands" });
+		await expect(toggle).toBeVisible();
+		await expect(toggle).toBeDisabled();
+		await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+		// Nothing is filtered: the whole sheet is there, legend included.
+		await expect(panel.getByText('Commands for')).toHaveCount(0);
 		await expect(panel.getByText('Three notations mark one')).toBeVisible();
+	});
+
+	test('exercise focus: the toggle turns filtering off and back on', async ({ page }) => {
+		await gotoHydrated(page, '/#ch-4-pick-your-undo');
+		await page.getByRole('button', { name: 'Git Cheat Sheet' }).click();
+
+		const panel = page.locator('.cheat-panel');
+		const toggle = panel.getByRole('button', { name: "Show only this exercise's commands" });
+		const rows = panel.locator('button[title="Click to copy"]');
+
+		await expect(toggle).toBeEnabled();
+		await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+		const focused = await rows.count();
+
+		await toggle.click();
+		await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+		expect(await rows.count()).toBeGreaterThan(focused);
+
+		await toggle.click();
+		await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+		expect(await rows.count()).toBe(focused);
 	});
 });
