@@ -1,8 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+// The header buttons are server-rendered, so a fast worker can click them
+// BEFORE hydration attaches their handlers — the click lands, nothing opens,
+// and the test times out. The heading anchors are created in +page's onMount,
+// so their presence proves the page's interactivity is live.
+async function gotoHydrated(page: Page, path = '/') {
+	await page.goto(path);
+	await page.locator('.heading-anchor').first().waitFor({ state: 'attached' });
+}
 
 test.describe('Agent panel', () => {
 	test('opens from the header, answers with a citation chip, closes on ESC', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
@@ -28,7 +36,7 @@ test.describe('Agent panel', () => {
 	});
 
 	test('is mutually exclusive with the playground panel', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		const agentPanel = page.locator('aside[aria-label="Agent"]');
 		const playgroundPanel = page.locator('aside[aria-label="Git Playground"]');
@@ -46,7 +54,7 @@ test.describe('Agent panel', () => {
 	});
 
 	test('shows starter chips and the honest scripted-guide notice', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
@@ -65,7 +73,7 @@ test.describe('Agent panel', () => {
 	test('offers the local model download with the size disclosed (never auto-starts)', async ({
 		page
 	}) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
@@ -94,7 +102,7 @@ test.describe('Agent panel', () => {
 	});
 
 	test('header gear opens the settings popover with the model picker', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
@@ -116,7 +124,7 @@ test.describe('Agent panel', () => {
 	test('gated demo: DENY runs nothing, ALLOW executes into the agent terminal', async ({
 		page
 	}) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
 		const input = page.getByLabel('Ask the agent');
@@ -159,7 +167,7 @@ test.describe('Agent panel', () => {
 	});
 
 	test('the agent terminal is seeded: log and branches show the demo repo', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
 		const input = page.getByLabel('Ask the agent');
@@ -187,7 +195,7 @@ test.describe('Agent panel', () => {
 		// Test breadcrumb: force the mock backend to serve suggestions (the
 		// product rule is "downloaded + ready local model only").
 		await page.addInitScript(() => localStorage.setItem('tv-agent-suggest-mock', '1'));
-		await page.goto('/#section-2-1');
+		await gotoHydrated(page, '/#section-2-1');
 
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
@@ -213,7 +221,7 @@ test.describe('Agent panel', () => {
 	});
 
 	test('no model, no breadcrumb: the static starters stay untouched', async ({ page }) => {
-		await page.goto('/#section-2-1');
+		await gotoHydrated(page, '/#section-2-1');
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
 		const chips = panel.locator('[data-testid="agent-chip"]');
@@ -225,7 +233,7 @@ test.describe('Agent panel', () => {
 	});
 
 	test('teaching answers render markdown with a code block and a sources row', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
 
@@ -243,7 +251,7 @@ test.describe('Agent panel', () => {
 		page
 	}) => {
 		// First run: the intro banner + model cards ARE the chat area's empty state.
-		await page.goto('/');
+		await gotoHydrated(page);
 		await page.getByRole('button', { name: 'Open Agent' }).click();
 		const panel = page.locator('aside[aria-label="Agent"]');
 		await expect(panel.locator('[data-testid="agent-intro"]')).toBeVisible();
@@ -274,7 +282,7 @@ test.describe('Agent panel', () => {
 		page
 	}) => {
 		await page.setViewportSize({ width: 1280, height: 900 });
-		await page.goto('/');
+		await gotoHydrated(page);
 		const main = page.locator('main#main-content');
 
 		// Sidebar starts open at desktop widths.

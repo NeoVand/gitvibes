@@ -1,8 +1,18 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+// The search input is server-rendered, so a fast worker can type into it
+// BEFORE hydration attaches its input listener — the keystrokes land in the
+// DOM, the dropdown never opens, and the test times out. The heading anchors
+// are created in +page's onMount, so their presence proves the page's
+// interactivity is live before any test starts typing.
+async function gotoHydrated(page: Page) {
+	await page.goto('/');
+	await page.locator('.heading-anchor').first().waitFor({ state: 'attached' });
+}
 
 test.describe('Command search', () => {
 	test('finds git stash commands instead of chapter titles', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		const search = page.getByPlaceholder('Search commands...');
 		await search.focus();
@@ -18,7 +28,7 @@ test.describe('Command search', () => {
 	});
 
 	test('navigates to the stash lesson from search', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		const search = page.getByPlaceholder('Search commands...');
 		await search.fill('git stash pop');
@@ -31,7 +41,7 @@ test.describe('Command search', () => {
 	});
 
 	test('shows empty state for nonsense queries', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 
 		const search = page.getByPlaceholder('Search commands...');
 		await search.fill('xyzzynotacommand');

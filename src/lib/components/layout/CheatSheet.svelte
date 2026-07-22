@@ -16,6 +16,9 @@
 		Undo2,
 		History,
 		GitPullRequest,
+		Gamepad2,
+		ListFilter,
+		Puzzle,
 		Tag,
 		Wrench,
 		Check,
@@ -31,6 +34,7 @@
 		type CheatSheetCommand
 	} from '$lib/data/cheat-sheet';
 	import { tokenizeGitCommand } from '$lib/data/git-syntax';
+	import { readingContext } from '$lib/ai/reading-context.svelte';
 
 	let { open = false, onToggle }: { open: boolean; onToggle: () => void } = $props();
 
@@ -66,12 +70,58 @@
 		wrench: Wrench
 	};
 
-	let filteredCategories = $derived.by(() => {
-		const query = searchQuery.toLowerCase().trim();
-		if (!query) return cheatSheet;
+	/* ── exercise focus ──────────────────────────────────────────────────
+	   When the learner is AT a playground or challenge — the scroll-spy
+	   anchor resolves to one, or the panel opened on one — the sheet can
+	   narrow itself to the commands that exercise actually reaches for.
+	   The ListFilter toggle in the toolbar turns it off and on; it only
+	   appears while there is an exercise to focus on.
 
+	   The exercise registries include the nine challenge modules, which the
+	   rest of the page keeps out of the entry bundle on purpose (the seeds
+	   and checks drag the whole engine along). The sheet honors that: the
+	   mapping loads on the panel's first open, never at page load. */
+	let focusEnabled = $state(true);
+	let focusApi = $state<typeof import('$lib/playground/exercise-commands') | null>(null);
+
+	$effect(() => {
+		if (open && !focusApi) {
+			import('$lib/playground/exercise-commands').then((module) => {
+				focusApi = module;
+			});
+		}
+	});
+
+	const exercise = $derived(
+		focusApi?.exerciseFocusOf(readingContext.scenarioId ?? readingContext.sectionId) ?? null
+	);
+
+	/** The sheet narrowed to the exercise's commands — null when that would
+	 *  leave nothing to show (an exercise whose commands the sheet lacks). */
+	const focusedCategories = $derived.by(() => {
+		if (!exercise || !focusApi) return null;
+		const { rowUsesWords } = focusApi;
 		const result: CheatSheetCategory[] = [];
 		for (const category of cheatSheet) {
+			const commands = category.commands.filter((cmd) => rowUsesWords(cmd.command, exercise.words));
+			if (commands.length > 0) result.push({ ...category, commands });
+		}
+		return result.length > 0 ? result : null;
+	});
+
+	const focusActive = $derived(focusEnabled && focusedCategories !== null);
+	const focusAccent = $derived(
+		exercise?.kind === 'challenge' ? 'var(--color-challenge)' : 'var(--color-important)'
+	);
+	const FocusIcon = $derived(exercise?.kind === 'challenge' ? Puzzle : Gamepad2);
+
+	let filteredCategories = $derived.by(() => {
+		const base = focusActive && focusedCategories ? focusedCategories : cheatSheet;
+		const query = searchQuery.toLowerCase().trim();
+		if (!query) return base;
+
+		const result: CheatSheetCategory[] = [];
+		for (const category of base) {
 			const matchingCommands = category.commands.filter(
 				(cmd) =>
 					cmd.command.toLowerCase().includes(query) ||
@@ -109,9 +159,56 @@
 			for (const category of filteredCategories) expandedCategories.add(category.label);
 		}
 	});
+
+	// A focused sheet is short; a collapsed category inside it hides half of
+	// an already-small kit. Expand what the focus surfaces (never collapse).
+	$effect(() => {
+		if (focusActive && focusedCategories) {
+			for (const category of focusedCategories) expandedCategories.add(category.label);
+		}
+	});
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
+
+{#snippet focusToggle()}
+	<!-- Only rendered while an exercise is in view AND the sheet has rows for
+	     it — a filter that could only produce an empty list never appears. -->
+	{#if exercise && focusedCategories}
+		<button
+			onclick={() => (focusEnabled = !focusEnabled)}
+			class="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md transition-colors hover:opacity-70"
+			style="color: {focusActive
+				? focusAccent
+				: 'var(--color-text-muted)'}; background: {focusActive
+				? `color-mix(in srgb, ${focusAccent} 14%, transparent)`
+				: 'transparent'};"
+			aria-pressed={focusActive}
+			aria-label="Show only this exercise's commands"
+			title={focusActive
+				? 'Showing this exercise’s commands — click for all'
+				: 'Show only this exercise’s commands'}
+		>
+			<ListFilter size={14} />
+		</button>
+	{/if}
+{/snippet}
+
+{#snippet focusStrip()}
+	<!-- Names what the filter is doing, so a suddenly-short list reads as a
+	     feature rather than as missing content. -->
+	{#if focusActive && exercise}
+		<div
+			class="flex items-center gap-2 px-4 py-1.5"
+			style="background: color-mix(in srgb, {focusAccent} 7%, transparent);"
+		>
+			<FocusIcon size={12} style="color: {focusAccent}; flex-shrink: 0;" />
+			<p class="min-w-0 truncate text-[11px]" style="color: var(--color-text-secondary);">
+				Commands for <strong style="font-weight: 600;">{exercise.title}</strong>
+			</p>
+		</div>
+	{/if}
+{/snippet}
 
 {#snippet chipText(text: string)}
 	<!-- Command mentions sit in `backticks`; render those segments as the same
@@ -151,8 +248,8 @@
 {#snippet commandRow(cmd: CheatSheetCommand, showDetail: boolean = false)}
 	{@const isCopied = copiedCommand === cmd.command}
 	<!-- The copy affordance overlays on hover instead of reserving a column —
-	     in the 336px panel that width is the difference between commands
-	     fitting on one line and wrapping -->
+	     the panel is sized so the longest command JUST fits on one line, and
+	     a reserved column would push it into wrapping -->
 	<button
 		onclick={() => copyCommand(cmd.command)}
 		class="group relative block w-full cursor-pointer rounded-md px-1.5 py-[6px] text-left transition-colors"
@@ -209,7 +306,7 @@
 <!-- Right-side sliding panel -->
 <aside
 	data-fabric
-	class="cheat-panel fixed top-0 right-0 bottom-0 z-40 flex w-84 flex-col border-l transition-transform duration-200 ease-out"
+	class="cheat-panel fixed top-0 right-0 bottom-0 z-40 flex w-full flex-col border-l transition-transform duration-200 ease-out sm:w-[var(--cheatsheet-width)]"
 	style="padding-top: var(--header-height); border-color: var(--color-border);"
 	class:translate-x-0={open}
 	class:translate-x-full={!open}
@@ -226,6 +323,7 @@
 			Git Cheat Sheet
 		</span>
 		<div class="flex items-center gap-0.5">
+			{@render focusToggle()}
 			<a
 				href={pdfHref}
 				download="gitvibes-cheatsheet.pdf"
@@ -271,9 +369,15 @@
 		/>
 	</div>
 
-	<!-- Scrollable command list -->
+	{@render focusStrip()}
+
+	<!-- Scrollable command list. The legend rests while the sheet is focused
+	     on an exercise: a learner mid-exercise is copying commands, not
+	     decoding notation, and the short list should read at a glance. -->
 	<div class="flex-1 overflow-y-auto px-2 py-2.5" use:autohideScroll>
-		{@render legend()}
+		{#if filteredCategories.length > 0 && !focusActive}
+			{@render legend()}
+		{/if}
 		{#each filteredCategories as category (category.label)}
 			{@const IconComponent = iconMap[category.icon]}
 			{@const isExpanded = expandedCategories.has(category.label)}
@@ -298,8 +402,8 @@
 					/>
 				</button>
 
-				<!-- Commands: no guide line, minimal indent — the 320px panel
-				     needs every pixel to keep commands on one line -->
+				<!-- Commands: no guide line, minimal indent — the panel needs
+				     every pixel to keep commands on one line -->
 				{#if isExpanded}
 					<div class="mt-0.5 ml-1 space-y-px">
 						{#each category.commands as cmd (cmd.command)}
@@ -346,6 +450,7 @@
 					Git Cheat Sheet
 				</span>
 				<div class="flex items-center gap-1">
+					{@render focusToggle()}
 					<a
 						href={pdfHref}
 						download="gitvibes-cheatsheet.pdf"
@@ -382,8 +487,12 @@
 				/>
 			</div>
 
+			{@render focusStrip()}
+
 			<div class="min-h-0 flex-1 overflow-y-auto px-5 py-4" use:autohideScroll>
-				{@render legend()}
+				{#if filteredCategories.length > 0 && !focusActive}
+					{@render legend()}
+				{/if}
 				<div class="cheat-modal-columns">
 					{#each filteredCategories as category (category.label)}
 						{@const IconComponent = iconMap[category.icon]}

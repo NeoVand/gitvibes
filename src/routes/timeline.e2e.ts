@@ -1,4 +1,12 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+// The header buttons are server-rendered, so a fast worker can click them
+// BEFORE hydration attaches their handlers — the click lands, nothing opens,
+// and the test times out. The heading anchors are created in +page's onMount,
+// so their presence proves the page's interactivity is live.
+async function gotoHydrated(page: Page, path = '/') {
+	await page.goto(path);
+	await page.locator('.heading-anchor').first().waitFor({ state: 'attached' });
+}
 
 /**
  * The Thread rail in the header.
@@ -41,7 +49,7 @@ test.describe('Thread rail', () => {
 	}
 
 	test('mounts in the header with a mark for every anchor', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 
@@ -53,7 +61,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('lays the thread out across the rail once offsets are measured', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 
@@ -73,7 +81,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('hovering opens the card and moving along it changes the target', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 		const rect = (await rail.boundingBox())!;
@@ -93,7 +101,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('the playground lane names the activity, not the section', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 		const rect = (await rail.boundingBox())!;
@@ -108,7 +116,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('clicking a bar navigates the page, same as the sidebar', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 		const rect = (await rail.boundingBox())!;
@@ -123,7 +131,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('a click navigates but leaves the card to the hover', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 		const rect = (await rail.boundingBox())!;
@@ -145,7 +153,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('is fully operable from the keyboard', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 
@@ -168,7 +176,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('focusing the search box yields exactly the width it takes', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 		const box = page.locator('.search-box');
@@ -203,7 +211,7 @@ test.describe('Thread rail', () => {
 	});
 
 	test('the lens stays under the pointer while the rail narrows', async ({ page }) => {
-		await page.goto('/');
+		await gotoHydrated(page);
 		const rail = page.locator(RAIL);
 		await expect(rail).toBeVisible();
 		const rect = (await rail.boundingBox())!;
@@ -252,7 +260,7 @@ test.describe('Thread rail', () => {
 	   one pixel under the 720 gate. */
 	test('survives to iPad mini portrait', async ({ page }) => {
 		await page.setViewportSize({ width: 744, height: 1000 });
-		await page.goto('/');
+		await gotoHydrated(page);
 		await expect(page.locator(RAIL)).toBeVisible();
 
 		// Every anchor still present — it is the whole rail, not a reduced one.
@@ -272,7 +280,7 @@ test.describe('Thread rail', () => {
 		// deliberately: 744 is iPad mini portrait exactly, so gating there puts
 		// the target device ON the boundary where a scrollbar tips it into mobile.
 		await page.setViewportSize({ width: 719, height: 1000 });
-		await page.goto('/');
+		await gotoHydrated(page);
 		await expect(page.locator(RAIL)).toHaveCount(0);
 	});
 });
