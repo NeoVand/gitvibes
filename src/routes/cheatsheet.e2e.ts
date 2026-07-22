@@ -51,16 +51,33 @@ test.describe('Cheat sheet', () => {
 					'.cheat-panel button[title="Click to copy"] > code'
 				)
 			];
+			const offenders: { text: string; over: number }[] = [];
 			let wrapped = 0;
 			let tightest = Infinity;
 			for (const chip of chips) {
 				const lineHeight = parseFloat(getComputedStyle(chip).lineHeight);
-				if (chip.getBoundingClientRect().height > lineHeight * 1.5) wrapped++;
 				const available = (chip.parentElement as HTMLElement).clientWidth;
-				tightest = Math.min(tightest, available - chip.scrollWidth);
+				const slack = available - chip.scrollWidth;
+				if (chip.getBoundingClientRect().height > lineHeight * 1.5) {
+					wrapped++;
+					offenders.push({ text: chip.textContent!.trim(), over: Math.round(-slack) });
+				}
+				tightest = Math.min(tightest, slack);
 			}
-			return { wrapped, tightest, chips: chips.length };
+			const list = document.querySelector('.cheat-list') as HTMLElement | null;
+			return {
+				wrapped,
+				tightest: Math.round(tightest),
+				chips: chips.length,
+				listWidth: list?.clientWidth ?? null,
+				font: getComputedStyle(chips[0]).fontFamily,
+				fontSize: getComputedStyle(chips[0]).fontSize,
+				offenders: offenders.slice(0, 4)
+			};
 		});
+		// Printed unconditionally: when this fails it fails on a machine that is
+		// not the one running it, so the numbers have to travel with the result.
+		console.log('cheat sheet fit:', JSON.stringify(fit));
 		expect(fit.chips).toBeGreaterThan(50);
 		expect(fit.wrapped).toBe(0);
 		// Enough room left over to absorb a scrollbar gutter or a slightly
