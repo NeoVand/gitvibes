@@ -268,33 +268,37 @@
 		sidebarOpen = !sidebarOpen;
 	}
 
-	// Opening the playground panel enters desktop "reading mode": the sidebar
-	// auto-collapses and the content reflows beside the panel. The sidebar's
-	// prior state is restored when the panel closes.
+	// The three header panels are mutually exclusive: opening one closes
+	// the others. Each enters desktop "reading mode": the sidebar
+	// auto-collapses and the content reflows beside the panel — the
+	// sidebar's prior state is restored when all of them are closed.
 	let sidebarBeforePanel = false;
 
-	/** Call BEFORE opening a reading-mode panel. */
+	/** Call BEFORE mutating any open flags when a side panel is opening. */
 	function enterReadingMode() {
-		if (!playgroundOpen && !agentOpen) {
+		if (!playgroundOpen && !agentOpen && !cheatSheetOpen) {
 			sidebarBeforePanel = sidebarOpen;
 			sidebarOpen = false;
 		}
 	}
 
-	/** Call AFTER closing a reading-mode panel — restores the sidebar. */
+	/** Call AFTER mutating flags — restores the sidebar once all are closed. */
 	function maybeLeaveReadingMode() {
-		if (!playgroundOpen && !agentOpen) {
+		if (!playgroundOpen && !agentOpen && !cheatSheetOpen) {
 			sidebarOpen = sidebarBeforePanel;
 		}
 	}
 
 	function toggleCheatSheet() {
 		if (!cheatSheetOpen) {
+			enterReadingMode();
 			playgroundOpen = false;
 			agentOpen = false;
+			cheatSheetOpen = true;
+		} else {
+			cheatSheetOpen = false;
 			maybeLeaveReadingMode();
 		}
-		cheatSheetOpen = !cheatSheetOpen;
 	}
 
 	function togglePlayground() {
@@ -439,7 +443,8 @@
 <main
 	id="main-content"
 	class="main-content transition-[margin] duration-200 ease-out"
-	class:reading-mode={playgroundOpen || agentOpen}
+	class:reading-mode={playgroundOpen || agentOpen || cheatSheetOpen}
+	class:cheat-mode={cheatSheetOpen}
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen
 		? 'var(--sidebar-width)'
 		: 'var(--sidebar-collapsed-width)'};"

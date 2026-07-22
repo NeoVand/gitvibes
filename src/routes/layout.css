@@ -116,6 +116,12 @@
 	--sidebar-collapsed-width: 52px;
 	--header-height: 48px;
 	--panel-reading-width: min(50vw, 44rem);
+	/* The cheat sheet is a narrower reading-mode panel: wide enough for every
+	   command on one line, no wider — it shares the viewport with an exercise.
+	   The ruler is the longest row (`git config --global core.excludesFile
+	   ~/.gitignore_global`: 57 chars of 11px JetBrains Mono ≈ 376px) plus the
+	   list's 40px of gutters and the border. */
+	--cheatsheet-width: 26.5rem;
 
 	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 	--font-heading: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -358,12 +364,17 @@ strong {
 	}
 }
 
-/* Desktop reading mode: an open playground panel RESHAPES the page — the
-   course text reflows into the remaining column instead of being covered,
-   so learners read and practice side by side. */
+/* Desktop reading mode: an open side panel RESHAPES the page — the course
+   text reflows into the remaining column instead of being covered, so
+   learners read beside the Agent, the Playground, or the cheat sheet. */
 @media (min-width: 1024px) {
 	.main-content.reading-mode {
 		margin-right: var(--panel-reading-width);
+	}
+
+	/* The cheat sheet is the narrow one; the content keeps the difference. */
+	.main-content.reading-mode.cheat-mode {
+		margin-right: var(--cheatsheet-width);
 	}
 
 	/* Tighter section gutters while sharing the viewport with a panel. */
