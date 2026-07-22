@@ -444,6 +444,7 @@
 	id="main-content"
 	class="main-content transition-[margin] duration-200 ease-out"
 	class:reading-mode={playgroundOpen || agentOpen || cheatSheetOpen}
+	class:agent-mode={agentOpen}
 	class:cheat-mode={cheatSheetOpen}
 	style="padding-top: var(--header-height); margin-left: {sidebarOpen
 		? 'var(--sidebar-width)'
