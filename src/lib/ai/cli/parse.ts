@@ -10,9 +10,7 @@
  */
 
 export type AgentInvocation =
-	| { kind: 'help' }
-	| { kind: 'task'; task: string }
-	| { kind: 'error'; message: string };
+	{ kind: 'help' } | { kind: 'task'; task: string } | { kind: 'error'; message: string };
 
 /**
  * Is this line an `agent` invocation, and which kind? Returns null for

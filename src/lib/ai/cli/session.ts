@@ -17,13 +17,7 @@ import { createGate, type Gate, type GateDecision } from '../gate';
 import type { AgentBackend, AgentBash } from '../types';
 
 export type CliPhase =
-	| 'idle'
-	| 'generating'
-	| 'awaiting-approval'
-	| 'executing'
-	| 'done'
-	| 'interrupted'
-	| 'error';
+	'idle' | 'generating' | 'awaiting-approval' | 'executing' | 'done' | 'interrupted' | 'error';
 
 export type CliEndReason = 'done' | 'interrupted' | 'error';
 
