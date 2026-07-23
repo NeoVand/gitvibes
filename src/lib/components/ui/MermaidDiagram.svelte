@@ -8,6 +8,17 @@
 	let renderCount = $state(0);
 	let isVisible = $state(false);
 
+	/* The theme watchers live out here, not inside the effect that creates
+	   them. They are registered on `document.documentElement` and on a media
+	   query — both outlive this component — so the teardown in onMount has to
+	   be able to reach them. A previous version declared a `themeObs` in
+	   onMount and a second one inside the effect, which shadowed it: the
+	   cleanup disconnected a variable that was never assigned, and every
+	   diagram scrolled past left an observer behind. */
+	let themeObs: MutationObserver | undefined;
+	let themeMql: MediaQueryList | undefined;
+	let onSchemeChange: (() => void) | undefined;
+
 	function isDark(): boolean {
 		const root = document.documentElement;
 		if (root.classList.contains('dark')) return true;
@@ -177,8 +188,6 @@
 	}
 
 	onMount(() => {
-		let themeObs: MutationObserver | undefined;
-
 		const viewportObserver = new IntersectionObserver(
 			([entry]) => {
 				if (entry?.isIntersecting) isVisible = true;
@@ -190,6 +199,7 @@
 		return () => {
 			viewportObserver.disconnect();
 			themeObs?.disconnect();
+			if (themeMql && onSchemeChange) themeMql.removeEventListener('change', onSchemeChange);
 		};
 	});
 
@@ -201,16 +211,18 @@
 				m.default.initialize(getMermaidConfig(isDark()));
 				mermaidModule = m;
 
-				const mql = window.matchMedia('(prefers-color-scheme: dark)');
-				mql.addEventListener('change', () => {
+				const reinitialise = () => {
 					m.default.initialize(getMermaidConfig(isDark()));
 					renderCount++;
-				});
+				};
 
-				const themeObs = new MutationObserver(() => {
-					m.default.initialize(getMermaidConfig(isDark()));
-					renderCount++;
-				});
+				themeMql = window.matchMedia('(prefers-color-scheme: dark)');
+				onSchemeChange = reinitialise;
+				themeMql.addEventListener('change', onSchemeChange);
+
+				// The class on <html> is what the in-app toggle changes; the media
+				// query only covers an OS-level switch while set to `system`.
+				themeObs = new MutationObserver(reinitialise);
 				themeObs.observe(document.documentElement, {
 					attributes: true,
 					attributeFilter: ['class']

@@ -138,7 +138,10 @@ export async function handlePatchAnswer(engine: GitEngine, answer: string): Prom
 		return 'Patch session quit.';
 	}
 
-	let note: string | null = null;
+	// Every branch below either assigns this or returns, so it deliberately
+	// starts unassigned — an unhandled choice fails to compile instead of
+	// silently falling through with a null note.
+	let note: string | null;
 
 	if (choice === 'y' || choice === 'yes') {
 		file.chosen.push(hunk);
