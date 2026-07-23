@@ -115,14 +115,21 @@
 	--sidebar-width: 249.5px;
 	--sidebar-collapsed-width: 52px;
 	--header-height: 48px;
-	/* ONE width for the playground and the tutor. They used to differ — 44rem
-	   against 40rem — while the content margin was pinned to the wider of the
-	   two, so opening the tutor left a 4rem strip of nothing down the right of
-	   the page. Splitting the difference costs the playground a little room and
-	   makes both panels sit flush against the text. Any panel that reads beside
-	   the content must use this token for its width AND for the margin, or the
-	   gap comes back. */
+	/* The playground's half of the page: a terminal, a file tree and a commit
+	   graph all have to be legible at once.
+
+	   THE RULE for every reading-mode panel: whatever width it takes, the
+	   content margin must be driven by the SAME token. These once differed —
+	   a 40rem tutor against a 44rem margin — and the mismatch left a strip of
+	   nothing down the right of the page that read as a layout bug, which is
+	   what makes the three panels three tokens rather than one shared width. */
 	--panel-reading-width: min(46vw, 42rem);
+	/* The tutor is a conversation, and a conversation does not want half a
+	   page. Chat lines set far past ~70 characters get hard to track back to
+	   the start, and the panel was inheriting the playground's width purely
+	   because they had been made to match. Slimmer, and the reading column it
+	   leaves behind is wider for it. */
+	--agent-reading-width: min(34vw, 30rem);
 	/* The cheat sheet reads BESIDE an exercise, so its width is bounded by what
 	   it takes away from the text, not by the longest string in it. A handful of
 	   the longest commands wrap onto a second line here, and that is the cheaper
@@ -382,7 +389,14 @@ strong {
 		margin-right: var(--panel-reading-width);
 	}
 
-	/* The cheat sheet is the narrow one; the content keeps the difference. */
+	/* Each panel that is narrower than the playground hands the difference back
+	   to the content. Every one of these must match its panel's own width token
+	   exactly — the gap this prevents is invisible in code and obvious on the
+	   page. */
+	.main-content.reading-mode.agent-mode {
+		margin-right: var(--agent-reading-width);
+	}
+
 	.main-content.reading-mode.cheat-mode {
 		margin-right: var(--cheatsheet-width);
 	}
