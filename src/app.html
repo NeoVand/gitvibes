@@ -14,15 +14,20 @@
 		     part pages the same title, blurb and image. -->
 
 		<script>
-			// Apply the stored theme before first paint to avoid a flash of the
-			// wrong theme. Mirrors $lib/theme.ts applyTheme.
+			// Apply the theme before first paint to avoid a flash of the wrong
+			// one. Mirrors $lib/theme.ts — including its default: an unset
+			// preference is dark, so a first visit must paint dark here too or
+			// the page flashes light before the app catches up.
 			try {
 				const theme = localStorage.getItem('gitvibes-theme');
 				if (theme === 'light' || theme === 'dark') {
 					document.documentElement.classList.add(theme);
+				} else if (theme !== 'system') {
+					document.documentElement.classList.add('dark');
 				}
 			} catch {
-				/* storage unavailable — system theme applies */
+				/* storage unavailable — the stylesheet's own default applies */
+				document.documentElement.classList.add('dark');
 			}
 		</script>
 		%sveltekit.head%
