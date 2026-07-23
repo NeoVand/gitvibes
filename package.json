@@ -55,7 +55,7 @@
 		"@langchain/langgraph": "^1.4.8",
 		"buffer": "^6.0.3",
 		"isomorphic-git": "^1.38.10",
-		"lucide-svelte": "^0.577.0",
+		"lucide-svelte": "^1.0.1",
 		"mermaid": "^11.16.0",
 		"zod": "^4.4.3"
 	}

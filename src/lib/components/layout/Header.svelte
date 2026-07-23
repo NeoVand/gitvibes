@@ -1,16 +1,8 @@
 <script lang="ts">
 	import { tick } from 'svelte';
-	import {
-		Sun,
-		Moon,
-		ScrollText,
-		Github,
-		Gamepad2,
-		Bot,
-		X,
-		Linkedin,
-		RotateCcw
-	} from 'lucide-svelte';
+	import { Sun, Moon, ScrollText, Gamepad2, Bot, X, RotateCcw } from 'lucide-svelte';
+	import Github from '$lib/components/ui/GithubIcon.svelte';
+	import Linkedin from '$lib/components/ui/LinkedinIcon.svelte';
 	import { base } from '$app/paths';
 	import Search from './Search.svelte';
 	import ThreadRail from './ThreadRail.svelte';
