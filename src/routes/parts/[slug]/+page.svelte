@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { base, resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
-	import { ArrowLeft, ArrowRight, BookOpen, Github } from 'lucide-svelte';
+	import { ArrowLeft, ArrowRight, BookOpen } from 'lucide-svelte';
+	import Github from '$lib/components/ui/GithubIcon.svelte';
 	import { courseEntry } from '$lib/data/sidebar-nav';
 	import { SITE_URL } from '$lib/data/part-pages';
 
