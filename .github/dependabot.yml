@@ -59,6 +59,17 @@ updates:
         update-types: [version-update:semver-major]
       - dependency-name: tailwindcss
         update-types: [version-update:semver-major]
+      # TypeScript 7 cannot be installed here yet, and the failure is upstream
+      # rather than anything this repo can fix: @sveltejs/kit declares a peer
+      # range of ^5.3.3 || ^6.0.0, and svelte-check crashes on startup against
+      # the 7.x compiler API ("Cannot read properties of undefined (reading
+      # 'useCaseSensitiveFileNames')"). Without svelte-check there is no type
+      # checking at all, which is a worse trade than staying on 5.
+      #
+      # Remove this entry once @sveltejs/kit widens that peer range — at which
+      # point the bump arrives as its own PR again and can be judged normally.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
 
   # The workflows pin actions by major version; this keeps those current.
   - package-ecosystem: github-actions
