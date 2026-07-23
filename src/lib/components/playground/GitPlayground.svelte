@@ -606,7 +606,9 @@
 		// Without a listener there is nothing to report, so keep the original
 		// short-circuit: a disarmed check must not re-run every command.
 		if (!checkArmed && !onProgress) return;
-		let passed = false;
+		// No initialiser: both branches below assign, so a future branch that
+		// forgets to becomes a compile error rather than a silent `false`.
+		let passed: boolean;
 		try {
 			passed = await scenario.check(engine);
 		} catch {

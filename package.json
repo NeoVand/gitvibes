@@ -20,7 +20,7 @@
 	},
 	"devDependencies": {
 		"@eslint/compat": "^2.1.0",
-		"@eslint/js": "^9.39.2",
+		"@eslint/js": "^10.0.1",
 		"@playwright/test": "^1.61.1",
 		"@sveltejs/adapter-static": "^3.0.10",
 		"@sveltejs/kit": "^2.70.1",
@@ -29,7 +29,7 @@
 		"@tailwindcss/typography": "^0.5.20",
 		"@tailwindcss/vite": "^4.3.3",
 		"@types/node": "^24",
-		"eslint": "^9.39.2",
+		"eslint": "^10.7.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.22.0",
 		"fake-indexeddb": "^6.2.5",
